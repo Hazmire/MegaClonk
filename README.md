@@ -1,4 +1,4 @@
-# BONK INFINITY
+# MegaClonk
 
 An offline native Godot 4.7.2 3D survival roguelike in development. Built from an empty repository using original procedural geometry/audio. **This is a playable foundation, not the complete requested commercial-scale game.**
 
