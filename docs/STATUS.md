@@ -1,38 +1,29 @@
-# Implementation status
+# Movement and enemy-variation milestone
 
-This repository now builds a playable native 3D development version. It is **not a completed implementation of the entire supplied specification**. No claim is made that it matches Megabonk balance, contains production-quality animation, or has been playtested for enjoyment.
+The initial requested overhaul milestone is implemented in the existing project. This is a playable development build, with further art/animation and game-feel work remaining.
 
-## Working foundation
+## Implemented
 
-- Godot 4.7.2, GDScript, native Windows x64 export with embedded resources; Forward+ default and OpenGL compatibility launch option.
-- Menu → character/biome/tier selection → automatic-combat run → paused upgrades → Warden → exit portal → three-stage victory or death → results → menu.
-- Camera-relative accelerated movement, sprint, jump, gravity, fall damage, spring-arm camera collision, mouse orbit and wheel zoom. Monke wall-climb and extra jump, Birdo triple jump and stronger air control.
-- Seeded non-flat terrain for forest, desert and graveyard with original instanced props and fog. Finite 180×180 metre world; boundary excursions return the player to spawn with damage.
-- 21 reference-named characters with distinct generated colour/headgear combinations, starting weapons and approximate passives. Fox and Sir Oofie initially unlocked; other characters use kill milestones. No claim of faithful character likenesses.
-- 36 weapon definitions, levels 1–10, four slots, shared combat modifiers and multiple runtime patterns: sweeps, auras, returning/piercing/bouncing/homing projectiles, hitscan lines, chains, trails/mines, poison fields, pull fields, freezing, lifesteal and executions.
-- Additional weapons: visible Chrono orbit blades and slowing/time-stop; Thunder Rail piercing line and arcs; Spore Cannon projectile/cloud/spreading tagged kills; Gravity Hammer smash/pull/fissure effects; persistent Phantom allies that chase and strike, with a stronger lead ally at high rank.
-- 22 independently balanced tomes with real stat modifiers, four slots, three-choice level-up selection, three rerolls/run, skip-heal and banish.
-- Ten original stat items with rarity labels, luck-influenced rarity rolls, gold-cost chests/shops, healing objects, charge/stat/risk shrines.
-- Eight regular enemy archetypes and a Warden with warning, radial fire, summons and targeted slam; desert adds extra projectiles and graveyard adds a short-range drain. Damage, poison, slowing/freezing, knockback and rewards.
-- Version-1 atomic profile save/load, currency, lifetime stats, unlocks, biome completions, best time, settings and explicit profile export/import. Sandbox results leave normal progression untouched.
-- Procedural score and sound effects, independent volume sliders, key rebinding, sensitivity/inversion, fullscreen shortcut, resolution, render scale, quality/shadows/MSAA, reduced effects, damage-number/shake/FPS toggles and pause on focus loss.
-- MultiMesh enemy rendering and scenery batches; spatial damage queries; bounded projectiles/fields/effects; reusable XP/projectile meshes and materials.
+- Sprint removed; configurable ground acceleration/friction, air control, slide threshold/friction/steering, slope acceleration, slide-speed cap, crouch speed and jump impulse. Rebindable Ctrl crouch/slide, low capsule, ceiling clearance, real slope response and momentum-preserving jump chaining. Monke forward wall-climb and character jump/air bonuses retained.
+- Original Fox Scout model separated from physics, with a pivot rig and blended pose state machine for idle, run, turning, jumping, falling, crouching, sliding, hit and death. Victory does not trigger death animation. Playable characters currently share the rig; their stats, passives and starting weapons remain distinct.
+- Eight preserved regular archetypes, each with two configurations and distinct committed models: goblin/skeleton, wolf/spider, ogre/golem, archer/cactus, knight/brute, bat/wisp, scarab/sporecap, bulwark/beetle.
+- Configurable stats, reward values, resistance and shared wind-up/recovery modules. Visible ranged projectiles/fans, stationary cactus, charges, slams, proximity explosions and guarded death blasts. Death blasts warn for 0.4s before damage; one death cannot repeatedly detonate.
+- Seeded, independent 50/50 per-archetype selection once per run, all eight preselected. Stage transitions and save/resume preserve the registry. Save snapshots retain enemies, HP/stats, equipped levels, XP drops, run counts, camera and interactables. Transient projectiles/fields restart on resume. Save format is currently version 1; no old active-run saves existed before this feature.
+- Original arrow/rocket/fire/spore/bolt meshes; pooled trails and sparks; slash ribbons, lightning segments, burn/poison/freeze colours, critical numbers, hit reactions, budgeted death meshes and effect intensity settings. Existing 36-weapon damage suite remains passing.
+- Existing terrain retained and run-seeded; procedural ground grain, grass/bushes, faceted rocks and ruins. Trees/rocks/grave markers/ruin columns have static collision. Ground enemies use local prop avoidance without individual physics/navigation nodes.
+- Instanced body/limb rendering and distant merged geometry; no per-enemy scene or skeleton. GitHub Actions validates, exports Windows x64 and publishes a playable artifact. PR #1 targets the existing default `Full-Release` branch.
 
-## Validation actually performed
+## Validation and limits
 
-See `VALIDATION.md` for command results. Tests validate specific behaviours rather than every permutation. In particular, damage from all weapon patterns does not establish their balance, exact reference behaviour or high-level synergies. Headless CPU timing excludes rendering and is not a 60-FPS claim.
+Read `VALIDATION.md` for measured checks and publication evidence. Native Windows execution, audible output on real devices and 60 FPS on a target PC remain unverified. The richer AI, collisions and animated transforms have increased CPU cost relative to the single-mesh baseline; measured headless timings are explicitly reported, not presented as target-PC FPS.
 
-## Substantial remaining work
+The supplied research sites remain unavailable from the initial research attempts. Variant behaviour and balance are original design choices, not verified Megabonk formulas. The project uses original generated native Godot assets; no third-party downloaded model or proprietary asset was imported.
 
-- Research sites are blocked by runtime network policy. Exact passives, original items/tomes, roster version, formulas and unlock quests remain unverified. All current balance is original approximation.
-- Windows executable runtime, target-PC performance, offline Windows launch, controller feel and human enjoyment require native Windows playtesting. Only export and PE architecture are verified here.
-- Characters use original procedural forms rather than tailored rigged models. Animation is procedural bob/limb movement; full idle/jump/hit/death/attack blending, tailored weapon poses and richer enemy silhouettes remain art work.
-- World scenery is simple. Complex ruins, hidden traversal, obstacle navigation, canyons/crypt interiors, environmental hazards and secret/map-specific content are not complete. Trees are visual props, not blocking obstacles.
-- Bosses share one body/attack framework with biome variations; fully distinct biome bosses, dedicated minibosses, robust navigation and authored phase choreography remain.
-- Original reference items, conditional item synergies, comprehensive on-hit/on-kill interactions and all exact advanced weapon behaviours are not complete. Many weapons share pattern code; for example Firestaff/Rocket/lob weapons share the projectile engine. Phantom allies have simple steering rather than navigation/rigged combat.
-- Persistent currency is awarded but has no spending economy yet. Achievements/quests are milestone text and derived profile stats, not a full independent quest/achievement database. Difficulty tiers are selectable; tier unlocking and weapon-unlock progression are not implemented.
-- UI is functional themed Godot controls, with scrollable panels and generated character preview. Custom icon art, polished responsive layouts, detailed before/after upgrade descriptions, accessibility/controller testing and full settings coverage remain.
-- Performance budgets prevent unbounded transient effects, but dynamic frame-rate adaptation, production profiling on a GPU, large-horde stress runs with all weapon combinations, complete pooling, and enemy separation need further work.
-- Script orchestration remains concentrated in `game.gd`; data, player, persistence and pooling are separate. Further extraction into world/UI/director/combat modules is recommended before major expansion.
+## Remaining work
 
-The project is useful for an initial playable test and continued implementation. These gaps should not be relabelled as completed features.
+- Human Windows playtesting of movement, combat balance, camera comfort and long runs; real-GPU profiling and further crowd optimizations.
+- Tailored models for the other 20 characters; more detailed player/monster rigs, authored attack/death animation, expressive faces and richer environment art. Current enemy animation is simplified instanced body/limb movement, attack poses, hit flash/recoil and falling/shrinking corpses.
+- Enemy separation, sophisticated navigation, more distinct biome bosses and authored multi-phase combat. Existing Warden mechanics are preserved.
+- Original game's verified passives/items/quests and full conditional item synergies. Persistent currency spending, comprehensive achievements, weapon unlock progression and difficulty unlock progression remain outside this milestone.
+- Saved active runs currently reset transient attacks/fields rather than restoring every effect. Malformed manually edited active-run files are not a supported import format.
+- Further extraction of world/UI/combat orchestration from `game.gd`; continued accessibility/controller and settings testing.

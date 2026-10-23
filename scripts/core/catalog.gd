@@ -51,7 +51,7 @@ const CHARACTERS = [
  ["Athena", 8, "Low health damage and thorns", "athena"],
  ["Robinette", 6, "Gold increases damage", "gold"],
  ["Monke", 9, "Extra jump and growing health", "monke"],
- ["Tony McZoom", 17, "Sprinting discharges lightning", "electric"],
+ ["Tony McZoom", 17, "Movement discharges lightning", "electric"],
  ["Bush", 13, "Critical damage and marked targets", "mark"],
  ["Birdo", 19, "Triple jump and air control", "air"],
  ["Noelle", 18, "Frozen kills restore health", "freeze"],

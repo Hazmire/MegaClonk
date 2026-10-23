@@ -22,6 +22,10 @@ BAT
 python3 - <<'PY'
 from pathlib import Path
 from zipfile import ZipFile, ZIP_DEFLATED
+import subprocess
+commit = subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+dirty = bool(subprocess.check_output(['git','status','--porcelain'],text=True).strip())
+Path('builds/windows/BUILD_INFO.txt').write_text('BONK INFINITY movement and enemy-variant milestone\nGodot 4.7.2\nSource commit: '+commit+'\nUncommitted source at build time: '+str(dirty)+'\nWindows execution requires native playtesting.\n')
 with ZipFile('builds/BONK_INFINITY_Windows_x64.zip','w',ZIP_DEFLATED) as z:
  for p in sorted(Path('builds/windows').iterdir()):
   if p.is_file(): z.write(p,p.name)

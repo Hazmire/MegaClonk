@@ -1,0 +1,37 @@
+name: Windows playtest build
+on:
+  push:
+    branches: ['**']
+    paths-ignore: ['releases/**', '**/*.md', 'docs/images/**']
+  pull_request:
+    paths-ignore: ['releases/**', '**/*.md', 'docs/images/**']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: windows-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  windows-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Configure writable tool directories
+        run: |
+          echo "BONK_TOOLS_ROOT=$RUNNER_TEMP/bonk-tools" >> "$GITHUB_ENV"
+          echo "BONK_RUNTIME_ROOT=$RUNNER_TEMP/bonk-runtime" >> "$GITHUB_ENV"
+      - name: Check out source and generated models
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - name: Install checksum-verified Godot 4.7.2 and export templates
+        run: python3 tools/install_engine.py
+      - name: Import project and run regression suites
+        run: tools/validate.sh
+      - name: Export Windows x64 with embedded game resources
+        run: tools/export.sh
+      - name: Upload playable Windows ZIP artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: BONK_INFINITY-Windows-x64
+          path: builds/windows/
+          if-no-files-found: error
+          retention-days: 30
