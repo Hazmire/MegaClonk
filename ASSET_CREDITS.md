@@ -29,3 +29,14 @@ No downloaded third-party 3D model was used. Quaternius, Kenney and poly.pizza w
 | Arrow, rocket, fire/spore projectiles, melee arcs, lightning, debris, terrain grain | BONK INFINITY project | Original project content, no third-party licence | `scripts/core/game.gd`, `shaders/terrain.gdshader`; cached meshes, pooled trails/sparks, original shader |
 
 “Original project content” records provenance, not a new third-party licence grant. This project does not import a restrictive external asset licence or claim a licence to Megabonk's characters or artwork.
+
+## Menu/loadout update
+
+| Asset | Creator | Source | Actual licence / modifications | Location |
+|---|---|---|---|---|
+| Pixelated Elegance (temporary heading font; **not Kurland**) | GGBotNet | https://github.com/ggbotnet/fonts-cc0/tree/main/Pixelated%20Elegance | CC0 1.0 Universal, verified from author's README and root LICENSE; unmodified TTF | `assets/fonts/PixelatedElegance.ttf`, `assets/fonts/LICENSE-CC0.txt` |
+| Temporary weapon/item/tome/trait/ultimate glyphs | MEGACLONK project | Original code in this repository | Original generated content; no third-party pack licence asserted | `scripts/ui/ui_assets.gd` |
+| Animated gold border | MEGACLONK project | Original shader | Original generated content | `shaders/gold_frame.gdshader` |
+| Cliff-bounded forest variation | MEGACLONK project | Existing original seeded terrain extended in code | Original generated content | `scripts/core/game.gd` |
+
+The user-specified itch.io packs, including Jacob and Kurland, are **not yet imported**. See `docs/ASSET_ACCESS.md` for exact URLs and access/licence status. Existing original Scout/enemy/environment/audio content remains in use until those downloads can be verified.

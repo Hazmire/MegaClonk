@@ -25,6 +25,9 @@ var fall_velocity = 0.0
 var fall_hit = 0.0
 var active = false
 var can_climb = false
+var can_glide=false
+var movement_multiplier=1.0
+var jump_multiplier=1.0
 var posture = "standing"
 var avatar: Node3D
 var arm: SpringArm3D
@@ -103,7 +106,7 @@ func _physics_process(delta: float) -> void:
   horizontal=slide_velocity(horizontal,get_floor_normal(),direction,delta)
   if horizontal.length()<crouch_speed: set_posture("crouching")
  elif is_on_floor():
-  var target = direction*(crouch_speed if posture!="standing" else 9.0)*stats.speed
+  var target = direction*(crouch_speed if posture!="standing" else 9.0)*stats.speed*movement_multiplier
   # Preserve excess landing momentum; friction bleeds it away instead of snapping.
   if horizontal.length()>target.length()+0.5:
    horizontal=horizontal.move_toward(Vector3.ZERO,slide_friction*2*delta)
@@ -119,9 +122,10 @@ func _physics_process(delta: float) -> void:
   fall_velocity=0
  else:
   velocity.y-=25*delta
+  if can_glide and velocity.y<0 and Input.is_action_pressed("jump"): velocity.y=maxf(velocity.y,-3.0)
   fall_velocity=minf(fall_velocity,velocity.y)
  if Input.is_action_just_pressed("jump") and (is_on_floor() or jumps<max_jumps):
-  velocity.y=jump_impulse*sqrt(stats.jump)
+  velocity.y=jump_impulse*sqrt(stats.jump*jump_multiplier)
   jumps+=1
  if can_climb and is_on_wall() and Input.is_action_pressed("forward") and not low: velocity.y=6
  move_and_slide()
@@ -144,7 +148,7 @@ func _physics_process(delta: float) -> void:
 func air_velocity(horizontal: Vector3, direction: Vector3, delta: float) -> Vector3:
  if direction.length_squared()<0.01: return horizontal
  # Steering may redirect carried slide speed; it cannot mint extra kinetic energy.
- var speed_limit=maxf(horizontal.length(),9.0*stats.speed)
+ var speed_limit=maxf(horizontal.length(),9.0*stats.speed*movement_multiplier)
  var along=horizontal.dot(direction)
- horizontal+=direction*minf(air_control*delta,maxf(0,9*stats.speed-along))
+ horizontal+=direction*minf(air_control*delta,maxf(0,9*stats.speed*movement_multiplier-along))
  return horizontal.limit_length(speed_limit)

@@ -58,9 +58,18 @@ var moving_time = 0.0
 var banished: Array = []
 var rerolls = 3
 var choices: Array = []
+var frontend: FrontEnd
+var loadout_runtime=LoadoutRuntime.new()
+var selected_weapon=1
+var selected_trait="climber"
+var selected_ultimate="nova"
+var run_metrics: Dictionary={}
+var chests_opened=0
+var legacy_weapon_slots=0
+var legacy_tome_slots=0
 var settings = {"visual_intensity":0.7,"render_scale":1.0,"quality":1,"master":0.7,"effects":0.7,"music":0.3,"sensitivity":0.0025,"invert":false,"reduced":false,"fps":false,"focus_pause":true,"shake":true,"numbers":true,"invincible":false}
 var pending_binding = ""
-var bindings = {"forward":KEY_W,"back":KEY_S,"left":KEY_A,"right":KEY_D,"jump":KEY_SPACE,"crouch":KEY_CTRL,"interact":KEY_E,"inspect":KEY_TAB}
+var bindings = {"forward":KEY_W,"back":KEY_S,"left":KEY_A,"right":KEY_D,"jump":KEY_SPACE,"crouch":KEY_CTRL,"interact":KEY_E,"inspect":KEY_TAB,"ultimate":KEY_Q}
 var music: AudioStreamPlayer
 var sfx: Array[AudioStreamPlayer] = []
 var sfx_cursor = 0
@@ -77,6 +86,7 @@ var smoke_frames = 0
 var smoke_failures: Array = []
 
 func _ready() -> void:
+ DisplayServer.window_set_title("MEGACLONK")
  rng.randomize()
  progress.load_save()
  settings.merge(progress.data.settings, true)
@@ -91,57 +101,13 @@ func _ready() -> void:
   event.physical_keycode = int(bindings[action])
   InputMap.action_add_event(action, event)
  setup_audio()
- ui = CanvasLayer.new()
- add_child(ui)
- var theme = Theme.new()
- theme.default_font_size = 19
- var style = StyleBoxFlat.new()
- style.bg_color = Color("182637")
- style.border_color = Color("5ed6c0")
- style.set_border_width_all(2)
- style.set_corner_radius_all(9)
- style.content_margin_left = 22
- style.content_margin_right = 22
- style.content_margin_top = 16
- style.content_margin_bottom = 16
- theme.set_stylebox("panel", "PanelContainer", style)
- var root = Control.new()
- root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
- root.mouse_filter = Control.MOUSE_FILTER_IGNORE
- root.theme = theme
- ui.add_child(root)
- panel = PanelContainer.new()
- panel.position = Vector2(60, 38)
- panel.custom_minimum_size = Vector2(650, 0)
- root.add_child(panel)
- hud = Label.new()
- hud.position = Vector2(24, 15)
- hud.add_theme_color_override("font_shadow_color", Color.BLACK)
- hud.add_theme_constant_override("shadow_offset_x", 2)
- hud.add_theme_constant_override("shadow_offset_y", 2)
- root.add_child(hud)
- health_bar = ProgressBar.new()
- health_bar.position = Vector2(24, 110)
- health_bar.size = Vector2(330, 20)
- var fill = StyleBoxFlat.new()
- fill.bg_color = Color("e56d80")
- fill.set_corner_radius_all(4)
- health_bar.add_theme_stylebox_override("fill", fill)
- health_bar.show_percentage = false
- root.add_child(health_bar)
- xp_bar = ProgressBar.new()
- xp_bar.position = Vector2(24, 136)
- xp_bar.size = Vector2(330, 12)
- var xp_fill = StyleBoxFlat.new()
- xp_fill.bg_color = Color("62d9c1")
- xp_fill.set_corner_radius_all(3)
- xp_bar.add_theme_stylebox_override("fill", xp_fill)
- xp_bar.show_percentage = false
- root.add_child(xp_bar)
- notice = Label.new()
- notice.position = Vector2(400, 610)
- notice.add_theme_color_override("font_color", Color("ffe09b"))
- root.add_child(notice)
+ selected_weapon=int(progress.data.loadout.weapon)
+ selected_trait=str(progress.data.loadout.trait)
+ selected_ultimate=str(progress.data.loadout.ultimate)
+ if not MetaProgress.unlocked(progress.data,"weapons",str(selected_weapon)):selected_weapon=1
+ if not MetaProgress.unlocked(progress.data,"traits",selected_trait):selected_trait="climber"
+ if not MetaProgress.unlocked(progress.data,"ultimates",selected_ultimate):selected_ultimate="nova"
+ frontend=FrontEnd.new();add_child(frontend);frontend.setup(self)
  build_menu_world()
  main_menu()
  smoke_mode = "--smoke" in OS.get_cmdline_user_args()
@@ -195,64 +161,11 @@ func button(text: String, parent: Node, callback: Callable) -> Button:
  node.pressed.connect(func(): tone(660, 0.06); callback.call())
  return node
 func clear_panel(heading: String) -> VBoxContainer:
- hud.hide()
- health_bar.hide()
- xp_bar.hide()
- for child in panel.get_children():
-  panel.remove_child(child)
-  child.queue_free()
- panel.show()
- var column = VBoxContainer.new()
- column.add_theme_constant_override("separation", 8)
- var scroll=ScrollContainer.new()
- scroll.custom_minimum_size=Vector2(650,570)
- scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
- scroll.follow_focus=true
- panel.add_child(scroll)
- scroll.add_child(column)
- column.size_flags_horizontal=Control.SIZE_EXPAND_FILL
- title(heading, column)
- Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
- if is_instance_valid(player): player.active = false
- return column
+ return frontend.page(heading)
+
 func main_menu() -> void:
- mode = "menu"
- hud.hide()
- health_bar.hide()
- xp_bar.hide()
- var col = clear_panel("BONK  /  INFINITY")
- title("SURVIVE • EVOLVE • BREAK THE HORDE", col, 16)
- title("Original playable foundation · reference balance unverified", col, 14)
- var select = OptionButton.new()
- for i in Catalog.CHARACTERS.size():
-  select.add_item(Catalog.CHARACTERS[i][0] + ("" if i in progress.data.unlocked or sandbox else "  [LOCKED · %d lifetime kills]" % ((i - 1) * 80)))
- select.selected = selected_character
- select.item_selected.connect(func(i): selected_character = i; build_menu_world(); main_menu())
- col.add_child(select)
- var char_data = Catalog.CHARACTERS[selected_character]
- title("%s  •  %s\n%s" % [char_data[0], Catalog.WEAPONS[char_data[1]][0], char_data[2]], col, 18)
- var maps = OptionButton.new()
- for name in ["Verdant Reach / Forest", "Sunken Sun / Desert", "Hollow Vigil / Graveyard"]: maps.add_item(name)
- maps.selected = selected_biome
- maps.item_selected.connect(func(i): selected_biome = i)
- col.add_child(maps)
- var tiers = OptionButton.new()
- for name in ["Tier I · Wanderer", "Tier II · Challenger", "Tier III · Cataclysm"]: tiers.add_item(name)
- tiers.selected = selected_tier - 1
- tiers.item_selected.connect(func(i): selected_tier = i + 1)
- col.add_child(tiers)
- if FileAccess.file_exists("user://active-run.json"):
-  button("Resume saved run",col,load_run)
- var play = button("ENTER THE WILD", col, begin_run)
- play.disabled = not sandbox and not selected_character in progress.data.unlocked
- button("Sandbox: " + ("ON · progression disabled" if sandbox else "OFF"), col, func(): sandbox = not sandbox; main_menu())
- var row = HBoxContainer.new()
- col.add_child(row)
- button("Progress & unlocks", row, show_progress)
- button("Settings", row, func(): settings_menu(main_menu))
- button("Quit", row, func(): get_tree().quit())
- title("WASD move   •   Mouse look   •   Space jump   •   Ctrl crouch / slide\nE interact   •   Tab build   •   Esc pause   •   F11 fullscreen", col, 15)
- play.grab_focus()
+ frontend.home()
+
 func build_menu_world() -> void:
  if is_instance_valid(world):
   remove_child(world)
@@ -289,8 +202,11 @@ func create_avatar(parent: Node3D, index: int, pos: Vector3) -> Node3D:
  node.set_meta("character_index",index)
  return node
 func begin_run() -> void:
- character = selected_character
- biome = selected_biome
+ MetaProgress.migrate(progress.data)
+ character = -1
+ selected_character=0
+ selected_biome=0
+ biome = 0
  tier = selected_tier
  stage = 1
  run_seed=next_run_seed if next_run_seed>=0 else rng.randi()
@@ -322,13 +238,18 @@ func begin_run() -> void:
  rerolls = 3
  passive_clock = 0
  moving_time = 0
- equip(Catalog.CHARACTERS[character][1])
+ run_metrics.clear();chests_opened=0;legacy_weapon_slots=0;legacy_tome_slots=0
+ loadout_runtime.reset(selected_trait,selected_ultimate)
+ frontend.minimap.reset(selected_trait=="seer")
+ equip(selected_weapon)
  build_stage()
  resume()
 func equip(id: int) -> void:
  if weapons.has(id): weapons[id].level = mini(10, weapons[id].level + 1)
- elif weapons.size() < 4: weapons[id] = {"level":1,"clock":0.1,"visuals":[],"summons":[]}
+ elif weapons.size() < weapon_limit(): weapons[id] = {"level":1,"clock":0.1,"visuals":[],"summons":[]}
 func terrain_height(x: float, z: float) -> float:
+ var edge=maxf(absf(x),absf(z))
+ if edge>74:return lerpf(4,24,smoothstep(74,87,edge))+terrain_noise.get_noise_2d(x,z)*2
  var radial = Vector2(x, z).length()
  var h = terrain_noise.get_noise_2d(x, z) * 8.0 + sin(x * 0.045) * cos(z * 0.055) * 3.0
  return lerpf(0, h, smoothstep(5, 22, radial))
@@ -437,8 +358,9 @@ func build_stage() -> void:
  player.stats = stats
  world.add_child(player)
  player.position = Vector3(0,3,0)
- player.avatar = create_avatar(player,character,Vector3.ZERO)
- player.can_climb = character == 8
+ player.avatar = create_avatar(player,0,Vector3.ZERO)
+ player.can_climb = loadout_runtime.trait_id=="climber"
+ player.can_glide=loadout_runtime.trait_id=="glider"
  player.air_control = 22 if character == 11 else 13
  player.max_jumps = 3 if character == 11 else (2 if character == 8 else 1)
  player.sensitivity = settings.sensitivity
@@ -460,10 +382,11 @@ func build_stage() -> void:
  world.add_child(enemy_mesh)
  rng.seed=previous_seed
  rng.state=previous_state
- toast("Stage %d / 3 • boss arrives in 3 minutes" % stage)
+ toast("The Verdant Hollow • the Warden arrives when the countdown ends")
 func resume() -> void:
  mode = "run"
  panel.hide()
+ frontend.enter_run()
  hud.show()
  health_bar.show()
  xp_bar.show()
@@ -480,13 +403,15 @@ func _unhandled_input(event: InputEvent) -> void:
   InputMap.action_add_event(pending_binding,binding)
   bindings[pending_binding] = int(event.physical_keycode)
   pending_binding = ""
-  settings_menu(func(): pause_menu())
+  settings_menu(frontend.settings_back if frontend.settings_back.is_valid() else main_menu)
   return
  if event is InputEventKey and event.pressed and event.physical_keycode == KEY_F11:
   DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED if DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN else DisplayServer.WINDOW_MODE_FULLSCREEN)
  if event.is_action_pressed("ui_cancel"):
   if mode == "run": pause_menu()
-  elif mode in ["pause","build","settings","sandbox"]: resume()
+  elif mode in ["pause","build","sandbox","shop","reward"]: resume()
+  elif mode=="settings":frontend.leave_settings()
+  elif mode in ["play","unlocks","quests"]: main_menu()
  if event.is_action_pressed("inspect") and mode == "run": show_build()
 func _notification(what: int) -> void:
  if what == NOTIFICATION_APPLICATION_FOCUS_OUT and settings.focus_pause and mode == "run" and not smoke_mode: pause_menu()
@@ -495,6 +420,7 @@ func _physics_process(delta: float) -> void:
  if health <= 0:
   finish_run(false)
   return
+ loadout_runtime.tick(self,delta)
  elapsed += delta
  stage_time += delta
  passive_clock += delta
@@ -559,7 +485,8 @@ func spawn_enemy(kind: int = -1, at: Vector3 = Vector3.INF) -> Dictionary:
  pos.x = clampf(pos.x,-84,84)
  pos.z = clampf(pos.z,-84,84)
  pos.y = terrain_height(pos.x,pos.z)+0.7
- var scale_factor = (1+elapsed/140.0) * (1+(tier-1)*0.5) * (1+(stage-1)*0.5) * stats.difficulty
+ var overtime=maxf(0,stage_time-STAGE_SECONDS)
+ var scale_factor = (1+elapsed/140.0)*(1+overtime/60.0) * (1+(tier-1)*0.5) * (1+(stage-1)*0.5) * stats.difficulty
  var hp = (35 + kind*8) * scale_factor * (18 if kind==8 else 1)
  var enemy = {"pos":pos,"hp":hp,"max_hp":hp,"kind":kind,"speed":(4.5 if kind==1 else (1.8 if kind in [2,7] else 3.0)),"cooldown":rng.randf()*2,"slow":0.0,"frozen":0.0,"spore":false,"burn":0.0,"burn_clock":0.0,"poison":0.0,"poison_clock":0.0,"knock":Vector3.ZERO,"age":0.0,"phase":0,"biome":biome,"target":Vector3.ZERO,"telegraph":0.0,"scale":2.8 if kind==8 else (1.4 if kind in [2,7] else 1.0)}
  if kind<8:
@@ -693,7 +620,8 @@ func nearest(pos: Vector3, radius: float, farthest: bool = false) -> Dictionary:
   if (farthest and d>best) or (not farthest and d<best): best=d; result=e
  return result
 func hurt(amount: float) -> void:
- if invulnerability>0 or (sandbox and settings.invincible): return
+ if invulnerability>0 or loadout_runtime.immune() or (sandbox and settings.invincible): return
+ amount*=loadout_runtime.incoming_multiplier()
  if rng.randf()<minf(0.75,stats.evasion): toast("DODGED"); return
  health -= maxf(1,amount*100/(100+stats.armor*5))
  invulnerability = 0.5
@@ -703,7 +631,8 @@ func hurt(amount: float) -> void:
 func hit(e: Dictionary, base: float, weapon: int) -> void:
  if e.is_empty() or e.hp<=0: return
  var critical = rng.randf()<stats.crit
- var amount = Catalog.damage(base,stats,critical)
+ var amount = Catalog.damage(base,stats,critical)*loadout_runtime.damage_multiplier()
+ e["last_weapon"]=weapon
  if character == 6: amount *= 1+(1-health/stats.max_health)*1.5
  if character == 7: amount *= 1+gold*0.001
  if character == 10 and e.hp/e.max_hp>0.9: amount*=1.5
@@ -748,7 +677,10 @@ func kill_enemy(index: int) -> void:
   area(e.pos,4*stats.size,12,33,"poison")
   flash(e.pos,Color("acff6a"),4)
  kills += 1
+ var source=int(e.get("last_weapon",-1))
+ if source>=0:run_metrics["weapon:"+str(source)]=int(run_metrics.get("weapon:"+str(source),0))+1
  if e.kind == 8:
+  run_metrics["bosses"]=int(run_metrics.get("bosses",0))+1
   boss_dead = true
   make_portal()
   gold += 50
@@ -1005,55 +937,41 @@ func on_level() -> void:
 func upgrade_pool() -> Array:
  var pool: Array = []
  for id in Catalog.WEAPONS.size():
-  if (weapons.has(id) and weapons[id].level<10) or (not weapons.has(id) and weapons.size()<4):
+  if (weapons.has(id) and weapons[id].level<10) or (not weapons.has(id) and weapons.size()<weapon_limit() and (sandbox or MetaProgress.enabled(progress.data,"weapons",str(id)))):
    if not "w%d"%id in banished: pool.append({"type":"weapon","id":id,"key":"w%d"%id})
  for name in Catalog.TOMES:
-  if (tomes.has(name) and tomes[name]<10) or (not tomes.has(name) and tomes.size()<4):
+  if (tomes.has(name) and tomes[name]<10) or (not tomes.has(name) and tomes.size()<tome_limit()):
    if not name in banished: pool.append({"type":"tome","id":name,"key":name})
+ if pool.is_empty():
+  for i in 3:pool.append({"type":"supply","id":str(i),"key":"supply"+str(i)})
  return pool
 func show_upgrades() -> void:
- mode="upgrade"
- var col=clear_panel("LEVEL %d  /  CHOOSE YOUR POWER"%level)
- choices.clear()
- var pool=upgrade_pool()
- for i in mini(3,pool.size()):
-  var index=rng.randi_range(0,pool.size()-1)
-  var choice=pool.pop_at(index)
-  choices.append(choice)
-  var description=""
-  if choice.type=="weapon":
-   var id=int(choice.id)
-   var rank=weapons[id].level if weapons.has(id) else 0
-   description="%s  ·  level %d → %d\n%s · damage %.0f · cooldown %.2fs"%[Catalog.WEAPONS[id][0],rank,rank+1,Catalog.WEAPONS[id][1],Catalog.WEAPONS[id][2]*(1+rank*0.23),Catalog.WEAPONS[id][3]]
-  else:
-   description="%s Tome  ·  level %d → %d\n+%s %s"%[choice.id,tomes.get(choice.id,0),tomes.get(choice.id,0)+1,Catalog.TOMES[choice.id][1],Catalog.TOMES[choice.id][0]]
-  var row=HBoxContainer.new()
-  col.add_child(row)
-  button(description,row,func(): apply_upgrade(choice); resume())
-  button("Banish",row,func(): banished.append(choice.key); resume())
- button("Reroll (%d left)"%rerolls,col,func(): if rerolls>0: rerolls-=1; show_upgrades()).disabled=rerolls<=0
- button("Skip · heal 10",col,func(): health=minf(stats.max_health,health+10); resume())
+ frontend.upgrades()
  tone(900,0.2)
+
 func apply_upgrade(choice: Dictionary) -> void:
+ if choice.type=="supply":health=minf(stats.max_health,health+25);return
  if choice.type=="weapon": equip(int(choice.id))
  else:
   var name=choice.id
+  if not tomes.has(name) and tomes.size()>=tome_limit():return
+  if int(tomes.get(name,0))>=10:return
   tomes[name]=tomes.get(name,0)+1
   var stat=Catalog.TOMES[name][0]
   stats[stat]+=Catalog.TOMES[name][1]
   if stat=="max_health": health+=Catalog.TOMES[name][1]
-func award_item() -> void:
+func award_item() -> Array:
+ var available=available_items()
+ if available.is_empty():return []
  var roll=rng.randf()+minf(stats.luck*0.2,0.4)
  var rarity="epic" if roll>0.92 else ("rare" if roll>0.58 else "common")
- var candidates: Array=[]
- for definition in Catalog.ITEMS:
-  if definition[1]==rarity: candidates.append(definition)
- var item=candidates[rng.randi_range(0,candidates.size()-1)]
- items.append(item[0])
- stats[item[2]]+=item[3]
- if item[2]=="max_health": health+=item[3]
- toast("%s [%s] · +%s %s"%[item[0],item[1],item[3],item[2]])
- tone(720,0.15)
+ var candidates=[]
+ for id in available:
+  if Catalog.ITEMS[id][1]==rarity:candidates.append(id)
+ if candidates.is_empty():candidates=available
+ var id=int(candidates[rng.randi_range(0,candidates.size()-1)])
+ apply_item(id)
+ return Catalog.ITEMS[id]
 func update_interactions(delta: float) -> void:
  var closest: Dictionary={}
  var distance=4.0
@@ -1068,17 +986,19 @@ func update_interactions(delta: float) -> void:
  if is_instance_valid(portal) and portal.position.distance_to(player.position)<4:
   notice.text="E  /  Enter exit portal"
   if Input.is_action_just_pressed("interact"):
-   if stage==3: finish_run(true)
-   else: stage+=1; biome=(biome+1)%3; build_stage(); resume()
+   finish_run(true)
   return
  if closest.is_empty(): return
- notice.text="E  /  %s%s"%[closest.kind," · 15 gold" if closest.kind in ["Chest","Shop"] else ""]
+ notice.text="E  /  %s%s"%[closest.kind," · %d gold"%chest_cost() if closest.kind=="Chest" else ""]
  if not Input.is_action_just_pressed("interact"): return
  match closest.kind:
-  "Chest","Shop":
-   if gold<15: toast("Need 15 gold"); return
-   gold-=15
-   award_item()
+  "Shop":frontend.shop(closest);return
+  "Chest":
+   if available_items().is_empty():toast("Enable items in Unlocks before opening chests");return
+   if gold<chest_cost():toast("Need %d gold"%chest_cost());return
+   gold-=chest_cost();chests_opened+=1;run_metrics["chests"]=chests_opened
+   var reward=award_item()
+   if not reward.is_empty():frontend.reward(reward)
   "Heal": health=minf(stats.max_health,health+40); toast("Restored 40 health")
   "Stat Shrine": stats.damage+=0.15; toast("Blessing · +15% damage")
   "Risk Shrine": stats.difficulty+=0.25; stats.damage+=0.3; gold+=20; toast("Curse accepted · stronger enemies, +30% damage")
@@ -1087,16 +1007,8 @@ func update_interactions(delta: float) -> void:
  closest.node.scale=Vector3.ONE*0.5
  tone(600,0.15)
 func update_hud() -> void:
- var weapon_names: Array[String]=[]
- for id in weapons: weapon_names.append("%s %d"%[Catalog.WEAPONS[id][0],weapons[id].level])
- var boss_text=""
- for e in enemies:
-  if e.kind==8: boss_text="\nWARDEN  %d / %d"%[maxf(0,e.hp),e.max_hp]
- hud.text="%s  /  STAGE %d · TIER %d    %02d:%02d\nHP %d / %d   LV %d   KILLS %d   GOLD %d\n%s%s%s"%[Catalog.CHARACTERS[character][0],stage,tier,int(elapsed)/60,int(elapsed)%60,maxf(0,health),stats.max_health,level,kills,gold,"  |  ".join(weapon_names),boss_text,"\nFPS %d · enemies %d · projectiles %d"%[Engine.get_frames_per_second(),enemies.size(),projectiles.size()] if settings.fps else ""]
- health_bar.max_value=stats.max_health
- health_bar.value=health
- xp_bar.max_value=Catalog.threshold(level)
- xp_bar.value=xp
+ frontend.update_hud()
+
 func pause_menu() -> void:
  mode="pause"
  var col=clear_panel("RUN PAUSED")
@@ -1108,16 +1020,8 @@ func pause_menu() -> void:
  button("Restart run",col,begin_run)
  button("Abandon run",col,func(): finish_run(false))
 func show_build() -> void:
- mode="build"
- var col=clear_panel("CURRENT BUILD")
- for id in weapons: title("%s · level %d"%[Catalog.WEAPONS[id][0],weapons[id].level],col,18)
- title("Tomes: %s\nItems: %s"%[str(tomes),", ".join(items)],col,16)
- var text=""
- for key in stats: text+="%s %.2f   "%[key,stats[key]]
- var label=title(text,col,15)
- label.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
- label.custom_minimum_size.x=600
- button("Resume",col,resume)
+ frontend.inventory()
+
 func finish_run(victory: bool) -> void:
  mode="results"
  if not victory and health<=0:
@@ -1128,22 +1032,21 @@ func finish_run(victory: bool) -> void:
    if is_instance_valid(dying_avatar): dying_avatar.animate("death",0,0.03),0.0,1.0,0.65)
  if not sandbox and FileAccess.file_exists("user://active-run.json"): DirAccess.remove_absolute("user://active-run.json")
  var unlocked=progress.finish(kills,elapsed,victory,selected_biome,sandbox)
+ run_metrics["ultimates"]=loadout_runtime.uses
+ MetaProgress.record(progress.data,{"weapon":selected_weapon,"trait":loadout_runtime.trait_id,"ultimate":loadout_runtime.ultimate_id,"time":elapsed,"kills":kills,"victory":victory,"metrics":run_metrics.duplicate(true)},sandbox)
+ if not sandbox:progress.save()
  var col=clear_panel("VICTORY / INFINITY BROKEN" if victory else "THE WILD CLAIMS ANOTHER")
  var best=-1
  for id in damage_by_weapon:
   if best==-1 or damage_by_weapon[id]>damage_by_weapon[best]: best=id
- title("Survived %02d:%02d · Stage %d · Level %d\n%d kills · %.0f damage · %d gold\nHighest damage: %s\n%s"%[int(elapsed)/60,int(elapsed)%60,stage,level,kills,damage_total,gold,Catalog.WEAPONS[best][0] if best>=0 else "None","Sandbox: no progression written" if sandbox else "Banked %d permanent currency"%(maxi(1,kills/8)+(25 if victory else 0))],col,20)
- if unlocked.size()>0: title("Unlocked: "+", ".join(unlocked),col,18)
+ title("Survived %02d:%02d · Stage %d · Level %d\n%d kills · %.0f damage · %d gold\nHighest damage: %s\n%s"%[int(elapsed)/60,int(elapsed)%60,stage,level,kills,damage_total,gold,Catalog.WEAPONS[best][0] if best>=0 else "None","Sandbox: no progression written" if sandbox else "Banked %d credits"%(maxi(1,kills/8)+(25 if victory else 0))],col,20)
+ if unlocked.size()>0: title("Requirements met: "+", ".join(unlocked),col,18)
  button("Run again",col,begin_run)
  button("Main menu",col,func(): build_menu_world(); main_menu())
  tone(520 if victory else 110,0.5)
 func show_progress() -> void:
- var col=clear_panel("PROGRESS / LOCAL PROFILE")
- title("Currency %d · Runs %d · Victories %d\nLifetime kills %d · Best survival %.0fs\nCharacters %d / 21 · Biomes completed %s"%[progress.data.currency,progress.data.runs,progress.data.wins,progress.data.kills,progress.data.best,progress.data.unlocked.size(),str(progress.data.completed)],col,19)
- title("Quests: defeat 80 more foes to work toward each next character.\nAchievements: First Hunt (80 kills), Survivor (300s), Warden Breaker (victory).",col,16)
- button("Export save to user://bonk-profile-export.json",col,func(): toast("Exported" if progress.save("user://bonk-profile-export.json") else "Export failed"))
- button("Import user://bonk-profile-export.json",col,func(): if progress.load_save("user://bonk-profile-export.json"): progress.save(); show_progress())
- button("Back",col,main_menu)
+ frontend.unlocks()
+
 func sandbox_menu() -> void:
  mode="sandbox"
  var col=clear_panel("SANDBOX / PROGRESSION ISOLATED")
@@ -1169,42 +1072,8 @@ func sandbox_menu() -> void:
  button("Teleport to spawn",col,func(): player.position=Vector3(0,4,0))
  button("Resume",col,resume)
 func settings_menu(back: Callable) -> void:
- mode="settings" if is_instance_valid(player) else "menu"
- var col=clear_panel("SETTINGS")
- for key in ["master","effects","music","sensitivity","render_scale","visual_intensity"]:
-  var row=HBoxContainer.new()
-  col.add_child(row)
-  title(key.capitalize(),row,16).custom_minimum_size.x=140
-  var slider=HSlider.new()
-  slider.min_value=0.0005 if key=="sensitivity" else (0.5 if key=="render_scale" else 0)
-  slider.max_value=0.008 if key=="sensitivity" else 1
-  slider.step=0.0001 if key=="sensitivity" else 0.05
-  slider.value=settings[key]
-  slider.custom_minimum_size.x=300
-  row.add_child(slider)
-  slider.value_changed.connect(func(value): settings[key]=value; apply_settings())
- var resolution=OptionButton.new()
- for name in ["1280 × 720","1600 × 900","1920 × 1080"]: resolution.add_item(name)
- col.add_child(resolution)
- resolution.item_selected.connect(func(i): DisplayServer.window_set_size([Vector2i(1280,720),Vector2i(1600,900),Vector2i(1920,1080)][i]))
- var quality=OptionButton.new()
- for name in ["Low · no shadows","Medium · shadows","High · shadows and 4× MSAA"]: quality.add_item(name)
- quality.selected=int(settings.quality)
- col.add_child(quality)
- quality.item_selected.connect(func(i): settings.quality=i; apply_settings())
- for key in ["invert","reduced","numbers","shake","fps","focus_pause"]:
-  var check=CheckButton.new()
-  check.text=key.capitalize().replace("_"," ")
-  check.button_pressed=settings[key]
-  col.add_child(check)
-  check.toggled.connect(func(value): settings[key]=value; apply_settings())
- var row=GridContainer.new()
- row.columns=4
- col.add_child(row)
- for action in bindings:
-  button("%s: %s"%[action,OS.get_keycode_string(bindings[action])],row,func(): pending_binding=action; toast("Press a key for "+action))
- title("F11 toggles fullscreen. Compatibility renderer selected for broad support.",col,14)
- button("Save & back",col,func(): progress.data.settings=settings; progress.data.settings["bindings"]=bindings; progress.save(); back.call())
+ frontend.settings(back)
+
 func apply_settings() -> void:
  AudioServer.set_bus_volume_db(0,linear_to_db(maxf(0.001,settings.master)))
  get_viewport().scaling_3d_scale=float(settings.render_scale)
@@ -1378,8 +1247,8 @@ func save_run(path: String = "user://active-run.json") -> bool:
  var saved_pickups=[]
  for pickup in pickups: saved_pickups.append({"position":[pickup.node.position.x,pickup.node.position.y,pickup.node.position.z],"value":pickup.value,"age":pickup.age})
  var used=[]
- for object in interactables: used.append({"used":object.used,"charge":object.charge})
- var data={"version":1,"variants":variants.serialize(),"rng_state":str(rng.state),"character":character,"biome":biome,"selected_biome":selected_biome,"tier":tier,"stage":stage,"elapsed":elapsed,"stage_time":stage_time,"stats":stats,"health":health,"xp":xp,"level":level,"kills":kills,"gold":gold,"weapons":saved_weapons,"tomes":tomes,"items":items,"sandbox":sandbox,"position":[player.position.x,player.position.y,player.position.z],"enemies":saved_enemies,"boss_spawned":boss_spawned,"boss_dead":boss_dead,"interactables":used,"damage_total":damage_total,"rerolls":rerolls,"banished":banished,"pickups":saved_pickups,"damage_by_weapon":damage_by_weapon,"gold_fraction":gold_fraction,"camera":[player.yaw,player.pitch,player.zoom]}
+ for object in interactables: used.append({"used":object.used,"charge":object.charge,"offers":object.get("offers",null),"sold":object.get("sold",[])})
+ var data={"version":2,"loadout":loadout_runtime.serialize(),"selected_weapon":selected_weapon,"run_metrics":run_metrics,"chests_opened":chests_opened,"legacy_weapon_slots":legacy_weapon_slots,"legacy_tome_slots":legacy_tome_slots,"minimap":serialize_minimap(),"variants":variants.serialize(),"rng_state":str(rng.state),"character":character,"biome":biome,"selected_biome":selected_biome,"tier":tier,"stage":stage,"elapsed":elapsed,"stage_time":stage_time,"stats":stats,"health":health,"xp":xp,"level":level,"kills":kills,"gold":gold,"weapons":saved_weapons,"tomes":tomes,"items":items,"sandbox":sandbox,"position":[player.position.x,player.position.y,player.position.z],"enemies":saved_enemies,"boss_spawned":boss_spawned,"boss_dead":boss_dead,"interactables":used,"damage_total":damage_total,"rerolls":rerolls,"banished":banished,"pickups":saved_pickups,"damage_by_weapon":damage_by_weapon,"gold_fraction":gold_fraction,"camera":[player.yaw,player.pitch,player.zoom]}
  var file=FileAccess.open(path+".tmp",FileAccess.WRITE)
  if not file: return false
  file.store_string(JSON.stringify(data)); file.close()
@@ -1387,7 +1256,7 @@ func save_run(path: String = "user://active-run.json") -> bool:
 func load_run(path: String = "user://active-run.json") -> bool:
  if not FileAccess.file_exists(path): return false
  var data=JSON.parse_string(FileAccess.get_file_as_string(path))
- if not data is Dictionary or int(data.get("version",0))!=1: return false
+ if not data is Dictionary or not int(data.get("version",0)) in [1,2]: return false
  var restored=RunEnemyVariants.new()
  if not restored.restore(data.get("variants",{})): return false
  for key in ["character","biome","tier","stage","stats","position","weapons","enemies"]:
@@ -1395,10 +1264,14 @@ func load_run(path: String = "user://active-run.json") -> bool:
  if data.position.size()!=3 or not data.stats is Dictionary: return false
  variants=restored
  run_seed=variants.seed_value
- character=int(data.character); biome=int(data.biome); tier=int(data.tier); stage=int(data.stage)
+ character=-1;biome=0;tier=int(data.tier);stage=1
+ loadout_runtime.restore(data.get("loadout",{}));selected_trait=loadout_runtime.trait_id;selected_ultimate=loadout_runtime.ultimate_id
+ selected_weapon=int(data.get("selected_weapon",1));run_metrics=data.get("run_metrics",{});chests_opened=int(data.get("chests_opened",0))
  selected_character=character; selected_biome=int(data.get("selected_biome",biome)); selected_tier=tier
  stats=Catalog.base_stats(); stats.merge(data.stats,true)
  sandbox=bool(data.sandbox)
+ legacy_weapon_slots=clampi(data.weapons.size(),2,4) if int(data.version)==1 else int(data.get("legacy_weapon_slots",0))
+ legacy_tome_slots=clampi(data.tomes.size(),2,4) if int(data.version)==1 else int(data.get("legacy_tome_slots",0))
  weapons.clear()
  for id in data.weapons:
   equip(int(id)); weapons[int(id)].level=int(data.weapons[id].level); weapons[int(id)].clock=float(data.weapons[id].clock)
@@ -1429,9 +1302,12 @@ func load_run(path: String = "user://active-run.json") -> bool:
  for i in mini(interactables.size(),data.interactables.size()):
   interactables[i].used=data.interactables[i].used
   interactables[i].charge=data.interactables[i].charge
+  if data.interactables[i].get("offers") is Array:interactables[i]["offers"]=data.interactables[i].offers
+  interactables[i]["sold"]=data.interactables[i].get("sold",[])
   if interactables[i].used: interactables[i].node.scale=Vector3.ONE*0.5
  if boss_dead: make_portal()
  rng.seed=run_seed; rng.state=int(data.rng_state)
+ restore_minimap(data.get("minimap",{}))
  rebuild_grid()
  resume()
  return true
@@ -1514,3 +1390,49 @@ func update_blasts(delta: float) -> void:
   if player.position.distance_to(blast.pos)<blast.radius: hurt(blast.damage)
   area(blast.pos,blast.radius,blast.damage*0.6,-1)
   pending_blasts.remove_at(i)
+
+func weapon_limit() -> int:
+ return 4 if sandbox else maxi(legacy_weapon_slots,int(progress.data.get("weapon_slots",2)))
+func tome_limit() -> int:
+ return 4 if sandbox else maxi(legacy_tome_slots,int(progress.data.get("tome_slots",2)))
+func chest_cost() -> int:return 15+chests_opened*5
+func available_items() -> Array:
+ var result=[]
+ for i in Catalog.ITEMS.size():
+  if sandbox or MetaProgress.enabled(progress.data,"items",str(i)):result.append(i)
+ return result
+func apply_item(id: int) -> void:
+ var item=Catalog.ITEMS[id];items.append(item[0]);stats[item[2]]+=item[3]
+ if item[2]=="max_health":health+=item[3]
+ toast("%s • +%s %s"%[item[0],item[3],item[2]])
+ tone(720,0.15)
+func buy_shop(object: Dictionary, id: int, price: int) -> bool:
+ if mode!="shop" or not id in object.get("offers",[]) or id in object.get("sold",[]) or gold<price or not id in available_items():return false
+ var expected=15 if Catalog.ITEMS[id][1]=="common" else (25 if Catalog.ITEMS[id][1]=="rare" else 40)
+ if price!=expected:return false
+ gold-=price;apply_item(id)
+ if not object.has("sold"):object.sold=[]
+ object.sold.append(id)
+ return true
+func serialize_minimap() -> Dictionary:
+ var cells=[]
+ for cell in frontend.minimap.explored:cells.append([cell.x,cell.y])
+ return {"all":frontend.minimap.reveal_all,"cells":cells}
+func restore_minimap(data: Dictionary) -> void:
+ frontend.minimap.reset(bool(data.get("all",loadout_runtime.trait_id=="seer")))
+ for cell in data.get("cells",[]):
+  if cell is Array and cell.size()==2:frontend.minimap.explored[Vector2i(int(cell[0]),int(cell[1]))]=true
+
+func ability_visual(state: String) -> void:
+ if not is_instance_valid(player) or not is_instance_valid(player.avatar):return
+ if str(player.avatar.get_meta("ability_visual","base"))==state:return
+ player.avatar.set_meta("ability_visual",state)
+ for node in player.avatar.find_children("*","MeshInstance3D",true,false):
+  if not node.has_meta("base_material"):node.set_meta("base_material",node.material_override)
+  if state=="base":node.material_override=node.get_meta("base_material")
+  else:
+   var material=StandardMaterial3D.new();material.vertex_color_use_as_albedo=state!="ghost"
+   material.albedo_color=Color(0.45,0.85,1.0,0.45) if state=="ghost" else Color(1.0,0.55,0.45,1)
+   if state=="ghost":material.transparency=BaseMaterial3D.TRANSPARENCY_ALPHA
+   material.emission_enabled=true;material.emission=Color("88dcff") if state=="ghost" else Color("b84d36");material.emission_energy_multiplier=0.4
+   node.material_override=material
