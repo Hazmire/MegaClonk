@@ -91,3 +91,9 @@ Variable cloud contention means these are observations, not a controlled speedup
 remains instanced/throttled; props are batched; projectiles/flipbooks pooled; visual caps24
 flipbooks/3 electric emitters (reduced mode6/no electric). Desktop-GPU60FPS certification,
 native Windows execution and long human balance playtests remain unverified.
+
+Core delivery: clean source b7ccae74ed26b4a39e0adc76d5508d43985b42fe; CI run40023925327
+succeeded and published artifact12532156289 (59,747,426bytes,unexpired). All315 checks also
+pass against the Windows executable's embedded PCK using Linux Godot. The durable repository
+ZIP is70,048,168bytes with19 files and verified ZIP integrity; source/digests are in
+releases/BUILD_INFO.md. This is resource validation, not native Windows execution.

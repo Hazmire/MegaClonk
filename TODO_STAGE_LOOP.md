@@ -25,8 +25,8 @@
 - [x] Automated regressions and rendered 720p/1080p/1440p inspection; performance observations documented.
 
 ## Delivery checks
-- [ ] Final clean-source Windows export and packed-resource validation.
-- [ ] Successful GitHub Actions artifact and updated durable ZIP/download checksum.
+- [x] Final clean-source Windows export and packed-resource validation.
+- [x] Successful GitHub Actions artifact and updated durable ZIP/download checksum.
 
 ## Exact-art substitutions / validation limits
 - The Quaternius Bestiary is absent from the uploads. Its free Standard download was
