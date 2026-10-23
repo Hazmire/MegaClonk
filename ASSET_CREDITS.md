@@ -61,3 +61,11 @@ The user-specified itch.io packs, including Jacob and Kurland, are **not yet imp
   Animated gold-border shader is original. Full terms `assets/vendor/abilities/READ ME.txt`.
 
 See docs/ASSET_ACCESS.md for the remaining archives and unverified terms.
+
+## Publisher verification for the next asset integration
+
+The supplied k0rveen environment is confirmed CC BY 4.0 on its product page;
+Clutch Assets' sound page explicitly permits commercial/non-commercial project
+use, prohibits claiming authorship and reselling sounds. These packs are cleared
+for integration but are **not yet used in the published build**. Sources, quoted
+terms and conditions: docs/licenses/PUBLISHER_VERIFICATION.md.

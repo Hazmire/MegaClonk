@@ -12,7 +12,8 @@ Baseline: menu branch `04a6722` (user uploads preserved); all 163 existing check
 - [x] Dormant/summoned/exit portal; player-triggered legacy Warden, stage travel and checkpoints.
 - [x] Preserve build, gold and run variant selection through stage travel.
 - [x] Minimap hides ordinary mobs and shows facing.
-- [ ] Complete remaining supplied asset integration after licence verification; missing enemy/scroll packs.
+- [ ] Integrate supplied environment (CC BY 4.0) and audio (publisher game-use terms), now verified through publisher URLs.
+- [ ] Verify the linked CraftPix terms and integrate Undead icons; enemy/scroll packs remain missing.
 
 ## Subsequent milestones — NOT delivered in this foundation
 - [ ] Two main bosses with weighted special attacks, two actual miniboss encounters, health bars, endless ghosts.
