@@ -24,6 +24,8 @@ var items: Array = []
 var effects: Array[Dictionary] = []
 var grid: Dictionary = {}
 var prop_batches: Dictionary = {}
+var projectile_meshes: Dictionary = {}
+var obstacles: Dictionary = {}
 var mode = "menu"
 var sandbox = false
 var character = 0
@@ -57,11 +59,15 @@ var rerolls = 3
 var choices: Array = []
 var settings = {"render_scale":1.0,"quality":1,"master":0.7,"effects":0.7,"music":0.3,"sensitivity":0.0025,"invert":false,"reduced":false,"fps":false,"focus_pause":true,"shake":true,"numbers":true,"invincible":false}
 var pending_binding = ""
-var bindings = {"forward":KEY_W,"back":KEY_S,"left":KEY_A,"right":KEY_D,"jump":KEY_SPACE,"sprint":KEY_SHIFT,"interact":KEY_E,"inspect":KEY_TAB}
+var bindings = {"forward":KEY_W,"back":KEY_S,"left":KEY_A,"right":KEY_D,"jump":KEY_SPACE,"crouch":KEY_CTRL,"interact":KEY_E,"inspect":KEY_TAB}
 var music: AudioStreamPlayer
 var sfx: Array[AudioStreamPlayer] = []
 var sfx_cursor = 0
 var pool: MeshPool
+var variants=RunEnemyVariants.new()
+var next_run_seed=-1
+var run_seed=0
+var enemy_view: EnemyView
 var enemy_mesh: MultiMeshInstance3D
 var enemy_material: StandardMaterial3D
 var smoke_mode = false
@@ -70,9 +76,11 @@ var smoke_frames = 0
 var smoke_failures: Array = []
 
 func _ready() -> void:
- rng.seed = 7371
+ rng.randomize()
  progress.load_save()
  settings.merge(progress.data.settings, true)
+ if settings.has("bindings"): settings.bindings.erase("sprint")
+ if InputMap.has_action("sprint"): InputMap.erase_action("sprint")
  if settings.has("bindings"):
   for key in bindings:
    if settings.bindings.has(key): bindings[key] = int(settings.bindings[key])
@@ -232,6 +240,8 @@ func main_menu() -> void:
  tiers.selected = selected_tier - 1
  tiers.item_selected.connect(func(i): selected_tier = i + 1)
  col.add_child(tiers)
+ if FileAccess.file_exists("user://active-run.json"):
+  button("Resume saved run",col,load_run)
  var play = button("ENTER THE WILD", col, begin_run)
  play.disabled = not sandbox and not selected_character in progress.data.unlocked
  button("Sandbox: " + ("ON · progression disabled" if sandbox else "OFF"), col, func(): sandbox = not sandbox; main_menu())
@@ -240,7 +250,7 @@ func main_menu() -> void:
  button("Progress & unlocks", row, show_progress)
  button("Settings", row, func(): settings_menu(main_menu))
  button("Quit", row, func(): get_tree().quit())
- title("WASD move   •   Mouse look   •   Space jump   •   Shift sprint\nE interact   •   Tab build   •   Esc pause   •   F11 fullscreen", col, 15)
+ title("WASD move   •   Mouse look   •   Space jump   •   Ctrl crouch / slide\nE interact   •   Tab build   •   Esc pause   •   F11 fullscreen", col, 15)
  play.grab_focus()
 func build_menu_world() -> void:
  if is_instance_valid(world):
@@ -272,32 +282,19 @@ func build_menu_world() -> void:
  mesh_node(cylinder(8, 1), Color("31575a"), world, Vector3(10, -1, -10))
  create_avatar(world, selected_character, Vector3(10,0,-10)).scale = Vector3.ONE * 3
 func create_avatar(parent: Node3D, index: int, pos: Vector3) -> Node3D:
- var node = Node3D.new()
+ var node=preload("res://assets/generated/fox_scout.tscn").instantiate()
  parent.add_child(node)
- node.position = pos
- var palette=["df8c4c","728ca8","e0ddc9","ce9e78","7c9b54","8ba8aa","c7b58e","7c9b5e","9b7257","70cbde","3f6a42","ecce75","b1e5ef","a6c74d","9ba9db","ae8362","514b71","a35169","694c9a","e5e0d2","72a193"]
- var color = Color(palette[index])
- mesh_node(cylinder(0.37, 0.8, 0.27), color, node, Vector3(0, 0.85, 0))
- mesh_node(sphere(0.28), Color("f4d3b0") if index % 3 else color.lightened(0.2), node, Vector3(0, 1.45, 0))
- for side in [-1, 1]:
-  var leg = mesh_node(box(Vector3(0.18, 0.5, 0.22)), color.darkened(0.4), node, Vector3(side * 0.2, 0.3, 0))
-  leg.set_meta("side",side)
-  mesh_node(box(Vector3(0.16, 0.55, 0.2)), color, node, Vector3(side * 0.46, 0.85, 0))
-  mesh_node(sphere(0.055), Color("17202b"), node, Vector3(side * 0.1, 1.49, 0.24))
- # Combinatorial original silhouettes: horns, crowns, hats, shoulder pieces.
- var hat = mesh_node(cylinder(0.38, 0.18 + (index % 4) * 0.1, 0.05 if index % 2 else 0.3), color.darkened(0.3), node, Vector3(0, 1.8, 0))
- hat.rotation.z = (index % 3 - 1) * 0.12
- if index==0:
-  mesh_node(cylinder(0.18,0.9,0.03),color,node,Vector3(0,0.7,-0.5)).rotation.x=-0.8
- if index % 3 == 0:
-  for side in [-1, 1]:
-   mesh_node(cylinder(0.12, 0.35, 0), color, node, Vector3(side * 0.24, 1.9, 0))
+ node.position=pos
+ node.set_meta("character_index",index)
  return node
 func begin_run() -> void:
  character = selected_character
  biome = selected_biome
  tier = selected_tier
  stage = 1
+ run_seed=next_run_seed if next_run_seed>=0 else rng.randi()
+ variants.initialize(run_seed)
+ rng.seed=run_seed
  stats = Catalog.base_stats()
  match character:
   2, 9: stats.speed += 0.15
@@ -343,6 +340,7 @@ func build_stage() -> void:
  interactables.clear()
  grid.clear()
  prop_batches.clear()
+ obstacles.clear()
  for id in weapons:
   weapons[id]["visuals"] = []
   weapons[id]["summons"] = []
@@ -382,14 +380,37 @@ func build_stage() -> void:
   if Vector2(p.x,p.z).length() < 10: continue
   p.y = terrain_height(p.x,p.z)
   if biome == 0:
+   prop_collider(p,0.3,3.0)
    prop_instance("trunks",cylinder(0.25,3),Color("755841"),p+Vector3.UP*1.5)
    prop_instance("leaves",cylinder(1.7,4,0),Color("254b40").lightened(rng.randf()*0.15),p+Vector3.UP*4)
   elif biome == 1:
-   prop_instance("rocks",box(Vector3(2,2,2)),Color("997448"),p+Vector3.UP,Vector3(1,rng.randf_range(1,3),1))
+   var rock_height=rng.randf_range(2,5)
+   prop_instance("rocks",rock_mesh(),Color("997448"),p+Vector3.UP*rock_height*0.35,Vector3(1,rock_height/2,1))
+   prop_collider(p,0.85,rock_height*0.8)
   else:
+   prop_collider(p,0.5,1.6)
    prop_instance("stones",box(Vector3(1,1.6,0.4)),Color("72798a"),p+Vector3.UP*0.8)
    if i % 5 == 0:
     prop_instance("dead_trees",box(Vector3(0.25,3,0.25)),Color("343743"),p+Vector3.UP*1.5)
+ # Low-cost ground cover and broken ruins use the same instancing pipeline.
+ for i in range(240):
+  var p=Vector3(rng.randf_range(-85,85),0,rng.randf_range(-85,85))
+  if Vector2(p.x,p.z).length()<8: continue
+  p.y=terrain_height(p.x,p.z)
+  if biome==0:
+   prop_instance("grass",grass_mesh(),Color("83ae69"),p)
+   if i%7==0: prop_instance("bush",rock_mesh(),Color("4b8460"),p+Vector3.UP*0.35,Vector3(0.7,0.5,0.7))
+  elif i%3==0: prop_instance("pebbles",rock_mesh(),Color("aa946d") if biome==1 else Color("697583"),p+Vector3.UP*0.2,Vector3.ONE*0.3)
+ for i in 4:
+  var angle=i*TAU/4
+  var base=Vector3(cos(angle)*56,0,sin(angle)*56)
+  for side in [-1,1]:
+   var p=base+Vector3(side*2.2,0,0)
+   p.y=terrain_height(p.x,p.z)
+   prop_instance("ruin_columns",box(Vector3(0.85,3.5,0.85)),Color("9ca995") if biome==0 else Color("aaa08d"),p+Vector3.UP*1.75)
+   prop_collider(p,0.5,3.5)
+  var top=base+Vector3.UP*(terrain_height(base.x,base.z)+3.6)
+  prop_instance("ruin_lintels",box(Vector3(5.3,0.6,1.0)),Color("a5ad9b"),top)
  for i in range(12):
   var angle = i * TAU / 12
   var p = Vector3(cos(angle),0,sin(angle)) * (20 + (i%3)*14)
@@ -415,11 +436,13 @@ func build_stage() -> void:
  player.sensitivity = settings.sensitivity
  player.inverted = settings.invert
  player.camera.current = true
+ enemy_view=EnemyView.new()
+ world.add_child(enemy_view)
  enemy_mesh = MultiMeshInstance3D.new()
  enemy_mesh.multimesh = MultiMesh.new()
  enemy_mesh.multimesh.transform_format = MultiMesh.TRANSFORM_3D
  enemy_mesh.multimesh.use_colors = true
- enemy_mesh.multimesh.mesh = build_enemy_mesh()
+ enemy_mesh.multimesh.mesh = preload("res://assets/generated/brute.res")
  enemy_mesh.multimesh.instance_count = ENEMY_LIMIT
  enemy_mesh.multimesh.visible_instance_count = 0
  enemy_material = StandardMaterial3D.new()
@@ -528,12 +551,30 @@ func spawn_enemy(kind: int = -1, at: Vector3 = Vector3.INF) -> Dictionary:
  var scale_factor = (1+elapsed/140.0) * (1+(tier-1)*0.5) * (1+(stage-1)*0.5) * stats.difficulty
  var hp = (35 + kind*8) * scale_factor * (18 if kind==8 else 1)
  var enemy = {"pos":pos,"hp":hp,"max_hp":hp,"kind":kind,"speed":(4.5 if kind==1 else (1.8 if kind in [2,7] else 3.0)),"cooldown":rng.randf()*2,"slow":0.0,"frozen":0.0,"spore":false,"poison":0.0,"poison_clock":0.0,"knock":Vector3.ZERO,"age":0.0,"phase":0,"biome":biome,"target":Vector3.ZERO,"telegraph":0.0,"scale":2.8 if kind==8 else (1.4 if kind in [2,7] else 1.0)}
+ if kind<8:
+  var config=variants.lookup(kind)
+  enemy["variant"]=config
+  enemy["hp"]=config.health*scale_factor
+  enemy["max_hp"]=enemy.hp
+  enemy["speed"]=config.speed
+  enemy["damage"]=config.damage*(1+(tier-1)*0.3+(stage-1)*0.2)
+  enemy["scale"]=1.0
+  enemy["state"]="move"
+  enemy["windup"]=0.0
+  enemy["recovery"]=0.0
+  enemy["action"]=""
+  enemy["charge_time"]=0.0
+  enemy["charge_direction"]=Vector3.ZERO
+  enemy["charge_hit"]=false
+  enemy["detonated"]=false
+  enemy["hit_time"]=0.0
  enemies.append(enemy)
  return enemy
 func update_enemies(delta: float) -> void:
  var colors = [Color("ee7d70"),Color("ffc05f"),Color("a28cae"),Color("e0d3a0"),Color("f55e67"),Color("b0dafa"),Color("aeef7a"),Color("80b9cb"),Color("cf7aff")]
  var mm = enemy_mesh.multimesh
- mm.visible_instance_count = enemies.size()
+ var boss_count=0
+ enemy_view.begin_frame()
  for i in enemies.size():
   var e = enemies[i]
   if e.hp <= 0: continue
@@ -545,6 +586,10 @@ func update_enemies(delta: float) -> void:
   if e.poison > 0:
    e.poison_clock -= delta
    if e.poison_clock <= 0: hit(e,5+level,23); e.poison_clock = 0.5
+  if e.kind<8:
+   EnemySimulation.step(self,e,delta)
+   if e.hp>0: enemy_view.draw_enemy(e,player.position)
+   continue
   var direction = player.position-e.pos
   direction.y = 0
   var distance = direction.length()
@@ -604,9 +649,12 @@ func update_enemies(delta: float) -> void:
    e.cooldown = 1
    if e.kind==6: area(e.pos,4,25,-1); e.hp = 0
   var facing = atan2(direction.x,direction.z)
-  var transform = Transform3D(Basis(Vector3.UP,facing).scaled(Vector3(0.8,1.2,0.8)*e.scale),e.pos)
-  mm.set_instance_transform(i,transform)
-  mm.set_instance_color(i,Color("91ddff") if e.slow>0 else (Color("b0ed72") if e.poison>0 else colors[e.kind]))
+  var transform = Transform3D(Basis(Vector3.UP,facing).scaled(Vector3.ONE*e.scale),e.pos-Vector3.UP*0.65*e.scale)
+  mm.set_instance_transform(boss_count,transform)
+  mm.set_instance_color(boss_count,Color("91ddff") if e.slow>0 else (Color("b0ed72") if e.poison>0 else colors[e.kind]))
+  boss_count+=1
+ mm.visible_instance_count=boss_count
+ enemy_view.end_frame()
 func rebuild_grid() -> void:
  grid.clear()
  for e in enemies:
@@ -634,6 +682,7 @@ func hurt(amount: float) -> void:
  health -= maxf(1,amount*100/(100+stats.armor*5))
  invulnerability = 0.5
  if settings.shake: player.camera.h_offset=rng.randf_range(-0.15,0.15)
+ player.hurt_time=0.22
  tone(130,0.1)
 func hit(e: Dictionary, base: float, weapon: int) -> void:
  if e.is_empty() or e.hp<=0: return
@@ -643,9 +692,10 @@ func hit(e: Dictionary, base: float, weapon: int) -> void:
  if character == 7: amount *= 1+gold*0.001
  if character == 10 and e.hp/e.max_hp>0.9: amount*=1.5
  if character == 16 and e.hp/e.max_hp<0.1: amount = e.hp+1
- if e.kind == 7 and e.hp/e.max_hp > 0.5: amount *= 0.5
+ if e.kind<8 and "shield" in e.variant.modules and e.hp/e.max_hp>0.5: amount*=0.5
+ if e.kind<8: e.hit_time=0.15
  e.hp -= amount
- e.knock += (e.pos-player.position).normalized()*stats.knockback*2
+ e.knock += (e.pos-player.position).normalized()*stats.knockback*2*(e.variant.knockback if e.kind<8 else 0.2)
  if settings.numbers and effects.size()<60 and DisplayServer.get_name()!="headless":
   var number=Label3D.new()
   number.text=str(int(amount))+("!" if critical else "")
@@ -667,6 +717,13 @@ func area(pos: Vector3, radius: float, damage: float, weapon: int, status: Strin
   if status == "poison": e.poison = 4.0*stats.duration
 func kill_enemy(index: int) -> void:
  var e = enemies[index]
+ if e.kind<8:
+  if "death_blast" in e.variant.modules: EnemySimulation.detonate(self,e)
+  var corpse=mesh_node(load(e.variant.model),Color.WHITE,world,e.pos-Vector3.UP*0.65)
+  corpse.material_override=ModelBuilder.material()
+  if effects.size()<90: effects.append({"node":corpse,"life":0.45,"death":true})
+  else: corpse.queue_free()
+  impact(e.pos,Color("d5d9b6"),3)
  if character == 13 and e.poison>0: area(e.pos,4,12,23,"poison")
  if character == 12 and (e.slow>0 or e.frozen>0): health = minf(stats.max_health,health+2)
  if e.spore:
@@ -680,7 +737,7 @@ func kill_enemy(index: int) -> void:
   award_item()
  for i in (6 if e.kind==8 else 1):
   var model = pool.acquire("xp",sphere(0.17),Color("6dffd8"),e.pos+Vector3(rng.randf()-0.5,0,rng.randf()-0.5))
-  pickups.append({"node":model,"value":(5 if e.kind>=7 else 2),"age":0.0})
+  pickups.append({"node":model,"value":(e.variant.reward if e.kind<8 else 5),"age":0.0})
  if rng.randf()<0.3:
   gold_fraction+=stats.gold_gain
   var gained=int(gold_fraction)
@@ -798,14 +855,14 @@ func update_weapons(delta: float) -> void:
   if not target.is_empty(): tone(180+id*19,0.035,0.12)
 func launch(pos: Vector3, direction: Vector3, damage: float, id: int, color: Color, kind: String, rank: int) -> void:
  if projectiles.size()>=220: return
- var node = pool.acquire("shot%d"%id,sphere(0.18),color,pos)
+ var node = pool.acquire("shot%d"%id,projectile_mesh(kind),color,pos)
  node.scale = Vector3.ONE * stats.size
  var speed = (35 if kind in ["pierce","scatter"] else 20)*stats.projectile_speed
  projectiles.append({"node":node,"velocity":direction*speed,"damage":damage,"weapon":id,"kind":kind,"life":2.5*stats.duration,"age":0.0,"pierce":rank+1 if kind in ["pierce","wave"] else 1,"hits":[],"hostile":false,"rank":rank})
-func hostile_bolt(pos: Vector3, target: Vector3) -> void:
+func hostile_bolt(pos: Vector3, target: Vector3, damage: float = -1, speed: float = 13, style: String = "thorn") -> void:
  if projectiles.size()>=240: return
- var node = pool.acquire("hostile",sphere(0.3),Color("ff4f75"),pos)
- projectiles.append({"node":node,"velocity":(target-pos).normalized()*13,"damage":10.0*tier,"weapon":-1,"kind":"hostile","life":4.0,"age":0.0,"pierce":1,"hits":[],"hostile":true,"rank":1})
+ var node = pool.acquire("hostile_"+style,projectile_mesh(style),Color("ff9b74"),pos)
+ projectiles.append({"node":node,"velocity":(target-pos).normalized()*speed,"damage":damage if damage>=0 else 10.0*tier,"weapon":-1,"kind":"hostile","life":4.0,"age":0.0,"pierce":1,"hits":[],"hostile":true,"rank":1})
 func segment_distance(p: Vector3, a: Vector3, b: Vector3) -> float:
  var segment = b-a
  var t = clampf((p-a).dot(segment)/maxf(segment.length_squared(),0.001),0,1)
@@ -822,12 +879,16 @@ func update_projectiles(delta: float) -> void:
   if p.kind=="return" and p.age>0.6: p.velocity=(player.position+Vector3.UP-previous).normalized()*26*stats.projectile_speed
   if p.kind=="lob": p.velocity.y-=15*delta
   p.node.position+=p.velocity*delta
+  if p.velocity.length_squared()>0.01: p.node.look_at(p.node.position+p.velocity)
+  if not settings.reduced and int(p.age*30)!=int((p.age-delta)*30) and effects.size()<55:
+   trail(p.node.position,Color("ff9b74") if p.hostile else Color(Catalog.WEAPONS[p.weapon][5]))
   if p.hostile:
    if segment_distance(player.position+Vector3.UP,previous,p.node.position)<0.8: hurt(p.damage); p.life=0
   else:
    for e in nearby(p.node.position,4+ p.velocity.length()*delta):
     if e in p.hits or segment_distance(e.pos,previous,p.node.position)>1.0*stats.size: continue
     hit(e,p.damage,p.weapon)
+    impact(e.pos,Color(Catalog.WEAPONS[p.weapon][5]),3)
     p.hits.append(e)
     if p.kind in ["poison","spore"]:
      make_field(p.node.position,4*stats.size,p.damage*0.4,p.weapon,Color(Catalog.WEAPONS[p.weapon][5]),"poison",(3+p.rank*0.15)*stats.duration)
@@ -884,7 +945,11 @@ func beam(a: Vector3, b: Vector3, color: Color) -> void:
 func update_effects(delta: float) -> void:
  for i in range(effects.size()-1,-1,-1):
   effects[i].life-=delta
-  effects[i].node.scale*=1+delta*2
+  if effects[i].get("death",false):
+   effects[i].node.rotation.z+=delta*3
+   effects[i].node.position.y-=delta*0.8
+   effects[i].node.scale*=maxf(0,1-delta*3)
+  elif not effects[i].get("telegraph",false): effects[i].node.scale*=1+delta*2
   if effects[i].node is Label3D: effects[i].node.position.y+=delta*2
   if effects[i].life<=0: effects[i].node.queue_free(); effects.remove_at(i)
 func update_pickups(delta: float) -> void:
@@ -1009,6 +1074,7 @@ func update_hud() -> void:
 func pause_menu() -> void:
  mode="pause"
  var col=clear_panel("RUN PAUSED")
+ button("Save run",col,func(): toast("Run saved" if save_run() else "Save failed"))
  button("Resume",col,resume).grab_focus()
  button("Inspect build",col,show_build)
  button("Settings",col,func(): settings_menu(pause_menu))
@@ -1028,6 +1094,10 @@ func show_build() -> void:
  button("Resume",col,resume)
 func finish_run(victory: bool) -> void:
  mode="results"
+ if victory or health<=0:
+  player.dead=true
+  if player.avatar.has_method("animate"): player.avatar.animate("death",0,1)
+ if not sandbox and FileAccess.file_exists("user://active-run.json"): DirAccess.remove_absolute("user://active-run.json")
  var unlocked=progress.finish(kills,elapsed,victory,selected_biome,sandbox)
  var col=clear_panel("VICTORY / INFINITY BROKEN" if victory else "THE WILD CLAIMS ANOTHER")
  var best=-1
@@ -1232,3 +1302,129 @@ func build_enemy_mesh() -> ArrayMesh:
   surface.append_from(sphere(0.13),0,Transform3D(Basis.IDENTITY,Vector3(side*0.25,0.18,0.57)))
  surface.generate_normals()
  return surface.commit()
+
+func projectile_mesh(kind: String) -> Mesh:
+ if projectile_meshes.has(kind): return projectile_meshes[kind]
+ var parts: Array=[]
+ match kind:
+  "arrow","pierce":
+   parts=[ModelBuilder.part(ModelBuilder.cube(Vector3(0.07,0.07,0.85)),Vector3.ZERO,"e8c990"),ModelBuilder.part(ModelBuilder.cone(0.17,0.35),Vector3(0,0,-0.5),"d9f2ee",Vector3(-PI/2,0,0))]
+  "rocket":
+   parts=[ModelBuilder.part(ModelBuilder.cone(0.2,0.85,0.12),Vector3.ZERO,"f5cf99",Vector3(PI/2,0,0)),ModelBuilder.part(ModelBuilder.cube(Vector3(0.65,0.07,0.3)),Vector3(0,0,0.3),"f49a5e")]
+  "spore","poison":
+   parts=[ModelBuilder.part(ModelBuilder.cone(0.3,0.48,0.15),Vector3.ZERO,"b5ed74"),ModelBuilder.part(ModelBuilder.cone(0.42,0.25,0.2),Vector3(0,0.2,0),"d6ffae")]
+  "fireball","thorn":
+   parts=[ModelBuilder.part(ModelBuilder.cone(0.28,0.8),Vector3.ZERO,"ffe2a0",Vector3(PI/2,0,0)),ModelBuilder.part(ModelBuilder.cone(0.2,0.65),Vector3(0,0,0.35),"ff9b55",Vector3(-PI/2,0,0))]
+  _:
+   parts=[ModelBuilder.part(ModelBuilder.cube(Vector3(0.14,0.14,0.55)),Vector3.ZERO,"e4f6ff"),ModelBuilder.part(ModelBuilder.cone(0.18,0.3),Vector3(0,0,-0.3),"c8efff",Vector3(-PI/2,0,0))]
+ projectile_meshes[kind]=ModelBuilder.bake(parts)
+ return projectile_meshes[kind]
+func trail(pos: Vector3, color: Color) -> void:
+ var node=mesh_node(box(Vector3(0.08,0.08,0.18)),color,world,pos,true)
+ effects.append({"node":node,"life":0.12})
+func impact(pos: Vector3, color: Color, count: int) -> void:
+ if settings.reduced: count=mini(count,2)
+ for i in mini(count,maxi(0,80-effects.size())):
+  var node=mesh_node(ModelBuilder.cone(0.06,0.28),color,world,pos+Vector3(rng.randf_range(-0.4,0.4),rng.randf_range(0,0.5),rng.randf_range(-0.4,0.4)),true)
+  node.rotation=Vector3(rng.randf()*PI,0,rng.randf()*TAU)
+  effects.append({"node":node,"life":0.22})
+func telegraph(pos: Vector3, radius: float, duration: float, color: Color) -> void:
+ var ring=TorusMesh.new()
+ ring.inner_radius=maxf(0.1,radius-0.12)
+ ring.outer_radius=radius
+ var node=mesh_node(ring,color,world,Vector3(pos.x,terrain_height(pos.x,pos.z)+0.1,pos.z),true)
+ effects.append({"node":node,"life":duration,"telegraph":true})
+func save_run(path: String = "user://active-run.json") -> bool:
+ var saved_weapons={}
+ for id in weapons: saved_weapons[str(id)]={"level":weapons[id].level,"clock":weapons[id].clock}
+ var saved_enemies=[]
+ for e in enemies:
+  var record=e.duplicate(true)
+  record.erase("variant")
+  for key in ["pos","knock","target","charge_direction"]:
+   if record.has(key): record[key]=[record[key].x,record[key].y,record[key].z]
+  saved_enemies.append(record)
+ var used=[]
+ for object in interactables: used.append({"used":object.used,"charge":object.charge})
+ var data={"version":1,"variants":variants.serialize(),"rng_state":str(rng.state),"character":character,"biome":biome,"selected_biome":selected_biome,"tier":tier,"stage":stage,"elapsed":elapsed,"stage_time":stage_time,"stats":stats,"health":health,"xp":xp,"level":level,"kills":kills,"gold":gold,"weapons":saved_weapons,"tomes":tomes,"items":items,"sandbox":sandbox,"position":[player.position.x,player.position.y,player.position.z],"enemies":saved_enemies,"boss_spawned":boss_spawned,"boss_dead":boss_dead,"interactables":used,"damage_total":damage_total,"rerolls":rerolls,"banished":banished}
+ var file=FileAccess.open(path+".tmp",FileAccess.WRITE)
+ if not file: return false
+ file.store_string(JSON.stringify(data)); file.close()
+ return DirAccess.rename_absolute(path+".tmp",path)==OK
+func load_run(path: String = "user://active-run.json") -> bool:
+ if not FileAccess.file_exists(path): return false
+ var data=JSON.parse_string(FileAccess.get_file_as_string(path))
+ if not data is Dictionary or int(data.get("version",0))!=1: return false
+ var restored=RunEnemyVariants.new()
+ if not restored.restore(data.get("variants",{})): return false
+ for key in ["character","biome","tier","stage","stats","position","weapons","enemies"]:
+  if not data.has(key): return false
+ if data.position.size()!=3 or not data.stats is Dictionary: return false
+ variants=restored
+ run_seed=variants.seed_value
+ character=int(data.character); biome=int(data.biome); tier=int(data.tier); stage=int(data.stage)
+ selected_character=character; selected_biome=int(data.get("selected_biome",biome)); selected_tier=tier
+ stats=Catalog.base_stats(); stats.merge(data.stats,true)
+ sandbox=bool(data.sandbox)
+ weapons.clear()
+ for id in data.weapons:
+  equip(int(id)); weapons[int(id)].level=int(data.weapons[id].level); weapons[int(id)].clock=float(data.weapons[id].clock)
+ tomes=data.tomes; items=data.items; banished=data.banished; rerolls=int(data.rerolls)
+ build_stage()
+ elapsed=float(data.elapsed); stage_time=float(data.stage_time)
+ health=float(data.health); xp=float(data.xp); level=int(data.level); kills=int(data.kills); gold=int(data.gold)
+ damage_total=float(data.damage_total)
+ player.position=Vector3(data.position[0],data.position[1],data.position[2])
+ for record in data.enemies:
+  var e=spawn_enemy(int(record.kind),Vector3(record.pos[0],record.pos[1],record.pos[2]))
+  if e.is_empty(): continue
+  for key in record:
+   if key in ["pos","knock","target","charge_direction"]: e[key]=Vector3(record[key][0],record[key][1],record[key][2])
+   elif key in ["kind","phase"]: e[key]=int(record[key])
+   else: e[key]=record[key]
+ boss_spawned=bool(data.boss_spawned); boss_dead=bool(data.boss_dead)
+ for i in mini(interactables.size(),data.interactables.size()):
+  interactables[i].used=data.interactables[i].used
+  interactables[i].charge=data.interactables[i].charge
+  if interactables[i].used: interactables[i].node.scale=Vector3.ONE*0.5
+ if boss_dead: make_portal()
+ rng.seed=run_seed; rng.state=int(data.rng_state)
+ rebuild_grid()
+ resume()
+ return true
+
+func prop_collider(pos: Vector3, radius: float, height: float) -> void:
+ var body=StaticBody3D.new()
+ var shape=CollisionShape3D.new()
+ var cylinder_shape=CylinderShape3D.new()
+ cylinder_shape.radius=radius
+ cylinder_shape.height=height
+ shape.shape=cylinder_shape
+ shape.position.y=height/2
+ body.add_child(shape)
+ world.add_child(body)
+ body.position=pos
+ var key=Vector2i(floori(pos.x/8),floori(pos.z/8))
+ if not obstacles.has(key): obstacles[key]=[]
+ obstacles[key].append({"pos":pos,"radius":radius})
+func avoid_props(pos: Vector3) -> Vector3:
+ var cell=Vector2i(floori(pos.x/8),floori(pos.z/8))
+ for x in range(cell.x-1,cell.x+2):
+  for z in range(cell.y-1,cell.y+2):
+   for obstacle in obstacles.get(Vector2i(x,z),[]):
+    var offset=Vector2(pos.x-obstacle.pos.x,pos.z-obstacle.pos.z)
+    var safe=obstacle.radius+0.4
+    if offset.length()<safe:
+     if offset.length()<0.01: offset=Vector2.RIGHT
+     offset=offset.normalized()*safe
+     pos.x=obstacle.pos.x+offset.x
+     pos.z=obstacle.pos.z+offset.y
+ return pos
+func rock_mesh() -> Mesh:
+ if not projectile_meshes.has("rock"):
+  projectile_meshes["rock"]=ModelBuilder.bake([ModelBuilder.part(ModelBuilder.cone(1.1,1.4,0.6),Vector3.ZERO,"ffffff"),ModelBuilder.part(ModelBuilder.cone(0.65,0.8,0.15),Vector3(0.1,0.8,0),"ebefdf")])
+ return projectile_meshes["rock"]
+func grass_mesh() -> Mesh:
+ if not projectile_meshes.has("grass"):
+  projectile_meshes["grass"]=ModelBuilder.bake([ModelBuilder.part(ModelBuilder.cone(0.1,0.65),Vector3(0,0.28,0),"ffffff"),ModelBuilder.part(ModelBuilder.cone(0.08,0.4),Vector3(0.2,0.2,0),"dce8a8",Vector3(0,0,-0.3))])
+ return projectile_meshes["grass"]
