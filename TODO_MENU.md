@@ -1,3 +1,5 @@
+> Superseded by TODO_STAGE_LOOP.md for the new core-loop update. Jacob, Kurland and ability demo icons are now integrated; see docs/ASSET_ACCESS.md for the current audit. The following checklist records the earlier menu milestone.
+
 # MEGACLONK menu/loadout and progression update
 
 - [x] Preserve current game; run baseline regression suites and inspect branch changes.

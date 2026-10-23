@@ -20,6 +20,7 @@ cp assets/vendor/jacob/License.txt builds/windows/JACOB_LICENSE.txt
 cp "assets/vendor/abilities/READ ME.txt" builds/windows/ABILITY_ICONS_LICENSE.txt
 cp docs/ASSET_ACCESS.md builds/windows/ASSET_STATUS.md
 cp docs/MENU_UPDATE.md builds/windows/MENU_GUIDE.md
+cp docs/STAGE_FOUNDATION.md builds/windows/STAGE_FOUNDATION.md
 cat > builds/windows/Launch_Compatibility.bat <<'BAT'
 @echo off
 cd /d "%~dp0"
