@@ -7,7 +7,7 @@ An offline native Godot 4.7.2 3D survival roguelike. This update rebuilds the me
 ## Download and play
 
 - [Download Windows ZIP directly](https://github.com/Hazmire/MegaClonk/raw/refs/heads/megaclonk-menu-loadouts/releases/BONK_INFINITY_Windows_x64.zip)
-- [Successful Actions build and artifact](https://github.com/Hazmire/MegaClonk/actions/runs/39995928415)
+- [Successful Actions build and artifact](https://github.com/Hazmire/MegaClonk/actions/runs/39996662829)
 - [PR #3 — merge into Full-Release](https://github.com/Hazmire/MegaClonk/pull/3)
 
 Extract and launch **BONK_INFINITY.exe**. If Vulkan is unavailable, run **Launch_Compatibility.bat**. The executable filename and `BONK INFINITY` user-data folder are retained to preserve saves; the window/menu title is MEGACLONK. No engine, account or network is needed to play. Native Windows playtesting remains outstanding. Actions artifact downloads require GitHub sign-in and expire after 30 days; the repository ZIP is retained separately with provenance/checksums in [BUILD_INFO](releases/BUILD_INFO.md).

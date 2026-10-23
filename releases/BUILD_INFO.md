@@ -1,11 +1,13 @@
-# Movement/variant Windows build
+# MEGACLONK menu/loadout build
 
-- Source: `0074f48f772b9a1671f01bc7bbebd3e0275f406b`, Godot 4.7.2.
-- Successful GitHub Actions run: https://github.com/Hazmire/MegaClonk/actions/runs/39978727835
-- Published Actions artifact: `BONK_INFINITY-Windows-x64`, ID `12511519962`, 39,134,894 bytes; upload step verified successful through the GitHub API.
-- Actions archive SHA256 (GitHub metadata): `8dd68548f43c1432331c684beb97eb7955550ec9751d9b7884310b0b38e05d05`.
-- Repository ZIP SHA256: `6ebae9d4f7fc291986d80d8739fa3a1b22976ce2a59f5918002d74ed744ffdf6`.
+- Source commit: `a2051f25a1fd562dad164ef1cdddf252d8617952` (Godot 4.7.2).
+- Successful Actions run: https://github.com/Hazmire/MegaClonk/actions/runs/39996662829
+- Published artifact: `BONK_INFINITY-Windows-x64`, ID `12520336253`, 39,187,545 bytes, unexpired when verified.
+- Actions archive digest (GitHub metadata): `sha256:d0d80981b4ef847cab9737e54e2c4d8eeaf03ba076564b7bfb9bc9d3b26b9b71`.
+- Durable repository ZIP SHA256: `d4e9e6dce90a99094258f06b0075bf299aa4959d44f11800f37ecadaf6f21b57`.
 
-The durable repository ZIP is a local Windows export of the exact same clean source commit as the successful Actions run. Its ZIP bytes need not match GitHub's artifact container. Archive integrity, PE32+ x64 architecture and embedded resources were checked. Both test suites (30 + 78 checks) also passed against the local Windows executable's embedded PCK using the Linux Godot engine. This checks packaged resources/scripts, not native Windows execution.
+The repository ZIP is a separately generated local Windows export from the same clean source commit as the successful CI run. Its archive bytes may differ from GitHub's artifact container. The ZIP was integrity-tested and includes the font licence, asset-access status and menu guide. The embedded executable is PE32+ Windows x64. The existing 108 and new 55 checks also passed against the Windows export's packed resources using Linux Godot; native Windows execution is untested.
 
-The Actions artifact's publication and digest were verified through GitHub. Downloading that artifact into this cloud machine was denied at its Azure blob storage destination; no claim is made that those archive bytes were downloaded/inspected. The repository ZIP provides a separate durable download without the Actions storage route. Actual Windows device playtesting remains outstanding.
+Artifact publication, upload-step success, positive size and digest were verified using GitHub. The durable repository download is independently verified after pushing. Downloading Actions archive bytes from the cloud was previously denied at the storage destination; no unsupported archive-byte verification claim is made here.
+
+Requested itch.io packs, including Jacob and Kurland, remain blocked and are not integrated. See docs/ASSET_ACCESS.md. The game uses original temporary visuals/audio plus a verified CC0 GGBotNet font. PR: https://github.com/Hazmire/MegaClonk/pull/3

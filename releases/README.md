@@ -1,50 +1,51 @@
-BONK INFINITY — playable development build
+MEGACLONK — menus, loadouts and progression build
 
-Windows 10/11 x64. Extract the entire ZIP and open BONK_INFINITY.exe.
-If Vulkan is unavailable or the window is blank, open Launch_Compatibility.bat.
-No account, network connection, engine installation or setup is needed to play.
-The executable is unsigned; a Windows reputation prompt is possible.
+Extract the Windows ZIP and launch BONK_INFINITY.exe (the filename/user-data
+folder is retained from earlier builds). If Vulkan is unavailable, use
+Launch_Compatibility.bat. No engine installation, account or internet is
+needed by the exported game. Windows execution still needs native playtesting.
 
-Controls
-WASD: camera-relative movement. Mouse: camera. Space: jump. Left Ctrl: crouch / momentum slide.
-E: interact. Escape: pause. Tab: inspect build. Wheel: zoom. F11: fullscreen.
-Hold Ctrl at low speed to crouch; press it above 7 m/s to slide. Downhill
-slopes accelerate a slide; uphill slopes and friction slow it. Jump during a
-slide to preserve momentum. Release Ctrl to stand when overhead space allows.
-Monke climbs by moving forward against a wall; no sprint input exists.
+MAIN MENU
+Play / Unlocks / Quests / Settings. The forest background rotates slowly.
+The upper-left panel shows the four nearest outstanding unlock requirements.
 
-Keys can be rebound in Settings. Escape and F11 remain dedicated controls.
+PLAY
+Choose one starting weapon, one passive trait and one ultimate. There is one
+playable adventurer and one forest destination. Personal bests show selected
+loadouts. The current original Scout is a temporary model: the requested
+Jacob and itch.io packs remain inaccessible, as detailed in ASSET_STATUS.md.
 
-Play
-Choose Fox or Sir Oofie, a biome and a tier, then Enter the Wild.
-Attacks are automatic. Collect glowing XP, select upgrades and find chests.
-Chests/shops cost 15 gold. Blue charge shrines require staying close.
-A Warden arrives after three minutes. Kill it, approach its portal and press E.
-Finish three stages to win. Death or abandonment displays results.
-Lifetime kill milestones unlock additional characters.
-Escape > Save run stores the current run. Use Resume saved run on the main
-menu to continue; variant selections and enemy state are retained. Transient
-projectiles/fields restart on resume.
+WASD move, mouse look, Space jump, Ctrl crouch or momentum slide, E interact,
+Q ultimate, Escape pause, Tab build/stats/items, wheel zoom, F11 fullscreen.
+All gameplay keys can be rebound in Settings. Skyweaver glides while Jump is
+held during descent. Cliffwalker climbs by moving forward against a wall.
 
-Sandbox
-Toggle Sandbox on the main menu to temporarily select any character.
-Each new run chooses one of two variations for each of eight enemy archetypes.
-These choices persist through all stages. Ranged attacks and explosions have
-visible wind-ups; step outside warning rings before they detonate.
+SURVIVE
+Weapons attack automatically. Collect XP, select upgrades and find treasure.
+The countdown lasts three minutes. At zero the Warden appears and enemies
+keep getting tougher. Defeat the Warden, then enter its portal to win.
+Chests begin at 15 run gold and increase by 5 each. Shops have priced stock.
+The minimap reveals explored areas; Far Sight begins fully revealed.
 
-During a sandbox run press Escape > Sandbox tools for weapons, levels,
-enemies, boss spawns, XP/gold, items, time scale and invincibility.
-Sandbox runs do not award persistent currency, wins or character unlocks.
+PROGRESSION
+New profiles have 2 weapon and 2 tome slots. Unlocks tabs contain collection
+entries and permanent slot upgrades. Locked details show only requirements.
+Disabled owned starting weapons remain selectable; disabled unowned entries
+are excluded from run offers. Credits purchase entries after their milestone.
+Quest gold buys slots: level 2 +100 gold for third slots, level 4 +200 gold
+for fourth slots. Two claimed quests raise account level by one.
 
-Saves
-Stored in Godot's user-data directory:
+Open Quests to CLAIM completed rewards. Credits/quest gold are persistent;
+run gold buys chests/shop stock. Practice/sandbox runs do not bank progression.
+
+SAVES
+Escape > Save run; return via Play > Resume saved run. Profiles stay in
 %APPDATA%\Godot\app_userdata\BONK INFINITY\progress.json
-The Progress menu can export/import bonk-profile-export.json in that folder.
-Updates keep the existing profile. Avoid overwriting this folder manually.
+V1 profiles migrate to V2 with a .v1.bak backup. Older executables cannot read
+V2 profiles. Existing lifetime statistics/currency/settings are retained.
+Run saves preserve loadout, cooldowns, fog, enemies and shop stock; transient
+projectiles/fields restart on resume. Do not delete the user-data folder.
 
-Status
-This is the movement/variant milestone, not the complete polished game in
-the specification. Reference mechanics and numerical balance are approximate.
-The source includes a detailed status report in docs/STATUS.md.
-Windows export was built in Linux; native Windows execution and human game-feel
-validation remain to be performed. This build is provided for personal testing.
+This build's functional UI/loadout systems are tested. Exact requested assets,
+native Windows execution and real-GPU FPS remain outstanding. Read
+MENU_GUIDE.md, ASSET_STATUS.md and FEATURE_STATUS.md for details.

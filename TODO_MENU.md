@@ -14,3 +14,5 @@
 Blocked asset work is explicitly incomplete: Jacob, exact provider icons/Kurland/audio/monster/environment packs require reachable product pages and actual licence verification. Original temporary content is disclosed in docs/ASSET_ACCESS.md. The replacement GGBotNet heading font has a verified CC0 licence.
 
 Validation: 108 existing checks plus 55 new checks pass, including all three suites against the local Windows export's embedded PCK using Linux Godot. Ten rendered UI screens were captured and inspected. GitHub Actions run 39995928415 successfully exported and uploaded artifact 12519956438; final documentation/package refresh follows. Native Windows execution is not claimed.
+
+Delivery complete for the functional update: PR #3, final successful Actions run 39996662829/artifact 12520336253, and a separate durable repository ZIP from clean source a2051f2. Exact provider asset integration remains the one blocked checklist item.
