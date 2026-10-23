@@ -1,0 +1,212 @@
+{
+ "effects": [
+  {
+   "name": "muzzle_front",
+   "group": "muzzle",
+   "anchor": [
+    0.5,
+    0.5
+   ],
+   "metres": 0.5,
+   "facing": "camera",
+   "frames": 4,
+   "fps": 30,
+   "loop": false,
+   "columns": 4,
+   "rows": 1,
+   "cell": {
+    "128": [
+     128,
+     128
+    ],
+    "64": [
+     64,
+     64
+    ]
+   },
+   "file": "muzzle_front.png"
+  },
+  {
+   "name": "impact_concrete",
+   "group": "impact",
+   "anchor": [
+    0.5,
+    0.5
+   ],
+   "metres": 0.5,
+   "facing": "camera",
+   "frames": 12,
+   "fps": 30,
+   "loop": false,
+   "columns": 8,
+   "rows": 2,
+   "cell": {
+    "128": [
+     128,
+     128
+    ],
+    "64": [
+     64,
+     64
+    ]
+   },
+   "file": "impact_concrete.png"
+  },
+  {
+   "name": "blood_burst",
+   "group": "blood",
+   "anchor": [
+    0.5,
+    0.5
+   ],
+   "metres": 1.2,
+   "facing": "camera",
+   "frames": 16,
+   "fps": 30,
+   "loop": false,
+   "columns": 8,
+   "rows": 2,
+   "cell": {
+    "128": [
+     128,
+     128
+    ],
+    "64": [
+     64,
+     64
+    ]
+   },
+   "file": "blood_burst.png"
+  },
+  {
+   "name": "fire_torch",
+   "group": "fire",
+   "anchor": [
+    0.5,
+    0.92
+   ],
+   "metres": 0.8,
+   "facing": "upright",
+   "frames": 24,
+   "fps": 20,
+   "loop": true,
+   "columns": 8,
+   "rows": 3,
+   "cell": {
+    "128": [
+     64,
+     128
+    ],
+    "64": [
+     32,
+     64
+    ]
+   },
+   "file": "fire_torch.png"
+  },
+  {
+   "name": "smoke_puff",
+   "group": "smoke",
+   "anchor": [
+    0.5,
+    0.5
+   ],
+   "metres": 1.0,
+   "facing": "camera",
+   "frames": 16,
+   "fps": 24,
+   "loop": false,
+   "columns": 8,
+   "rows": 2,
+   "cell": {
+    "128": [
+     128,
+     128
+    ],
+    "64": [
+     64,
+     64
+    ]
+   },
+   "file": "smoke_puff.png"
+  },
+  {
+   "name": "explosion_small",
+   "group": "explosion",
+   "anchor": [
+    0.5,
+    0.75
+   ],
+   "metres": 2.0,
+   "facing": "camera",
+   "frames": 20,
+   "fps": 24,
+   "loop": false,
+   "columns": 8,
+   "rows": 3,
+   "cell": {
+    "128": [
+     128,
+     128
+    ],
+    "64": [
+     64,
+     64
+    ]
+   },
+   "file": "explosion_small.png"
+  },
+  {
+   "name": "sparks_shower",
+   "group": "electric",
+   "anchor": [
+    0.5,
+    0.075
+   ],
+   "metres": 1.5,
+   "facing": "upright",
+   "frames": 24,
+   "fps": 24,
+   "loop": true,
+   "columns": 8,
+   "rows": 3,
+   "cell": {
+    "128": [
+     64,
+     128
+    ],
+    "64": [
+     32,
+     64
+    ]
+   },
+   "file": "sparks_shower.png"
+  },
+  {
+   "name": "decal_hole_concrete",
+   "group": "decal",
+   "anchor": [
+    0.5,
+    0.5
+   ],
+   "metres": 0.15,
+   "facing": "wall",
+   "frames": 1,
+   "fps": 1,
+   "loop": true,
+   "columns": 1,
+   "rows": 1,
+   "cell": {
+    "128": [
+     128,
+     128
+    ],
+    "64": [
+     64,
+     64
+    ]
+   },
+   "file": "decal_hole_concrete.png"
+  }
+ ]
+}

@@ -1,0 +1,926 @@
+[
+  {
+    "path": "res://assets/vendor/audio/Achievement_unlock____1_1766766517076.mp3",
+    "original": "150+ Free RPG Sounds/Achievement_unlock_\u0393\u00c7\u00f4_#1-1766766517076.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Achievement_unlock____2_1766766517077.mp3",
+    "original": "150+ Free RPG Sounds/Achievement_unlock_\u0393\u00c7\u00f4_#2-1766766517077.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Achievement_unlock____3_1766766517078.mp3",
+    "original": "150+ Free RPG Sounds/Achievement_unlock_\u0393\u00c7\u00f4_#3-1766766517078.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Achievement_unlock____4_1766766517078.mp3",
+    "original": "150+ Free RPG Sounds/Achievement_unlock_\u0393\u00c7\u00f4_#4-1766766517078.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Axe_hit_armor___Deep__1_1766764038219.mp3",
+    "original": "150+ Free RPG Sounds/Axe_hit_armor_\u0393\u00c7\u00f4_Deep_#1-1766764038219.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Axe_hit_armor___Deep__2_1766764035183.mp3",
+    "original": "150+ Free RPG Sounds/Axe_hit_armor_\u0393\u00c7\u00f4_Deep_#2-1766764035183.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Axe_hit_armor___Deep__3_1766764032292.mp3",
+    "original": "150+ Free RPG Sounds/Axe_hit_armor_\u0393\u00c7\u00f4_Deep_#3-1766764032292.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Axe_hit_armor___Deep__4_1766764026227.mp3",
+    "original": "150+ Free RPG Sounds/Axe_hit_armor_\u0393\u00c7\u00f4_Deep_#4-1766764026227.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Blessing_applied___L__1_1766768702262.mp3",
+    "original": "150+ Free RPG Sounds/Blessing_applied_\u0393\u00c7\u00f4_L_#1-1766768702262.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Blessing_applied___L__2_1766768702262.mp3",
+    "original": "150+ Free RPG Sounds/Blessing_applied_\u0393\u00c7\u00f4_L_#2-1766768702262.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Blessing_applied___L__4_1766768699835.mp3",
+    "original": "150+ Free RPG Sounds/Blessing_applied_\u0393\u00c7\u00f4_L_#4-1766768699835.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Bow_and_arrow_shot____3_1766764176083.mp3",
+    "original": "150+ Free RPG Sounds/Bow_and_arrow_shot_\u0393\u00c7\u00f4_#3-1766764176083.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Bow_and_arrow_shot____4_1766764179015.mp3",
+    "original": "150+ Free RPG Sounds/Bow_and_arrow_shot_\u0393\u00c7\u00f4_#4-1766764179015.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Bridge_creak___Old_w__1_1766767266448.mp3",
+    "original": "150+ Free RPG Sounds/Bridge_creak_\u0393\u00c7\u00f4_Old_w_#1-1766767266448.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Bridge_creak___Old_w__2_1766767266449.mp3",
+    "original": "150+ Free RPG Sounds/Bridge_creak_\u0393\u00c7\u00f4_Old_w_#2-1766767266449.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Bridge_creak___Old_w__3_1766767266449.mp3",
+    "original": "150+ Free RPG Sounds/Bridge_creak_\u0393\u00c7\u00f4_Old_w_#3-1766767266449.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Bridge_creak___Old_w__4_1766767266450.mp3",
+    "original": "150+ Free RPG Sounds/Bridge_creak_\u0393\u00c7\u00f4_Old_w_#4-1766767266450.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Buff_spell___Magical__1_1766764764908.mp3",
+    "original": "150+ Free RPG Sounds/Buff_spell_\u0393\u00c7\u00f4_Magical_#1-1766764764908.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Buff_spell___Magical__2_1766764764908.mp3",
+    "original": "150+ Free RPG Sounds/Buff_spell_\u0393\u00c7\u00f4_Magical_#2-1766764764908.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Buff_spell___Magical__3_1766764760176.mp3",
+    "original": "150+ Free RPG Sounds/Buff_spell_\u0393\u00c7\u00f4_Magical_#3-1766764760176.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Buff_spell___Magical__4_1766764760177.mp3",
+    "original": "150+ Free RPG Sounds/Buff_spell_\u0393\u00c7\u00f4_Magical_#4-1766764760177.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Button_click___Clean__2_1766767620402.mp3",
+    "original": "150+ Free RPG Sounds/Button_click_\u0393\u00c7\u00f4_Clean_#2-1766767620402.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Button_click___Clean__3_1766767618113.mp3",
+    "original": "150+ Free RPG Sounds/Button_click_\u0393\u00c7\u00f4_Clean_#3-1766767618113.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Button_click___Clean__4_1766767615407.mp3",
+    "original": "150+ Free RPG Sounds/Button_click_\u0393\u00c7\u00f4_Clean_#4-1766767615407.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Campfire___Medium_fi__1_1766768610324.mp3",
+    "original": "150+ Free RPG Sounds/Campfire_\u0393\u00c7\u00f4_Medium_fi_#1-1766768610324.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Campfire___Medium_fi__2_1766768610326.mp3",
+    "original": "150+ Free RPG Sounds/Campfire_\u0393\u00c7\u00f4_Medium_fi_#2-1766768610326.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Campfire___Medium_fi__3_1766768605809.mp3",
+    "original": "150+ Free RPG Sounds/Campfire_\u0393\u00c7\u00f4_Medium_fi_#3-1766768605809.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Campfire___Medium_fi__4_1766768602107.mp3",
+    "original": "150+ Free RPG Sounds/Campfire_\u0393\u00c7\u00f4_Medium_fi_#4-1766768602107.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Cave_ambience___Holl__1_1766768454355.mp3",
+    "original": "150+ Free RPG Sounds/Cave_ambience_\u0393\u00c7\u00f4_Holl_#1-1766768454355.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Cave_ambience___Holl__2_1766768454356.mp3",
+    "original": "150+ Free RPG Sounds/Cave_ambience_\u0393\u00c7\u00f4_Holl_#2-1766768454356.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Cave_ambience___Holl__3_1766768451463.mp3",
+    "original": "150+ Free RPG Sounds/Cave_ambience_\u0393\u00c7\u00f4_Holl_#3-1766768451463.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Cave_ambience___Holl__4_1766768447850.mp3",
+    "original": "150+ Free RPG Sounds/Cave_ambience_\u0393\u00c7\u00f4_Holl_#4-1766768447850.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Coin_pickup___Single__1_1766764980016.mp3",
+    "original": "150+ Free RPG Sounds/Coin_pickup_\u0393\u00c7\u00f4_Single_#1-1766764980016.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Coin_pickup___Single__2_1766764967251.mp3",
+    "original": "150+ Free RPG Sounds/Coin_pickup_\u0393\u00c7\u00f4_Single_#2-1766764967251.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Coin_pickup___Single__3_1766764993247.mp3",
+    "original": "150+ Free RPG Sounds/Coin_pickup_\u0393\u00c7\u00f4_Single_#3-1766764993247.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Coin_pickup___Single__4_1766764989061.mp3",
+    "original": "150+ Free RPG Sounds/Coin_pickup_\u0393\u00c7\u00f4_Single_#4-1766764989061.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Critical_sword_hit____1_1766763481774.mp3",
+    "original": "150+ Free RPG Sounds/Critical_sword_hit_\u0393\u00c7\u00f4_#1-1766763481774.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Critical_sword_hit____2_1766763478532.mp3",
+    "original": "150+ Free RPG Sounds/Critical_sword_hit_\u0393\u00c7\u00f4_#2-1766763478532.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Critical_sword_hit____3_1766763474762.mp3",
+    "original": "150+ Free RPG Sounds/Critical_sword_hit_\u0393\u00c7\u00f4_#3-1766763474762.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Critical_sword_hit____4_1766763469468.mp3",
+    "original": "150+ Free RPG Sounds/Critical_sword_hit_\u0393\u00c7\u00f4_#4-1766763469468.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Dagger_stab___Quick___1_1766764093333.mp3",
+    "original": "150+ Free RPG Sounds/Dagger_stab_\u0393\u00c7\u00f4_Quick__#1-1766764093333.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Dagger_stab___Quick___2_1766764090266.mp3",
+    "original": "150+ Free RPG Sounds/Dagger_stab_\u0393\u00c7\u00f4_Quick__#2-1766764090266.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Dagger_stab___Quick___3_1766764080183.mp3",
+    "original": "150+ Free RPG Sounds/Dagger_stab_\u0393\u00c7\u00f4_Quick__#3-1766764080183.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Dagger_stab___Quick___4_1766764076280.mp3",
+    "original": "150+ Free RPG Sounds/Dagger_stab_\u0393\u00c7\u00f4_Quick__#4-1766764076280.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Debuff_spell___Dark___1_1766764811779.mp3",
+    "original": "150+ Free RPG Sounds/Debuff_spell_\u0393\u00c7\u00f4_Dark__#1-1766764811779.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Debuff_spell___Dark___2_1766764808747.mp3",
+    "original": "150+ Free RPG Sounds/Debuff_spell_\u0393\u00c7\u00f4_Dark__#2-1766764808747.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Debuff_spell___Dark___3_1766764806389.mp3",
+    "original": "150+ Free RPG Sounds/Debuff_spell_\u0393\u00c7\u00f4_Dark__#3-1766764806389.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Debuff_spell___Dark___4_1766764801217.mp3",
+    "original": "150+ Free RPG Sounds/Debuff_spell_\u0393\u00c7\u00f4_Dark__#4-1766764801217.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Dungeon_ambience___W__1_1766768410723.mp3",
+    "original": "150+ Free RPG Sounds/Dungeon_ambience_\u0393\u00c7\u00f4_W_#1-1766768410723.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Dungeon_ambience___W__2_1766768407101.mp3",
+    "original": "150+ Free RPG Sounds/Dungeon_ambience_\u0393\u00c7\u00f4_W_#2-1766768407101.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Dungeon_ambience___W__3_1766768404415.mp3",
+    "original": "150+ Free RPG Sounds/Dungeon_ambience_\u0393\u00c7\u00f4_W_#3-1766768404415.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Dungeon_ambience___W__4_1766768400401.mp3",
+    "original": "150+ Free RPG Sounds/Dungeon_ambience_\u0393\u00c7\u00f4_W_#4-1766768400401.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Enemy_death___Monste__1_1766764309706.mp3",
+    "original": "150+ Free RPG Sounds/Enemy_death_\u0393\u00c7\u00f4_Monste_#1-1766764309706.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Enemy_death___Monste__2_1766764305947.mp3",
+    "original": "150+ Free RPG Sounds/Enemy_death_\u0393\u00c7\u00f4_Monste_#2-1766764305947.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Enemy_death___Monste__3_1766764302127.mp3",
+    "original": "150+ Free RPG Sounds/Enemy_death_\u0393\u00c7\u00f4_Monste_#3-1766764302127.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Enemy_death___Monste__4_1766764298071.mp3",
+    "original": "150+ Free RPG Sounds/Enemy_death_\u0393\u00c7\u00f4_Monste_#4-1766764298071.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Equip_weapon___Weapo__1_1766765195705.mp3",
+    "original": "150+ Free RPG Sounds/Equip_weapon_\u0393\u00c7\u00f4_Weapo_#1-1766765195705.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Equip_weapon___Weapo__2_1766765195705.mp3",
+    "original": "150+ Free RPG Sounds/Equip_weapon_\u0393\u00c7\u00f4_Weapo_#2-1766765195705.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Equip_weapon___Weapo__3_1766765195706.mp3",
+    "original": "150+ Free RPG Sounds/Equip_weapon_\u0393\u00c7\u00f4_Weapo_#3-1766765195706.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Equip_weapon___Weapo__4_1766765195706.mp3",
+    "original": "150+ Free RPG Sounds/Equip_weapon_\u0393\u00c7\u00f4_Weapo_#4-1766765195706.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Fire_spell_cast___Ma__1_1766763536495.mp3",
+    "original": "150+ Free RPG Sounds/Fire_spell_cast_\u0393\u00c7\u00f4_Ma_#1-1766763536495.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Fire_spell_cast___Ma__2_1766763532663.mp3",
+    "original": "150+ Free RPG Sounds/Fire_spell_cast_\u0393\u00c7\u00f4_Ma_#2-1766763532663.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Fire_spell_cast___Ma__3_1766763528875.mp3",
+    "original": "150+ Free RPG Sounds/Fire_spell_cast_\u0393\u00c7\u00f4_Ma_#3-1766763528875.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Fire_spell_cast___Ma__4_1766763524728.mp3",
+    "original": "150+ Free RPG Sounds/Fire_spell_cast_\u0393\u00c7\u00f4_Ma_#4-1766763524728.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Fire_spell_impact_____1_1766764398952.mp3",
+    "original": "150+ Free RPG Sounds/Fire_spell_impact_\u0393\u00c7\u00f4__#1-1766764398952.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Fire_spell_impact_____2_1766764396374.mp3",
+    "original": "150+ Free RPG Sounds/Fire_spell_impact_\u0393\u00c7\u00f4__#2-1766764396374.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Fire_spell_impact_____3_1766764393616.mp3",
+    "original": "150+ Free RPG Sounds/Fire_spell_impact_\u0393\u00c7\u00f4__#3-1766764393616.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Fire_spell_impact_____4_1766764388701.mp3",
+    "original": "150+ Free RPG Sounds/Fire_spell_impact_\u0393\u00c7\u00f4__#4-1766764388701.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Footstep_dirt___Boot__1_1766767400645.mp3",
+    "original": "150+ Free RPG Sounds/Footstep_dirt_\u0393\u00c7\u00f4_Boot_#1-1766767400645.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Footstep_dirt___Boot__2_1766767400646.mp3",
+    "original": "150+ Free RPG Sounds/Footstep_dirt_\u0393\u00c7\u00f4_Boot_#2-1766767400646.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Footstep_dirt___Boot__3_1766767400647.mp3",
+    "original": "150+ Free RPG Sounds/Footstep_dirt_\u0393\u00c7\u00f4_Boot_#3-1766767400647.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Footstep_dirt___Boot__4_1766767404604.mp3",
+    "original": "150+ Free RPG Sounds/Footstep_dirt_\u0393\u00c7\u00f4_Boot_#4-1766767404604.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Footstep_grass___Sof__1_1766767691077.mp3",
+    "original": "150+ Free RPG Sounds/Footstep_grass_\u0393\u00c7\u00f4_Sof_#1-1766767691077.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Footstep_grass___Sof__2_1766767688744.mp3",
+    "original": "150+ Free RPG Sounds/Footstep_grass_\u0393\u00c7\u00f4_Sof_#2-1766767688744.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Footstep_grass___Sof__3_1766767686377.mp3",
+    "original": "150+ Free RPG Sounds/Footstep_grass_\u0393\u00c7\u00f4_Sof_#3-1766767686377.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Footstep_grass___Sof__4_1766767680960.mp3",
+    "original": "150+ Free RPG Sounds/Footstep_grass_\u0393\u00c7\u00f4_Sof_#4-1766767680960.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Footstep_stone___Boo__1_1766767108408.mp3",
+    "original": "150+ Free RPG Sounds/Footstep_stone_\u0393\u00c7\u00f4_Boo_#1-1766767108408.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Footstep_stone___Boo__1_1766767223813.mp3",
+    "original": "150+ Free RPG Sounds/Footstep_stone_\u0393\u00c7\u00f4_Boo_#1-1766767223813.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Footstep_stone___Boo__2_1766767108410.mp3",
+    "original": "150+ Free RPG Sounds/Footstep_stone_\u0393\u00c7\u00f4_Boo_#2-1766767108410.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Footstep_stone___Boo__2_1766767223814.mp3",
+    "original": "150+ Free RPG Sounds/Footstep_stone_\u0393\u00c7\u00f4_Boo_#2-1766767223814.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Footstep_stone___Boo__3_1766767108411.mp3",
+    "original": "150+ Free RPG Sounds/Footstep_stone_\u0393\u00c7\u00f4_Boo_#3-1766767108411.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Footstep_stone___Boo__3_1766767223814.mp3",
+    "original": "150+ Free RPG Sounds/Footstep_stone_\u0393\u00c7\u00f4_Boo_#3-1766767223814.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Footstep_stone___Boo__4_1766767108412.mp3",
+    "original": "150+ Free RPG Sounds/Footstep_stone_\u0393\u00c7\u00f4_Boo_#4-1766767108412.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Footstep_stone___Boo__4_1766767223815.mp3",
+    "original": "150+ Free RPG Sounds/Footstep_stone_\u0393\u00c7\u00f4_Boo_#4-1766767223815.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Footstep_water___Sha__1_1766767893228.mp3",
+    "original": "150+ Free RPG Sounds/Footstep_water_\u0393\u00c7\u00f4_Sha_#1-1766767893228.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Footstep_water___Sha__2_1766767891265.mp3",
+    "original": "150+ Free RPG Sounds/Footstep_water_\u0393\u00c7\u00f4_Sha_#2-1766767891265.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Footstep_water___Sha__3_1766767885196.mp3",
+    "original": "150+ Free RPG Sounds/Footstep_water_\u0393\u00c7\u00f4_Sha_#3-1766767885196.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Footstep_water___Sha__4_1766767887803.mp3",
+    "original": "150+ Free RPG Sounds/Footstep_water_\u0393\u00c7\u00f4_Sha_#4-1766767887803.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Footstep_wood___Wood__1_1766767773818.mp3",
+    "original": "150+ Free RPG Sounds/Footstep_wood_\u0393\u00c7\u00f4_Wood_#1-1766767773818.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Footstep_wood___Wood__2_1766767771082.mp3",
+    "original": "150+ Free RPG Sounds/Footstep_wood_\u0393\u00c7\u00f4_Wood_#2-1766767771082.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Footstep_wood___Wood__3_1766767768137.mp3",
+    "original": "150+ Free RPG Sounds/Footstep_wood_\u0393\u00c7\u00f4_Wood_#3-1766767768137.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Footstep_wood___Wood__4_1766767763952.mp3",
+    "original": "150+ Free RPG Sounds/Footstep_wood_\u0393\u00c7\u00f4_Wood_#4-1766767763952.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Footsteps_gravel___C__1_1766807164433.mp3",
+    "original": "150+ Free RPG Sounds/Footsteps_gravel_\u0393\u00c7\u00f4_C_#1-1766807164433.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Footsteps_gravel___C__2_1766807175935.mp3",
+    "original": "150+ Free RPG Sounds/Footsteps_gravel_\u0393\u00c7\u00f4_C_#2-1766807175935.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Footsteps_gravel___C__3_1766807172660.mp3",
+    "original": "150+ Free RPG Sounds/Footsteps_gravel_\u0393\u00c7\u00f4_C_#3-1766807172660.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Footsteps_gravel___C__4_1766807123525.mp3",
+    "original": "150+ Free RPG Sounds/Footsteps_gravel_\u0393\u00c7\u00f4_C_#4-1766807123525.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Footsteps_gravel___C__4_1766807169118.mp3",
+    "original": "150+ Free RPG Sounds/Footsteps_gravel_\u0393\u00c7\u00f4_C_#4-1766807169118.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Footsteps_running_on__1_1766807262080.mp3",
+    "original": "150+ Free RPG Sounds/Footsteps_running_on_#1-1766807262080.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Footsteps_running_on__2_1766807256102.mp3",
+    "original": "150+ Free RPG Sounds/Footsteps_running_on_#2-1766807256102.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Forest_ambience___Wi__1_1766769061255.mp3",
+    "original": "150+ Free RPG Sounds/Forest_ambience_\u0393\u00c7\u00f4_Wi_#1-1766769061255.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Forest_ambience___Wi__2_1766769058873.mp3",
+    "original": "150+ Free RPG Sounds/Forest_ambience_\u0393\u00c7\u00f4_Wi_#2-1766769058873.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Forest_ambience___Wi__3_1766769058873.mp3",
+    "original": "150+ Free RPG Sounds/Forest_ambience_\u0393\u00c7\u00f4_Wi_#3-1766769058873.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Forest_ambience___Wi__4_1766769055134.mp3",
+    "original": "150+ Free RPG Sounds/Forest_ambience_\u0393\u00c7\u00f4_Wi_#4-1766769055134.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Gate_open___Heavy_me__1_1766767347275.mp3",
+    "original": "150+ Free RPG Sounds/Gate_open_\u0393\u00c7\u00f4_Heavy_me_#1-1766767347275.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Gate_open___Heavy_me__2_1766767347276.mp3",
+    "original": "150+ Free RPG Sounds/Gate_open_\u0393\u00c7\u00f4_Heavy_me_#2-1766767347276.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Gate_open___Heavy_me__4_1766767347277.mp3",
+    "original": "150+ Free RPG Sounds/Gate_open_\u0393\u00c7\u00f4_Heavy_me_#4-1766767347277.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Goblin_attack___Smal__1_1766768039592.mp3",
+    "original": "150+ Free RPG Sounds/Goblin_attack_\u0393\u00c7\u00f4_Smal_#1-1766768039592.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Goblin_attack___Smal__2_1766768045094.mp3",
+    "original": "150+ Free RPG Sounds/Goblin_attack_\u0393\u00c7\u00f4_Smal_#2-1766768045094.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Goblin_attack___Smal__3_1766768042373.mp3",
+    "original": "150+ Free RPG Sounds/Goblin_attack_\u0393\u00c7\u00f4_Smal_#3-1766768042373.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Goblin_attack___Smal__4_1766768042374.mp3",
+    "original": "150+ Free RPG Sounds/Goblin_attack_\u0393\u00c7\u00f4_Smal_#4-1766768042374.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Goblin_laugh___High___1_1766767980719.mp3",
+    "original": "150+ Free RPG Sounds/Goblin_laugh_\u0393\u00c7\u00f4_High-_#1-1766767980719.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Goblin_laugh___High___2_1766767986609.mp3",
+    "original": "150+ Free RPG Sounds/Goblin_laugh_\u0393\u00c7\u00f4_High-_#2-1766767986609.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Goblin_laugh___High___3_1766767986609.mp3",
+    "original": "150+ Free RPG Sounds/Goblin_laugh_\u0393\u00c7\u00f4_High-_#3-1766767986609.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Goblin_laugh___High___4_1766767984387.mp3",
+    "original": "150+ Free RPG Sounds/Goblin_laugh_\u0393\u00c7\u00f4_High-_#4-1766767984387.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Heavy_weapon_whoosh___3_1766763893457.mp3",
+    "original": "150+ Free RPG Sounds/Heavy_weapon_whoosh,_#3-1766763893457.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Heavy_weapon_whoosh___4_1766763889384.mp3",
+    "original": "150+ Free RPG Sounds/Heavy_weapon_whoosh,_#4-1766763889384.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Ice_impact___Ice_sha__1_1766764678544.mp3",
+    "original": "150+ Free RPG Sounds/Ice_impact_\u0393\u00c7\u00f4_Ice_sha_#1-1766764678544.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Ice_impact___Ice_sha__2_1766764676177.mp3",
+    "original": "150+ Free RPG Sounds/Ice_impact_\u0393\u00c7\u00f4_Ice_sha_#2-1766764676177.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Ice_impact___Ice_sha__3_1766764673747.mp3",
+    "original": "150+ Free RPG Sounds/Ice_impact_\u0393\u00c7\u00f4_Ice_sha_#3-1766764673747.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Ice_impact___Ice_sha__4_1766764669612.mp3",
+    "original": "150+ Free RPG Sounds/Ice_impact_\u0393\u00c7\u00f4_Ice_sha_#4-1766764669612.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Ice_spell_cast___Col__1_1766764638425.mp3",
+    "original": "150+ Free RPG Sounds/Ice_spell_cast_\u0393\u00c7\u00f4_Col_#1-1766764638425.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Ice_spell_cast___Col__2_1766764635940.mp3",
+    "original": "150+ Free RPG Sounds/Ice_spell_cast_\u0393\u00c7\u00f4_Col_#2-1766764635940.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Ice_spell_cast___Col__3_1766764633331.mp3",
+    "original": "150+ Free RPG Sounds/Ice_spell_cast_\u0393\u00c7\u00f4_Col_#3-1766764633331.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Ice_spell_cast___Col__4_1766764626746.mp3",
+    "original": "150+ Free RPG Sounds/Ice_spell_cast_\u0393\u00c7\u00f4_Col_#4-1766764626746.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Inventory_open___UI___1_1766765859218.mp3",
+    "original": "150+ Free RPG Sounds/Inventory_open_\u0393\u00c7\u00f4_UI__#1-1766765859218.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Inventory_open___UI___2_1766765859219.mp3",
+    "original": "150+ Free RPG Sounds/Inventory_open_\u0393\u00c7\u00f4_UI__#2-1766765859219.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Inventory_open___UI___3_1766765859219.mp3",
+    "original": "150+ Free RPG Sounds/Inventory_open_\u0393\u00c7\u00f4_UI__#3-1766765859219.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Inventory_open___UI___4_1766765856604.mp3",
+    "original": "150+ Free RPG Sounds/Inventory_open_\u0393\u00c7\u00f4_UI__#4-1766765856604.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Item_pickup___Soft_c__1_1766764916364.mp3",
+    "original": "150+ Free RPG Sounds/Item_pickup_\u0393\u00c7\u00f4_Soft_c_#1-1766764916364.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Item_pickup___Soft_c__2_1766764914173.mp3",
+    "original": "150+ Free RPG Sounds/Item_pickup_\u0393\u00c7\u00f4_Soft_c_#2-1766764914173.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Item_pickup___Soft_c__3_1766764911468.mp3",
+    "original": "150+ Free RPG Sounds/Item_pickup_\u0393\u00c7\u00f4_Soft_c_#3-1766764911468.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Item_pickup___Soft_c__4_1766764909142.mp3",
+    "original": "150+ Free RPG Sounds/Item_pickup_\u0393\u00c7\u00f4_Soft_c_#4-1766764909142.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Level_up___Magical_a__1_1766766447104.mp3",
+    "original": "150+ Free RPG Sounds/Level_up_\u0393\u00c7\u00f4_Magical_a_#1-1766766447104.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Level_up___Magical_a__2_1766766447105.mp3",
+    "original": "150+ Free RPG Sounds/Level_up_\u0393\u00c7\u00f4_Magical_a_#2-1766766447105.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Level_up___Magical_a__3_1766766447105.mp3",
+    "original": "150+ Free RPG Sounds/Level_up_\u0393\u00c7\u00f4_Magical_a_#3-1766766447105.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Level_up___Magical_a__4_1766766447106.mp3",
+    "original": "150+ Free RPG Sounds/Level_up_\u0393\u00c7\u00f4_Magical_a_#4-1766766447106.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Lever_pull___Mechani__1_1766767013449.mp3",
+    "original": "150+ Free RPG Sounds/Lever_pull_\u0393\u00c7\u00f4_Mechani_#1-1766767013449.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Lever_pull___Mechani__2_1766767013450.mp3",
+    "original": "150+ Free RPG Sounds/Lever_pull_\u0393\u00c7\u00f4_Mechani_#2-1766767013450.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Lever_pull___Mechani__3_1766767013452.mp3",
+    "original": "150+ Free RPG Sounds/Lever_pull_\u0393\u00c7\u00f4_Mechani_#3-1766767013452.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Lever_pull___Mechani__4_1766767013453.mp3",
+    "original": "150+ Free RPG Sounds/Lever_pull_\u0393\u00c7\u00f4_Mechani_#4-1766767013453.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Lightning_cast___Ele__1_1766764720689.mp3",
+    "original": "150+ Free RPG Sounds/Lightning_cast_\u0393\u00c7\u00f4_Ele_#1-1766764720689.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Lightning_cast___Ele__2_1766764718272.mp3",
+    "original": "150+ Free RPG Sounds/Lightning_cast_\u0393\u00c7\u00f4_Ele_#2-1766764718272.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Lightning_cast___Ele__3_1766764718272.mp3",
+    "original": "150+ Free RPG Sounds/Lightning_cast_\u0393\u00c7\u00f4_Ele_#3-1766764718272.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Lightning_cast___Ele__4_1766764715064.mp3",
+    "original": "150+ Free RPG Sounds/Lightning_cast_\u0393\u00c7\u00f4_Ele_#4-1766764715064.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Magic_projectile_lau__1_1766764866448.mp3",
+    "original": "150+ Free RPG Sounds/Magic_projectile_lau_#1-1766764866448.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Magic_projectile_lau__2_1766764864417.mp3",
+    "original": "150+ Free RPG Sounds/Magic_projectile_lau_#2-1766764864417.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Magic_projectile_lau__3_1766764862223.mp3",
+    "original": "150+ Free RPG Sounds/Magic_projectile_lau_#3-1766764862223.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Magic_projectile_lau__4_1766764858633.mp3",
+    "original": "150+ Free RPG Sounds/Magic_projectile_lau_#4-1766764858633.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Night_ambience___Cri__1_1766769107163.mp3",
+    "original": "150+ Free RPG Sounds/Night_ambience_\u0393\u00c7\u00f4_Cri_#1-1766769107163.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Night_ambience___Cri__2_1766769107163.mp3",
+    "original": "150+ Free RPG Sounds/Night_ambience_\u0393\u00c7\u00f4_Cri_#2-1766769107163.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Night_ambience___Cri__4_1766769103625.mp3",
+    "original": "150+ Free RPG Sounds/Night_ambience_\u0393\u00c7\u00f4_Cri_#4-1766769103625.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Player_hurt___Short___1_1766764352490.mp3",
+    "original": "150+ Free RPG Sounds/Player_hurt_\u0393\u00c7\u00f4_Short__#1-1766764352490.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Player_hurt___Short___2_1766764349848.mp3",
+    "original": "150+ Free RPG Sounds/Player_hurt_\u0393\u00c7\u00f4_Short__#2-1766764349848.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Player_hurt___Short___3_1766764346956.mp3",
+    "original": "150+ Free RPG Sounds/Player_hurt_\u0393\u00c7\u00f4_Short__#3-1766764346956.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Player_hurt___Short___4_1766764341901.mp3",
+    "original": "150+ Free RPG Sounds/Player_hurt_\u0393\u00c7\u00f4_Short__#4-1766764341901.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Potion_drink___Liqui__1_1766765101919.mp3",
+    "original": "150+ Free RPG Sounds/Potion_drink_\u0393\u00c7\u00f4_Liqui_#1-1766765101919.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Potion_drink___Liqui__2_1766765101920.mp3",
+    "original": "150+ Free RPG Sounds/Potion_drink_\u0393\u00c7\u00f4_Liqui_#2-1766765101920.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Potion_drink___Liqui__3_1766765101920.mp3",
+    "original": "150+ Free RPG Sounds/Potion_drink_\u0393\u00c7\u00f4_Liqui_#3-1766765101920.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Potion_drink___Liqui__4_1766765068166.mp3",
+    "original": "150+ Free RPG Sounds/Potion_drink_\u0393\u00c7\u00f4_Liqui_#4-1766765068166.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Potion_drink___Liqui__4_1766765101921.mp3",
+    "original": "150+ Free RPG Sounds/Potion_drink_\u0393\u00c7\u00f4_Liqui_#4-1766765101921.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Potion_throw___Bottl__1_1766765150580.mp3",
+    "original": "150+ Free RPG Sounds/Potion_throw_\u0393\u00c7\u00f4_Bottl_#1-1766765150580.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Potion_throw___Bottl__2_1766765150580.mp3",
+    "original": "150+ Free RPG Sounds/Potion_throw_\u0393\u00c7\u00f4_Bottl_#2-1766765150580.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Potion_throw___Bottl__3_1766765150580.mp3",
+    "original": "150+ Free RPG Sounds/Potion_throw_\u0393\u00c7\u00f4_Bottl_#3-1766765150580.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Potion_throw___Bottl__4_1766765147927.mp3",
+    "original": "150+ Free RPG Sounds/Potion_throw_\u0393\u00c7\u00f4_Bottl_#4-1766765147927.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Quest_accepted___Pos__1_1766766362250.mp3",
+    "original": "150+ Free RPG Sounds/Quest_accepted_\u0393\u00c7\u00f4_Pos_#1-1766766362250.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Quest_complete___Lon__1_1766766413148.mp3",
+    "original": "150+ Free RPG Sounds/Quest_complete_\u0393\u00c7\u00f4_Lon_#1-1766766413148.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Quest_complete___Lon__2_1766766413149.mp3",
+    "original": "150+ Free RPG Sounds/Quest_complete_\u0393\u00c7\u00f4_Lon_#2-1766766413149.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Quest_complete___Lon__3_1766766413150.mp3",
+    "original": "150+ Free RPG Sounds/Quest_complete_\u0393\u00c7\u00f4_Lon_#3-1766766413150.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Quest_complete___Lon__4_1766766413151.mp3",
+    "original": "150+ Free RPG Sounds/Quest_complete_\u0393\u00c7\u00f4_Lon_#4-1766766413151.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/River_flow___Calm_fl__1_1766768653145.mp3",
+    "original": "150+ Free RPG Sounds/River_flow_\u0393\u00c7\u00f4_Calm_fl_#1-1766768653145.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/River_flow___Calm_fl__2_1766768659442.mp3",
+    "original": "150+ Free RPG Sounds/River_flow_\u0393\u00c7\u00f4_Calm_fl_#2-1766768659442.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/River_flow___Calm_fl__3_1766768659442.mp3",
+    "original": "150+ Free RPG Sounds/River_flow_\u0393\u00c7\u00f4_Calm_fl_#3-1766768659442.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/River_flow___Calm_fl__4_1766768656493.mp3",
+    "original": "150+ Free RPG Sounds/River_flow_\u0393\u00c7\u00f4_Calm_fl_#4-1766768656493.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Rune_activate___Anci__2_1766768897281.mp3",
+    "original": "150+ Free RPG Sounds/Rune_activate_\u0393\u00c7\u00f4_Anci_#2-1766768897281.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Rune_activate___Anci__4_1766768893815.mp3",
+    "original": "150+ Free RPG Sounds/Rune_activate_\u0393\u00c7\u00f4_Anci_#4-1766768893815.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Running_dirt___Boot___1_1766767446866.mp3",
+    "original": "150+ Free RPG Sounds/Running_dirt_\u0393\u00c7\u00f4_Boot__#1-1766767446866.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Running_dirt___Boot___2_1766767446867.mp3",
+    "original": "150+ Free RPG Sounds/Running_dirt_\u0393\u00c7\u00f4_Boot__#2-1766767446867.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Running_dirt___Boot___3_1766767446868.mp3",
+    "original": "150+ Free RPG Sounds/Running_dirt_\u0393\u00c7\u00f4_Boot__#3-1766767446868.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Running_dirt___Boot___4_1766767446868.mp3",
+    "original": "150+ Free RPG Sounds/Running_dirt_\u0393\u00c7\u00f4_Boot__#4-1766767446868.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Running_on_grass___r__1_1766767732161.mp3",
+    "original": "150+ Free RPG Sounds/Running_on_grass_\u0393\u00c7\u00f4_r_#1-1766767732161.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Running_on_grass___r__2_1766767729930.mp3",
+    "original": "150+ Free RPG Sounds/Running_on_grass_\u0393\u00c7\u00f4_r_#2-1766767729930.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Running_on_grass___r__4_1766767723231.mp3",
+    "original": "150+ Free RPG Sounds/Running_on_grass_\u0393\u00c7\u00f4_r_#4-1766767723231.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Running_on_water___S__1_1766767927005.mp3",
+    "original": "150+ Free RPG Sounds/Running_on_water_\u0393\u00c7\u00f4_S_#1-1766767927005.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Running_on_water___S__2_1766767924901.mp3",
+    "original": "150+ Free RPG Sounds/Running_on_water_\u0393\u00c7\u00f4_S_#2-1766767924901.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Running_on_water___S__3_1766767924902.mp3",
+    "original": "150+ Free RPG Sounds/Running_on_water_\u0393\u00c7\u00f4_S_#3-1766767924902.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Running_on_water___S__4_1766767921049.mp3",
+    "original": "150+ Free RPG Sounds/Running_on_water_\u0393\u00c7\u00f4_S_#4-1766767921049.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Running_on_wood___Wo__1_1766767821477.mp3",
+    "original": "150+ Free RPG Sounds/Running_on_wood_\u0393\u00c7\u00f4_Wo_#1-1766767821477.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Running_on_wood___Wo__2_1766767819070.mp3",
+    "original": "150+ Free RPG Sounds/Running_on_wood_\u0393\u00c7\u00f4_Wo_#2-1766767819070.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Running_on_wood___Wo__3_1766767816223.mp3",
+    "original": "150+ Free RPG Sounds/Running_on_wood_\u0393\u00c7\u00f4_Wo_#3-1766767816223.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Running_on_wood___Wo__4_1766767812816.mp3",
+    "original": "150+ Free RPG Sounds/Running_on_wood_\u0393\u00c7\u00f4_Wo_#4-1766767812816.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Running_stone___Boot__1_1766767186839.mp3",
+    "original": "150+ Free RPG Sounds/Running_stone_\u0393\u00c7\u00f4_Boot_#1-1766767186839.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Running_stone___Boot__2_1766767176467.mp3",
+    "original": "150+ Free RPG Sounds/Running_stone_\u0393\u00c7\u00f4_Boot_#2-1766767176467.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Running_stone___Boot__3_1766767176468.mp3",
+    "original": "150+ Free RPG Sounds/Running_stone_\u0393\u00c7\u00f4_Boot_#3-1766767176468.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Running_stone___Boot__4_1766767176468.mp3",
+    "original": "150+ Free RPG Sounds/Running_stone_\u0393\u00c7\u00f4_Boot_#4-1766767176468.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Shield_block___Metal__1_1766764259584.mp3",
+    "original": "150+ Free RPG Sounds/Shield_block_\u0393\u00c7\u00f4_Metal_#1-1766764259584.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Shield_block___Metal__4_1766764263919.mp3",
+    "original": "150+ Free RPG Sounds/Shield_block_\u0393\u00c7\u00f4_Metal_#4-1766764263919.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Skeleton_attack___Bo__1_1766768184245.mp3",
+    "original": "150+ Free RPG Sounds/Skeleton_attack_\u0393\u00c7\u00f4_Bo_#1-1766768184245.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Skeleton_attack___Bo__2_1766768184245.mp3",
+    "original": "150+ Free RPG Sounds/Skeleton_attack_\u0393\u00c7\u00f4_Bo_#2-1766768184245.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Skeleton_attack___Bo__3_1766768181651.mp3",
+    "original": "150+ Free RPG Sounds/Skeleton_attack_\u0393\u00c7\u00f4_Bo_#3-1766768181651.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Skeleton_attack___Bo__4_1766768179054.mp3",
+    "original": "150+ Free RPG Sounds/Skeleton_attack_\u0393\u00c7\u00f4_Bo_#4-1766768179054.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Spider_hiss___Soft_c__1_1766768279530.mp3",
+    "original": "150+ Free RPG Sounds/Spider_hiss_\u0393\u00c7\u00f4_Soft_c_#1-1766768279530.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Spider_hiss___Soft_c__4_1766768277241.mp3",
+    "original": "150+ Free RPG Sounds/Spider_hiss_\u0393\u00c7\u00f4_Soft_c_#4-1766768277241.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Sword_swing_1.mp3",
+    "original": "150+ Free RPG Sounds/Sword swing #1.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Sword_hit_armor___Me__1_1766763413914.mp3",
+    "original": "150+ Free RPG Sounds/Sword_hit_armor_\u0393\u00c7\u00f4_Me_#1-1766763413914.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Sword_hit_armor___Me__2_1766763409846.mp3",
+    "original": "150+ Free RPG Sounds/Sword_hit_armor_\u0393\u00c7\u00f4_Me_#2-1766763409846.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Sword_hit_armor___Me__3_1766763406268.mp3",
+    "original": "150+ Free RPG Sounds/Sword_hit_armor_\u0393\u00c7\u00f4_Me_#3-1766763406268.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Sword_hit_armor___Me__4_1766763401093.mp3",
+    "original": "150+ Free RPG Sounds/Sword_hit_armor_\u0393\u00c7\u00f4_Me_#4-1766763401093.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Sword_hit_flesh___Me__1_1766763353113.mp3",
+    "original": "150+ Free RPG Sounds/Sword_hit_flesh_\u0393\u00c7\u00f4_Me_#1-1766763353113.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Sword_hit_flesh___Me__4_1766763347247.mp3",
+    "original": "150+ Free RPG Sounds/Sword_hit_flesh_\u0393\u00c7\u00f4_Me_#4-1766763347247.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Sword_swing_4.mp3",
+    "original": "150+ Free RPG Sounds/Sword_swing#4.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Sword_swing___Fast_m__4_1766763244157.mp3",
+    "original": "150+ Free RPG Sounds/Sword_swing_\u0393\u00c7\u00f4_Fast_m_#4-1766763244157.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Torch_fire___Small_f__1_1766768552071.mp3",
+    "original": "150+ Free RPG Sounds/Torch_fire_\u0393\u00c7\u00f4_Small_f_#1-1766768552071.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Torch_fire___Small_f__2_1766768548120.mp3",
+    "original": "150+ Free RPG Sounds/Torch_fire_\u0393\u00c7\u00f4_Small_f_#2-1766768548120.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Torch_fire___Small_f__3_1766768543502.mp3",
+    "original": "150+ Free RPG Sounds/Torch_fire_\u0393\u00c7\u00f4_Small_f_#3-1766768543502.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Torch_fire___Small_f__4_1766768544875.mp3",
+    "original": "150+ Free RPG Sounds/Torch_fire_\u0393\u00c7\u00f4_Small_f_#4-1766768544875.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Town_ambience___Dist__1_1766768998365.mp3",
+    "original": "150+ Free RPG Sounds/Town_ambience_\u0393\u00c7\u00f4_Dist_#1-1766768998365.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Town_ambience___Dist__2_1766768995895.mp3",
+    "original": "150+ Free RPG Sounds/Town_ambience_\u0393\u00c7\u00f4_Dist_#2-1766768995895.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Town_ambience___Dist__3_1766768993491.mp3",
+    "original": "150+ Free RPG Sounds/Town_ambience_\u0393\u00c7\u00f4_Dist_#3-1766768993491.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Town_ambience___Dist__4_1766768989698.mp3",
+    "original": "150+ Free RPG Sounds/Town_ambience_\u0393\u00c7\u00f4_Dist_#4-1766768989698.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Wolf_growl___Low_ani__2_1766768104138.mp3",
+    "original": "150+ Free RPG Sounds/Wolf_growl_\u0393\u00c7\u00f4_Low_ani_#2-1766768104138.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Wolf_growl___Low_ani__3_1766768101091.mp3",
+    "original": "150+ Free RPG Sounds/Wolf_growl_\u0393\u00c7\u00f4_Low_ani_#3-1766768101091.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Wolf_growl___Low_ani__4_1766768097372.mp3",
+    "original": "150+ Free RPG Sounds/Wolf_growl_\u0393\u00c7\u00f4_Low_ani_#4-1766768097372.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Wooden_door_open___O__1_1766765986124.mp3",
+    "original": "150+ Free RPG Sounds/Wooden_door_open_\u0393\u00c7\u00f4_O_#1-1766765986124.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Wooden_door_open___O__2_1766765986125.mp3",
+    "original": "150+ Free RPG Sounds/Wooden_door_open_\u0393\u00c7\u00f4_O_#2-1766765986125.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Wooden_door_open___O__3_1766765986126.mp3",
+    "original": "150+ Free RPG Sounds/Wooden_door_open_\u0393\u00c7\u00f4_O_#3-1766765986126.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Wooden_door_open___O__4_1766765986127.mp3",
+    "original": "150+ Free RPG Sounds/Wooden_door_open_\u0393\u00c7\u00f4_O_#4-1766765986127.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Zombie_moan___Slow_u__1_1766768225594.mp3",
+    "original": "150+ Free RPG Sounds/Zombie_moan_\u0393\u00c7\u00f4_Slow_u_#1-1766768225594.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Zombie_moan___Slow_u__2_1766768233458.mp3",
+    "original": "150+ Free RPG Sounds/Zombie_moan_\u0393\u00c7\u00f4_Slow_u_#2-1766768233458.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Zombie_moan___Slow_u__3_1766768231428.mp3",
+    "original": "150+ Free RPG Sounds/Zombie_moan_\u0393\u00c7\u00f4_Slow_u_#3-1766768231428.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/Zombie_moan___Slow_u__4_1766768225595.mp3",
+    "original": "150+ Free RPG Sounds/Zombie_moan_\u0393\u00c7\u00f4_Slow_u_#4-1766768225595.mp3"
+  },
+  {
+    "path": "res://assets/vendor/audio/generate_sound_effect_694eb85e4a053264c8b895d0_97SzKtixHzsKdusWXaACd.mp3",
+    "original": "150+ Free RPG Sounds/generate-sound-effect_694eb85e4a053264c8b895d0_97SzKtixHzsKdusWXaACd.mp3"
+  }
+]

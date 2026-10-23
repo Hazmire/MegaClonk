@@ -140,7 +140,9 @@ func run() -> void:
  game.resume()
  await physics_frame
  await physics_frame
- verify(game.boss_spawned,"Director spawns stage boss")
+ verify(not game.boss_spawned,"Stage timer does not summon the boss automatically")
+ game.activate_portal()
+ verify(game.boss_spawned,"Portal summons stage boss")
  var boss: Dictionary={}
  for enemy in game.enemies:
   if enemy.kind==8: boss=enemy
