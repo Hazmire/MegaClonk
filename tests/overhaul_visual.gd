@@ -28,9 +28,18 @@ func run() -> void:
    var e=game.spawn_enemy(kind,Vector3((kind%4)*4.5-6.75,0,(kind/4)*7+choice*3.0+2))
    e.pos.y=game.terrain_height(e.pos.x,e.pos.z)+0.65
    e.age=1.2+kind
+ var gallery_camera=Camera3D.new()
+ game.world.add_child(gallery_camera)
+ gallery_camera.position=Vector3(14,11,22)
+ gallery_camera.look_at(Vector3(0,0.8,6))
+ gallery_camera.current=true
+ game.player.position=Vector3(14,0,22)
+ for object in game.interactables: object.node.hide()
  game.update_enemies(0.001)
  await create_timer(0.3).timeout
  await capture("overhaul_enemy_gallery")
+ gallery_camera.queue_free()
+ game.player.camera.current=true
  game.enemies.clear(); game.enemy_view.begin_frame(); game.enemy_view.end_frame()
  game.player.avatar.show()
  game.player.position=Vector3(0,0,0)

@@ -13,10 +13,11 @@ jobs:
   windows-build:
     runs-on: ubuntu-latest
     timeout-minutes: 25
-    env:
-      BONK_TOOLS_ROOT: ${{ runner.temp }}/bonk-tools
-      BONK_RUNTIME_ROOT: ${{ runner.temp }}/bonk-runtime
     steps:
+      - name: Configure writable tool directories
+        run: |
+          echo "BONK_TOOLS_ROOT=$RUNNER_TEMP/bonk-tools" >> "$GITHUB_ENV"
+          echo "BONK_RUNTIME_ROOT=$RUNNER_TEMP/bonk-runtime" >> "$GITHUB_ENV"
       - name: Check out source and generated models
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Install checksum-verified Godot 4.7.2 and export templates
