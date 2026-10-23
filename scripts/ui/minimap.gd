@@ -19,14 +19,17 @@ func _draw() -> void:
    if reveal_all or explored.has(Vector2i(x,y)):
     draw_rect(Rect2(Vector2(x,y)*size/18,size/18+Vector2.ONE),Color("344f42"))
  if not is_instance_valid(game) or not is_instance_valid(game.player): return
+ for pos in game.landmarks:
+  if visible_at(pos):draw_circle(point(pos),3,Color("c3c7a1"))
  for obj in game.interactables:
   if obj.used or not visible_at(obj.node.position): continue
   var color=Color("f3cc6f") if obj.kind=="Chest" else (Color("b7a6ff") if obj.kind=="Shop" else Color("77d6d1"))
   draw_rect(Rect2(point(obj.node.position)-Vector2.ONE*2,Vector2.ONE*4),color)
  for e in game.enemies:
-  if e.kind>=8 and e.hp>0 and visible_at(e.pos): draw_circle(point(e.pos),2 if e.kind<8 else 4,Color("f3877a"))
+  if e.kind in [8,9,10] and e.hp>0 and visible_at(e.pos): draw_circle(point(e.pos),2 if e.kind<8 else 4,Color("f3877a"))
  if is_instance_valid(game.portal) and visible_at(game.portal.position): draw_arc(point(game.portal.position),6,0,TAU,20,Color("b3fff1"),2)
  draw_circle(point(game.player.position),4,Color("fff6dc"))
- var facing=Vector2(-sin(game.player.yaw),-cos(game.player.yaw))
+ var angle=game.player.avatar.rotation.y
+ var facing=Vector2(sin(angle),cos(angle))
  draw_line(point(game.player.position),point(game.player.position)+facing*10,Color("fff6dc"),2)
  draw_rect(Rect2(Vector2.ZERO,size),Color("c7a564"),false,2)

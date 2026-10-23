@@ -5,6 +5,8 @@ extends Node3D
 static var materials: Dictionary={}
 var animation_state="idle"
 var clock=0.0
+var flashing=false
+var flash_material: StandardMaterial3D
 var model: Node3D
 var rig: Skeleton3D
 var playback: AnimationPlayer
@@ -63,4 +65,13 @@ func animate(state: String, speed: float, delta: float) -> void:
   rotate_bone("DEF-ULEG."+side,Vector3.RIGHT,leg)
   rotate_bone("DEF-LLEG."+side,Vector3.RIGHT,0.95 if low else maxf(0,-leg)*0.5)
   rotate_bone("DEF-UARM_01."+side,Vector3.RIGHT,-stride*sign_value)
+  if state=="glide":rotate_bone("DEF-UARM_01."+side,Vector3.FORWARD,0.9*sign_value)
  rotate_bone("DEF-CHEST",Vector3.UP,sin(clock*6)*0.15 if state=="turn" else 0.0)
+
+func set_damage_flash(value: bool) -> void:
+ if flashing==value:return
+ flashing=value
+ if flash_material==null:
+  flash_material=StandardMaterial3D.new();flash_material.albedo_color=Color(1,0.02,0.01,0.85)
+  flash_material.transparency=BaseMaterial3D.TRANSPARENCY_ALPHA;flash_material.shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED
+ for mesh in model.find_children("*","MeshInstance3D",true,false):mesh.material_overlay=flash_material if flashing else null

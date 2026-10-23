@@ -70,3 +70,24 @@ with 15 files including the stage guide and supplied-asset licences. Final
 export's embedded PCK also passes 39 stage-loop checks; the same runtime's
 full 203-check packed-resource run passed before the guide-only packaging change.
 See releases/BUILD_INFO.md for checksums and publication evidence.
+
+## Core milestones and combat feedback — current update
+
+Baseline:203 prior checks. Current suites:31 integration,78 overhaul,55 updated menus,
+39 stage loop and112 milestone checks =315 checks. Updated menu expectations explicitly
+cover the requested silver wallet/250–750 prices, initially available abilities and revised
+trait/ultimate values. New tests verify source assets,30 terrain seeds, weapon pool eligibility,
+overkill-free DPS, red-flash triggers, effect caps/recycling, actual boss attack damage/dodging,
+three Soul Barrage waves, single-hit dash, consumed-shop save/load and legendary item behavior.
+
+Rendered output inspected under Mesa llvmpipe OpenGL compatibility: imported forest/Jacob,
+red player/enemy flashes, PSX explosions/sparks, both boss models and simultaneous bars,
+build/silver/shop screens. Actual1920×1080 and2560×1440 captures were inspected and scale
+with the reference layout. No shader/script errors in that inspection; the first run's shader
+cache miss recompiled successfully. Automated rendering is not a claim of human playtesting.
+
+400-enemy CPU-only observations: prior baseline16.14ms/tick; modified runs8.07ms,9.04ms and11.92ms.
+Variable cloud contention means these are observations, not a controlled speedup. Animation
+remains instanced/throttled; props are batched; projectiles/flipbooks pooled; visual caps24
+flipbooks/3 electric emitters (reduced mode6/no electric). Desktop-GPU60FPS certification,
+native Windows execution and long human balance playtests remain unverified.

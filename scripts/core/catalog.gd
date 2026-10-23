@@ -11,7 +11,7 @@ const WEAPONS = [
  ["Chunkers", "orbit", 17.0, 0.75, 4.0, "#c4a0ff"],
  ["Bone", "bounce", 16.0, 0.9, 20.0, "#f1edd1"],
  ["Bow", "pierce", 22.0, 0.9, 32.0, "#b7e978"],
- ["Revolver", "hitscan", 32.0, 0.8, 27.0, "#ffe5a6"],
+ ["Revolver", "bullet", 32.0, 0.8, 27.0, "#ffe5a6"],
  ["Aegis", "orbit", 18.0, 0.8, 4.0, "#69c5ff"],
  ["Bananarang", "return", 20.0, 1.0, 18.0, "#ffdf43"],
  ["Aura", "aura", 8.0, 0.6, 5.0, "#f5a7ff"],
@@ -75,6 +75,7 @@ const TOMES = {
  "Velocity": ["projectile_speed", 0.15], "Colossus": ["size", 0.15],
  "Persistence": ["duration", 0.2], "Force": ["knockback", 0.2],
  "Briar": ["thorns", 3.0], "Vampire": ["lifesteal", 0.01],
+ "Thermal": ["glide",0.15], "Gecko": ["climb",0.15], "Air Step": ["air_jumps",1.0], "Skater": ["slide_speed",0.15], "Wax": ["slide_friction",-0.08],
  "Greed": ["gold_gain", 0.2], "Curse": ["difficulty", 0.15]
 }
 const ITEMS = [
@@ -87,15 +88,27 @@ const ITEMS = [
  ["Vampire Fang", "epic", "lifesteal", 0.02],
  ["Storm Lens", "epic", "count", 1.0],
  ["Giant's Ring", "rare", "size", 0.2],
- ["Briar Halo", "common", "thorns", 5.0]
+ ["Briar Halo", "common", "thorns", 5.0],
+ ["Phoenix Seal", "legendary", "revives",1.0],
+ ["Thunder Covenant", "legendary", "storm",1.0],
+ ["Timekeeper", "legendary", "ultimate_haste",0.25]
 ]
 static func base_stats() -> Dictionary:
  return {"damage":1.0,"haste":1.0,"crit":0.05,"crit_damage":2.0,
  "max_health":100.0,"regen":0.2,"armor":0.0,"evasion":0.0,
  "speed":1.0,"jump":1.0,"pickup":1.0,"xp":1.0,"luck":0.0,
  "count":1.0,"projectile_speed":1.0,"size":1.0,"duration":1.0,
- "knockback":1.0,"thorns":0.0,"lifesteal":0.0,"gold_gain":1.0,"difficulty":1.0}
+ "knockback":1.0,"thorns":0.0,"lifesteal":0.0,"gold_gain":1.0,"difficulty":1.0,"air_jumps":0.0,"glide":1.0,"climb":1.0,"slide_speed":1.0,"slide_friction":1.0}
 static func threshold(level: int) -> float:
  return 10.0 + level * 7.0 + pow(level, 1.4)
 static func damage(base: float, stats: Dictionary, critical: bool) -> float:
  return base * stats.damage * (stats.crit_damage if critical else 1.0)
+
+static func item_description(id: int) -> String:
+ match id:
+  10:return "Revive once at full health after a fatal hit, with 3 seconds of protection."
+  11:return "Automatically strike a nearby enemy with lightning each second. Stacks increase damage."
+  12:return "Recover ultimate cooldown 25% faster during active gameplay."
+ var item=ITEMS[id];var stat=str(item[2]).replace("_"," ")
+ if item[2] in ["max_health","armor","count","thorns"]:return "+%.0f %s"%[item[3],stat]
+ return "+%.0f%% %s"%[item[3]*100,stat]

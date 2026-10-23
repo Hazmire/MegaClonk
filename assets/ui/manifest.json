@@ -1,6 +1,7 @@
 {
- "font": "Kurland by GGBotNet, SIL OFL 1.1; supplied archive",
- "traits_ultimates": "GandalfHardcore five-icon demo; game-use licence in assets/vendor/abilities/READ ME.txt; some demo icons reused",
- "player": "Jacob by Jupifox, CC BY 4.0; supplied FBX, authored Idle, original additive movement poses",
- "weapons_items_tomes": "original temporary glyphs; CraftPix linked terms unavailable, scroll pack absent"
+  "font": "Kurland OFL1.1",
+  "traits_ultimates": "GandalfHardcore supplied five-icon demo with original gold frames",
+  "player": "Jacob by Jupifox, CC BY4.0",
+  "weapons_items": "supplied CraftPix Undead icons under publisher free-asset terms supplied by user",
+  "tomes": "scrolls from supplied Undead Loot pack; separate paid scroll pack absent"
 }

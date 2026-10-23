@@ -1,33 +1,27 @@
-# Supplied asset audit — October 23, 2026
+# Uploaded assets — current integration status
 
-All eight user uploads were found on `megaclonk-menu-loadouts` commit `04a6722`
-and preserved by fast-forwarding the existing work branch. No reset or asset deletion.
+Original uploads on `04a6722` and particle uploads on `b57fff0` were preserved.
 
-| Archive | Audit and integration status |
+| Pack | Runtime use |
 | --- | --- |
-| Jacob.zip | Contained CC BY 4.0 licence by Jupifox. FBX/textures integrated; original additive movement animation over authored Idle. |
-| Kurland_Font_0_46.zip | Contained SIL OFL 1.1. Unmodified regular TTF integrated with full licence. |
-| GandalfHardcore Icons Demo.zip | Five PNGs and READ ME expressly permit commercial/free game use, prohibit standalone asset resale/redistribution. Integrated as game icons, with reused demo images. |
-| Free-Undead-Skill-Pixel-Art-Icons.zip | Licence.txt only points to https://craftpix.net/file-licenses/; page returns 403 from environment. Archive preserved; game import deferred until actual terms can be verified. |
-| free-undead-loot-pixel-art-icons.zip | Same linked CraftPix terms; not imported yet. |
-| 150+ Free RPG Sounds .zip | Publisher page now verified: permits commercial/non-commercial project use, prohibits claiming authorship or reselling sounds. **Cleared for game integration**, not yet imported/wired into the build. |
-| LowPoly Environment Pack.rar | 31 FBX models. Publisher metadata now verified as **CC BY 4.0**. **Cleared for integration with attribution**, not yet imported into scenes. |
-| Ancient Reliques.zip | OBJ/MTL/textures/VOX and preview, no licence. Not silently treated as the missing enemy pack. Preserved; not integrated. |
+| Jacob | Textured player, menu preview and shop NPCs; authored idle plus original procedural movement poses. |
+| Kurland | UI typography; included OFL. |
+| GandalfHardcore demo | Trait/ultimate icons and original animated gold frames; five demo images reused as needed. |
+| Undead Skill icons | Weapon/spell icons, mapped to suitable effects. |
+| Undead Loot icons | Items and scroll artwork for tomes. User supplied the linked CraftPix terms, clearing the previous blocked-link issue. |
+| RPG Sounds | Sourced UI, weapon, hit, death, pickup, level, ultimate and ambient audio. |
+| LowPoly Environment | Imported/batched forest trees, grass, bushes and rocks; simple colliders for substantial geometry. |
+| Ancient Reliques | Imported textured head-totem landmark. |
+| Electric FX Free | CC0 shader, adapted for bounded runtime GPU lightning particles. |
+| PSX FX Free | CC BY4.0 flipbook impacts, explosions, blood, sparks, smoke, fire and muzzle flash. |
 
-The Quaternius Bestiary and 48 Scroll packs are not in any of these archives.
-GitHub's current branches were enumerated; only the menu branch had the new
-upload commit. Existing original enemies, terrain, audio and weapon/item/tome
-icons continue to run until their replacements can be integrated correctly.
+The Quaternius Bestiary was not among the uploads. Its publisher page is now
+reachable and the free Standard download was attempted. Download storage host
+`itchio-mirror.cb031a832f44726753d6267436f3b414.r2.cloudflarestorage.com`
+is denied by the environment proxy. The pack is not claimed as integrated;
+original distinct low-poly enemies and procedural bosses remain.
 
-This audit supersedes the earlier blanket claim that none of the requested
-assets were available. Further work can proceed on gameplay independently.
+The separately linked 48 Scroll pack is not uploaded and currently requires payment.
+No purchase was made; scrolls from the supplied free loot pack fill that role.
 
-## Publisher-page recheck
-
-The sound/environment pages became accessible on recheck. Their publisher terms
-establish permission despite absent licence files inside the archives. Both
-Undead product pages also load, but do not state the licence directly; their
-linked CraftPix terms remain inaccessible. See [evidence and exact terms](licenses/PUBLISHER_VERIFICATION.md).
-
-These findings update licence status; they do not retroactively add assets to
-the previously published Windows build.
+See [credits](../ASSET_CREDITS.md) and [publisher evidence](licenses/PUBLISHER_VERIFICATION.md).

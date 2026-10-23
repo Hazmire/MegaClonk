@@ -5,13 +5,16 @@ var batches: Dictionary={}
 var counts: Dictionary={}
 var models: Dictionary={}
 var distant_models: Dictionary={}
-var material=ModelBuilder.material()
+var material: ShaderMaterial
+func _init() -> void:
+ material=ShaderMaterial.new();material.shader=preload("res://shaders/enemy_feedback.gdshader")
 func batch(key: String, mesh: Mesh, capacity: int) -> MultiMesh:
  if batches.has(key): return batches[key].multimesh
  var node=MultiMeshInstance3D.new()
  node.multimesh=MultiMesh.new()
  node.multimesh.transform_format=MultiMesh.TRANSFORM_3D
  node.multimesh.use_colors=true
+ node.multimesh.use_custom_data=true
  node.multimesh.mesh=mesh
  node.multimesh.instance_count=capacity
  node.multimesh.visible_instance_count=0
@@ -27,10 +30,11 @@ func put(key: String, mesh: Mesh, transform: Transform3D, color: Color, capacity
  if index>=capacity: return
  mm.set_instance_transform(index,transform)
  mm.set_instance_color(index,color)
+ mm.set_instance_custom_data(index,Color(1 if color==Color("ff0804") else 0,1 if key=="ghost" else 0,0,0))
  counts[key]=index+1
 func draw_enemy(e: Dictionary, viewer: Vector3) -> void:
  var key=e.variant.id
- if not models.has(key): models[key]=load(e.variant.model)
+ if not models.has(key): models[key]=e.variant.mesh if e.variant.has("mesh") else load(e.variant.model)
  var body: Mesh=models[key]
  var limb: Mesh=preload("res://assets/generated/limb.res")
  var direction=viewer-e.pos
@@ -44,7 +48,7 @@ func draw_enemy(e: Dictionary, viewer: Vector3) -> void:
  if e.hit_time>0: tilt=-0.25
  var swell=1+0.18*sin(e.age*24) if e.state=="windup" and e.action=="explode" else 1.0
  var color=Color.WHITE
- if e.hit_time>0: color=Color(2.5,2.2,2.0)
+ if e.hit_time>0: color=Color("ff0804")
  elif e.frozen>0: color=Color("91dfff")
  elif e.poison>0: color=Color("bcff83")
  elif e.burn>0: color=Color("ffc086")

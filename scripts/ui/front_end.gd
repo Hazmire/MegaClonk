@@ -6,6 +6,12 @@ var menu: Control
 var hud_root: Control
 var loadout_label: Label
 var gold_label: Label
+var boss_panel: VBoxContainer
+var boss_fingerprint=""
+var boss_widgets: Array=[]
+var ultimate_badge: Label
+var xp_label: Label
+var event_label: Label
 var timer_label: Label
 var status_label: Label
 var minimap: RunMinimap
@@ -49,11 +55,14 @@ func setup(owner_game: Node) -> void:
  game.xp_bar=ProgressBar.new();game.xp_bar.position=Vector2(0,698);game.xp_bar.size=Vector2(1280,22);game.xp_bar.show_percentage=false;hud_root.add_child(game.xp_bar)
  for pair in [[game.health_bar,Color("e17f83")],[game.xp_bar,Color("75cdb2")]]:
   var fill=StyleBoxFlat.new();fill.bg_color=pair[1];pair[0].add_theme_stylebox_override("fill",fill)
+ xp_label=text("",hud_root,14);xp_label.position=Vector2(450,698);xp_label.custom_minimum_size.x=380;xp_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
  loadout_label=text("",hud_root,14);loadout_label.position=Vector2(28,14)
  loadout_icons=VBoxContainer.new();loadout_icons.position=Vector2(28,38);loadout_icons.add_theme_constant_override("separation",5);hud_root.add_child(loadout_icons)
  gold_label=text("",hud_root,20);gold_label.position=Vector2(1010,25)
  timer_label=text("",hud_root,30);timer_label.position=Vector2(525,24);timer_label.custom_minimum_size.x=230;timer_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
- status_label=text("",hud_root,16);status_label.position=Vector2(28,184)
+ event_label=text("",hud_root,16);event_label.position=Vector2(380,62);event_label.custom_minimum_size.x=520;event_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+ boss_panel=VBoxContainer.new();boss_panel.position=Vector2(415,95);boss_panel.custom_minimum_size.x=450;hud_root.add_child(boss_panel)
+ status_label=text("",hud_root,16);status_label.position=Vector2(28,198)
  minimap=RunMinimap.new();minimap.game=game;minimap.position=Vector2(1040,450);minimap.size=Vector2(210,210);hud_root.add_child(minimap)
  var legend=text("YOU • PORTAL • TREASURE",hud_root,12);legend.position=Vector2(1040,670)
  game.notice=text("",root,18);game.notice.position=Vector2(350,646);game.notice.custom_minimum_size.x=590;game.notice.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
@@ -64,7 +73,7 @@ func heading(value: String, parent: Node, size_value: int = 28) -> Label:
  var label=text(value,parent,size_value);label.add_theme_font_override("font",headline_font);return label
 func action(value: String, parent: Node, callback: Callable) -> Button:
  var button=Button.new();button.text=value;button.custom_minimum_size.y=42;parent.add_child(button)
- button.pressed.connect(func(): game.tone(600,0.04);callback.call())
+ button.pressed.connect(func(): game.play_sound("menu");callback.call())
  return button
 func card(parent: Node, pos: Vector2, dimensions: Vector2) -> VBoxContainer:
  var panel=PanelContainer.new();panel.position=pos;panel.size=dimensions;panel.custom_minimum_size=dimensions
@@ -76,6 +85,7 @@ func card(parent: Node, pos: Vector2, dimensions: Vector2) -> VBoxContainer:
  game.panel=panel
  return column
 func clear() -> void:
+ if is_instance_valid(game.notice):game.notice.text=""
  for child in menu.get_children():menu.remove_child(child);child.queue_free()
  menu.show();hud_root.hide();Input.mouse_mode=Input.MOUSE_MODE_VISIBLE
  if is_instance_valid(game.player):game.player.active=false
@@ -117,18 +127,16 @@ func home() -> void:
  action("PLAY",buttons,play_screen).grab_focus();action("UNLOCKS",buttons,unlocks);action("QUESTS",buttons,quests);action("SETTINGS",buttons,func(): settings(home))
  var closest=card(menu,Vector2(24,28),Vector2(310,410));heading("Within reach",closest,19)
  var pending=[]
- for category in ["weapons","traits","items","ultimates"]:
-  for entry in LoadoutCatalog.entries(category):
-   if not MetaProgress.unlocked(game.progress.data,category,entry.id):
-    pending.append({"entry":entry,"ratio":minf(1,float(game.progress.data.kills)/maxf(1,entry.goal))})
- pending.sort_custom(func(a,b):return a.entry.goal<b.entry.goal if is_equal_approx(a.ratio,b.ratio) else a.ratio>b.ratio)
+ for q in LoadoutCatalog.quests():
+  if not q.id in game.progress.data.claimed:pending.append({"quest":q,"ratio":minf(1,MetaProgress.quest_value(game.progress.data,q.metric)/q.target)})
+ pending.sort_custom(func(a,b):return a.ratio>b.ratio)
  for i in mini(4,pending.size()):
-  var e=pending[i].entry;paragraph(e.name,closest,260)
-  text("%d / %d kills • %d credits"%[mini(game.progress.data.kills,e.goal),e.goal,e.cost],closest,13)
-  var bar=ProgressBar.new();bar.max_value=maxf(1,e.goal);bar.value=mini(game.progress.data.kills,e.goal);bar.custom_minimum_size.y=10;bar.show_percentage=false;closest.add_child(bar)
+  var q=pending[i].quest;paragraph(q.name,closest,260)
+  paragraph(quest_description(q),closest,260)
+  var bar=ProgressBar.new();bar.max_value=q.target;bar.value=MetaProgress.quest_value(game.progress.data,q.metric);bar.custom_minimum_size.y=10;bar.show_percentage=false;closest.add_child(bar)
  var currency=text(wallet(),menu,18);currency.position=Vector2(880,30)
 func wallet() -> String:
- return "CREDITS %d   •   QUEST GOLD %d\nACCOUNT LEVEL %d"%[game.progress.data.credits,game.progress.data.quest_gold,MetaProgress.account_level(game.progress.data)]
+ return "SILVER %d"%game.progress.data.silver
 func play_screen() -> void:
  game.mode="play";preview_mode="play";prepare_backdrop();game.mode="play";clear()
  var left=card(menu,Vector2(28,25),Vector2(460,645));left.add_theme_constant_override("separation",6);heading("Prepare your run",left,23)
@@ -179,27 +187,35 @@ func unlocks() -> void:
    heading(e.name,detail,22)
    if open:
     paragraph(e.description,detail,370)
-    action("Disable from runs" if MetaProgress.enabled(game.progress.data,active_tab,e.id) else "Enable in runs",detail,func():MetaProgress.toggle(game.progress.data,active_tab,e.id);game.progress.save();unlocks())
+    if active_tab in ["traits","ultimates"]:paragraph("Always available for loadout selection.",detail,370)
+    else:action("Disable from runs" if MetaProgress.enabled(game.progress.data,active_tab,e.id) else "Enable in runs",detail,func():MetaProgress.toggle(game.progress.data,active_tab,e.id);game.progress.save();unlocks())
    else:
     # Locked entries reveal their requirement, never their effect text.
-    paragraph("Unlock: %d lifetime kills and %d credits.\nProgress: %d / %d kills."%[e.goal,e.cost,mini(game.progress.data.kills,e.goal),e.goal],detail,370)
-    action("Unlock for %d credits"%e.cost,detail,func():
-     if MetaProgress.purchase(game.progress.data,active_tab,e.id):game.progress.save();unlocks()
-     else:game.toast("Requirement or credits missing")))
+    paragraph("Unlock: %d silver"%e.cost if active_tab=="weapons" else "Unlock: %d lifetime kills"%e.goal,detail,370)
+    if active_tab=="weapons":
+     action("Unlock for %d silver"%e.cost,detail,func():
+      if MetaProgress.purchase(game.progress.data,active_tab,e.id):game.progress.save();unlocks()
+      else:game.toast("Not enough silver"))
+   )
  heading("Account upgrades",col,21)
  for kind in ["weapon","tome"]:
   var slots=int(game.progress.data[kind+"_slots"])
   var required=2 if slots==2 else 4
-  action("%s slots: %d/4  •  %s"%[kind.capitalize(),slots,"MAXIMUM" if slots>=4 else "Level %d + %d quest gold"%[required,MetaProgress.slot_cost(game.progress.data,kind)]],col,func():
+  action("%s slots: %d/4  •  %s"%[kind.capitalize(),slots,"MAXIMUM" if slots>=4 else "%d silver"%MetaProgress.slot_cost(game.progress.data,kind)],col,func():
    if MetaProgress.buy_slot(game.progress.data,kind):game.progress.save();unlocks()
-   else:game.toast("Earn and claim quests to raise your level and quest gold"))
+   else:game.toast("Complete quests and claim silver rewards"))
 func quest_description(q: Dictionary) -> String:
  if q.metric.begins_with("weapon:"):return "%d kills using %s"%[q.target,Catalog.WEAPONS[int(q.metric.get_slice(":",1))][0]]
  match q.metric:
   "kills":return "Defeat %d enemies"%q.target
   "survival":return "Survive %d seconds in one run"%q.target
   "fast_clear":return "Clear the forest in under five minutes"
-  "bosses":return "Defeat a Warden"
+  "bosses":return "Defeat a main boss"
+  "minibosses":return "Defeat a miniboss"
+  "stage":return "Reach stage 2"
+  "endless":return "Survive until endless mode"
+  "early_stage":return "Escape a stage before the timer reaches zero"
+  "legendary_shop":return "Purchase from a Legendary shop"
   "chests":return "Open %d chests"%q.target
   _:return "Use an ultimate %d times"%q.target
 func quests() -> void:
@@ -208,9 +224,9 @@ func quests() -> void:
  for category in ["Hunting","Arsenal","Survival","Exploration"]:
   var scroll=ScrollContainer.new();scroll.name=category;tabs.add_child(scroll)
   var list=VBoxContainer.new();list.size_flags_horizontal=Control.SIZE_EXPAND_FILL;scroll.add_child(list)
-  for q in LoadoutCatalog.QUESTS:
+  for q in LoadoutCatalog.quests():
    if q.category!=category:continue
-   heading(q.name,list,20);paragraph(quest_description(q)+" • Reward: %d credits / %d quest gold"%[q.credits,q.gold],list,900)
+   heading(q.name,list,20);paragraph(quest_description(q)+" • Reward: %d silver"%LoadoutCatalog.quest_reward(q),list,900)
    var bar=ProgressBar.new();bar.max_value=q.target;bar.value=MetaProgress.quest_value(game.progress.data,q.metric);list.add_child(bar)
    var claimed=q.id in game.progress.data.claimed
    var claim=action("Claimed" if claimed else "Claim reward",list,func():
@@ -227,14 +243,16 @@ func update_hud() -> void:
  loadout_label.text="ARSENAL %d/%d • TOMES %d/%d"%[game.weapons.size(),game.weapon_limit(),game.tomes.size(),game.tome_limit()]
  var equipment=[]
  for id in game.weapons:equipment.append(str(id)+":"+str(game.weapons[id].level))
- var fingerprint=str(equipment)+str(game.tomes)+game.loadout_runtime.trait_id+game.loadout_runtime.ultimate_id
+ var fingerprint=str(equipment)+str(game.tomes)+str(game.weapon_limit())+str(game.tome_limit())+game.loadout_runtime.trait_id+game.loadout_runtime.ultimate_id
  if fingerprint!=icon_fingerprint:
   icon_fingerprint=fingerprint
   for child in loadout_icons.get_children():loadout_icons.remove_child(child);child.queue_free()
   var weapon_row=HBoxContainer.new();loadout_icons.add_child(weapon_row)
   for id in game.weapons:icon_tile(weapon_row,"weapons",str(id),Catalog.WEAPONS[id][0],false,int(game.weapons[id].level))
+  for i in maxi(0,game.weapon_limit()-game.weapons.size()):empty_slot(weapon_row,"Empty weapon slot")
   var tome_row=HBoxContainer.new();loadout_icons.add_child(tome_row)
   for id in game.tomes:icon_tile(tome_row,"tomes",str(id),str(id),false,int(game.tomes[id]))
+  for i in maxi(0,game.tome_limit()-game.tomes.size()):empty_slot(tome_row,"Empty tome slot")
   var ability_row=HBoxContainer.new();loadout_icons.add_child(ability_row)
   icon_tile(ability_row,"traits",game.loadout_runtime.trait_id,LoadoutCatalog.entry("traits",game.loadout_runtime.trait_id).get("name","Trait"),true)
   icon_tile(ability_row,"ultimates",game.loadout_runtime.ultimate_id,LoadoutCatalog.entry("ultimates",game.loadout_runtime.ultimate_id).get("name","Ultimate"),true)
@@ -243,19 +261,22 @@ func update_hud() -> void:
  timer_label.text="%02d:%02d"%[int(left)/60,int(left)%60] if left>0 else "00:00 • ENDLESS"
  timer_label.modulate=Color("f68c7a") if left<=0 else Color("f2e5c4")
  game.health_bar.max_value=game.stats.max_health;game.health_bar.value=game.health
- game.xp_bar.max_value=Catalog.threshold(game.level);game.xp_bar.value=game.xp
+ xp_label.text="LEVEL %d • %.0f / %.0f XP"%[game.level,game.xp,Catalog.threshold(game.level)]
+ if is_instance_valid(ultimate_badge):ultimate_badge.text="READY" if game.loadout_runtime.cooldown<=0 else str(ceili(game.loadout_runtime.cooldown))+"s"
+ game.xp_bar.max_value=Catalog.threshold(game.level);game.xp_bar.value=game.xp;game.xp_bar.tooltip_text="Level %d • %.0f / %.0f XP"%[game.level,game.xp,Catalog.threshold(game.level)]
  status_label.text="HP %d/%d  •  LV %d  •  KILLS %d\nTab • Build & stats"%[maxf(0,game.health),game.stats.max_health,game.level,game.kills]
  status_label.text+="\n[%s] %s • %s"%[OS.get_keycode_string(game.bindings.ultimate),LoadoutCatalog.entry("ultimates",game.loadout_runtime.ultimate_id).get("name","Ultimate"),"READY" if game.loadout_runtime.cooldown<=0 else "%ds"%ceili(game.loadout_runtime.cooldown)]
  if game.loadout_runtime.remaining>0:status_label.text+="\nULTIMATE ACTIVE • %.1fs"%game.loadout_runtime.remaining
- for e in game.enemies:
-  if e.kind==8:status_label.text+="\nWARDEN %d / %d"%[maxf(0,e.hp),e.max_hp]
+ update_boss_bars()
  if game.settings.fps:status_label.text+="\n%d FPS"%Engine.get_frames_per_second()
 func inventory() -> void:
  game.mode="build";var col=page("Your build & character stats")
+ text("Stage %d • Gold %d • Level %d • %.0fs survived"%[game.stage,game.gold,game.level,game.elapsed],col,16)
  var row=HBoxContainer.new();col.add_child(row)
  var left=VBoxContainer.new();row.add_child(left)
  heading("Equipment",left,22)
- for id in game.weapons:icon_row(left,"weapons",str(id),"%s • Level %d"%[Catalog.WEAPONS[id][0],game.weapons[id].level])
+ for id in game.weapons:
+  var weapon_row=icon_row(left,"weapons",str(id),"%s • Level %d"%[Catalog.WEAPONS[id][0],game.weapons[id].level]);weapon_row.tooltip_text=game.weapon_tooltip(id)
  for id in game.tomes:icon_row(left,"tomes",str(id),"%s • Level %d"%[id,game.tomes[id]])
  for category in ["traits","ultimates"]:
   var id=game.loadout_runtime.trait_id if category=="traits" else game.loadout_runtime.ultimate_id
@@ -268,12 +289,17 @@ func inventory() -> void:
   var index=0
   for i in Catalog.ITEMS.size():
    if Catalog.ITEMS[i][0]==name:index=i;break
-  icon_row(middle,"items",str(index),"%s ×%d"%[name,counts[name]])
+  var item_row=icon_row(middle,"items",str(index),"%s ×%d"%[name,counts[name]]);item_row.tooltip_text=Catalog.item_description(index)
  var right=VBoxContainer.new();row.add_child(right);heading("Live statistics",right,22)
  var stats_grid=GridContainer.new();stats_grid.columns=2;right.add_child(stats_grid)
  for key in game.stats:
-  text(key.replace("_"," ").capitalize(),stats_grid,15);text("%.2f"%game.stats[key],stats_grid,15)
- text("Trait/ultimate damage ×%.2f"%game.loadout_runtime.damage_multiplier(),right,14)
+  var name_label=text(key.replace("_"," ").capitalize(),stats_grid,15);name_label.tooltip_text=BuildStats.help(key);name_label.mouse_filter=Control.MOUSE_FILTER_STOP
+  var value_label=text(BuildStats.value(key,game.stats[key]),stats_grid,15);value_label.tooltip_text=BuildStats.help(key);value_label.mouse_filter=Control.MOUSE_FILTER_STOP
+ var multiplier=game.loadout_runtime.damage_multiplier()
+ var trait_multiplier=multiplier/(1.75 if game.loadout_runtime.remaining>0 and game.loadout_runtime.ultimate_id=="berserk" else 1.0)
+ text("Trait damage bonus +%.0f%%"%((trait_multiplier-1)*100),right,14)
+ text("Combined damage bonus +%.0f%%"%((game.stats.damage*multiplier-1)*100),right,14)
+ var reduction=text("Damage reduction %.0f%%"%((1-game.loadout_runtime.incoming_multiplier()*100/(100+game.stats.armor*5))*100),right,14);reduction.tooltip_text=BuildStats.help("armor");reduction.mouse_filter=Control.MOUSE_FILTER_STOP
  action("Resume",col,game.resume)
 func upgrades() -> void:
  game.mode="upgrade";var col=page("Level %d • Choose your power"%game.level)
@@ -287,7 +313,7 @@ func upgrades() -> void:
   var title="";var description="";var category="weapons"
   if choice.type=="weapon":
    var id=int(choice.id);var rank=int(game.weapons[id].level) if game.weapons.has(id) else 0
-   title=Catalog.WEAPONS[id][0];description="Level %d → %d\nDamage %.0f → %.0f\n%s"%[rank,rank+1,Catalog.WEAPONS[id][2]*(1+maxi(0,rank-1)*0.23),Catalog.WEAPONS[id][2]*(1+rank*0.23),Catalog.WEAPONS[id][1]]
+   title=Catalog.WEAPONS[id][0];description="New weapon • "+Catalog.WEAPONS[id][1] if rank==0 else "Level %d → %d\n%s"%[rank,rank+1,WeaponUpgrades.description(id,game.weapons[id],choice.attribute)]
   elif choice.type=="tome":
    category="tomes";var stat=Catalog.TOMES[choice.id][0];title=str(choice.id)+" Tome";description="Level %d → %d\n%s %.2f → %.2f"%[game.tomes.get(choice.id,0),game.tomes.get(choice.id,0)+1,stat,game.stats[stat],game.stats[stat]+Catalog.TOMES[choice.id][1]]
   else:title="Field supplies";description="Restore 25 health."
@@ -300,24 +326,24 @@ func upgrades() -> void:
  action("Skip • heal 10",controls,func():game.health=minf(game.stats.max_health,game.health+10);game.resume())
 func shop(object: Dictionary) -> void:
  game.mode="shop";shop_object=object
- if not object.has("offers"):object.offers=game.available_items();object.offers.shuffle();object.offers=object.offers.slice(0,3)
+ if not object.has("offers"):object.offers=ShopSystem.offers(object.get("tier","Common"),game.available_items(),game.rng)
  shop_offers=object.offers
- var col=page("Wanderer's shop");paragraph("Run gold: %d • Choose an item. Purchased stock stays sold."%game.gold,col,850)
+ var col=page(object.get("tier","Common")+" shop");paragraph("Run gold: %d • One purchase per seller."%game.gold,col,850)
  var row=HBoxContainer.new();row.add_theme_constant_override("separation",15);col.add_child(row)
  for i in shop_offers.size():
-  var id=int(shop_offers[i]);var item=Catalog.ITEMS[id];var price=15 if item[1]=="common" else (25 if item[1]=="rare" else 40)
+  var id=int(shop_offers[i]);var item=Catalog.ITEMS[id];var price=ShopSystem.price(id)
   var box=VBoxContainer.new();box.custom_minimum_size=Vector2(345,280);row.add_child(box)
-  icon_row(box,"items",str(id),item[0]);paragraph("%s\n+%s %s"%[item[1],item[3],item[2]],box,300)
+  icon_row(box,"items",str(id),item[0]);paragraph(item[1].capitalize()+"\n"+Catalog.item_description(id),box,300)
   var sold=id in object.get("sold",[])
   var buy=action("SOLD" if sold else "Buy • %d gold"%price,box,func():
-   if game.buy_shop(object,id,price):shop(object)
+   if game.buy_shop(object,id,price):return
    else:game.toast("Not enough run gold"))
   buy.disabled=sold or game.gold<price
  if shop_offers.is_empty():paragraph("No enabled items are available. Enable items from Unlocks between runs.",col,900)
  action("Leave shop",col,game.resume)
 func reward(item: Array) -> void:
  game.mode="reward";var col=page("Treasure discovered")
- var id=Catalog.ITEMS.find(item);icon_row(col,"items",str(id),item[0]);paragraph("%s • +%s %s\nApplied to your build immediately."%[item[1],item[3],item[2]],col,850)
+ var id=Catalog.ITEMS.find(item);icon_row(col,"items",str(id),item[0]);paragraph(item[1].capitalize()+" • "+Catalog.item_description(id)+"\nApplied to your build immediately.",col,850)
  action("Continue",col,game.resume)
 func settings(back: Callable) -> void:
  settings_back=back
@@ -377,7 +403,30 @@ func icon_tile(parent: Node, category: String, id: String, hint: String, golden:
  if golden:
   var border=ColorRect.new();border.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);border.mouse_filter=Control.MOUSE_FILTER_IGNORE
   var material=ShaderMaterial.new();material.shader=preload("res://shaders/gold_frame.gdshader");border.material=material;slot.add_child(border)
+ if category=="ultimates":
+  ultimate_badge=text("",slot,11);ultimate_badge.position=Vector2(0,20);ultimate_badge.add_theme_color_override("font_shadow_color",Color.BLACK);ultimate_badge.add_theme_constant_override("shadow_offset_x",1);ultimate_badge.add_theme_constant_override("shadow_offset_y",1)
 func leave_settings() -> void:
  game.progress.data.settings=game.settings;game.progress.data.settings.bindings=game.bindings;game.progress.save()
  if settings_back.is_valid():settings_back.call()
  else:home()
+
+func empty_slot(parent: Node, label: String) -> void:
+ var slot=PanelContainer.new();slot.custom_minimum_size=Vector2(34,34);slot.tooltip_text=label;parent.add_child(slot)
+ var mark=text("—",slot,18);mark.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+func update_boss_bars() -> void:
+ var bosses=[]
+ for e in game.enemies:
+  if e.kind in [8,9,10] and e.hp>0:bosses.append(e)
+ bosses.sort_custom(func(a,b):return a.kind<b.kind)
+ var fingerprint=""
+ for e in bosses:fingerprint+=str(e.kind)+str(e.get("encounter",""))
+ if fingerprint!=boss_fingerprint:
+  boss_fingerprint=fingerprint
+  for child in boss_panel.get_children():boss_panel.remove_child(child);child.queue_free()
+  boss_widgets.clear()
+  for e in bosses:
+   var label=text("",boss_panel,16);var bar=ProgressBar.new();bar.custom_minimum_size=Vector2(450,10);bar.show_percentage=false;boss_panel.add_child(bar)
+   var fill=StyleBoxFlat.new();fill.bg_color=Color("e56f73") if e.kind==8 else Color("d9a95f");bar.add_theme_stylebox_override("fill",fill)
+   boss_widgets.append({"label":label,"bar":bar})
+ for i in bosses.size():
+  var e=bosses[i];boss_widgets[i].label.text="%s  %d / %d"%[e.variant.name,maxf(0,e.hp),e.max_hp];boss_widgets[i].bar.max_value=e.max_hp;boss_widgets[i].bar.value=maxf(0,e.hp)

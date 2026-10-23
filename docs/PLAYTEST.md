@@ -1,60 +1,38 @@
-# Stage-foundation playtest
+# Playtest guide — core overhaul
 
-Current stage rules supersede the previous three-minute single-stage ending:
-[Stage foundation](STAGE_FOUNDATION.md). Use E at the purple portal to summon the
-Warden, defeat it, then E at the mint portal to enter the next forest stage.
-The clock starts at 10:00; rushes at 08:00/04:00, endless ordinary pressure at zero.
-Jacob/Kurland/ability icons are now included. New bosses/minibosses/ghosts and
-revised economy remain pending. Previous feature/control details follow.
+Extract the Windows ZIP, launch BONK_INFINITY.exe. Use Launch_Compatibility.bat if Vulkan
+is unavailable. No Godot installation is needed. Native Windows execution is not verified
+in the cloud; the export's packed resources are validated with Linux Godot.
 
-MEGACLONK — menus, loadouts and progression build
+Play / Unlocks / Quests / Settings. Choose one owned starting weapon, any of the five traits,
+and any of the three ultimates. There is one forest biome and one player character, Jacob.
 
-Extract the Windows ZIP and launch BONK_INFINITY.exe (the filename/user-data
-folder is retained from earlier builds). If Vulkan is unavailable, use
-Launch_Compatibility.bat. No engine installation, account or internet is
-needed by the exported game. Windows execution still needs native playtesting.
+WASD movement; mouse camera; Space jump / hold to glide with Glider; Left Ctrl crouch/slide;
+E interact; Q ultimate; Tab build/stat tooltips; Escape pause/save; wheel zoom; F11 fullscreen.
+Gameplay controls are rebindable. Air Step grants extra jumps; Wall Climber can wall jump.
 
-MAIN MENU
-Play / Unlocks / Quests / Settings. The forest background rotates slowly.
-The upper-left panel shows the four nearest outstanding unlock requirements.
+10:00 countdown. Rushes08:00/04:00. Minibosses07:00/03:00. Endless at00:00. Find the purple
+portal and E to summon the seeded main boss at any time. Defeat it, explore further or E at
+the mint portal to advance. Build and gold persist across generated forest stages. The
+Colossus slam can be jumped; dodge its charge and thorns. The Sovereign marks explosions,
+dashes along its telegraph and fires three projectile waves. Main/miniboss bars coexist.
 
-PLAY
-Choose one starting weapon, one passive trait and one ultimate. There is one
-playable adventurer and one forest destination. Personal bests show selected
-loadouts. The current original Scout is a temporary model: the requested
-Jacob and itch.io packs remain inaccessible, as detailed in ASSET_STATUS.md.
+Gold is automatically collected from kills and spent in the run. A shop offers tier-appropriate
+stock; one successful purchase consumes the seller. Browsing/insufficient gold leaves it intact.
+Chests start at15gold and increase by5 each. Legendary effects include a revival, periodic
+lightning and faster ultimate recovery. Red flashes indicate actual damage; particle intensity
+and reduced effects are configurable.
 
-WASD move, mouse look, Space jump, Ctrl crouch or momentum slide, E interact,
-Q ultimate, Escape pause, Tab build/stats/items, wheel zoom, F11 fullscreen.
-All gameplay keys can be rebound in Settings. Skyweaver glides while Jump is
-held during descent. Cliffwalker climbs by moving forward against a wall.
+Quests persist progress when a non-practice run ends; claim silver once per quest. Silver
+unlocks weapons and buys capacity:250 for slot3,750 for slot4, separately for weapons/tomes.
+All traits/ultimates are always available. Disabled owned weapons remain valid starters.
+Weapon upgrade cards select an eligible attribute and show the exact proposed change.
+Tab tooltips distinguish recent measured DPS (no overkill) from a labelled base estimate.
 
-SURVIVE
-Weapons attack automatically. Collect XP, select upgrades and find treasure.
-The countdown lasts three minutes. At zero the Warden appears and enemies
-keep getting tougher. Defeat the Warden, then enter its portal to win.
-Chests begin at 15 run gold and increase by 5 each. Shops have priced stock.
-The minimap reveals explored areas; Far Sight begins fully revealed.
-
-PROGRESSION
-New profiles have 2 weapon and 2 tome slots. Unlocks tabs contain collection
-entries and permanent slot upgrades. Locked details show only requirements.
-Disabled owned starting weapons remain selectable; disabled unowned entries
-are excluded from run offers. Credits purchase entries after their milestone.
-Quest gold buys slots: level 2 +100 gold for third slots, level 4 +200 gold
-for fourth slots. Two claimed quests raise account level by one.
-
-Open Quests to CLAIM completed rewards. Credits/quest gold are persistent;
-run gold buys chests/shop stock. Practice/sandbox runs do not bank progression.
-
-SAVES
-Escape > Save run; return via Play > Resume saved run. Profiles stay in
+Escape > Save run, then Play > Resume saved run. Profiles retain the old data location:
 %APPDATA%\Godot\app_userdata\BONK INFINITY\progress.json
-V1 profiles migrate to V2 with a .v1.bak backup. Older executables cannot read
-V2 profiles. Existing lifetime statistics/currency/settings are retained.
-Run saves preserve loadout, cooldowns, fog, enemies and shop stock; transient
-projectiles/fields restart on resume. Do not delete the user-data folder.
+V3 migrates old credits + quest gold to silver once. Existing owned entries/settings/statistics
+remain. Run checkpoints preserve stage/event/portal/encounter state, weapon attributes, shops,
+fog and abilities; transient projectiles, damage windows and visual effects restart on loading.
 
-This build's functional UI/loadout systems are tested. Exact requested assets,
-native Windows execution and real-GPU FPS remain outstanding. Read
-MENU_GUIDE.md, ASSET_STATUS.md and FEATURE_STATUS.md for details.
+[Full rules](CORE_OVERHAUL.md). Missing exact-art substitutions are documented in ASSET_STATUS.md.

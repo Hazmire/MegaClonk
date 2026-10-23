@@ -1,16 +1,16 @@
 class_name LoadoutCatalog
 extends RefCounted
 const TRAITS=[
- {"id":"climber","name":"Cliffwalker","description":"Move forward against walls to climb.","goal":0,"cost":0},
- {"id":"momentum","name":"Endless Stride","description":"Movement builds damage, up to +50%. Stopping drains it.","goal":0,"cost":0},
- {"id":"sentry","name":"Rooted Fury","description":"Stand still to build up to +60% damage.","goal":100,"cost":30},
- {"id":"glider","name":"Skyweaver","description":"Hold Jump while falling to glide and steer.","goal":250,"cost":50},
- {"id":"seer","name":"Far Sight","description":"Begin with the entire minimap revealed.","goal":500,"cost":75}
+ {"id":"climber","name":"Wall Climber","description":"Move forward against walls to climb.","goal":0,"cost":0},
+ {"id":"momentum","name":"Momentum","description":"Movement builds damage, up to +40%. Stopping drains it.","goal":0,"cost":0},
+ {"id":"sentry","name":"Unmoving Force","description":"Stand still to build up to +50% damage.","goal":0,"cost":0},
+ {"id":"glider","name":"Glider","description":"Hold Jump while falling to glide and steer.","goal":0,"cost":0},
+ {"id":"seer","name":"Cartographer","description":"Begin with the entire minimap revealed.","goal":0,"cost":0}
 ]
 const ULTIMATES=[
- {"id":"nova","name":"Cataclysm","description":"A devastating 28m explosion. 90 second cooldown.","cooldown":90.0,"duration":0.0,"goal":0,"cost":0},
- {"id":"berserk","name":"Berserker","description":"12 seconds: double damage and 50% less incoming damage.","cooldown":75.0,"duration":12.0,"goal":150,"cost":60},
- {"id":"ghost","name":"Ghost Form","description":"8 seconds: invulnerable, +100% speed, +125% jump height.","cooldown":90.0,"duration":8.0,"goal":400,"cost":100}
+ {"id":"nova","name":"Cataclysm","description":"A devastating 15m explosion. 90 second cooldown.","cooldown":90.0,"duration":0.0,"goal":0,"cost":0},
+ {"id":"berserk","name":"Berserker","description":"12 seconds: +75% damage and 30% less incoming damage.","cooldown":90.0,"duration":12.0,"goal":0,"cost":0},
+ {"id":"ghost","name":"Ghost Form","description":"8 seconds: invulnerable, +100% speed, +100% jump height.","cooldown":120.0,"duration":8.0,"goal":0,"cost":0}
 ]
 const QUESTS=[
  {"id":"first_hunt","name":"First blood","category":"Hunting","metric":"kills","target":40,"credits":20,"gold":25},
@@ -26,19 +26,33 @@ const QUESTS=[
  {"id":"treasure","name":"Treasure trail","category":"Exploration","metric":"chests","target":6,"credits":40,"gold":50},
  {"id":"ultimate","name":"Unleashed","category":"Arsenal","metric":"ultimates","target":5,"credits":35,"gold":40}
 ]
+const EXTRA_QUESTS=[
+ {"id":"revolver","name":"Six shooter","category":"Arsenal","metric":"weapon:7","target":100,"credits":0,"gold":0,"silver":150},
+ {"id":"champion","name":"Champion slayer","category":"Hunting","metric":"minibosses","target":1,"credits":0,"gold":0,"silver":150},
+ {"id":"stage2","name":"Into the deep forest","category":"Exploration","metric":"stage","target":2,"credits":0,"gold":0,"silver":200},
+ {"id":"endless_mode","name":"After the final bell","category":"Survival","metric":"endless","target":1,"credits":0,"gold":0,"silver":200},
+ {"id":"early_exit","name":"Ahead of the darkness","category":"Survival","metric":"early_stage","target":1,"credits":0,"gold":0,"silver":200},
+ {"id":"legendary_shop","name":"A fabled bargain","category":"Exploration","metric":"legendary_shop","target":1,"credits":0,"gold":0,"silver":250}
+]
+static func quests() -> Array:
+ var result=QUESTS+EXTRA_QUESTS
+ for id in Catalog.WEAPONS.size():
+  result.append({"id":"mastery_"+str(id),"name":Catalog.WEAPONS[id][0]+" mastery","category":"Arsenal","metric":"weapon:"+str(id),"target":100,"credits":0,"gold":0,"silver":150})
+ return result
+static func quest_reward(q: Dictionary) -> int:return int(q.get("silver",int(q.credits)+int(q.gold)))
 static func entries(category: String) -> Array:
  var result: Array=[]
  match category:
   "weapons":
    for i in Catalog.WEAPONS.size():
     var w=Catalog.WEAPONS[i]
-    result.append({"id":str(i),"name":w[0],"description":"%s • %.0f damage • %.2fs cooldown"%[w[1],w[2],w[3]],"goal":0 if i in [0,1,6,7] else (i+1)*15,"cost":0 if i in [0,1,6,7] else 15+i*3})
+    result.append({"id":str(i),"name":w[0],"description":"%s • %.0f damage • %.2fs cooldown"%[w[1],w[2],w[3]],"goal":0,"cost":0 if i in [0,1,6,7] else 15+i*3})
   "traits": result=TRAITS.duplicate(true)
   "ultimates": result=ULTIMATES.duplicate(true)
   "items":
    for i in Catalog.ITEMS.size():
     var item=Catalog.ITEMS[i]
-    result.append({"id":str(i),"name":item[0],"description":"%s • +%s %s"%[item[1],item[3],item[2]],"goal":0 if i<5 else i*50,"cost":0 if i<5 else i*10})
+    result.append({"id":str(i),"name":item[0],"description":Catalog.item_description(i),"goal":0 if i<5 or i>=10 else i*50,"cost":0 if i<5 else i*10})
  return result
 static func entry(category: String, id: String) -> Dictionary:
  for definition in entries(category):

@@ -13,14 +13,15 @@ func load_save(path: String = "") -> bool:
  var parser=JSON.new()
  if parser.parse(FileAccess.get_file_as_string(path))!=OK:return false
  var parsed=parser.data
- if not parsed is Dictionary or int(parsed.get("version", 0)) > 2: return false
+ if not parsed is Dictionary or int(parsed.get("version", 0)) > 3: return false
  if int(parsed.get("version",1))<2 and not FileAccess.file_exists(path+".v1.bak"):
   DirAccess.copy_absolute(path,path+".v1.bak")
+ MetaProgress.migrate(parsed)
  MetaProgress.migrate(data)
  for key in data:
   if parsed.has(key) and typeof(parsed[key]) == typeof(data[key]): data[key] = parsed[key]
  # JSON parses integers as floats. Normalize numerical fields explicitly.
- for key in ["currency","kills","runs","wins","credits","quest_gold","weapon_slots","tome_slots","account_level"]:
+ for key in ["silver","currency","kills","runs","wins","credits","quest_gold","weapon_slots","tome_slots","account_level"]:
   if parsed.get(key) is float or parsed.get(key) is int: data[key] = maxi(0, int(parsed[key]))
  if int(parsed.get("version",1))<2: data.credits=maxi(0,int(parsed.get("currency",0)))
  data.unlocked = normalize_ids(data.unlocked, 21)
@@ -44,8 +45,7 @@ func finish(kills: int, time: float, victory: bool, biome: int, sandbox: bool) -
  data.runs += 1
  data.kills += kills
  var reward=maxi(1,kills/8)+(25 if victory else 0)
- data.currency+=reward
- data.credits+=reward
+ # Permanent silver is granted only by idempotent quest claims.
  data.best = maxf(data.best, time)
  if victory:
   data.wins += 1

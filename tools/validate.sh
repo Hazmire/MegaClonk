@@ -34,3 +34,9 @@ if ! tools/godot.sh --headless --path . --script tests/stage_loop.gd > "$log_pat
 fi
 cat "$log_path"
 if rg -q 'SCRIPT ERROR|^ERROR:' "$log_path"; then exit 1; fi
+if ! tools/godot.sh --headless --path . --script tests/milestones.gd > "$log_path" 2>&1; then
+ cat "$log_path"
+ exit 1
+fi
+cat "$log_path"
+if rg -q 'SCRIPT ERROR|^ERROR:' "$log_path"; then exit 1; fi

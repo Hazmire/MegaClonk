@@ -19,25 +19,26 @@ func _initialize() -> void:call_deferred("run")
 func run() -> void:
  var profile=Progress.new();profile.storage_path="user://menu-test-profile.json"
  MetaProgress.migrate(profile.data)
- check(profile.data.version==2 and profile.data.weapon_slots==2 and profile.data.tome_slots==2,"New profile starts with 2+2 slots")
+ check(profile.data.version==3 and profile.data.weapon_slots==2 and profile.data.tome_slots==2,"New profile starts with 2+2 slots")
  var old=FileAccess.open("user://legacy-menu-profile.json",FileAccess.WRITE)
  old.store_string(JSON.stringify({"version":1,"currency":123,"kills":200,"runs":4,"wins":1,"best":240.0,"unlocked":[0,1,2],"completed":[0],"settings":{}}));old.close()
  var legacy=Progress.new()
- check(legacy.load_save("user://legacy-menu-profile.json") and legacy.data.credits==123 and legacy.data.kills==200,"V1 migration preserves currency and lifetime stats")
+ check(legacy.load_save("user://legacy-menu-profile.json") and legacy.data.silver==123 and legacy.data.kills==200,"V1 migration preserves currency and lifetime stats")
  check(MetaProgress.unlocked(profile.data,"weapons","1") and not MetaProgress.unlocked(profile.data,"weapons","35"),"Default and locked weapon entries")
  check(MetaProgress.toggle(profile.data,"weapons","1") and not MetaProgress.enabled(profile.data,"weapons","1"),"Unlocked entry disable toggle")
  check(not MetaProgress.toggle(profile.data,"weapons","35"),"Locked entry cannot be enabled")
- profile.data.kills=500;profile.data.credits=100
- check(MetaProgress.purchase(profile.data,"traits","sentry") and profile.data.credits==70,"Unlock purchase charges credits once")
- check(not MetaProgress.purchase(profile.data,"traits","sentry") and profile.data.credits==70,"Already owned unlock cannot charge again")
+ profile.data.kills=500;profile.data.silver=100
+ check(MetaProgress.purchase(profile.data,"weapons","2") and profile.data.silver==79,"Weapon purchase charges silver once")
+ check(not MetaProgress.purchase(profile.data,"weapons","2") and profile.data.silver==79,"Already owned unlock cannot charge again")
  check(MetaProgress.claim(profile.data,"first_hunt") and not MetaProgress.claim(profile.data,"first_hunt"),"Quest claims are idempotent")
  MetaProgress.claim(profile.data,"hunter")
- profile.data.quest_gold=100
- check(MetaProgress.buy_slot(profile.data,"weapon") and profile.data.weapon_slots==3 and profile.data.quest_gold==0,"Account level and gold unlock third slot")
- profile.data.quest_gold=1000
- check(not MetaProgress.buy_slot(profile.data,"weapon"),"Fourth slot requires account level four")
+ profile.data.silver=250
+ check(MetaProgress.buy_slot(profile.data,"weapon") and profile.data.weapon_slots==3 and profile.data.silver==0,"250 silver buys third slot")
+ profile.data.silver=749
+ check(not MetaProgress.buy_slot(profile.data,"weapon"),"Fourth slot requires 750 silver")
  for quest in LoadoutCatalog.QUESTS:profile.data.quest_metrics[quest.metric]=1000
  for quest in LoadoutCatalog.QUESTS:MetaProgress.claim(profile.data,quest.id)
+ profile.data.silver=750
  check(MetaProgress.buy_slot(profile.data,"weapon") and profile.data.weapon_slots==4,"Fourth slot purchase")
  check(not MetaProgress.buy_slot(profile.data,"weapon"),"Slot capacity cannot exceed four")
  var before=profile.data.duplicate(true)
@@ -77,18 +78,18 @@ func run() -> void:
   if choice.type=="weapon" and int(choice.id)==0:no_disabled=false
  check(no_disabled,"Disabled unowned weapons excluded from upgrades")
  game.loadout_runtime.movement_charge=20
- check(is_equal_approx(game.loadout_runtime.damage_multiplier(),1.5),"Moving trait caps at +50 percent")
- game.loadout_runtime.reset("sentry","berserk");game.loadout_runtime.still_charge=6
- check(is_equal_approx(game.loadout_runtime.damage_multiplier(),1.6),"Standing trait caps at +60 percent")
+ check(is_equal_approx(game.loadout_runtime.damage_multiplier(),1.4),"Moving trait caps at +40 percent")
+ game.loadout_runtime.reset("sentry","berserk");game.loadout_runtime.still_charge=10
+ check(is_equal_approx(game.loadout_runtime.damage_multiplier(),1.5),"Standing trait caps at +50 percent")
  game.loadout_runtime.reset("climber","nova");game.enemies.clear()
  var e=game.spawn_enemy(0,game.player.position+Vector3(3,0,0));e.hp=10000;e.max_hp=10000
  game.rebuild_grid();var hp=e.hp
  check(game.loadout_runtime.activate(game) and e.hp<hp,"Nova damages nearby targets")
  check(not game.loadout_runtime.activate(game) and game.loadout_runtime.cooldown==90,"Ultimate cooldown prevents reuse")
  game.loadout_runtime.reset("climber","berserk");game.loadout_runtime.activate(game)
- check(game.loadout_runtime.damage_multiplier()==2 and game.loadout_runtime.incoming_multiplier()==0.5,"Berserker damage and defense are functional")
+ check(game.loadout_runtime.damage_multiplier()==1.75 and game.loadout_runtime.incoming_multiplier()==0.7,"Berserker damage and defense are functional")
  game.loadout_runtime.reset("glider","ghost");game.loadout_runtime.activate(game);game.loadout_runtime.tick(game,0.1)
- check(game.loadout_runtime.immune() and game.player.movement_multiplier==2 and game.player.jump_multiplier==2.25,"Ghost grants immunity, speed and jump")
+ check(game.loadout_runtime.immune() and game.player.movement_multiplier==2 and game.player.jump_multiplier==2,"Ghost grants immunity, speed and jump")
  game.health=100;game.invulnerability=0;game.hurt(20)
  check(game.health==100,"Ghost prevents incoming damage")
  game.loadout_runtime.tick(game,9)
@@ -121,10 +122,10 @@ func run() -> void:
  check(game.load_run("user://menu-loadout-run.json") and game.loadout_runtime.ultimate_id=="ghost" and game.loadout_runtime.cooldown==42 and game.frontend.minimap.reveal_all,"Run resume retains ultimate cooldown and minimap")
  game.mode="pause";game.player.active=false
  game.frontend.unlocks();check(game.mode=="unlocks","Unlock browser opens")
- game.frontend.active_tab="traits";game.frontend.unlocks()
+ game.frontend.active_tab="weapons";game.frontend.unlocks()
  for button in widgets(game.frontend.menu,"Button"):
-  if button.text.begins_with("Skyweaver"):button.pressed.emit();break
- check(screen_text().contains("Unlock:") and not screen_text().contains(LoadoutCatalog.TRAITS[3].description),"Locked detail reveals requirements without revealing effect")
+  if button.text.begins_with(Catalog.WEAPONS[35][0]):button.pressed.emit();break
+ check(screen_text().contains("Unlock:") and not screen_text().contains(LoadoutCatalog.entry("weapons","35").description),"Locked detail reveals requirements without revealing effect")
  game.frontend.quests();check(game.mode=="quests","Categorized quest screen opens")
  game.frontend.settings(game.frontend.home);check(game.mode=="settings","Grouped settings open")
  game.frontend.inventory();check(game.mode=="build","Stats and item inventory open")

@@ -1,5 +1,6 @@
 class_name BonkPlayer
 extends CharacterBody3D
+const RULES=preload("res://assets/config/abilities.tres")
 
 @export var ground_acceleration = 55.0
 @export var ground_friction = 45.0
@@ -84,12 +85,12 @@ func slide_velocity(horizontal: Vector3, normal: Vector3, direction: Vector3, de
  # Tangential gravity is the only source of slide acceleration. No entry boost.
  var tangent_gravity = (Vector3.DOWN*slope_acceleration).slide(normal)
  horizontal += Vector3(tangent_gravity.x,0,tangent_gravity.z)*delta
- horizontal = horizontal.move_toward(Vector3.ZERO,slide_friction*delta)
+ horizontal = horizontal.move_toward(Vector3.ZERO,slide_friction*stats.get("slide_friction",1.0)*delta)
  if direction.length_squared()>0.01 and horizontal.length()>0.1:
   var magnitude = horizontal.length()
   var steered = horizontal.normalized().lerp(direction,clampf(slide_steering*delta,0,1)).normalized()
   horizontal = steered*magnitude
- return horizontal.limit_length(max_slide_speed)
+ return horizontal.limit_length(max_slide_speed*stats.speed*stats.get("slide_speed",1.0))
 func _physics_process(delta: float) -> void:
  if not active: return
  arm.rotation = Vector3(pitch, yaw, 0)
@@ -116,27 +117,32 @@ func _physics_process(delta: float) -> void:
   horizontal=air_velocity(horizontal,direction,delta)
  velocity.x=horizontal.x
  velocity.z=horizontal.z
+ max_jumps=1+int(stats.get("air_jumps",0))+(2 if stats.get("legacy_air",false) else 0)
  if is_on_floor():
   if fall_velocity < -24: fall_hit+=(-fall_velocity-24)*1.5
   jumps=0
   fall_velocity=0
  else:
-  velocity.y-=34*delta
-  if can_glide and velocity.y<0 and Input.is_action_pressed("jump"): velocity.y=maxf(velocity.y,-3.0)
+  var gliding=can_glide and velocity.y<0 and Input.is_action_pressed("jump")
+  velocity.y-=34*(RULES.glide_gravity_multiplier/maxf(1,stats.get("glide",1)) if gliding else 1.0)*delta
+  if can_glide and velocity.y<0 and Input.is_action_pressed("jump"): velocity.y=maxf(velocity.y,-maxf(0.8,RULES.glide_terminal_speed/maxf(1,stats.get("glide",1))))
   fall_velocity=minf(fall_velocity,velocity.y)
- if Input.is_action_just_pressed("jump") and (is_on_floor() or jumps<max_jumps):
+ var wall_jump=can_climb and is_on_wall() and maxf(absf(position.x),absf(position.z))<73
+ if Input.is_action_just_pressed("jump") and (is_on_floor() or jumps<max_jumps or wall_jump):
   velocity.y=jump_impulse*sqrt(stats.jump*jump_multiplier)
   jumps+=1
- if can_climb and is_on_wall() and Input.is_action_pressed("forward") and not low and maxf(absf(position.x),absf(position.z))<73: velocity.y=8*stats.speed*0.6
+  if wall_jump:velocity+=get_wall_normal()*6
+ if can_climb and is_on_wall() and Input.is_action_pressed("forward") and not low and not Input.is_action_just_pressed("jump") and maxf(absf(position.x),absf(position.z))<73: velocity.y=8*stats.speed*movement_multiplier*RULES.climb_speed_ratio*stats.get("climb",1)
  move_and_slide()
  hurt_time=maxf(0,hurt_time-delta)
  if not is_instance_valid(avatar): return
+ if avatar.has_method("set_damage_flash"):avatar.set_damage_flash(hurt_time>0)
  var previous=avatar.rotation.y
  if direction.length_squared()>0.1: avatar.rotation.y=lerp_angle(previous,atan2(direction.x,direction.z),12*delta)
  var animation="idle"
  if dead: animation="death"
  elif hurt_time>0: animation="hit"
- elif not is_on_floor(): animation="jump" if velocity.y>0 else "fall"
+ elif not is_on_floor(): animation="jump" if velocity.y>0 else ("glide" if can_glide and Input.is_action_pressed("jump") else "fall")
  elif posture=="sliding": animation="slide"
  elif posture=="crouching": animation="crouch"
  elif horizontal.length()>0.5: animation="run"

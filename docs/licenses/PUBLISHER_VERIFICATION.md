@@ -58,3 +58,18 @@ returned 429 but a subsequent request succeeded.
 The remaining issue is verifying linked terms, not broken assets or a requirement
 for an archive-local licence. No conclusion that these packs prohibit game use
 has been established. Their integration remains deferred pending that evidence.
+
+## CraftPix terms supplied by the user
+
+The user pasted the CraftPix licence text from https://craftpix.net/file-licenses/
+in this session. This resolves the inaccessible-link issue for the two supplied
+free Undead icon packs. Relevant free-assets terms:
+
+> 2.1.1 You are permitted to use the resources in any number of personal and commercial projects for yourself or a client.
+> 2.1.2 You can modify the resources according to your requirements and include them into works such as game projects, elements for websites, applications, printed materials and others;
+> 2.1.3 You can sell and distribute games with our assets.
+
+The pasted text also prohibits reselling art/source files as artwork or exposing
+the artwork for export in an app (2.2.1); no art-export feature is provided.
+The game now uses the supplied icons in its weapon/item/tome UI. These are
+CraftPix's custom terms, not CC0. Attribution is not required but retained.
