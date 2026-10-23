@@ -63,3 +63,10 @@ The 400-enemy CPU-only simulation measured 16.14ms/tick on the baseline and
 with variable contention, not a controlled speedup or desktop 60FPS certification.
 Native Windows execution, hardware GPU performance and full human movement
 playtesting remain outstanding.
+
+Foundation delivery: clean source `1f1a762`, successful CI run 40011031526,
+artifact 12526556411 (41,219,587 bytes). Final Windows ZIP integrity checked
+with 15 files including the stage guide and supplied-asset licences. Final
+export's embedded PCK also passes 39 stage-loop checks; the same runtime's
+full 203-check packed-resource run passed before the guide-only packaging change.
+See releases/BUILD_INFO.md for checksums and publication evidence.

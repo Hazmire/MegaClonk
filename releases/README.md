@@ -1,51 +1,35 @@
-MEGACLONK — menus, loadouts and progression build
+MEGACLONK — stage-loop foundation
 
-Extract the Windows ZIP and launch BONK_INFINITY.exe (the filename/user-data
-folder is retained from earlier builds). If Vulkan is unavailable, use
-Launch_Compatibility.bat. No engine installation, account or internet is
-needed by the exported game. Windows execution still needs native playtesting.
+Extract BONK_INFINITY_Windows_x64.zip and launch BONK_INFINITY.exe.
+If Vulkan is unavailable, use Launch_Compatibility.bat. No engine installation,
+account or network is needed to play. Native Windows playtesting is outstanding.
 
-MAIN MENU
-Play / Unlocks / Quests / Settings. The forest background rotates slowly.
-The upper-left panel shows the four nearest outstanding unlock requirements.
+WASD move · mouse look · Space jump · Ctrl crouch/slide · E interact · Q ultimate
+Escape pause/save · Tab build/stats · mouse wheel zoom · F11 fullscreen.
+Gameplay controls can be rebound in Settings.
 
-PLAY
-Choose one starting weapon, one passive trait and one ultimate. There is one
-playable adventurer and one forest destination. Personal bests show selected
-loadouts. The current original Scout is a temporary model: the requested
-Jacob and itch.io packs remain inaccessible, as detailed in ASSET_STATUS.md.
+Choose a starting weapon, trait and ultimate. Each forest stage starts at 10:00.
+Rushes increase pressure at 08:00 and 04:00; zero begins endless ordinary pressure.
+Find the purple portal and press E to summon the existing Warden whenever ready.
+Boss death opens the mint exit without ending the stage. Enter it to generate the
+next, harder forest while keeping your weapons, tomes, levels, items and run gold.
+Timed minibosses and dedicated endless ghosts are NOT included in this foundation.
 
-WASD move, mouse look, Space jump, Ctrl crouch or momentum slide, E interact,
-Q ultimate, Escape pause, Tab build/stats/items, wheel zoom, F11 fullscreen.
-All gameplay keys can be rebound in Settings. Skyweaver glides while Jump is
-held during descent. Cliffwalker climbs by moving forward against a wall.
+Supplied Jacob, Kurland and the five-icon ability demo are integrated. Full licence
+and asset audit files are included. Some other supplied archives have unverified
+terms; the enemy and scroll packs were absent. Original enemy/environment/audio
+assets and weapon/item/tome glyphs remain until replacements can be integrated.
 
-SURVIVE
-Weapons attack automatically. Collect XP, select upgrades and find treasure.
-The countdown lasts three minutes. At zero the Warden appears and enemies
-keep getting tougher. Defeat the Warden, then enter its portal to win.
-Chests begin at 15 run gold and increase by 5 each. Shops have priced stock.
-The minimap reveals explored areas; Far Sight begins fully revealed.
+The new silver economy, two new bosses, revised traits/ultimates, attribute-based
+weapon upgrades, terrain redesign, tiered NPC shops and further HUD work remain
+pending. This build retains the previous credits/quest-gold progression systems.
+Read STAGE_FOUNDATION.md, ASSET_STATUS.md and FEATURE_STATUS.md for exact limits.
 
-PROGRESSION
-New profiles have 2 weapon and 2 tome slots. Unlocks tabs contain collection
-entries and permanent slot upgrades. Locked details show only requirements.
-Disabled owned starting weapons remain selectable; disabled unowned entries
-are excluded from run offers. Credits purchase entries after their milestone.
-Quest gold buys slots: level 2 +100 gold for third slots, level 4 +200 gold
-for fourth slots. Two claimed quests raise account level by one.
-
-Open Quests to CLAIM completed rewards. Credits/quest gold are persistent;
-run gold buys chests/shop stock. Practice/sandbox runs do not bank progression.
-
-SAVES
-Escape > Save run; return via Play > Resume saved run. Profiles stay in
+Profiles retain the BONK INFINITY user-data folder for compatibility:
 %APPDATA%\Godot\app_userdata\BONK INFINITY\progress.json
-V1 profiles migrate to V2 with a .v1.bak backup. Older executables cannot read
-V2 profiles. Existing lifetime statistics/currency/settings are retained.
-Run saves preserve loadout, cooldowns, fog, enemies and shop stock; transient
-projectiles/fields restart on resume. Do not delete the user-data folder.
+Use Escape > Save run, then Play > Resume saved run. Checkpoints preserve stage,
+portal and fired-event state in addition to the existing build and world data.
 
-This build's functional UI/loadout systems are tested. Exact requested assets,
-native Windows execution and real-GPU FPS remain outstanding. Read
-MENU_GUIDE.md, ASSET_STATUS.md and FEATURE_STATUS.md for details.
+BUILD_INFO.md and SHA256SUMS document the source, CI publication and download.
+203 automated checks pass. Rendered output inspected under Linux software OpenGL;
+Windows binary native execution and desktop GPU performance are not verified.
