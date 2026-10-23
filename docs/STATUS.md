@@ -1,29 +1,19 @@
-# Movement and enemy-variation milestone
+# Current status — MEGACLONK menu/loadout update
 
-The initial requested overhaul milestone is implemented in the existing project. This is a playable development build, with further art/animation and game-feel work remaining.
+The functional menu, loadout and progression update is implemented on top of the previous movement/enemy overhaul. The exact requested third-party asset integration is **blocked and incomplete**.
 
-## Implemented
+Implemented: four-button menu with orbiting forest and four unlock progress cards; one adventurer with independently selected starting weapon/trait/ultimate; personal loadout leaderboard; collection tabs, disabled drop pools and locked-detail privacy; twelve tracked/claimable quests; credits, quest gold, account levels and permanent 2→4 weapon/tome slots. Display/Graphics/Audio/Gameplay settings, shops, rewards, level-up cards and stats/items have separate layouts.
 
-- Sprint removed; configurable ground acceleration/friction, air control, slide threshold/friction/steering, slope acceleration, slide-speed cap, crouch speed and jump impulse. Rebindable Ctrl crouch/slide, low capsule, ceiling clearance, real slope response and momentum-preserving jump chaining. Monke forward wall-climb and character jump/air bonuses retained.
-- Original Fox Scout model separated from physics, with a pivot rig and blended pose state machine for idle, run, turning, jumping, falling, crouching, sliding, hit and death. Victory does not trigger death animation. Playable characters currently share the rig; their stats, passives and starting weapons remain distinct.
-- Eight preserved regular archetypes, each with two configurations and distinct committed models: goblin/skeleton, wolf/spider, ogre/golem, archer/cactus, knight/brute, bat/wisp, scarab/sporecap, bulwark/beetle.
-- Configurable stats, reward values, resistance and shared wind-up/recovery modules. Visible ranged projectiles/fans, stationary cactus, charges, slams, proximity explosions and guarded death blasts. Death blasts warn for 0.4s before damage; one death cannot repeatedly detonate.
-- Seeded, independent 50/50 per-archetype selection once per run, all eight preselected. Stage transitions and save/resume preserve the registry. Save snapshots retain enemies, HP/stats, equipped levels, XP drops, run counts, camera and interactables. Transient projectiles/fields restart on resume. Save format is currently version 1; no old active-run saves existed before this feature.
-- Original arrow/rocket/fire/spore/bolt meshes; pooled trails and sparks; slash ribbons, lightning segments, burn/poison/freeze colours, critical numbers, hit reactions, budgeted death meshes and effect intensity settings. Existing 36-weapon damage suite remains passing.
-- Existing terrain retained and run-seeded; procedural ground grain, grass/bushes, faceted rocks and ruins. Trees/rocks/grave markers/ruin columns have static collision. Ground enemies use local prop avoidance without individual physics/navigation nodes.
-- Instanced body/limb rendering and distant merged geometry; no per-enemy scene or skeleton. GitHub Actions validates, exports Windows x64 and publishes a playable artifact. PR #1 targets the existing default `Full-Release` branch.
+Five traits and three cooldown ultimates have real effects, HUD states and run-save persistence. The HUD has bottom-wide XP, loadout/ability icons with animated gold frames, chest prices, countdown/overtime and fogged minimap. One cliff-bounded forest replaces the map-selection/multi-biome flow. The previous crouch/slide controller, 16 enemy variants, 36 weapon patterns, instancing and effect pools remain.
 
-## Validation and limits
+Profile V2 migrates lifetime data/settings and retains a non-overwriting V1 backup. Active-run V2 retains loadout/cooldowns/fog/shop stock. Old active runs may retain grandfathered slot capacity for that run; new profiles/runs follow purchased capacity. See MENU_UPDATE.md for precise rules.
 
-Read `VALIDATION.md` for measured checks and publication evidence. Native Windows execution, audible output on real devices and 60 FPS on a target PC remain unverified. The richer AI, collisions and animated transforms have increased CPU cost relative to the single-mesh baseline; measured headless timings are explicitly reported, not presented as target-PC FPS.
+## Unfinished and unverified
 
-The supplied research sites remain unavailable from the initial research attempts. Variant behaviour and balance are original design choices, not verified Megabonk formulas. The project uses original generated native Godot assets; no third-party downloaded model or proprietary asset was imported.
+- **Jacob, Kurland and the requested icon/audio/enemy/environment packs are not imported.** All supplied itch.io pages returned proxy 403. Their licences/prices/files could not be verified. Existing original Scout/environment/audio and original temporary icon glyphs are used. A separately verified GGBotNet CC0 font temporarily supplies headings. See ASSET_ACCESS.md; apply the saved network settings to unblock the next integration pass.
+- Native Windows execution, target-GPU Forward+ rendering, human movement/balance playtesting and 60 FPS on target hardware remain unverified.
+- Further art/animation polish, richer navigation/separation and boss choreography remain from the previous milestone. Enemy animation is simplified instanced body/limb poses.
+- Exact Megabonk formulas/items/progression are not claimed. Current quest targets, trait values, economy, map scale and timing are original configurable choices.
+- Transient projectiles/fields restart on active-run resume. Manually edited corrupt active-run JSON is not a supported import format. V1 profile backup supports rollback to older executables.
 
-## Remaining work
-
-- Human Windows playtesting of movement, combat balance, camera comfort and long runs; real-GPU profiling and further crowd optimizations.
-- Tailored models for the other 20 characters; more detailed player/monster rigs, authored attack/death animation, expressive faces and richer environment art. Current enemy animation is simplified instanced body/limb movement, attack poses, hit flash/recoil and falling/shrinking corpses.
-- Enemy separation, sophisticated navigation, more distinct biome bosses and authored multi-phase combat. Existing Warden mechanics are preserved.
-- Original game's verified passives/items/quests and full conditional item synergies. Persistent currency spending, comprehensive achievements, weapon unlock progression and difficulty unlock progression remain outside this milestone.
-- Saved active runs currently reset transient attacks/fields rather than restoring every effect. Malformed manually edited active-run files are not a supported import format.
-- Further extraction of world/UI/combat orchestration from `game.gd`; continued accessibility/controller and settings testing.
+Validation/publication evidence is in VALIDATION.md and releases/BUILD_INFO.md. Remaining asset work is tracked in TODO_MENU.md.

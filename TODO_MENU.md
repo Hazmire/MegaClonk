@@ -9,6 +9,8 @@
 - [x] Five real traits and three cooldown ultimates with input/HUD/save support.
 - [x] Single large forest arena with cliff boundary, countdown and post-zero escalation.
 - [x] HUD, minimap/fog, bottom XP, loadout/stats/items, shop and upgrade card layouts, grouped settings.
-- [ ] Meaningful regression tests, rendered inspection, Windows export, Git commits, PR and verified downloadable delivery.
+- [x] Meaningful regression tests, rendered inspection, Windows export, Git commits, PR and verified downloadable delivery.
 
 Blocked asset work is explicitly incomplete: Jacob, exact provider icons/Kurland/audio/monster/environment packs require reachable product pages and actual licence verification. Original temporary content is disclosed in docs/ASSET_ACCESS.md. The replacement GGBotNet heading font has a verified CC0 licence.
+
+Validation: 108 existing checks plus 55 new checks pass, including all three suites against the local Windows export's embedded PCK using Linux Godot. Ten rendered UI screens were captured and inspected. GitHub Actions run 39995928415 successfully exported and uploaded artifact 12519956438; final documentation/package refresh follows. Native Windows execution is not claimed.
