@@ -15,6 +15,9 @@ cp docs/GODOT_COPYRIGHT.txt builds/windows/GODOT_COPYRIGHT.txt
 cp docs/STATUS.md builds/windows/FEATURE_STATUS.md
 cp RESEARCH.md ASSET_CREDITS.md builds/windows/
 cp assets/fonts/LICENSE-CC0.txt builds/windows/FONT_LICENSE_CC0.txt
+cp assets/fonts/LICENSE-Kurland-OFL.txt builds/windows/FONT_LICENSE_KURLAND.txt
+cp assets/vendor/jacob/License.txt builds/windows/JACOB_LICENSE.txt
+cp "assets/vendor/abilities/READ ME.txt" builds/windows/ABILITY_ICONS_LICENSE.txt
 cp docs/ASSET_ACCESS.md builds/windows/ASSET_STATUS.md
 cp docs/MENU_UPDATE.md builds/windows/MENU_GUIDE.md
 cat > builds/windows/Launch_Compatibility.bat <<'BAT'
@@ -28,7 +31,7 @@ from zipfile import ZipFile, ZIP_DEFLATED
 import subprocess
 commit = subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
 dirty = bool(subprocess.check_output(['git','status','--porcelain'],text=True).strip())
-Path('builds/windows/BUILD_INFO.txt').write_text('MEGACLONK menus, loadouts and progression update\nGodot 4.7.2\nSource commit: '+commit+'\nUncommitted source at build time: '+str(dirty)+'\nWindows execution requires native playtesting.\n')
+Path('builds/windows/BUILD_INFO.txt').write_text('MEGACLONK stage-loop foundation\nGodot 4.7.2\nSource commit: '+commit+'\nUncommitted source at build time: '+str(dirty)+'\nWindows execution requires native playtesting.\n')
 with ZipFile('builds/BONK_INFINITY_Windows_x64.zip','w',ZIP_DEFLATED) as z:
  for p in sorted(Path('builds/windows').iterdir()):
   if p.is_file(): z.write(p,p.name)

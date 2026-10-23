@@ -1,3 +1,12 @@
+# Stage-foundation playtest
+
+Current stage rules supersede the previous three-minute single-stage ending:
+[Stage foundation](STAGE_FOUNDATION.md). Use E at the purple portal to summon the
+Warden, defeat it, then E at the mint portal to enter the next forest stage.
+The clock starts at 10:00; rushes at 08:00/04:00, endless ordinary pressure at zero.
+Jacob/Kurland/ability icons are now included. New bosses/minibosses/ghosts and
+revised economy remain pending. Previous feature/control details follow.
+
 MEGACLONK — menus, loadouts and progression build
 
 Extract the Windows ZIP and launch BONK_INFINITY.exe (the filename/user-data

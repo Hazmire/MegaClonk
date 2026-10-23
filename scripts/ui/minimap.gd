@@ -24,7 +24,9 @@ func _draw() -> void:
   var color=Color("f3cc6f") if obj.kind=="Chest" else (Color("b7a6ff") if obj.kind=="Shop" else Color("77d6d1"))
   draw_rect(Rect2(point(obj.node.position)-Vector2.ONE*2,Vector2.ONE*4),color)
  for e in game.enemies:
-  if e.hp>0 and visible_at(e.pos): draw_circle(point(e.pos),2 if e.kind<8 else 4,Color("f3877a"))
+  if e.kind>=8 and e.hp>0 and visible_at(e.pos): draw_circle(point(e.pos),2 if e.kind<8 else 4,Color("f3877a"))
  if is_instance_valid(game.portal) and visible_at(game.portal.position): draw_arc(point(game.portal.position),6,0,TAU,20,Color("b3fff1"),2)
  draw_circle(point(game.player.position),4,Color("fff6dc"))
+ var facing=Vector2(-sin(game.player.yaw),-cos(game.player.yaw))
+ draw_line(point(game.player.position),point(game.player.position)+facing*10,Color("fff6dc"),2)
  draw_rect(Rect2(Vector2.ZERO,size),Color("c7a564"),false,2)

@@ -1,19 +1,23 @@
-# Requested asset integration status
+# Supplied asset audit — October 23, 2026
 
-All nine linked itch.io product pages returned proxy CONNECT **403 Forbidden** when requested from this cloud machine on 2026-10-23. Required domains were saved to the environment network draft. A saved draft alone does not prove runtime access. Their product licences, prices, file contents, rigs and animation names could not be inspected. No preview sheets, paid downloads, commercial assets or presumed licences were copied.
+All eight user uploads were found on `megaclonk-menu-loadouts` commit `04a6722`
+and preserved by fast-forwarding the existing work branch. No reset or asset deletion.
 
-| Requested pack | Creator / supplied source | Status |
-|---|---|---|
-| Undead skill icons | https://free-game-assets.itch.io/free-undead-skill-pixel-art-icons | Blocked; not imported |
-| Undead loot icons | https://free-game-assets.itch.io/free-undead-loot-pixel-art-icons | Blocked; not imported |
-| 48 scroll icons | https://free-game-assets.itch.io/48-scroll-pixel-art-icons-pack | Blocked; licence/price unknown; not imported |
-| Buffs & ability icons | https://gandalfhardcore.itch.io/buffs-and-ability-icons-pixel-art-pack | Blocked; not imported |
-| Kurland font | https://ggbot.itch.io/kurland-font | Blocked; exact font not imported |
-| 200 RPG sounds | https://clutch-assets.itch.io/200-free-rpg-sounds | Blocked; not imported |
-| Bestiary dungeon monsters | https://quaternius.itch.io/bestiary-dungeon-monsters-kit | Blocked; not imported |
-| Low-poly environment | https://k0rveen.itch.io/lowpoly-environment-pack | Blocked; not imported |
-| Jacob character | https://jupifox.itch.io/jacob-game-ready-character | Blocked; **Jacob is not integrated** |
+| Archive | Audit and integration status |
+| --- | --- |
+| Jacob.zip | Contained CC BY 4.0 licence by Jupifox. FBX/textures integrated; original additive movement animation over authored Idle. |
+| Kurland_Font_0_46.zip | Contained SIL OFL 1.1. Unmodified regular TTF integrated with full licence. |
+| GandalfHardcore Icons Demo.zip | Five PNGs and READ ME expressly permit commercial/free game use, prohibit standalone asset resale/redistribution. Integrated as game icons, with reused demo images. |
+| Free-Undead-Skill-Pixel-Art-Icons.zip | Licence.txt only points to https://craftpix.net/file-licenses/; page returns 403 from environment. Archive preserved; game import deferred until actual terms can be verified. |
+| free-undead-loot-pixel-art-icons.zip | Same linked CraftPix terms; not imported yet. |
+| 150+ Free RPG Sounds .zip | MP3s plus macOS sidecars; no licence/readme in archive. Preserved; not incorporated in game export pending verified terms. |
+| LowPoly Environment Pack.rar | 31 FBX models inspected via libarchive, no licence/readme. Preserved; not integrated pending verified terms. |
+| Ancient Reliques.zip | OBJ/MTL/textures/VOX and preview, no licence. Not silently treated as the missing enemy pack. Preserved; not integrated. |
 
-The functional update uses one existing original Scout model, existing original enemies/environment/synthesis, original temporary icon glyphs and a separately verified font. **Pixelated Elegance** by **GGBotNet** comes from the author's official `ggbotnet/fonts-cc0` repository. Its README directs users to the included root **CC0 1.0 Universal** licence, copied to `assets/fonts/LICENSE-CC0.txt`. This is a transparent temporary substitute, not Kurland.
+The Quaternius Bestiary and 48 Scroll packs are not in any of these archives.
+GitHub's current branches were enumerated; only the menu branch had the new
+upload commit. Existing original enemies, terrain, audio and weapon/item/tome
+icons continue to run until their replacements can be integrated correctly.
 
-Next integration step: review/save the network domain additions in environment settings and publish them, then retry the actual product pages and inspect each licence/download. If a pack requires payment, a licensed copy or purchase decision will be needed; no price or licence is guessed here. After access is available, map the actual individual icons, retarget Jacob's actual animations and revalidate exports. `assets/ui/manifest.json` records the current sources. UI icon lookup supports licensed per-entry images under `assets/ui/icons/<category>/<id>.png`, but no files are falsely labelled as the requested packs.
+This audit supersedes the earlier blanket claim that none of the requested
+assets were available. Further work can proceed on gameplay independently.

@@ -1,8 +1,8 @@
 class_name UIAssets
 extends RefCounted
 static var cache: Dictionary={}
-# Original temporary pixel glyphs. Provider packs remain unlicensed/unavailable
-# until fetched; no provider preview sheets are copied into the game.
+# Licensed supplied ability demo icons take precedence; original temporary glyphs
+# remain for weapon/item/tome packs whose usage terms are not yet verified.
 static func icon(category: String, id: String) -> Texture2D:
  var key=category+":"+id
  if cache.has(key): return cache[key]

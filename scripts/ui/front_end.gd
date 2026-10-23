@@ -28,7 +28,7 @@ func setup(owner_game: Node) -> void:
  layer=2
  root=Control.new();root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);root.mouse_filter=Control.MOUSE_FILTER_IGNORE
  add_child(root)
- var theme=Theme.new();theme.default_font_size=18
+ var theme=Theme.new();theme.default_font_size=18;theme.default_font=load("res://assets/fonts/Kurland.ttf")
  for state in ["normal","hover","pressed","focus"]:
   var style=StyleBoxFlat.new();style.bg_color=Color("172a30") if state=="normal" else Color("29464b")
   style.border_color=Color("5b7775") if state=="normal" else card_gold
@@ -55,7 +55,7 @@ func setup(owner_game: Node) -> void:
  timer_label=text("",hud_root,30);timer_label.position=Vector2(525,24);timer_label.custom_minimum_size.x=230;timer_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
  status_label=text("",hud_root,16);status_label.position=Vector2(28,184)
  minimap=RunMinimap.new();minimap.game=game;minimap.position=Vector2(1040,450);minimap.size=Vector2(210,210);hud_root.add_child(minimap)
- var legend=text("YOU  •  FOES  •  TREASURE",hud_root,12);legend.position=Vector2(1040,670)
+ var legend=text("YOU • PORTAL • TREASURE",hud_root,12);legend.position=Vector2(1040,670)
  game.notice=text("",root,18);game.notice.position=Vector2(350,646);game.notice.custom_minimum_size.x=590;game.notice.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
  hud_root.hide()
 func text(value: String, parent: Node, size_value: int = 18) -> Label:
@@ -240,7 +240,7 @@ func update_hud() -> void:
   icon_tile(ability_row,"ultimates",game.loadout_runtime.ultimate_id,LoadoutCatalog.entry("ultimates",game.loadout_runtime.ultimate_id).get("name","Ultimate"),true)
  gold_label.text="GOLD  %d\nCHESTS  %d"%[game.gold,game.chest_cost()]
  var left=maxf(0,game.STAGE_SECONDS-game.stage_time)
- timer_label.text="%02d:%02d"%[int(left)/60,int(left)%60] if left>0 else "OVERTIME  +%02d:%02d"%[int(game.stage_time-game.STAGE_SECONDS)/60,int(game.stage_time-game.STAGE_SECONDS)%60]
+ timer_label.text="%02d:%02d"%[int(left)/60,int(left)%60] if left>0 else "00:00 • ENDLESS"
  timer_label.modulate=Color("f68c7a") if left<=0 else Color("f2e5c4")
  game.health_bar.max_value=game.stats.max_health;game.health_bar.value=game.health
  game.xp_bar.max_value=Catalog.threshold(game.level);game.xp_bar.value=game.xp

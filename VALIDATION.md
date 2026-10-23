@@ -43,3 +43,23 @@ Ten UI screens were captured in a rendered Mesa llvmpipe compatibility run and v
 GitHub Actions run **39995928415** successfully imported, tested, exported Windows and uploaded artifact **12519956438** from source commit `4d77747`. Final package/source provenance is recorded in releases/BUILD_INFO.md. Requested third-party assets remain blocked and unverified; see docs/ASSET_ACCESS.md. The only new downloaded font is the author's verified CC0 Pixelated Elegance temporary substitute, not Kurland.
 
 Final documentation/package source `a2051f2` passed Actions run **39996662829**, which uploaded unexpired artifact **12520336253** (39,187,545 bytes; upload step and digest verified through GitHub). The durable ZIP is separately exported from that same clean source, includes licence/access/menu notes, and passed ZIP integrity checks. The requested itch.io asset integration remains incomplete; no native Windows execution claim is made.
+
+## Stage-loop foundation — October 23, 2026
+
+Baseline on user upload commit `04a6722`: 163 passing checks. Added stage clock,
+portal/travel/save tests, a changed automatic-boss regression plus explicit
+portal summon check. Four-suite result: 203 passing checks (31 integration, 78 overhaul,
+55 menu, 39 stage). Old suite checks intentionally retain the previous economy
+and ability values; passing them does not claim the new specification is complete.
+
+Rendered validation uses Mesa llvmpipe/OpenGL compatibility via Xvfb. Inspected
+Jacob's textured loadout preview and HUD plus dormant/exit portal views. First
+pass exposed missing FBX atlas references; explicitly bound the supplied images.
+Shared material caching also removed GLES material-lifetime errors during repeated
+menu/world teardown. Supplied Idle and additive pose state checks run headlessly.
+
+The 400-enemy CPU-only simulation measured 16.14ms/tick on the baseline and
+9.27ms/tick in the first modified run. These are single cloud-host observations
+with variable contention, not a controlled speedup or desktop 60FPS certification.
+Native Windows execution, hardware GPU performance and full human movement
+playtesting remain outstanding.

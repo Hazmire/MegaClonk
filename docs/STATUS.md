@@ -1,3 +1,14 @@
+# Current stage-foundation update
+
+The ten-minute clock, saved rush scheduler, player-activated three-state portal,
+continued stages, tighter movement and Jacob/Kurland/ability-demo integration are
+implemented. See [stage foundation](STAGE_FOUNDATION.md) for exact behavior and
+[remaining work](../TODO_STAGE_LOOP.md). The existing Warden is retained; the two
+new bosses, minibosses and endless ghosts are still pending, as are the revised
+silver economy and weapon upgrades. Original prototype terrain is still in use.
+
+The following notes describe the previous menu milestone and its remaining systems.
+
 # Current status — MEGACLONK menu/loadout update
 
 The functional menu, loadout and progression update is implemented on top of the previous movement/enemy overhaul. The exact requested third-party asset integration is **blocked and incomplete**.

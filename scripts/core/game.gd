@@ -1,6 +1,6 @@
 extends Node3D
 
-const STAGE_SECONDS = 180.0
+const STAGE_SECONDS = StageClock.DURATION
 const ENEMY_LIMIT = 500
 var rng = RandomNumberGenerator.new()
 var progress = Progress.new()
@@ -35,6 +35,9 @@ var tier = 1
 var stage = 1
 var elapsed = 0.0
 var stage_time = 0.0
+var stage_clock=StageClock.new()
+var spawn_budget=0.0
+var portal_state="dormant"
 var health = 100.0
 var xp = 0.0
 var level = 1
@@ -196,7 +199,7 @@ func build_menu_world() -> void:
  mesh_node(cylinder(8, 1), Color("31575a"), world, Vector3(10, -1, -10))
  create_avatar(world, selected_character, Vector3(10,0,-10)).scale = Vector3.ONE * 3
 func create_avatar(parent: Node3D, index: int, pos: Vector3) -> Node3D:
- var node=preload("res://assets/generated/fox_scout.tscn").instantiate()
+ var node=JacobVisual.new()
  parent.add_child(node)
  node.position=pos
  node.set_meta("character_index",index)
@@ -271,6 +274,10 @@ func build_stage() -> void:
   weapons[id]["visuals"] = []
   weapons[id]["summons"] = []
  stage_time = 0
+ stage_clock.reset()
+ spawn_budget=0
+ portal_state="dormant"
+ frontend.minimap.reset(loadout_runtime.trait_id=="seer")
  spawn_clock = 0
  boss_spawned = false
  boss_dead = false
@@ -306,7 +313,7 @@ func build_stage() -> void:
  # Repeated biome props are instanced, with collision only for large rocks/ruins.
  for i in range(150):
   var p = Vector3(rng.randf_range(-84,84),0,rng.randf_range(-84,84))
-  if Vector2(p.x,p.z).length() < 10: continue
+  if Vector2(p.x,p.z).length() < 10 or Vector2(p.x-48,p.z-24).length()<9: continue
   p.y = terrain_height(p.x,p.z)
   if biome == 0:
    prop_collider(p,0.3,3.0)
@@ -361,7 +368,7 @@ func build_stage() -> void:
  player.avatar = create_avatar(player,0,Vector3.ZERO)
  player.can_climb = loadout_runtime.trait_id=="climber"
  player.can_glide=loadout_runtime.trait_id=="glider"
- player.air_control = 22 if character == 11 else 13
+ player.air_control = 18 if character == 11 else 9
  player.max_jumps = 3 if character == 11 else (2 if character == 8 else 1)
  player.sensitivity = settings.sensitivity
  player.inverted = settings.invert
@@ -382,7 +389,8 @@ func build_stage() -> void:
  world.add_child(enemy_mesh)
  rng.seed=previous_seed
  rng.state=previous_state
- toast("The Verdant Hollow • the Warden arrives when the countdown ends")
+ make_portal()
+ toast("Stage %d • Explore the forest. Activate the portal to challenge the Warden."%stage)
 func resume() -> void:
  mode = "run"
  panel.hide()
@@ -422,7 +430,9 @@ func _physics_process(delta: float) -> void:
   return
  loadout_runtime.tick(self,delta)
  elapsed += delta
- stage_time += delta
+ for event_id in stage_clock.advance(delta):
+  stage_event(event_id)
+ stage_time = stage_clock.elapsed
  passive_clock += delta
  message_time -= delta
  if message_time <= 0: notice.text = ""
@@ -441,14 +451,13 @@ func _physics_process(delta: float) -> void:
   tick_passive()
   passive_clock -= 1
  spawn_clock -= delta
- if spawn_clock <= 0 and enemies.size() < ENEMY_LIMIT - 8:
-  spawn_clock = maxf(0.12, 0.9 / (1+elapsed/90))
-  for i in range(mini(1+stage+tier,ENEMY_LIMIT-enemies.size())): spawn_enemy()
- if stage_time > STAGE_SECONDS and not boss_spawned:
-  boss_spawned = true
-  spawn_enemy(8)
-  tone(90,0.6)
-  toast("WARDEN AWAKENED • defeat it to open the exit")
+ # Budgeted spawning: no catch-up burst after a long frame; bounded ordinary counts.
+ spawn_budget=minf(6,spawn_budget+delta*2.4*stage_clock.pressure()*(1+(stage-1)*0.15))
+ if spawn_clock<=0 and spawn_budget>=1 and enemies.size()<ENEMY_LIMIT-8:
+  var count=mini(3,int(spawn_budget))
+  for i in count:spawn_enemy()
+  spawn_budget-=count
+  spawn_clock=0.25
  update_enemies(delta)
  rebuild_grid()
  update_special_visuals(delta)
@@ -479,7 +488,10 @@ func tick_passive() -> void:
    if int(elapsed) % 60 == 0: award_item()
 func spawn_enemy(kind: int = -1, at: Vector3 = Vector3.INF) -> Dictionary:
  if enemies.size() >= ENEMY_LIMIT: return {}
- if kind < 0: kind = rng.randi_range(0, mini(7,2+int(elapsed/35)))
+ if kind < 0:
+  var roll=rng.randf()
+  kind=0 if roll<0.78 else (1 if roll<0.93 else 3)
+  if stage>1 and kind==0 and rng.randf()<0.2:kind=2
  var angle = rng.randf()*TAU
  var pos = player.position + Vector3(cos(angle),0,sin(angle))*rng.randf_range(25,38) if at == Vector3.INF else at
  pos.x = clampf(pos.x,-84,84)
@@ -682,30 +694,68 @@ func kill_enemy(index: int) -> void:
  if e.kind == 8:
   run_metrics["bosses"]=int(run_metrics.get("bosses",0))+1
   boss_dead = true
-  make_portal()
+  portal_state="exit"
+  refresh_portal()
+  toast("BOSS DEFEATED • The portal is open. Explore or advance with E.")
   gold += 50
   award_item()
  for i in (6 if e.kind==8 else 1):
   var model = pool.acquire("xp",projectile_mesh("xp"),Color("6dffd8"),e.pos+Vector3(rng.randf()-0.5,0,rng.randf()-0.5))
   pickups.append({"node":model,"value":(e.variant.reward if e.kind<8 else 5),"age":0.0})
- if rng.randf()<0.3:
-  gold_fraction+=stats.gold_gain
-  var gained=int(gold_fraction)
-  gold+=gained
-  gold_fraction-=gained
+ # Gold is automatically collected on every kill; no per-coin physics objects.
+ gold_fraction+=stats.gold_gain
+ var gained=int(gold_fraction)
+ gold+=gained
+ gold_fraction-=gained
  enemies.remove_at(index)
+func stage_event(event_id: String) -> void:
+ match event_id:
+  "rush_1","rush_2":
+   toast("MOB RUSH • Increased pressure for 30 seconds")
+   tone(180,0.5)
+  "miniboss_1","miniboss_2":
+   # Dedicated miniboss behaviours arrive in milestone 2; no disguised ordinary mob.
+   toast("Stage pressure rising • Keep exploring for the boss portal")
+  "endless":
+   run_metrics["endless"]=int(run_metrics.get("endless",0))+1
+   toast("ENDLESS MODE • Pressure continues rising. The boss portal remains available.")
+   tone(90,0.6)
 func make_portal() -> void:
- portal = Node3D.new()
- world.add_child(portal)
- var p = player.position + Vector3(7,0,0)
- p.y = terrain_height(p.x,p.z)
- portal.position = p
- var torus = TorusMesh.new()
- torus.inner_radius = 1.5
- torus.outer_radius = 2
- var ring = mesh_node(torus,Color("77ffe1"),portal,Vector3.UP*2,true)
- ring.rotation.x = PI/2
- toast("EXIT OPEN • approach the portal and press E")
+ if is_instance_valid(portal):return
+ portal=Node3D.new();world.add_child(portal)
+ portal.position=Vector3(48,terrain_height(48,24),24)
+ var torus=TorusMesh.new();torus.inner_radius=1.5;torus.outer_radius=2
+ var ring=mesh_node(torus,Color("bba0ff"),portal,Vector3.UP*2,true)
+ ring.name="Ring";ring.rotation.x=PI/2
+ mesh_node(cylinder(2.5,0.3),Color("414458"),portal,Vector3.UP*0.15)
+ refresh_portal()
+func refresh_portal() -> void:
+ if not is_instance_valid(portal):return
+ var mat=portal.get_node("Ring").material_override as StandardMaterial3D
+ mat.albedo_color=Color("77ffe1") if portal_state=="exit" else (Color("ff718d") if portal_state=="summoned" else Color("bba0ff"))
+ mat.emission_enabled=false
+ mat.shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED
+func activate_portal() -> bool:
+ if portal_state=="summoned":return false
+ if portal_state=="exit":return advance_stage()
+ var boss=spawn_enemy(8,portal.position+Vector3(-7,0,0))
+ if boss.is_empty():return false
+ boss_spawned=true;portal_state="summoned";refresh_portal()
+ toast("THE WARDEN • Defeat the boss to unlock stage travel")
+ tone(90,0.6)
+ return true
+func advance_stage() -> bool:
+ if not boss_dead or portal_state!="exit":return false
+ # Persist both sides of the transition; an interrupted generation can resume safely.
+ if not save_run():toast("Cannot advance: checkpoint save failed");return false
+ stage+=1
+ run_metrics["stage"]=maxi(stage,int(run_metrics.get("stage",1)))
+ if stage_time<STAGE_SECONDS:run_metrics["early_stage"]=int(run_metrics.get("early_stage",0))+1
+ build_stage()
+ loadout_runtime.cooldown=0;loadout_runtime.remaining=0
+ resume()
+ if not save_run():toast("Stage entered • checkpoint save failed")
+ return true
 func update_weapons(delta: float) -> void:
  for id in weapons:
   var state = weapons[id]
@@ -984,9 +1034,8 @@ func update_interactions(delta: float) -> void:
    if obj.charge>=12: obj.used=true; award_item(); gold+=15
    elif d<8: notice.text="Charge Shrine: %d%% · stay nearby"%int(obj.charge/12*100)
  if is_instance_valid(portal) and portal.position.distance_to(player.position)<4:
-  notice.text="E  /  Enter exit portal"
-  if Input.is_action_just_pressed("interact"):
-   finish_run(true)
+  notice.text="E  /  "+("Advance to stage %d"%(stage+1) if portal_state=="exit" else ("Boss active • defeat the Warden" if portal_state=="summoned" else "Summon the stage boss"))
+  if Input.is_action_just_pressed("interact"):activate_portal()
   return
  if closest.is_empty(): return
  notice.text="E  /  %s%s"%[closest.kind," · %d gold"%chest_cost() if closest.kind=="Chest" else ""]
@@ -1248,7 +1297,7 @@ func save_run(path: String = "user://active-run.json") -> bool:
  for pickup in pickups: saved_pickups.append({"position":[pickup.node.position.x,pickup.node.position.y,pickup.node.position.z],"value":pickup.value,"age":pickup.age})
  var used=[]
  for object in interactables: used.append({"used":object.used,"charge":object.charge,"offers":object.get("offers",null),"sold":object.get("sold",[])})
- var data={"version":2,"loadout":loadout_runtime.serialize(),"selected_weapon":selected_weapon,"run_metrics":run_metrics,"chests_opened":chests_opened,"legacy_weapon_slots":legacy_weapon_slots,"legacy_tome_slots":legacy_tome_slots,"minimap":serialize_minimap(),"variants":variants.serialize(),"rng_state":str(rng.state),"character":character,"biome":biome,"selected_biome":selected_biome,"tier":tier,"stage":stage,"elapsed":elapsed,"stage_time":stage_time,"stats":stats,"health":health,"xp":xp,"level":level,"kills":kills,"gold":gold,"weapons":saved_weapons,"tomes":tomes,"items":items,"sandbox":sandbox,"position":[player.position.x,player.position.y,player.position.z],"enemies":saved_enemies,"boss_spawned":boss_spawned,"boss_dead":boss_dead,"interactables":used,"damage_total":damage_total,"rerolls":rerolls,"banished":banished,"pickups":saved_pickups,"damage_by_weapon":damage_by_weapon,"gold_fraction":gold_fraction,"camera":[player.yaw,player.pitch,player.zoom]}
+ var data={"version":2,"stage_clock":stage_clock.serialize(),"portal_state":portal_state,"loadout":loadout_runtime.serialize(),"selected_weapon":selected_weapon,"run_metrics":run_metrics,"chests_opened":chests_opened,"legacy_weapon_slots":legacy_weapon_slots,"legacy_tome_slots":legacy_tome_slots,"minimap":serialize_minimap(),"variants":variants.serialize(),"rng_state":str(rng.state),"character":character,"biome":biome,"selected_biome":selected_biome,"tier":tier,"stage":stage,"elapsed":elapsed,"stage_time":stage_time,"stats":stats,"health":health,"xp":xp,"level":level,"kills":kills,"gold":gold,"weapons":saved_weapons,"tomes":tomes,"items":items,"sandbox":sandbox,"position":[player.position.x,player.position.y,player.position.z],"enemies":saved_enemies,"boss_spawned":boss_spawned,"boss_dead":boss_dead,"interactables":used,"damage_total":damage_total,"rerolls":rerolls,"banished":banished,"pickups":saved_pickups,"damage_by_weapon":damage_by_weapon,"gold_fraction":gold_fraction,"camera":[player.yaw,player.pitch,player.zoom]}
  var file=FileAccess.open(path+".tmp",FileAccess.WRITE)
  if not file: return false
  file.store_string(JSON.stringify(data)); file.close()
@@ -1264,7 +1313,7 @@ func load_run(path: String = "user://active-run.json") -> bool:
  if data.position.size()!=3 or not data.stats is Dictionary: return false
  variants=restored
  run_seed=variants.seed_value
- character=-1;biome=0;tier=int(data.tier);stage=1
+ character=-1;biome=0;tier=int(data.tier);stage=maxi(1,int(data.stage))
  loadout_runtime.restore(data.get("loadout",{}));selected_trait=loadout_runtime.trait_id;selected_ultimate=loadout_runtime.ultimate_id
  selected_weapon=int(data.get("selected_weapon",1));run_metrics=data.get("run_metrics",{});chests_opened=int(data.get("chests_opened",0))
  selected_character=character; selected_biome=int(data.get("selected_biome",biome)); selected_tier=tier
@@ -1278,6 +1327,8 @@ func load_run(path: String = "user://active-run.json") -> bool:
  tomes=data.tomes; items=data.items; banished=data.banished; rerolls=int(data.rerolls)
  build_stage()
  elapsed=float(data.elapsed); stage_time=float(data.stage_time)
+ stage_clock.restore(data.get("stage_clock",{}),stage_time)
+ stage_time=stage_clock.elapsed
  health=float(data.health); xp=float(data.xp); level=int(data.level); kills=int(data.kills); gold=int(data.gold)
  damage_total=float(data.damage_total)
  damage_by_weapon.clear()
@@ -1305,7 +1356,8 @@ func load_run(path: String = "user://active-run.json") -> bool:
   if data.interactables[i].get("offers") is Array:interactables[i]["offers"]=data.interactables[i].offers
   interactables[i]["sold"]=data.interactables[i].get("sold",[])
   if interactables[i].used: interactables[i].node.scale=Vector3.ONE*0.5
- if boss_dead: make_portal()
+ portal_state=str(data.get("portal_state","exit" if boss_dead else ("summoned" if boss_spawned else "dormant")))
+ refresh_portal()
  rng.seed=run_seed; rng.state=int(data.rng_state)
  restore_minimap(data.get("minimap",{}))
  rebuild_grid()

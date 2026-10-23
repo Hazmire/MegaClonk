@@ -1,16 +1,16 @@
 class_name BonkPlayer
 extends CharacterBody3D
 
-@export var ground_acceleration = 42.0
-@export var ground_friction = 30.0
-@export var air_control = 13.0
+@export var ground_acceleration = 55.0
+@export var ground_friction = 45.0
+@export var air_control = 9.0
 @export var slide_initiation_speed = 7.0
-@export var slide_friction = 2.4
+@export var slide_friction = 3.0
 @export var slide_steering = 2.8
 @export var slope_acceleration = 26.0
 @export var max_slide_speed = 23.0
 @export var crouch_speed = 3.8
-@export var jump_impulse = 10.5
+@export var jump_impulse = 10.0
 @export var standing_height = 1.8
 @export var crouched_height = 0.95
 var stats: Dictionary
@@ -106,10 +106,10 @@ func _physics_process(delta: float) -> void:
   horizontal=slide_velocity(horizontal,get_floor_normal(),direction,delta)
   if horizontal.length()<crouch_speed: set_posture("crouching")
  elif is_on_floor():
-  var target = direction*(crouch_speed if posture!="standing" else 9.0)*stats.speed*movement_multiplier
+  var target = direction*(crouch_speed if posture!="standing" else 8.0)*stats.speed*movement_multiplier
   # Preserve excess landing momentum; friction bleeds it away instead of snapping.
   if horizontal.length()>target.length()+0.5:
-   horizontal=horizontal.move_toward(Vector3.ZERO,slide_friction*2*delta)
+   horizontal=horizontal.move_toward(Vector3.ZERO,(ground_friction if input.length()<0.01 else slide_friction*2)*delta)
    if direction.length_squared()>0.1: horizontal=horizontal.lerp(direction*horizontal.length(),delta*2)
   else: horizontal=horizontal.move_toward(target,(ground_acceleration if input.length()>0 else ground_friction)*delta)
  else:
@@ -121,13 +121,13 @@ func _physics_process(delta: float) -> void:
   jumps=0
   fall_velocity=0
  else:
-  velocity.y-=25*delta
+  velocity.y-=34*delta
   if can_glide and velocity.y<0 and Input.is_action_pressed("jump"): velocity.y=maxf(velocity.y,-3.0)
   fall_velocity=minf(fall_velocity,velocity.y)
  if Input.is_action_just_pressed("jump") and (is_on_floor() or jumps<max_jumps):
   velocity.y=jump_impulse*sqrt(stats.jump*jump_multiplier)
   jumps+=1
- if can_climb and is_on_wall() and Input.is_action_pressed("forward") and not low: velocity.y=6
+ if can_climb and is_on_wall() and Input.is_action_pressed("forward") and not low and maxf(absf(position.x),absf(position.z))<73: velocity.y=8*stats.speed*0.6
  move_and_slide()
  hurt_time=maxf(0,hurt_time-delta)
  if not is_instance_valid(avatar): return
@@ -148,7 +148,7 @@ func _physics_process(delta: float) -> void:
 func air_velocity(horizontal: Vector3, direction: Vector3, delta: float) -> Vector3:
  if direction.length_squared()<0.01: return horizontal
  # Steering may redirect carried slide speed; it cannot mint extra kinetic energy.
- var speed_limit=maxf(horizontal.length(),9.0*stats.speed*movement_multiplier)
+ var speed_limit=maxf(horizontal.length(),8.0*stats.speed*movement_multiplier)
  var along=horizontal.dot(direction)
- horizontal+=direction*minf(air_control*delta,maxf(0,9*stats.speed*movement_multiplier-along))
+ horizontal+=direction*minf(air_control*delta,maxf(0,8*stats.speed*movement_multiplier-along))
  return horizontal.limit_length(speed_limit)
