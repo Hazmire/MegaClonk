@@ -12,10 +12,10 @@ Inspection: `controller.gd` owns CharacterBody movement/camera; `game.gd` owns s
 - [x] Combat art: recognizable pooled projectiles, trails, arcs, impact/status feedback with budgets.
 - [x] Environment: preserve seeded terrain; improve cohesive foliage/rocks/ruins and collision.
 - [x] Testing: baseline comparison, movement/variants/AI regression suite, rendered inspection, Windows export.
-- [ ] Delivery: portable installer/wrapper, GitHub Actions validation/export/artifact workflow; commit/push; verify workflow publication and artifact availability or report precise permission blocker.
+- [x] Delivery: portable installer/wrapper, GitHub Actions validation/export/artifact workflow; commit/push; verify workflow publication and artifact availability or report precise permission blocker.
 
 Research: initial attempt at megabonk.wiki/wiki/Enemies returned 503; Quaternius, Kenney and poly.pizza requests were proxy-blocked (403). No external asset or undocumented game mechanic is assumed verified. Use original generated models if access remains blocked; maintain credits and research provenance.
 
 Milestone checks: original 30 regression checks and 78 new movement/variant/AI/save checks pass. Model generation produces committed original native Godot meshes/scenes. Rendered inspection and delivery remain in progress.
 
-GitHub delivery: PR #1 created against `Full-Release`. The corrected workflow has already run successfully and uploaded a 37 MB Windows artifact. Final source/artifact refresh is in progress. No native Windows or target-GPU FPS claim is made. Further work is listed in docs/STATUS.md.
+GitHub delivery: PR #1 created against `Full-Release`. The corrected workflow has already run successfully and uploaded a 37 MB Windows artifact. Final source commit `0074f48` passed CI run 39978727835, which published artifact 12511519962. The durable repository ZIP has been refreshed from a verified local export of the same clean source. No native Windows or target-GPU FPS claim is made. Further work is listed in docs/STATUS.md.
