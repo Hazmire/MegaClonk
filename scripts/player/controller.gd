@@ -110,10 +110,7 @@ func _physics_process(delta: float) -> void:
    if direction.length_squared()>0.1: horizontal=horizontal.lerp(direction*horizontal.length(),delta*2)
   else: horizontal=horizontal.move_toward(target,(ground_acceleration if input.length()>0 else ground_friction)*delta)
  else:
-  # Air steering cannot remove existing forward momentum simply by releasing input.
-  var along=horizontal.dot(direction)
-  if direction.length_squared()>0.01:
-   horizontal+=direction*minf(air_control*delta,maxf(0,9*stats.speed-along))
+  horizontal=air_velocity(horizontal,direction,delta)
  velocity.x=horizontal.x
  velocity.z=horizontal.z
  if is_on_floor():
@@ -143,3 +140,11 @@ func _physics_process(delta: float) -> void:
  if animation in ["idle","run"] and horizontal.length()<3 and absf(angle_difference(previous,avatar.rotation.y))>0.04: animation="turn"
  last_facing=avatar.rotation.y
  if avatar.has_method("animate"): avatar.animate(animation,horizontal.length(),delta)
+
+func air_velocity(horizontal: Vector3, direction: Vector3, delta: float) -> Vector3:
+ if direction.length_squared()<0.01: return horizontal
+ # Steering may redirect carried slide speed; it cannot mint extra kinetic energy.
+ var speed_limit=maxf(horizontal.length(),9.0*stats.speed)
+ var along=horizontal.dot(direction)
+ horizontal+=direction*minf(air_control*delta,maxf(0,9*stats.speed-along))
+ return horizontal.limit_length(speed_limit)

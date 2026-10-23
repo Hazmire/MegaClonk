@@ -55,6 +55,7 @@ func run() -> void:
  verify(p.velocity.y>0 and Vector3(p.velocity.x,0,p.velocity.z).length()>before*0.8,"Slide jump preserves horizontal momentum")
  Input.action_release("forward"); Input.action_release("crouch")
  var v=Vector3(0,0,-10)
+ verify(is_equal_approx(p.air_velocity(Vector3(0,0,-17),Vector3.RIGHT,0.1).length(),17),"Air steering redirects slide momentum without adding speed")
  var flat=p.slide_velocity(v,Vector3.UP,Vector3.ZERO,0.1)
  var downhill=p.slide_velocity(v,Vector3(0,cos(0.4),-sin(0.4)),Vector3.ZERO,0.1)
  var uphill=p.slide_velocity(v,Vector3(0,cos(0.4),sin(0.4)),Vector3.ZERO,0.1)

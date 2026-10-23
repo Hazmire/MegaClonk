@@ -965,6 +965,9 @@ func beam(a: Vector3, b: Vector3, color: Color) -> void:
 func update_effects(delta: float) -> void:
  for i in range(effects.size()-1,-1,-1):
   effects[i].life-=delta
+  if effects[i].has("velocity"):
+   effects[i].velocity+=Vector3.DOWN*delta*6
+   effects[i].node.position+=effects[i].velocity*delta
   if effects[i].get("death",false):
    effects[i].node.rotation.z+=delta*3
    effects[i].node.position.y-=delta*0.8
@@ -1355,7 +1358,7 @@ func impact(pos: Vector3, color: Color, count: int) -> void:
  for i in mini(count,maxi(0,80-effects.size())):
   var node=pool.acquire("spark"+color.to_html(),ModelBuilder.cone(0.06,0.28),color,pos+Vector3(rng.randf_range(-0.4,0.4),rng.randf_range(0,0.5),rng.randf_range(-0.4,0.4)))
   node.rotation=Vector3(rng.randf()*PI,0,rng.randf()*TAU)
-  effects.append({"node":node,"life":0.22})
+  effects.append({"node":node,"life":0.22,"velocity":Vector3(rng.randf_range(-3,3),rng.randf_range(1,4),rng.randf_range(-3,3))})
 func telegraph(pos: Vector3, radius: float, duration: float, color: Color) -> void:
  var ring=TorusMesh.new()
  ring.inner_radius=maxf(0.1,radius-0.12)

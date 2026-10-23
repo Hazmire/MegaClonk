@@ -16,6 +16,6 @@ Inspection: `controller.gd` owns CharacterBody movement/camera; `game.gd` owns s
 
 Research: initial attempt at megabonk.wiki/wiki/Enemies returned 503; Quaternius, Kenney and poly.pizza requests were proxy-blocked (403). No external asset or undocumented game mechanic is assumed verified. Use original generated models if access remains blocked; maintain credits and research provenance.
 
-Milestone checks: original 30 regression checks and 77 new movement/variant/AI/save checks pass. Model generation produces committed original native Godot meshes/scenes. Rendered inspection and delivery remain in progress.
+Milestone checks: original 30 regression checks and 78 new movement/variant/AI/save checks pass. Model generation produces committed original native Godot meshes/scenes. Rendered inspection and delivery remain in progress.
 
 GitHub delivery: PR #1 created against `Full-Release`. The corrected workflow has already run successfully and uploaded a 37 MB Windows artifact. Final source/artifact refresh is in progress. No native Windows or target-GPU FPS claim is made. Further work is listed in docs/STATUS.md.
