@@ -30,14 +30,24 @@ func run() -> void:
    e.age=1.2+kind
  var gallery_camera=Camera3D.new()
  game.world.add_child(gallery_camera)
- gallery_camera.position=Vector3(14,11,22)
- gallery_camera.look_at(Vector3(0,0.8,6))
+ gallery_camera.projection=Camera3D.PROJECTION_ORTHOGONAL
+ gallery_camera.size=21
+ gallery_camera.position=Vector3(0,22,28)
+ gallery_camera.look_at(Vector3(0,6,6))
  gallery_camera.current=true
  game.player.position=Vector3(14,0,22)
  for object in game.interactables: object.node.hide()
- game.update_enemies(0.001)
+ for batch in game.prop_batches.values(): batch.hide()
+ var gallery_floor=game.mesh_node(game.box(Vector3(20,0.25,17)),Color("304b50"),game.world,Vector3(0,5.8,6))
+ game.enemy_view.begin_frame()
+ for e in game.enemies:
+  e.pos.y=6.65
+  game.enemy_view.draw_enemy(e,Vector3(0,6,26))
+ game.enemy_view.end_frame()
  await create_timer(0.3).timeout
  await capture("overhaul_enemy_gallery")
+ gallery_floor.queue_free()
+ for batch in game.prop_batches.values(): batch.show()
  gallery_camera.queue_free()
  game.player.camera.current=true
  game.enemies.clear(); game.enemy_view.begin_frame(); game.enemy_view.end_frame()

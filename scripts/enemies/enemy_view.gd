@@ -4,6 +4,7 @@ extends Node3D
 var batches: Dictionary={}
 var counts: Dictionary={}
 var models: Dictionary={}
+var distant_models: Dictionary={}
 var material=ModelBuilder.material()
 func batch(key: String, mesh: Mesh, capacity: int) -> MultiMesh:
  if batches.has(key): return batches[key].multimesh
@@ -36,7 +37,7 @@ func draw_enemy(e: Dictionary, viewer: Vector3) -> void:
  var facing=atan2(direction.x,direction.z)
  var phase=e.age*e.speed*2.8
  var walking=e.state=="move" and e.speed>0
- var far=e.pos.distance_squared_to(viewer)>900
+ var far=e.pos.distance_squared_to(viewer)>324
  if far: phase=floorf(phase*3)/3
  var bob=absf(sin(phase))*0.06 if walking else sin(e.age*3)*0.02
  var tilt=-0.25 if e.state=="windup" else (0.4 if e.state=="charging" else 0.0)
@@ -46,8 +47,14 @@ func draw_enemy(e: Dictionary, viewer: Vector3) -> void:
  if e.hit_time>0: color=Color(2.5,2.2,2.0)
  elif e.frozen>0: color=Color("91dfff")
  elif e.poison>0: color=Color("bcff83")
+ elif e.burn>0: color=Color("ffc086")
  elif e.state=="windup": color=Color("ffd59f")
  var base=Transform3D(Basis.from_euler(Vector3(tilt,facing,0)).scaled(Vector3.ONE*e.scale*swell),e.pos-Vector3.UP*0.65+Vector3.UP*bob)
+ if far and not key in ["wolf","spider","scarab","beetle","bat","wisp","cactus","mushroom"]:
+  if not distant_models.has(key):
+   distant_models[key]=ModelBuilder.bake([{"mesh":body,"transform":Transform3D.IDENTITY,"color":Color.WHITE},{"mesh":limb,"transform":Transform3D(Basis.IDENTITY,Vector3(-0.24,0.6,0)),"color":Color.WHITE},{"mesh":limb,"transform":Transform3D(Basis.IDENTITY,Vector3(0.24,0.6,0)),"color":Color.WHITE}])
+  put(key+"_distant",distant_models[key],base,color)
+  return
  put(key,body,base,color)
  # Multi-legged bodies already include their legs; animate them by body sway.
  if key in ["wolf","spider","scarab","beetle","bat","wisp","cactus","mushroom"]: return

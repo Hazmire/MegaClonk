@@ -16,6 +16,7 @@ var xp_bar: ProgressBar
 var enemies: Array[Dictionary] = []
 var projectiles: Array[Dictionary] = []
 var fields: Array[Dictionary] = []
+var pending_blasts: Array[Dictionary] = []
 var pickups: Array[Dictionary] = []
 var interactables: Array[Dictionary] = []
 var weapons: Dictionary = {}
@@ -57,7 +58,7 @@ var moving_time = 0.0
 var banished: Array = []
 var rerolls = 3
 var choices: Array = []
-var settings = {"render_scale":1.0,"quality":1,"master":0.7,"effects":0.7,"music":0.3,"sensitivity":0.0025,"invert":false,"reduced":false,"fps":false,"focus_pause":true,"shake":true,"numbers":true,"invincible":false}
+var settings = {"visual_intensity":0.7,"render_scale":1.0,"quality":1,"master":0.7,"effects":0.7,"music":0.3,"sensitivity":0.0025,"invert":false,"reduced":false,"fps":false,"focus_pause":true,"shake":true,"numbers":true,"invincible":false}
 var pending_binding = ""
 var bindings = {"forward":KEY_W,"back":KEY_S,"left":KEY_A,"right":KEY_D,"jump":KEY_SPACE,"crouch":KEY_CTRL,"interact":KEY_E,"inspect":KEY_TAB}
 var music: AudioStreamPlayer
@@ -332,9 +333,13 @@ func terrain_height(x: float, z: float) -> float:
  var h = terrain_noise.get_noise_2d(x, z) * 8.0 + sin(x * 0.045) * cos(z * 0.055) * 3.0
  return lerpf(0, h, smoothstep(5, 22, radial))
 func build_stage() -> void:
+ var previous_seed=rng.seed
+ var previous_state=rng.state
+ rng.seed=run_seed+stage*65537+biome*101
  enemies.clear()
  projectiles.clear()
  fields.clear()
+ pending_blasts.clear()
  pickups.clear()
  effects.clear()
  interactables.clear()
@@ -352,7 +357,7 @@ func build_stage() -> void:
  build_menu_world()
  for child in world.get_children():
   if child is Camera3D or child is MeshInstance3D or (child is Node3D and not child is Light3D and not child is WorldEnvironment): child.queue_free()
- terrain_noise.seed = 8127 + biome * 101 + stage * 73
+ terrain_noise.seed = posmod(run_seed+8127+biome*101+stage*73,2147483647)
  terrain_noise.frequency = 0.018
  var colors = [Color("304f3d"),Color("9b7e51"),Color("353947")]
  var env = world.get_child(0).environment
@@ -373,6 +378,9 @@ func build_stage() -> void:
  var terrain = mesh_node(surface.commit(), Color.WHITE, world)
  var terrain_mat = terrain.material_override as StandardMaterial3D
  terrain_mat.vertex_color_use_as_albedo = true
+ var terrain_shader=ShaderMaterial.new()
+ terrain_shader.shader=preload("res://shaders/terrain.gdshader")
+ terrain.material_override=terrain_shader
  terrain.create_trimesh_collision()
  # Repeated biome props are instanced, with collision only for large rocks/ruins.
  for i in range(150):
@@ -450,6 +458,8 @@ func build_stage() -> void:
  enemy_material.roughness = 0.8
  enemy_mesh.material_override = enemy_material
  world.add_child(enemy_mesh)
+ rng.seed=previous_seed
+ rng.state=previous_state
  toast("Stage %d / 3 • boss arrives in 3 minutes" % stage)
 func resume() -> void:
  mode = "run"
@@ -519,6 +529,7 @@ func _physics_process(delta: float) -> void:
  update_weapons(delta)
  update_projectiles(delta)
  update_fields(delta)
+ update_blasts(delta)
  update_pickups(delta)
  update_effects(delta)
  update_interactions(delta)
@@ -550,7 +561,7 @@ func spawn_enemy(kind: int = -1, at: Vector3 = Vector3.INF) -> Dictionary:
  pos.y = terrain_height(pos.x,pos.z)+0.7
  var scale_factor = (1+elapsed/140.0) * (1+(tier-1)*0.5) * (1+(stage-1)*0.5) * stats.difficulty
  var hp = (35 + kind*8) * scale_factor * (18 if kind==8 else 1)
- var enemy = {"pos":pos,"hp":hp,"max_hp":hp,"kind":kind,"speed":(4.5 if kind==1 else (1.8 if kind in [2,7] else 3.0)),"cooldown":rng.randf()*2,"slow":0.0,"frozen":0.0,"spore":false,"poison":0.0,"poison_clock":0.0,"knock":Vector3.ZERO,"age":0.0,"phase":0,"biome":biome,"target":Vector3.ZERO,"telegraph":0.0,"scale":2.8 if kind==8 else (1.4 if kind in [2,7] else 1.0)}
+ var enemy = {"pos":pos,"hp":hp,"max_hp":hp,"kind":kind,"speed":(4.5 if kind==1 else (1.8 if kind in [2,7] else 3.0)),"cooldown":rng.randf()*2,"slow":0.0,"frozen":0.0,"spore":false,"burn":0.0,"burn_clock":0.0,"poison":0.0,"poison_clock":0.0,"knock":Vector3.ZERO,"age":0.0,"phase":0,"biome":biome,"target":Vector3.ZERO,"telegraph":0.0,"scale":2.8 if kind==8 else (1.4 if kind in [2,7] else 1.0)}
  if kind<8:
   var config=variants.lookup(kind)
   enemy["variant"]=config
@@ -583,6 +594,11 @@ func update_enemies(delta: float) -> void:
   e.slow = maxf(0,e.slow-delta)
   e.frozen = maxf(0,e.frozen-delta)
   e.poison = maxf(0,e.poison-delta)
+  e.burn=maxf(0,e.burn-delta)
+  if e.burn>0:
+   e.burn_clock-=delta
+   if e.burn_clock<=0: hit(e,3+level*0.5,1); e.burn_clock=0.5
+   if not settings.reduced and rng.randf()<0.07: impact(e.pos,Color("ffb45a"),1)
   if e.poison > 0:
    e.poison_clock -= delta
    if e.poison_clock <= 0: hit(e,5+level,23); e.poison_clock = 0.5
@@ -700,7 +716,7 @@ func hit(e: Dictionary, base: float, weapon: int) -> void:
   var number=Label3D.new()
   number.text=str(int(amount))+("!" if critical else "")
   number.font_size=42 if critical else 32
-  number.modulate=Color("ffe6a0") if critical else Color.WHITE
+  number.modulate=Color("ffe6a0") if critical else (Color("acdf76") if weapon in [23,33] else (Color("ffb370") if weapon in [1,3,25] else Color.WHITE))
   number.billboard=BaseMaterial3D.BILLBOARD_ENABLED
   number.no_depth_test=true
   world.add_child(number)
@@ -718,7 +734,9 @@ func area(pos: Vector3, radius: float, damage: float, weapon: int, status: Strin
 func kill_enemy(index: int) -> void:
  var e = enemies[index]
  if e.kind<8:
-  if "death_blast" in e.variant.modules: EnemySimulation.detonate(self,e)
+  if "death_blast" in e.variant.modules and not e.detonated:
+   e.detonated=true
+   schedule_blast(e.pos,e.variant.blast_radius,e.damage,0.4)
   var corpse=mesh_node(load(e.variant.model),Color.WHITE,world,e.pos-Vector3.UP*0.65)
   corpse.material_override=ModelBuilder.material()
   if effects.size()<90: effects.append({"node":corpse,"life":0.45,"death":true})
@@ -736,7 +754,7 @@ func kill_enemy(index: int) -> void:
   gold += 50
   award_item()
  for i in (6 if e.kind==8 else 1):
-  var model = pool.acquire("xp",sphere(0.17),Color("6dffd8"),e.pos+Vector3(rng.randf()-0.5,0,rng.randf()-0.5))
+  var model = pool.acquire("xp",projectile_mesh("xp"),Color("6dffd8"),e.pos+Vector3(rng.randf()-0.5,0,rng.randf()-0.5))
   pickups.append({"node":model,"value":(e.variant.reward if e.kind<8 else 5),"age":0.0})
  if rng.randf()<0.3:
   gold_fraction+=stats.gold_gain
@@ -779,7 +797,8 @@ func update_weapons(delta: float) -> void:
      if w[1] in ["aura","reap","corrupt"] or direction.dot((e.pos-origin).normalized())>0.1:
       hit(e,power,id)
       if w[1]=="corrupt": e.poison=3
-    flash(origin,color,r)
+    if w[1]=="aura": flash(origin,color,r)
+    else: slash_arc(origin,direction,r,color)
     if w[1]=="reap": health = minf(stats.max_health,health+1)
    "orbit","chrono":
     for i in range(2+count):
@@ -799,7 +818,7 @@ func update_weapons(delta: float) -> void:
      var e = list[i]
      hit(e,power*(2 if w[1]=="execute" and e.hp/e.max_hp<0.3 else 1),id)
      if w[1]=="freeze": e.frozen=1.5*stats.duration
-     beam(origin,e.pos,color)
+     lightning_arc(origin,e.pos,color)
     if w[1]=="drain": health=minf(stats.max_health,health+3)
    "hitscan","beam","rail":
     if target.is_empty(): continue
@@ -814,7 +833,7 @@ func update_weapons(delta: float) -> void:
       hits+=1
       if w[1]=="rail":
        for arc in nearby(e.pos,5+rank):
-        if arc!=e: hit(arc,power*0.25,id); beam(e.pos,arc.pos,color)
+        if arc!=e: hit(arc,power*0.25,id); lightning_arc(e.pos,arc.pos,color)
       if w[1]=="hitscan" and hits>=count: break
    "poison","spore":
     if target.is_empty(): continue
@@ -888,6 +907,7 @@ func update_projectiles(delta: float) -> void:
    for e in nearby(p.node.position,4+ p.velocity.length()*delta):
     if e in p.hits or segment_distance(e.pos,previous,p.node.position)>1.0*stats.size: continue
     hit(e,p.damage,p.weapon)
+    if p.kind=="fireball": e.burn=3*stats.duration
     impact(e.pos,Color(Catalog.WEAPONS[p.weapon][5]),3)
     p.hits.append(e)
     if p.kind in ["poison","spore"]:
@@ -929,7 +949,7 @@ func update_fields(delta: float) -> void:
     if f.mine and targets.size()>0: flash(f.node.position,Color("ffc56a"),f.radius); f.life=0
   if f.life<=0: f.node.queue_free(); fields.remove_at(i)
 func flash(pos: Vector3, color: Color, radius: float) -> void:
- if effects.size() >= (35 if settings.reduced else 90): return
+ if effects.size() >= effect_budget(): return
  var ring = TorusMesh.new()
  ring.inner_radius = radius*0.85
  ring.outer_radius = radius
@@ -951,7 +971,10 @@ func update_effects(delta: float) -> void:
    effects[i].node.scale*=maxf(0,1-delta*3)
   elif not effects[i].get("telegraph",false): effects[i].node.scale*=1+delta*2
   if effects[i].node is Label3D: effects[i].node.position.y+=delta*2
-  if effects[i].life<=0: effects[i].node.queue_free(); effects.remove_at(i)
+  if effects[i].life<=0:
+   if effects[i].node.has_meta("pool_key"): pool.release(effects[i].node)
+   else: effects[i].node.queue_free()
+   effects.remove_at(i)
 func update_pickups(delta: float) -> void:
  for i in range(pickups.size()-1,-1,-1):
   var p = pickups[i]
@@ -1094,9 +1117,12 @@ func show_build() -> void:
  button("Resume",col,resume)
 func finish_run(victory: bool) -> void:
  mode="results"
- if victory or health<=0:
+ if not victory and health<=0:
   player.dead=true
-  if player.avatar.has_method("animate"): player.avatar.animate("death",0,1)
+  var dying_avatar=player.avatar
+  var death_tween=dying_avatar.create_tween()
+  death_tween.tween_method(func(_time):
+   if is_instance_valid(dying_avatar): dying_avatar.animate("death",0,0.03),0.0,1.0,0.65)
  if not sandbox and FileAccess.file_exists("user://active-run.json"): DirAccess.remove_absolute("user://active-run.json")
  var unlocked=progress.finish(kills,elapsed,victory,selected_biome,sandbox)
  var col=clear_panel("VICTORY / INFINITY BROKEN" if victory else "THE WILD CLAIMS ANOTHER")
@@ -1142,7 +1168,7 @@ func sandbox_menu() -> void:
 func settings_menu(back: Callable) -> void:
  mode="settings" if is_instance_valid(player) else "menu"
  var col=clear_panel("SETTINGS")
- for key in ["master","effects","music","sensitivity","render_scale"]:
+ for key in ["master","effects","music","sensitivity","render_scale","visual_intensity"]:
   var row=HBoxContainer.new()
   col.add_child(row)
   title(key.capitalize(),row,16).custom_minimum_size.x=140
@@ -1307,6 +1333,8 @@ func projectile_mesh(kind: String) -> Mesh:
  if projectile_meshes.has(kind): return projectile_meshes[kind]
  var parts: Array=[]
  match kind:
+  "xp":
+   parts=[ModelBuilder.part(ModelBuilder.cone(0.16,0.22),Vector3(0,0.11,0),"aaffdd"),ModelBuilder.part(ModelBuilder.cone(0.16,0.22),Vector3(0,-0.11,0),"66ddb5",Vector3(PI,0,0))]
   "arrow","pierce":
    parts=[ModelBuilder.part(ModelBuilder.cube(Vector3(0.07,0.07,0.85)),Vector3.ZERO,"e8c990"),ModelBuilder.part(ModelBuilder.cone(0.17,0.35),Vector3(0,0,-0.5),"d9f2ee",Vector3(-PI/2,0,0))]
   "rocket":
@@ -1320,12 +1348,12 @@ func projectile_mesh(kind: String) -> Mesh:
  projectile_meshes[kind]=ModelBuilder.bake(parts)
  return projectile_meshes[kind]
 func trail(pos: Vector3, color: Color) -> void:
- var node=mesh_node(box(Vector3(0.08,0.08,0.18)),color,world,pos,true)
+ var node=pool.acquire("trail"+color.to_html(),box(Vector3(0.08,0.08,0.18)),color,pos)
  effects.append({"node":node,"life":0.12})
 func impact(pos: Vector3, color: Color, count: int) -> void:
  if settings.reduced: count=mini(count,2)
  for i in mini(count,maxi(0,80-effects.size())):
-  var node=mesh_node(ModelBuilder.cone(0.06,0.28),color,world,pos+Vector3(rng.randf_range(-0.4,0.4),rng.randf_range(0,0.5),rng.randf_range(-0.4,0.4)),true)
+  var node=pool.acquire("spark"+color.to_html(),ModelBuilder.cone(0.06,0.28),color,pos+Vector3(rng.randf_range(-0.4,0.4),rng.randf_range(0,0.5),rng.randf_range(-0.4,0.4)))
   node.rotation=Vector3(rng.randf()*PI,0,rng.randf()*TAU)
   effects.append({"node":node,"life":0.22})
 func telegraph(pos: Vector3, radius: float, duration: float, color: Color) -> void:
@@ -1344,9 +1372,11 @@ func save_run(path: String = "user://active-run.json") -> bool:
   for key in ["pos","knock","target","charge_direction"]:
    if record.has(key): record[key]=[record[key].x,record[key].y,record[key].z]
   saved_enemies.append(record)
+ var saved_pickups=[]
+ for pickup in pickups: saved_pickups.append({"position":[pickup.node.position.x,pickup.node.position.y,pickup.node.position.z],"value":pickup.value,"age":pickup.age})
  var used=[]
  for object in interactables: used.append({"used":object.used,"charge":object.charge})
- var data={"version":1,"variants":variants.serialize(),"rng_state":str(rng.state),"character":character,"biome":biome,"selected_biome":selected_biome,"tier":tier,"stage":stage,"elapsed":elapsed,"stage_time":stage_time,"stats":stats,"health":health,"xp":xp,"level":level,"kills":kills,"gold":gold,"weapons":saved_weapons,"tomes":tomes,"items":items,"sandbox":sandbox,"position":[player.position.x,player.position.y,player.position.z],"enemies":saved_enemies,"boss_spawned":boss_spawned,"boss_dead":boss_dead,"interactables":used,"damage_total":damage_total,"rerolls":rerolls,"banished":banished}
+ var data={"version":1,"variants":variants.serialize(),"rng_state":str(rng.state),"character":character,"biome":biome,"selected_biome":selected_biome,"tier":tier,"stage":stage,"elapsed":elapsed,"stage_time":stage_time,"stats":stats,"health":health,"xp":xp,"level":level,"kills":kills,"gold":gold,"weapons":saved_weapons,"tomes":tomes,"items":items,"sandbox":sandbox,"position":[player.position.x,player.position.y,player.position.z],"enemies":saved_enemies,"boss_spawned":boss_spawned,"boss_dead":boss_dead,"interactables":used,"damage_total":damage_total,"rerolls":rerolls,"banished":banished,"pickups":saved_pickups,"damage_by_weapon":damage_by_weapon,"gold_fraction":gold_fraction,"camera":[player.yaw,player.pitch,player.zoom]}
  var file=FileAccess.open(path+".tmp",FileAccess.WRITE)
  if not file: return false
  file.store_string(JSON.stringify(data)); file.close()
@@ -1374,6 +1404,16 @@ func load_run(path: String = "user://active-run.json") -> bool:
  elapsed=float(data.elapsed); stage_time=float(data.stage_time)
  health=float(data.health); xp=float(data.xp); level=int(data.level); kills=int(data.kills); gold=int(data.gold)
  damage_total=float(data.damage_total)
+ damage_by_weapon.clear()
+ for id in data.get("damage_by_weapon",{}): damage_by_weapon[int(id)]=float(data.damage_by_weapon[id])
+ gold_fraction=float(data.get("gold_fraction",0))
+ if data.has("camera"):
+  player.yaw=float(data.camera[0]); player.pitch=float(data.camera[1]); player.zoom=float(data.camera[2])
+ invulnerability=0.5
+ for record in data.get("pickups",[]):
+  var pos=Vector3(record.position[0],record.position[1],record.position[2])
+  var model=pool.acquire("xp",projectile_mesh("xp"),Color("6dffd8"),pos)
+  pickups.append({"node":model,"value":record.value,"age":record.age})
  player.position=Vector3(data.position[0],data.position[1],data.position[2])
  for record in data.enemies:
   var e=spawn_enemy(int(record.kind),Vector3(record.pos[0],record.pos[1],record.pos[2]))
@@ -1428,3 +1468,46 @@ func grass_mesh() -> Mesh:
  if not projectile_meshes.has("grass"):
   projectile_meshes["grass"]=ModelBuilder.bake([ModelBuilder.part(ModelBuilder.cone(0.1,0.65),Vector3(0,0.28,0),"ffffff"),ModelBuilder.part(ModelBuilder.cone(0.08,0.4),Vector3(0.2,0.2,0),"dce8a8",Vector3(0,0,-0.3))])
  return projectile_meshes["grass"]
+
+func effect_budget() -> int:
+ return 28 if settings.reduced else 30+int(settings.visual_intensity*65)
+func slash_arc(origin: Vector3, direction: Vector3, radius: float, color: Color) -> void:
+ if effects.size()>=effect_budget(): return
+ var surface=SurfaceTool.new()
+ surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+ var facing=atan2(direction.x,direction.z)
+ for i in 12:
+  var a=facing-1.1+i*2.2/12
+  var b=a+2.2/12
+  var outer_a=Vector3(sin(a),0,cos(a))*radius
+  var inner_a=outer_a*0.8
+  var outer_b=Vector3(sin(b),0,cos(b))*radius
+  var inner_b=outer_b*0.8
+  for point in [inner_a,outer_a,inner_b,inner_b,outer_a,outer_b]:
+   surface.set_normal(Vector3.UP)
+   surface.add_vertex(point)
+ var node=mesh_node(surface.commit(),color,world,origin,true)
+ node.material_override.cull_mode=BaseMaterial3D.CULL_DISABLED
+ effects.append({"node":node,"life":0.18})
+func lightning_arc(a: Vector3, b: Vector3, color: Color) -> void:
+ var previous=a
+ for i in range(1,6):
+  var point=a.lerp(b,float(i)/5)
+  if i<5: point+=Vector3(rng.randf_range(-0.3,0.3),rng.randf_range(-0.2,0.2),rng.randf_range(-0.3,0.3))
+  if effects.size()<effect_budget(): beam(previous,point,color)
+  previous=point
+
+func schedule_blast(pos: Vector3, radius: float, damage: float, delay: float) -> void:
+ telegraph(pos,radius,delay,Color("ff986b"))
+ pending_blasts.append({"pos":pos,"radius":radius,"damage":damage,"delay":delay})
+func update_blasts(delta: float) -> void:
+ for i in range(pending_blasts.size()-1,-1,-1):
+  var blast=pending_blasts[i]
+  blast.delay-=delta
+  if blast.delay>0: continue
+  flash(blast.pos,Color("ffaf67"),blast.radius)
+  impact(blast.pos,Color("ffd49b"),8)
+  tone(85,0.2)
+  if player.position.distance_to(blast.pos)<blast.radius: hurt(blast.damage)
+  area(blast.pos,blast.radius,blast.damage*0.6,-1)
+  pending_blasts.remove_at(i)

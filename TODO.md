@@ -9,11 +9,13 @@ Inspection: `controller.gd` owns CharacterBody movement/camera; `game.gd` owns s
 - [x] Variants: data-driven definitions and deterministic, serializable per-run registry; two variations for all eight existing regular archetypes.
 - [x] Enemy AI: shared wind-up/recovery, projectiles, charges, slams, stationary attacks and exactly-once proximity/death explosions.
 - [x] Enemy art: original committed geometry, distinct silhouettes, batched animated rendering, hit/death/attack feedback.
-- [ ] Combat art: recognizable pooled projectiles, trails, arcs, impact/status feedback with budgets.
-- [ ] Environment: preserve seeded terrain; improve cohesive foliage/rocks/ruins and collision.
-- [ ] Testing: baseline comparison, movement/variants/AI regression suite, rendered inspection, Windows export.
+- [x] Combat art: recognizable pooled projectiles, trails, arcs, impact/status feedback with budgets.
+- [x] Environment: preserve seeded terrain; improve cohesive foliage/rocks/ruins and collision.
+- [x] Testing: baseline comparison, movement/variants/AI regression suite, rendered inspection, Windows export.
 - [ ] Delivery: portable installer/wrapper, GitHub Actions validation/export/artifact workflow; commit/push; verify workflow publication and artifact availability or report precise permission blocker.
 
 Research: initial attempt at megabonk.wiki/wiki/Enemies returned 503; Quaternius, Kenney and poly.pizza requests were proxy-blocked (403). No external asset or undocumented game mechanic is assumed verified. Use original generated models if access remains blocked; maintain credits and research provenance.
 
-Milestone checks: original 30 regression checks and 73 new movement/variant/AI/save checks pass. Model generation produces committed original native Godot meshes/scenes. Rendered inspection and delivery remain in progress.
+Milestone checks: original 30 regression checks and 77 new movement/variant/AI/save checks pass. Model generation produces committed original native Godot meshes/scenes. Rendered inspection and delivery remain in progress.
+
+GitHub delivery: PR #1 created against `Full-Release`. The corrected workflow has already run successfully and uploaded a 37 MB Windows artifact. Final source/artifact refresh is in progress. No native Windows or target-GPU FPS claim is made. Further work is listed in docs/STATUS.md.

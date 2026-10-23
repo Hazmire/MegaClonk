@@ -140,5 +140,6 @@ func _physics_process(delta: float) -> void:
  elif posture=="crouching": animation="crouch"
  elif horizontal.length()>0.5: animation="run"
  elif absf(angle_difference(last_facing,avatar.rotation.y))>0.01: animation="turn"
+ if animation in ["idle","run"] and horizontal.length()<3 and absf(angle_difference(previous,avatar.rotation.y))>0.04: animation="turn"
  last_facing=avatar.rotation.y
  if avatar.has_method("animate"): avatar.animate(animation,horizontal.length(),delta)

@@ -62,6 +62,26 @@ func run() -> void:
  verify(uphill.length()<flat.length(),"Uphill slope slows slide")
  verify(p.slide_velocity(v,Vector3.UP,Vector3.RIGHT,0.1).x>0,"Slide steering changes direction")
  verify(p.slide_velocity(v*10,Vector3.UP,Vector3.ZERO,0.1).length()<=p.max_slide_speed+0.001,"Slide practical speed cap")
+ # Real inclined StaticBody test, separate from the finite terrain.
+ p.active=true
+ Input.action_press("crouch")
+ var ramp=solid(Vector3(110,5,0),Vector3(32,0.6,10))
+ ramp.rotation.z=-0.32
+ p.position=Vector3(110,10,0); p.velocity=Vector3.ZERO
+ await ticks(65)
+ verify(p.is_on_floor(),"Player settles on real inclined collision")
+ p.set_posture("sliding"); p.velocity=Vector3(8,0,0)
+ await ticks(25)
+ verify(Vector3(p.velocity.x,0,p.velocity.z).length()>8,"Real downhill ramp accelerates sliding body")
+ p.position=Vector3(110,10,0); p.velocity=Vector3.ZERO; p.set_posture("crouching")
+ await ticks(65)
+ p.set_posture("sliding"); p.velocity=Vector3(-8,0,0)
+ await ticks(25)
+ verify(Vector3(p.velocity.x,0,p.velocity.z).length()<8,"Real uphill ramp reduces sliding body speed")
+ Input.action_release("crouch")
+ ramp.queue_free()
+ p.position=Vector3(0,3,0); p.velocity=Vector3.ZERO
+ await ticks(35)
  var avatar=p.avatar
  for state in ["idle","run","turn","jump","fall","crouch","slide","hit","death"]:
   avatar.animate(state,8,0.1)
@@ -134,7 +154,9 @@ func run() -> void:
  death_spider.hp=0; game.invulnerability=0; game.health=100
  var kill_before=game.kills
  game.kill_enemy(0)
- verify(death_spider.detonated and game.health<100 and game.kills==kill_before+1,"Death explosion triggers with normal kill rewards")
+ verify(death_spider.detonated and game.health==100 and game.pending_blasts.size()==1,"Death blast schedules a visible dodge window")
+ game.update_blasts(0.5)
+ verify(game.health<100 and game.kills==kill_before+1 and game.pending_blasts.is_empty(),"Death explosion triggers once with normal kill rewards")
  game.enemies.clear()
  game.variants.selections[0]=0
  var melee=game.spawn_enemy(0,game.player.position+Vector3(0.5,0,0))

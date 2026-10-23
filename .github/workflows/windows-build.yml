@@ -2,7 +2,9 @@ name: Windows playtest build
 on:
   push:
     branches: ['**']
+    paths-ignore: ['releases/**', '**/*.md', 'docs/images/**']
   pull_request:
+    paths-ignore: ['releases/**', '**/*.md', 'docs/images/**']
   workflow_dispatch:
 permissions:
   contents: read

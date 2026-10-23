@@ -15,9 +15,10 @@ static func bake(parts: Array) -> ArrayMesh:
   var vertices=arrays[Mesh.ARRAY_VERTEX]
   var normals=arrays[Mesh.ARRAY_NORMAL]
   var indices=arrays[Mesh.ARRAY_INDEX]
-  if indices.is_empty(): indices=range(vertices.size())
+  if indices==null or indices.is_empty(): indices=range(vertices.size())
   for i in indices:
-   tool.set_color(p.color)
+   var vertex_colors=arrays[Mesh.ARRAY_COLOR]
+   tool.set_color(p.color*(vertex_colors[i] if vertex_colors!=null and not vertex_colors.is_empty() else Color.WHITE))
    tool.set_normal(p.transform.basis*normals[i])
    tool.add_vertex(p.transform*vertices[i])
  return tool.commit()

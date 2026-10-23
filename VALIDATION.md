@@ -17,3 +17,15 @@ Reversed terrain triangles caused failed floor/jump detection. Health regenerati
 ## Not established
 
 Native Windows execution, audible output on speakers, Forward+ rendering on a real GPU, 60 FPS on a target gaming PC, long-run stability, faithful reference balance, all character-passive combinations and playtester enjoyment. Only two passives have explicit behaviour assertions; the roster is not equivalent to complete per-character integration coverage. Exact original mechanics remain unverified because all supplied research sites are proxy-blocked.
+
+## Movement/visual overhaul — 2026-10-23
+
+Baseline on the existing project: **30 checks pass**, 400-enemy CPU update + grid rebuild averaged **1.61 ms/tick**.
+
+The overhaul retains those **30 checks** and adds **77 passing checks** (107 total). New coverage includes absence of a sprint action; rebindable Ctrl crouch; capsule resize and real ceiling clearance; entry threshold and momentum; steering/cap; pure slope calculations plus actual downhill/uphill inclined StaticBody traversal; slide jumping; all nine player animation states; eight archetypes/two variations each; all 16 model resources; deterministic and diverse registry choices; per-run spawn consistency; stage and actual saved-run continuity; variant stats; cactus wind-up/fan/projectile impact; proximity and delayed death explosions with repeat guards; melee recovery; normal rewards; distinct attack meshes and animated instancing.
+
+The comparable final local headless benchmark averaged approximately **6.0 ms/tick for 400 enemies** (runs during development ranged about 5.8–8.0 ms). This is a significant increase over 1.61 ms: richer AI, obstacle queries, separate model batches and animated transforms do more work. Distant humanoids use merged meshes to reduce update cost. Timing excludes rasterization, full late-game combat and target-PC hardware; stable 60 FPS is **not established**.
+
+Rendered inspection used Godot 4.7.2, Xvfb and Mesa llvmpipe with OpenGL compatibility rendering. Menu, all 16 enemy silhouettes in a dedicated gallery, player idle/run/crouch/slide/jump poses and a combat scene were actually captured and viewed. The ground shader compiled/rendered. These images do not establish authored skeletal animation or Windows/Vulkan performance.
+
+A real GitHub Actions run on commit `49d00f1` completed successfully and uploaded `BONK_INFINITY-Windows-x64` (run 39976842983); the first workflow attempt had failed due to an unsupported `runner.temp` YAML context and was fixed. Final source/artifact provenance is recorded in `releases/BUILD_INFO.md`. Artifact publication is separate from native Windows execution, which remains untested.
