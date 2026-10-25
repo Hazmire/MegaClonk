@@ -27,7 +27,8 @@ explicit old-region detachment; query budgets cover the full map rather than the
 A detached menu-camera look_at was also corrected. Tests retain true 3D explosion proximity;
 paused ground-combat fixtures now place the player on the ground.
 
-Windows export/publication evidence is maintained in `releases/BUILD_INFO.md`.
+Windows CI run40237119122 passed and published the release ZIP plus artifact.
+Export/publication evidence is maintained in `releases/BUILD_INFO.md`.
 Native Windows execution, audible speaker output and stable60FPS on gaming hardware remain unverified.
 
 ---

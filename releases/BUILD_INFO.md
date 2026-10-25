@@ -1,25 +1,30 @@
-# MEGACLONK core overhaul and combat feedback
+# Forest playtest publication — 2026-10-25
 
-- Clean source: `b7ccae74ed26b4a39e0adc76d5508d43985b42fe`, Godot4.7.2.
-- Successful CI: https://github.com/Hazmire/MegaClonk/actions/runs/40023925327
-- Artifact: `BONK_INFINITY-Windows-x64`, ID12532156289;59,747,426bytes;unexpired when checked.
-- Artifact digest from GitHub metadata: `sha256:150db7aa66bdd7531524a508b6bf79676c5c9e74513b10fe3953c27f87edf820`.
-- Repository ZIP:70,048,168bytes;19files.
-- Repository ZIP SHA256: `4f534bf8abb83842c337372d48b02e8054926c5b54eaa96546dca55ff37e3086`.
+Download: https://github.com/Hazmire/MegaClonk/releases/download/forest-playtest-v2/BONK_INFINITY_Windows_x64.zip
+Release: https://github.com/Hazmire/MegaClonk/releases/tag/forest-playtest-v2
 
-The repository ZIP is independently exported from the same clean source as CI;
-its container bytes differ from the Actions artifact. ZIP integrity, required
-licence/guide files and its embedded Windows resources were checked. All315checks
-pass against the embedded PCK under Linux Godot. Native Windows execution is not tested.
+- Clean source: `5fe086c5c549273d72e890307d61be90c683ee2e`, branch `megaclonk-menu-loadouts`.
+- Successful GitHub Actions run: https://github.com/Hazmire/MegaClonk/actions/runs/40237119122
+- Release asset ID: `676215692`; size **107,058,902 bytes**.
+- Release ZIP SHA256: `6a5ef826faa4ac07c70493beea9c371e70d9971d07d910ece861dd9ceb9beb30`.
+- Actions artifact: `BONK_INFINITY-Windows-x64`, ID `12615397512`, **107,955,250 bytes**, not expired at verification.
+- Artifact SHA256: `c932383c4a989d3f86dd22cc6a31884411e2ca28498592428f1e22d5099f479b`.
+- Artifact ZIP wraps the exported directory; its bytes differ from the separately packaged release ZIP.
 
-CI success, upload success, artifact size/digest/non-expiry were verified via GitHub.
-The public durable ZIP URL is downloaded and compared to SHA256SUMS after pushing.
-Actions archive bytes themselves are not claimed as downloaded/verified here.
+CI imported the committed assets, passed all eight suites, exported Windows x86-64, uploaded the
+artifact and published the durable release ZIP. Publication IDs, sizes and digests were verified
+through GitHub's API. The release ZIP was downloaded again: its byte count and SHA256 matched, all ZIP CRCs passed, and BUILD_INFO confirms clean source5fe086c plus all four Quaternius licences. The cloud workspace's direct uploads endpoint was forbidden; the authorized
+manual GitHub Actions release step performed publication successfully.
 
-Rendered imported forest/Jacob, red flashes, particle effects, both bosses, health
-bars, build/shops/unlocks and1080p/1440p HUD output were inspected under Mesa OpenGL.
-Hardware60FPS and sustained human balance playtests remain unverified. Exact missing
-art substitutions are in docs/ASSET_ACCESS.md. Full current rules: docs/CORE_OVERHAUL.md.
+A clean local export from runtime-equivalent `54c94df234fc08277b692ca8f832ca359bb98f4f` also passed
+ZIP CRC checks. Its Windows executable is PE32+ x86-64. Linux Godot loaded its embedded game data
+for a 180-frame practice run and a rendered 90-frame asset-showcase run, without resource/script
+errors. This checks exported resources, **not execution of the Windows binary on Windows**.
+The downloaded CI release executable’s embedded game data also completed a 180-frame practice run under Linux Godot without errors. Native Windows execution and gaming-GPU performance remain local playtest tasks.
 
-Merge PR3 into Full-Release to put this update on the default branch:
-https://github.com/Hazmire/MegaClonk/pull/3
+Source PR: https://github.com/Hazmire/MegaClonk/pull/3 (base `Full-Release`). Merge it to put this
+source on the default branch; the release download is available independently of merging.
+
+The old tracked `releases/BONK_INFINITY_Windows_x64.zip` is an earlier build. Use the release URL
+above for this update. Its old checksum remains in `SHA256SUMS`; the new published ZIP checksum
+is in `FOREST_SHA256SUMS`.

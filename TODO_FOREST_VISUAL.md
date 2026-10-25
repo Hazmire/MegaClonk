@@ -10,8 +10,10 @@
 - [x] Terrain-aware projectile collision and ground-field alignment.
 - [x] Hidden generation debugger, seed controls and rendered asset showcase.
 - [x] Final 100-seed collision/native path checks and complete regression run.
-- [ ] Publish and verify Windows playtest ZIP and Actions artifact.
+- [x] Publish and verify Windows playtest ZIP and Actions artifact.
 
 Limitations: supplied pack contains two monster species, no dedicated run/crouch clips and no
 outfit head. Documented adaptations address these; sixteen bespoke species are not claimed.
 Native Windows execution and target-GPU FPS remain local playtest tasks.
+
+Delivery verified: release `forest-playtest-v2`, successful Actions run40237119122. See `releases/BUILD_INFO.md`.
