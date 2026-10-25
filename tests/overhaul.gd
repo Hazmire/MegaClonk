@@ -22,6 +22,8 @@ func run() -> void:
  game.progress.storage_path="user://overhaul-test-profile.json"
  game.sandbox=true
  game.next_run_seed=500
+ # Deterministic flat combat fixture; map variety has separate 100-seed coverage.
+ game.map_seed_override=9
  game.begin_run()
  game.mode="pause"
  game.player.active=true
@@ -140,6 +142,7 @@ func run() -> void:
  game.enemies.clear(); game.projectiles.clear()
  game.variants.selections[1]=1
  var spider=game.spawn_enemy(1,game.player.position+Vector3(0.5,0,0))
+ spider.variant=OrdinaryRoster.variant(1,0)
  spider.cooldown=0
  game.rebuild_grid()
  game.invulnerability=0; game.health=100
@@ -152,7 +155,8 @@ func run() -> void:
  EnemySimulation.detonate(game,spider)
  verify(game.health==hp,"Repeat detonation cannot damage again")
  game.enemies.clear()
- var death_spider=game.spawn_enemy(1,game.player.position+Vector3(0.5,0,0))
+ game.variants.selections[6]=1
+ var death_spider=game.spawn_enemy(6,game.player.position+Vector3(0.5,0,0))
  death_spider.hp=0; game.invulnerability=0; game.health=100
  var kill_before=game.kills
  game.kill_enemy(0)
@@ -178,7 +182,7 @@ func run() -> void:
  for kind in 8:
   for choice in 2:
    game.variants.selections[kind]=choice
-   game.spawn_enemy(kind,Vector3(kind*2,0,choice*3+8))
+   var e=game.spawn_enemy(kind,Vector3(kind*2,0,choice*3+8));e.variant=game.variants.lookup(kind)
  game.update_enemies(0.016)
  verify(game.enemy_view.models.size()>=16,"All sixteen variants enter animated instanced renderer")
  print("OVERHAUL RESULT: %d checks, %d failures"%[checks,failures.size()])

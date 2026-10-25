@@ -52,7 +52,7 @@ func run():
  check(game.decoration_checksum==before,"Same seed reproduces decoration transforms")
  await process_frame
  check(not is_instance_valid(previous_world),"Stage rebuild cleans previous world/nav/collision")
- var nav_path=game.forest_navigation.server_path(Vector3.ZERO,game.map_layout.portal)
+ var nav_path=game.forest_navigation.server_path(game.map_layout.spawn,game.map_layout.portal)
  check(not nav_path.is_empty() and nav_path[-1].distance_to(game.map_layout.portal)<1,"Godot navigation path reaches elevated portal")
  game.queue_free();await process_frame;await process_frame
  print("FOREST TRAVERSAL RESULT: %d checks, %d failures"%[checks,errors.size()]);quit(0 if errors.is_empty() else 1)

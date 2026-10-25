@@ -22,7 +22,7 @@ func run():
  check(restored.pressure()>previous,"Endless pressure increases gradually")
  var game=load("res://scenes/main/main.tscn").instantiate();root.add_child(game);await process_frame
  game.progress=Progress.new();game.progress.storage_path="user://stage-loop-profile.json"
- game.next_run_seed=542;game.selected_trait="seer";game.selected_ultimate="ghost";game.begin_run()
+ game.next_run_seed=542;game.selected_trait="seer";game.selected_ultimate="ghost";game.map_seed_override=9;game.begin_run()
  game.mode="pause";game.player.active=false
  check(game.stage_time==0 and game.portal_state=="dormant","New run has dormant portal and fresh clock")
  check(game.portal.position.distance_to(game.player.position)>40 and abs(game.portal.position.x)<90 and abs(game.portal.position.z)<90,"Portal is away from spawn inside playable interior")

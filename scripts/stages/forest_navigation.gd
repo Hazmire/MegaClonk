@@ -6,6 +6,7 @@ var blocked: Dictionary={}
 var distances=PackedInt32Array()
 var goal=-1
 var clock=0.0
+var navigation_map: RID
 var region: NavigationRegion3D
 var ready_for_spawning=false
 func setup(data: Dictionary, obstacles: Dictionary) -> void:
@@ -31,12 +32,16 @@ func setup(data: Dictionary, obstacles: Dictionary) -> void:
   polygons.append(PackedInt32Array([polygon[0],polygon[1],polygon[2],polygon[3]]))
  var nav=NavigationMesh.new();nav.set_vertices(vertices)
  for polygon in polygons:nav.add_polygon(polygon)
- region=NavigationRegion3D.new();region.navigation_mesh=nav;region.use_edge_connections=false
- add_child(region)
- NavigationServer3D.map_set_use_async_iterations(get_world_3d().navigation_map,false)
- NavigationServer3D.map_force_update(get_world_3d().navigation_map)
- refresh(Vector3.ZERO)
- ready_for_spawning=true
+ navigation_map=NavigationServer3D.map_create()
+ NavigationServer3D.map_set_active(navigation_map,true)
+ NavigationServer3D.map_set_use_async_iterations(navigation_map,false)
+ region=NavigationRegion3D.new();NavigationServer3D.region_set_use_async_iterations(region.get_rid(),false);region.navigation_mesh=nav;region.use_edge_connections=false
+ region.set_navigation_map(navigation_map);add_child(region)
+ NavigationServer3D.map_force_update(navigation_map)
+ refresh(data.spawn)
+ var path=server_path(data.spawn,data.portal)
+ ready_for_spawning=not path.is_empty() and path[-1].distance_to(data.portal)<1
+ assert(ready_for_spawning,"Native navigation is not ready for this stage")
 func nearest_cell(pos: Vector3) -> int:
  var index=ForestMap.index(pos.x,pos.z)
  if not blocked.has(index):return index
@@ -75,9 +80,14 @@ func constrain(from: Vector3,to: Vector3) -> Vector3:
  return to
 func reachable(pos: Vector3) -> bool:return distances[nearest_cell(pos)]>=0
 func server_path(from: Vector3,to: Vector3) -> PackedVector3Array:
- var query=NavigationPathQueryParameters3D.new();query.map=get_world_3d().navigation_map;query.start_position=from;query.target_position=to
+ var query=NavigationPathQueryParameters3D.new();query.map=navigation_map;query.start_position=from;query.target_position=to
  # Godot's default 4096-polygon limit is too small for a full 96x96 arena.
  # This is an occasional validation/debug query, never one query per enemy.
- query.path_search_max_polygons=edges.size()*2
+ query.path_search_max_polygons=edges.size()*8
+ NavigationServer3D.map_force_update(navigation_map)
  var result=NavigationPathQueryResult3D.new();NavigationServer3D.query_path(query,result)
  return result.get_path()
+
+func _exit_tree() -> void:
+ if navigation_map.is_valid():
+  NavigationServer3D.free_rid(navigation_map);navigation_map=RID()

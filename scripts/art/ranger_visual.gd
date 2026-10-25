@@ -59,7 +59,7 @@ func animate(state: String,speed: float,delta: float) -> void:
  if not playback.has_animation(wanted):wanted="idle"
  if wanted!=animation_state:animation_state=wanted;playback.play(wanted,0.15,-2.5 if wanted=="death" else 1.0,wanted=="death");state_time=0
  state_time+=delta;previous_input=state
- playback.speed_scale=clampf(speed/2.5,0.65,4.0) if wanted=="move" else 1
+ playback.speed_scale=clampf(speed/RangerStride.METRES_PER_SECOND,0.1,4.0) if wanted=="move" else 1
  playback.advance(delta)
  if state=="crouch" and speed>0.5:
   for side in ["l","r"]:

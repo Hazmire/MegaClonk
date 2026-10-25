@@ -2,6 +2,9 @@ class_name ForestWorld
 extends RefCounted
 const NATURE="res://assets/quaternius/nature/"
 static func spaced(game: Node,p: Vector3,radius: float) -> bool:
+ for direction in [Vector3.RIGHT,Vector3.LEFT,Vector3.FORWARD,Vector3.BACK]:
+  var other=p+direction*(radius+4)
+  if absf(game.terrain_height(other.x,other.z)-p.y)>0.1:return false
  var cell=Vector2i(floori(p.x/8),floori(p.z/8))
  for x in range(cell.x-1,cell.x+2):
   for z in range(cell.y-1,cell.y+2):
@@ -37,7 +40,7 @@ static func build(game: Node) -> void:
   if game.prop_batches["mega_"+tree].multimesh.visible_instance_count>=140:break
  for i in 600:
   var p=Vector2(rng.randf_range(-92,92),rng.randf_range(-92,92))
-  if ForestMap.is_ramp(data,p,1) or p.length()<8:continue
+  if ForestMap.is_ramp(data,p,1) or p.distance_to(Vector2(data.spawn.x,data.spawn.z))<12:continue
   var model=["Grass_Common_Short","Fern_1","Flower_3_Group","Bush_Common","Bush_Common_Flowers"][i%5]
   var height=0.6 if i%5<3 else 1.0
   game.prop_instance("mega_"+model,ImportedArt.mesh(NATURE+model+".gltf",height,2),Color.WHITE,Vector3(p.x,game.terrain_height(p.x,p.y),p.y),Vector3.ONE*rng.randf_range(0.8,1.2),true,rng.randf()*TAU)
@@ -64,6 +67,7 @@ static func build(game: Node) -> void:
   for key in game.prop_batches:
    if str(key).begins_with("mega_CommonTree") or key=="mega_rock":game.prop_batches[key].multimesh.visible_instance_count=0
   game.obstacles.clear()
+  NavigationServer3D.region_set_map(game.forest_navigation.region.get_rid(),RID())
   game.world.remove_child(game.forest_navigation);game.forest_navigation.queue_free()
   game.forest_navigation=ForestNavigation.new();game.world.add_child(game.forest_navigation);game.forest_navigation.setup(data,{})
   push_warning("Removed obstructing decorations in map seed %s"%data.seed)

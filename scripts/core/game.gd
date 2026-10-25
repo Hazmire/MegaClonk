@@ -52,7 +52,10 @@ var damage_by_weapon: Dictionary = {}
 var weapon_damage_windows: Dictionary={}
 var spawn_clock = 0.0
 var invulnerability = 0.0
-var boss_variant="colossus"
+var boss_variant="chunkus"
+var spawn_rng=RandomNumberGenerator.new()
+var elite_active=false
+var elite_rewarded=false
 var ghost_budget=0.0
 var boss_spawned = false
 var boss_dead = false
@@ -295,7 +298,9 @@ func build_stage() -> void:
  announcement="";announcement_time=0
  stage_clock.reset()
  ghost_budget=0
- boss_variant="colossus" if posmod(run_seed+stage,2)==0 else "sovereign"
+ boss_variant="chunkus" if posmod(hash(str(run_seed)+":"+str(stage)),2)==0 else "rock_golem"
+ spawn_rng.seed=run_seed+stage*104729
+ elite_active=false;elite_rewarded=false
  spawn_budget=0
  portal_state="dormant"
  frontend.minimap.reset(loadout_runtime.trait_id=="seer")
@@ -315,6 +320,7 @@ func build_stage() -> void:
  env.fog_light_color = env.background_color
  env.fog_density = 0.003 if biome < 2 else 0.009
  ForestWorld.build(self)
+ if OrdinaryRoster.SETTINGS.elite_statues>0:create_elite_statue()
  for i in range(12):
   var p: Vector3=map_layout.pois[i]
   var kind = ["Chest","Heal","Charge Shrine","Shop","Risk Shrine","Stat Shrine"][i % 6]
@@ -337,7 +343,7 @@ func build_stage() -> void:
  player = BonkPlayer.new()
  player.stats = stats
  world.add_child(player)
- player.position = Vector3(0,3,0)
+ player.position = map_layout.spawn+Vector3.UP*0.1
  player.avatar = create_avatar(player,0,Vector3.ZERO)
  player.can_climb = loadout_runtime.trait_id=="climber"
  player.can_glide=loadout_runtime.trait_id=="glider"
@@ -429,7 +435,7 @@ func _physics_process(delta: float) -> void:
   player.fall_hit = 0
  if player.position.y < -30 or absf(player.position.x)>102 or absf(player.position.z)>102:
   hurt(12)
-  player.position = Vector3(0,4,0)
+  player.position = map_layout.spawn+Vector3.UP
  if player.velocity.length() > 3: moving_time += delta
  else: moving_time = maxf(0,moving_time-delta*2)
  if passive_clock >= 1:
@@ -479,12 +485,8 @@ func tick_passive() -> void:
    if int(elapsed) % 60 == 0: award_item()
 func spawn_enemy(kind: int = -1, at: Vector3 = Vector3.INF) -> Dictionary:
  if enemies.size() >= ENEMY_LIMIT: return {}
- if kind < 0:
-  var roll=rng.randf()
-  kind=0 if roll<0.78 else (1 if roll<0.93 else 3)
-  if stage>1 and kind==0 and rng.randf()<0.3:kind=[2,4,7][rng.randi_range(0,2)]
-  if stage>1 and kind==1 and rng.randf()<0.2:kind=6
-  if stage>2 and kind==1 and rng.randf()<0.25:kind=5
+ if is_instance_valid(forest_navigation) and not forest_navigation.ready_for_spawning:return {}
+ if kind < 0:kind=OrdinaryRoster.choose(spawn_rng)
  var angle = rng.randf()*TAU
  var pos = player.position + Vector3(cos(angle),0,sin(angle))*rng.randf_range(25,38) if at == Vector3.INF else at
  pos.x = clampf(pos.x,-92,92)
@@ -498,7 +500,10 @@ func spawn_enemy(kind: int = -1, at: Vector3 = Vector3.INF) -> Dictionary:
  var hp = (35 + kind*8) * scale_factor * (18 if kind==8 else 1)
  var enemy = {"pos":pos,"hp":hp,"max_hp":hp,"kind":kind,"speed":(4.5 if kind==1 else (1.8 if kind in [2,7] else 3.0)),"cooldown":rng.randf()*2,"slow":0.0,"frozen":0.0,"spore":false,"burn":0.0,"burn_clock":0.0,"poison":0.0,"poison_clock":0.0,"knock":Vector3.ZERO,"age":0.0,"phase":0,"biome":biome,"target":Vector3.ZERO,"telegraph":0.0,"scale":2.8 if kind==8 else (1.4 if kind in [2,7] else 1.0)}
  if kind<8:
-  var config=variants.lookup(kind)
+  var config=OrdinaryRoster.variant(kind,spawn_rng.randi_range(0,1)) if kind<3 else variants.lookup(kind)
+  enemy["ordinary"]=kind<3
+  enemy["roster_choice"]=config.id
+  enemy["radius"]=config.get("radius",0.5)
   enemy["variant"]=config
   enemy["hp"]=config.health*scale_factor
   enemy["max_hp"]=enemy.hp
@@ -515,11 +520,12 @@ func spawn_enemy(kind: int = -1, at: Vector3 = Vector3.INF) -> Dictionary:
   enemy["detonated"]=false
   enemy["hit_time"]=0.0
  if kind>=8:
-  Encounters.initialize(self,enemy,boss_variant if kind==8 else ("champion" if kind==9 else ("hunter" if kind==10 else "ghost")))
+  Encounters.initialize(self,enemy,boss_variant if kind==8 else ("champion" if kind==9 else ("hunter" if kind==10 else ("lesser_golem" if kind==12 else ("statue_elite" if kind==13 else "ghost")))))
  if is_instance_valid(forest_navigation):
-  enemy.pos=avoid_props(enemy.pos)
+  enemy.pos=avoid_props(enemy.pos,float(enemy.get("radius",0.5)))
   if not forest_navigation.reachable(enemy.pos):return {}
  enemies.append(enemy)
+ if effects.size()<70:combat_fx.burst("smoke_puff",enemy.pos-Vector3.UP*0.5,0.5)
  return enemy
 func update_enemies(delta: float) -> void:
  if is_instance_valid(forest_navigation):forest_navigation.tick(delta,player.position)
@@ -717,6 +723,8 @@ func kill_enemy(index: int) -> void:
   effects.append({"node":corpse,"life":0.6,"death":true})
   combat_fx.burst("smoke_puff",e.pos,2)
  if e.kind == 8:
+  for summoned in enemies:
+   if summoned.get("summon_owner","")==e.get("owner_key","none"):summoned.hp=0
   run_metrics["bosses"]=int(run_metrics.get("bosses",0))+1
   boss_dead = true
   portal_state="exit"
@@ -733,6 +741,12 @@ func kill_enemy(index: int) -> void:
  gold+=gained
  gold_fraction-=gained
  enemies.remove_at(index)
+ if e.get("elite",false) and elite_active and not elite_rewarded:
+  var remaining=false
+  for enemy in enemies:
+   if enemy.hp>0 and enemy.get("elite",false):remaining=true;break
+  if not remaining:
+   elite_rewarded=true;elite_active=false;gold+=OrdinaryRoster.SETTINGS.elite_reward;toast("ELITES DEFEATED • +%d gold"%OrdinaryRoster.SETTINGS.elite_reward)
 func announce(text: String) -> void:
  announcement=text;announcement_time=4
  toast(text)
@@ -768,6 +782,8 @@ func refresh_portal() -> void:
 func activate_portal() -> bool:
  if portal_state=="summoned":return false
  if portal_state=="exit":return advance_stage()
+ for active in enemies:
+  if active.kind==8 and active.hp>0:return false
  var boss=spawn_enemy(8,portal.position+Vector3(-7,0,0))
  if boss.is_empty():return false
  boss_spawned=true;portal_state="summoned";refresh_portal()
@@ -929,7 +945,7 @@ func update_projectiles(delta: float) -> void:
    if segment_distance(player.position+Vector3.UP,previous,p.node.position)<0.8: hurt(p.damage); p.life=0
   else:
    for e in nearby(p.node.position,4+ p.velocity.length()*delta):
-    if e in p.hits or segment_distance(e.pos,previous,p.node.position)>1.0*stats.size: continue
+    if e in p.hits or segment_distance(e.pos,previous,p.node.position)>maxf(1.0,float(e.get("radius",0.5)))*stats.size: continue
     hit(e,p.damage,p.weapon)
     if p.kind=="fireball": e.burn=3*stats.duration;e["burn_source"]=p.weapon
     impact(e.pos,Color(Catalog.WEAPONS[p.weapon][5]),3)
@@ -1093,6 +1109,10 @@ func update_interactions(delta: float) -> void:
   if Input.is_action_just_pressed("interact"):activate_portal()
   return
  if closest.is_empty(): return
+ if closest.kind=="Elite Statue":
+  notice.text="Press E to summon Elite Enemies"
+  if Input.is_action_just_pressed("interact"):activate_elite_statue(closest)
+  return
  notice.text="E  /  %s%s"%[closest.kind," · %d gold"%chest_cost() if closest.kind=="Chest" else ""]
  if not Input.is_action_just_pressed("interact"): return
  match closest.kind:
@@ -1178,7 +1198,7 @@ func sandbox_menu() -> void:
  button("Add XP +100 / gold +100",col,func(): xp+=100; gold+=100)
  button("Invincibility: "+str(settings.invincible),col,func(): settings.invincible=not settings.invincible; sandbox_menu())
  button("Time scale: "+str(Engine.time_scale),col,func(): Engine.time_scale=2 if Engine.time_scale==1 else 1; sandbox_menu())
- button("Teleport to spawn",col,func(): player.position=Vector3(0,4,0))
+ button("Teleport to spawn",col,func(): player.position=map_layout.spawn+Vector3.UP)
  button("Resume",col,resume)
 func settings_menu(back: Callable) -> void:
  frontend.settings(back)
@@ -1371,8 +1391,8 @@ func save_run(path: String = "user://active-run.json") -> bool:
  var saved_pickups=[]
  for pickup in pickups: saved_pickups.append({"position":[pickup.node.position.x,pickup.node.position.y,pickup.node.position.z],"value":pickup.value,"age":pickup.age})
  var used=[]
- for object in interactables: used.append({"used":object.used,"charge":object.charge,"tier":object.get("tier","Common"),"offers":object.get("offers",null),"sold":object.get("sold",[])})
- var data={"version":2,"terrain_version":2,"map_seed_override":map_seed_override,"stage_clock":stage_clock.serialize(),"boss_variant":boss_variant,"ghost_budget":ghost_budget,"portal_state":portal_state,"loadout":loadout_runtime.serialize(),"selected_weapon":selected_weapon,"run_metrics":run_metrics,"chests_opened":chests_opened,"legacy_weapon_slots":legacy_weapon_slots,"legacy_tome_slots":legacy_tome_slots,"minimap":serialize_minimap(),"variants":variants.serialize(),"rng_state":str(rng.state),"character":character,"biome":biome,"selected_biome":selected_biome,"tier":tier,"stage":stage,"elapsed":elapsed,"stage_time":stage_time,"stats":stats,"health":health,"xp":xp,"level":level,"kills":kills,"gold":gold,"weapons":saved_weapons,"tomes":tomes,"items":items,"sandbox":sandbox,"position":[player.position.x,player.position.y,player.position.z],"enemies":saved_enemies,"boss_spawned":boss_spawned,"boss_dead":boss_dead,"interactables":used,"damage_total":damage_total,"rerolls":rerolls,"banished":banished,"pickups":saved_pickups,"damage_by_weapon":damage_by_weapon,"gold_fraction":gold_fraction,"camera":[player.yaw,player.pitch,player.zoom]}
+ for object in interactables: used.append({"kind":object.kind,"used":object.used,"charge":object.charge,"tier":object.get("tier","Common"),"offers":object.get("offers",null),"sold":object.get("sold",[])})
+ var data={"version":2,"terrain_version":3,"map_seed_override":map_seed_override,"stage_clock":stage_clock.serialize(),"boss_variant":boss_variant,"ghost_budget":ghost_budget,"portal_state":portal_state,"loadout":loadout_runtime.serialize(),"selected_weapon":selected_weapon,"run_metrics":run_metrics,"chests_opened":chests_opened,"legacy_weapon_slots":legacy_weapon_slots,"legacy_tome_slots":legacy_tome_slots,"minimap":serialize_minimap(),"variants":variants.serialize(),"spawn_rng_state":str(spawn_rng.state),"elite_active":elite_active,"elite_rewarded":elite_rewarded,"rng_state":str(rng.state),"character":character,"biome":biome,"selected_biome":selected_biome,"tier":tier,"stage":stage,"elapsed":elapsed,"stage_time":stage_time,"stats":stats,"health":health,"xp":xp,"level":level,"kills":kills,"gold":gold,"weapons":saved_weapons,"tomes":tomes,"items":items,"sandbox":sandbox,"position":[player.position.x,player.position.y,player.position.z],"enemies":saved_enemies,"boss_spawned":boss_spawned,"boss_dead":boss_dead,"interactables":used,"damage_total":damage_total,"rerolls":rerolls,"banished":banished,"pickups":saved_pickups,"damage_by_weapon":damage_by_weapon,"gold_fraction":gold_fraction,"camera":[player.yaw,player.pitch,player.zoom]}
  var file=FileAccess.open(path+".tmp",FileAccess.WRITE)
  if not file: return false
  file.store_string(JSON.stringify(data)); file.close()
@@ -1403,7 +1423,9 @@ func load_run(path: String = "user://active-run.json") -> bool:
  tomes=data.tomes; items=data.items; banished=data.banished; rerolls=int(data.rerolls)
  build_stage()
  elapsed=float(data.elapsed); stage_time=float(data.stage_time)
- boss_variant=str(data.get("boss_variant",boss_variant));ghost_budget=float(data.get("ghost_budget",0))
+ boss_variant=str(data.get("boss_variant",boss_variant))
+ if boss_variant not in ["chunkus","rock_golem"]:boss_variant="chunkus" if boss_variant=="sovereign" else "rock_golem"
+ ghost_budget=float(data.get("ghost_budget",0))
  stage_clock.restore(data.get("stage_clock",{}),stage_time)
  stage_time=stage_clock.elapsed
  health=float(data.health); xp=float(data.xp); level=int(data.level); kills=int(data.kills); gold=int(data.gold)
@@ -1419,25 +1441,35 @@ func load_run(path: String = "user://active-run.json") -> bool:
   var model=pool.acquire("xp",projectile_mesh("xp"),Color("6dffd8"),pos)
   pickups.append({"node":model,"value":record.value,"age":record.age})
  player.position=Vector3(data.position[0],data.position[1],data.position[2])
- if int(data.get("terrain_version",1))<2:player.position=Vector3(0,1,0)
+ if int(data.get("terrain_version",1))<3:player.position=map_layout.spawn+Vector3.UP
  for record in data.enemies:
+  if int(data.get("terrain_version",1))<3 and int(record.kind)<8:continue
   var e=spawn_enemy(int(record.kind),Vector3(record.pos[0],record.pos[1],record.pos[2]))
   if e.is_empty(): continue
+  if record.has("roster_choice") and int(record.kind)<3:
+   var choice=1 if record.roster_choice in ["skeleton","speedy_monster"] else 0
+   e.variant=OrdinaryRoster.variant(int(record.kind),choice)
   for key in record:
+   if key=="encounter" and int(data.get("terrain_version",1))<3 and int(record.kind)==8:continue
    if key in ["pos","knock","target","charge_direction"]: e[key]=Vector3(record[key][0],record[key][1],record[key][2])
    elif key in ["kind","phase"]: e[key]=int(record[key])
    else: e[key]=record[key]
+ if int(data.get("terrain_version",1))<3:
+  for enemy in enemies:enemy.pos.y=terrain_height(enemy.pos.x,enemy.pos.z)+0.65
  boss_spawned=bool(data.boss_spawned); boss_dead=bool(data.boss_dead)
- for i in mini(interactables.size(),data.interactables.size()):
-  interactables[i].used=data.interactables[i].used
-  interactables[i].charge=data.interactables[i].charge
-  if data.interactables[i].get("offers") is Array:interactables[i]["offers"]=data.interactables[i].offers
-  interactables[i]["sold"]=data.interactables[i].get("sold",[])
+ for i in interactables.size():
+  var saved_index=i-1 if int(data.get("terrain_version",1))<3 else i
+  if saved_index<0 or saved_index>=data.interactables.size():continue
+  interactables[i].used=data.interactables[saved_index].used
+  interactables[i].charge=data.interactables[saved_index].charge
+  if data.interactables[saved_index].get("offers") is Array:interactables[i]["offers"]=data.interactables[saved_index].offers
+  interactables[i]["sold"]=data.interactables[saved_index].get("sold",[])
   if interactables[i].used:
    if interactables[i].kind=="Shop":interactables[i].node.hide()
    else:interactables[i].node.scale=Vector3.ONE*0.5
  portal_state=str(data.get("portal_state","exit" if boss_dead else ("summoned" if boss_spawned else "dormant")))
  refresh_portal()
+ spawn_rng.state=int(data.get("spawn_rng_state",spawn_rng.state));elite_active=bool(data.get("elite_active",false));elite_rewarded=bool(data.get("elite_rewarded",false))
  rng.seed=run_seed; rng.state=int(data.rng_state)
  restore_minimap(data.get("minimap",{}))
  rebuild_grid()
@@ -1458,13 +1490,13 @@ func prop_collider(pos: Vector3, radius: float, height: float) -> void:
  var key=Vector2i(floori(pos.x/8),floori(pos.z/8))
  if not obstacles.has(key): obstacles[key]=[]
  obstacles[key].append({"pos":pos,"radius":radius})
-func avoid_props(pos: Vector3) -> Vector3:
+func avoid_props(pos: Vector3,agent_radius: float=0.4) -> Vector3:
  var cell=Vector2i(floori(pos.x/8),floori(pos.z/8))
  for x in range(cell.x-1,cell.x+2):
   for z in range(cell.y-1,cell.y+2):
    for obstacle in obstacles.get(Vector2i(x,z),[]):
     var offset=Vector2(pos.x-obstacle.pos.x,pos.z-obstacle.pos.z)
-    var safe=obstacle.radius+0.4
+    var safe=obstacle.radius+agent_radius
     if offset.length()<safe:
      if offset.length()<0.01: offset=Vector2.RIGHT
      offset=offset.normalized()*safe
@@ -1617,10 +1649,27 @@ func toggle_map_debug() -> void:
  var mat=StandardMaterial3D.new();mat.vertex_color_use_as_albedo=true;mat.shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED;map_debug_node.material_override=mat;world.add_child(map_debug_node)
  for i in map_layout.regions.size():
   var region=map_layout.regions[i];var p=region.rect.get_center();var label=Label3D.new();label.text="Region %d • %.0fm"%[i,region.height];label.billboard=BaseMaterial3D.BILLBOARD_ENABLED;label.pixel_size=0.03;map_debug_node.add_child(label);label.position=Vector3(p.x,region.height+3,p.y)
- var points=map_layout.pois.duplicate();points.append(map_layout.portal);points.append(Vector3.ZERO)
+ var points=map_layout.pois.duplicate();points.append(map_layout.portal);points.append(map_layout.spawn);points.append(map_layout.elite)
  for i in points.size():
-  var label=Label3D.new();label.text="POI %d"%i if i<12 else ("BOSS PORTAL" if i==12 else "PLAYER SPAWN");label.billboard=BaseMaterial3D.BILLBOARD_ENABLED;label.pixel_size=0.02;label.no_depth_test=true;map_debug_node.add_child(label);label.position=points[i]+Vector3.UP*2
+  var label=Label3D.new();label.text="POI %d"%i if i<12 else ("BOSS PORTAL" if i==12 else ("PLAYER SPAWN" if i==13 else "ELITE STATUE"));label.billboard=BaseMaterial3D.BILLBOARD_ENABLED;label.pixel_size=0.02;label.no_depth_test=true;map_debug_node.add_child(label);label.position=points[i]+Vector3.UP*2
  toast("DEBUG MAP SEED %s"%stage_map_seed())
 
 func enemy_line_clear(pos: Vector3,target: Vector3) -> bool:
  return get_world_3d().direct_space_state.intersect_ray(PhysicsRayQueryParameters3D.create(pos+Vector3.UP,target+Vector3.UP,1)).is_empty()
+
+func create_elite_statue() -> void:
+ var statue=Node3D.new();statue.name="EliteStatue";world.add_child(statue);statue.position=map_layout.elite
+ mesh_node(cylinder(1.7,0.5),Color("54466c"),statue,Vector3.UP*0.25)
+ var guardian=mesh_node(BestiaryFrames.mesh("Knight","enemy_idle",0),Color.WHITE,statue,Vector3.UP*0.5)
+ guardian.material_override=null
+ var jewel=mesh_node(ModelBuilder.cone(0.45,0.9),Color("f7c763"),statue,Vector3.UP*3,true)
+ jewel.rotation.z=PI
+ interactables.append({"node":statue,"kind":"Elite Statue","used":false,"charge":0.0})
+func activate_elite_statue(statue: Dictionary) -> bool:
+ if statue.used or elite_active or elite_rewarded:return false
+ statue.used=true;elite_active=true
+ for i in OrdinaryRoster.SETTINGS.elite_count:
+  var angle=i*TAU/OrdinaryRoster.SETTINGS.elite_count
+  var point=statue.node.position+Vector3(cos(angle),0,sin(angle))*6
+  spawn_enemy(13,point)
+ combat_fx.burst("sparks_shower",statue.node.position,2);announce("ELITE ENCOUNTER • Obsidian Sentinels");return true

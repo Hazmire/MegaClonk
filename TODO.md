@@ -1,3 +1,7 @@
+# Latest update
+
+See [Dynamic Forest milestones](TODO_DYNAMIC_FOREST.md) and [current gameplay guide](docs/DYNAMIC_FOREST.md).
+
 # Current work
 
 See [Forest visual milestone](TODO_FOREST_VISUAL.md) and [implementation guide](docs/FOREST_OVERHAUL.md).

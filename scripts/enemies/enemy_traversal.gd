@@ -1,0 +1,43 @@
+class_name EnemyTraversal
+extends RefCounted
+static func move(game: Node,e: Dictionary,speed: float,delta: float) -> Vector3:
+ var nav=game.forest_navigation
+ if not e.get("climb",{}).is_empty():
+  var climb: Dictionary=e.climb;climb.clock+=delta
+  if climb.clock>8:e.climb={};e.climb_retry=2.0;return e.pos
+  var target: Vector3=Vector3(climb.landing[0],climb.landing[1],climb.landing[2])
+  var next: Vector3=e.pos
+  if climb.phase=="rise":
+   next.y=move_toward(next.y,target.y,maxf(3,speed)*delta)
+   if absf(next.y-target.y)<0.01:climb.phase="over"
+  else:
+   next=next.move_toward(target,maxf(2,speed)*delta)
+   if next.distance_to(target)<0.02:e.climb={}
+  e.move_direction=Vector3(target.x-e.pos.x,0,target.z-e.pos.z).normalized();return next
+ e["climb_retry"]=maxf(0,e.get("climb_retry",0)-delta)
+ var direction=game.player.position-e.pos;direction.y=0;direction=direction.normalized()
+ var ahead=e.pos+direction*(e.get("radius",0.5)+1.2)
+ var step_height=game.terrain_height(ahead.x,ahead.z)-game.terrain_height(e.pos.x,e.pos.z)
+ if speed>0 and e.climb_retry<=0 and step_height>1.1 and maxf(absf(ahead.x),absf(ahead.z))<92:
+  e.climb_retry=0.25
+  var query=PhysicsRayQueryParameters3D.create(e.pos+Vector3.UP*0.2,ahead+Vector3.UP*0.2,1)
+  var hit=game.get_world_3d().direct_space_state.intersect_ray(query)
+  if not hit.is_empty() and absf(hit.normal.y)<0.2 and not hit.collider.has_meta("forest_decoration"):
+   var landing: Vector3=hit.position-hit.normal*(e.get("radius",0.5)+0.8)
+   landing.y=game.terrain_height(landing.x,landing.z)+0.65
+   var valid=landing.y>e.pos.y+1 and landing.y-e.pos.y<=12.5 and maxf(absf(landing.x),absf(landing.z))<92
+   for offset in [Vector3.ZERO,Vector3.RIGHT,Vector3.LEFT,Vector3.FORWARD,Vector3.BACK]:
+    var point=landing+offset*e.get("radius",0.5)
+    if nav.blocked.has(ForestMap.index(point.x,point.z)) or absf(game.terrain_height(point.x,point.z)+0.65-landing.y)>0.1:valid=false
+   var clearance=game.get_world_3d().direct_space_state.intersect_ray(PhysicsRayQueryParameters3D.create(landing,landing+Vector3.UP*2,1))
+   if valid and clearance.is_empty():
+    e.climb={"landing":[landing.x,landing.y,landing.z],"phase":"rise","clock":0.0};return e.pos
+ # Direct pursuit on compatible surfaces; otherwise shared flow routes around
+ # colliders, down cliffs, or toward a ramp when no safe climb landing exists.
+ if absf(step_height)>1.1 or nav.blocked.has(ForestMap.index(ahead.x,ahead.z)):direction=nav.direction(e.pos,game.player.position)
+ e.move_direction=direction
+ var next=nav.constrain(e.pos,e.pos+(direction*speed+e.knock)*delta)
+ next=game.avoid_props(next,e.get("radius",0.5))
+ next.x=clampf(next.x,-94,94);next.z=clampf(next.z,-94,94)
+ next.y=game.terrain_height(next.x,next.z)+0.65
+ return next

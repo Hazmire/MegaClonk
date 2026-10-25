@@ -63,6 +63,8 @@ func run() -> void:
  game.frontend.play_screen()
  check(game.mode=="play" and game.selected_weapon==1,"Play opens independent loadout selection")
  game.sandbox=false;game.selected_trait="momentum";game.selected_ultimate="nova";game.next_run_seed=900
+ # Deterministic flat combat fixture; map variety has separate 100-seed coverage.
+ game.map_seed_override=9
  game.begin_run();game.spawn_clock=999
  check(game.character==-1 and game.weapons.has(1) and game.weapon_limit()==2,"One adventurer starts selected weapon with normal capacity")
  game.equip(0);game.equip(6)

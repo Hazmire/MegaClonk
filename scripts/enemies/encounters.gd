@@ -3,6 +3,10 @@ extends RefCounted
 static var meshes: Dictionary={}
 static func config(id: String) -> Dictionary:
  var table={
+ "chunkus":{"name":"Big Chunkus","health":5000.0,"speed":1.8,"damage":25.0,"scale":3.4,"reward":80,"attacks":[],"visual_model":"Puglin","radius":2.0},
+ "rock_golem":{"name":"Rock Golem","health":5000.0,"speed":1.7,"damage":25.0,"scale":2.0,"reward":80,"attacks":[],"visual_model":"Golem","radius":2.0},
+ "statue_elite":{"name":"Obsidian Sentinel","health":350.0,"speed":2.8,"damage":15.0,"scale":1.2,"reward":8,"attacks":[],"visual_model":"Knight","radius":0.8},
+ "lesser_golem":{"name":"Lesser Golem","health":60.0,"speed":3.8,"damage":8.0,"scale":0.55,"reward":2,"attacks":[],"visual_model":"Golem","radius":0.5},
  "colossus":{"name":"The Forest Colossus","health":2400.0,"speed":2.4,"damage":28.0,"scale":2.4,"reward":80,"attacks":["slam","charge","thorns"]},
  "sovereign":{"name":"The Wraith Sovereign","health":1900.0,"speed":4.0,"damage":23.0,"scale":2.2,"reward":80,"attacks":["dash","souls","phantom"]},
  "champion":{"name":"Brute Champion","health":650.0,"speed":2.0,"damage":20.0,"scale":1.7,"reward":30,"attacks":["slam","charge"]},
@@ -10,13 +14,16 @@ static func config(id: String) -> Dictionary:
  "ghost":{"name":"Endless Revenant","health":100.0,"speed":5.5,"damage":16.0,"scale":1.0,"reward":4,"attacks":["cleave"]}}
  var d=table[id].duplicate(true);d.id=id;d.model="";d.mesh=model(id);return d
 static func model(id: String) -> Mesh:
- return BestiaryFrames.mesh("Puglin" if id in ["colossus","champion"] else "Imp","enemy_idle",0)
+ return BestiaryFrames.mesh("Golem" if id in ["rock_golem","lesser_golem"] else ("Knight" if id=="statue_elite" else ("Puglin" if id in ["colossus","champion","chunkus"] else "Imp")),"enemy_idle",0)
 static func initialize(game: Node, e: Dictionary, id: String) -> void:
  var d=config(id);var scaling=(1+(game.stage-1)*0.6)*(1+(game.tier-1)*0.3)*game.stats.difficulty
  if id=="ghost":scaling*=1+maxf(0,game.stage_time-game.STAGE_SECONDS)/120
  e.encounter=id;e.variant=d;e.hp=d.health*scaling;e.max_hp=e.hp;e.speed=d.speed;e.damage=d.damage*scaling;e.scale=d.scale
+ e.radius=d.get("radius",0.6);e.ability_clock=10.0 if id=="chunkus" else 12.0;e.aoe_remaining=0.0;e.owner_key=str(game.stage)+"_golem";e.elite=id=="statue_elite"
  e.state="move";e.action="";e.windup=0.0;e.recovery=0.0;e.charge_time=0.0;e.charge_direction=Vector3.ZERO;e.charge_hit=false;e.hit_time=0.0;e.special_cds={};e.wave_clock=0.0;e.waves=0
 static func step(game: Node, e: Dictionary, delta: float) -> void:
+ if e.encounter in ["chunkus","rock_golem","statue_elite","lesser_golem"]:
+  modern_step(game,e,delta);return
  var d=e.variant
  for key in e.special_cds:e.special_cds[key]=maxf(0,e.special_cds[key]-delta)
  if e.encounter=="ghost":e.speed=minf(game.RUN_RULES.ghost_speed_cap,5.5+maxf(0,game.stage_time-game.STAGE_SECONDS)/game.RUN_RULES.ghost_growth_seconds)
@@ -92,3 +99,35 @@ static func execute(game: Node,e: Dictionary) -> void:
    game.combat_fx.burst("explosion_small",e.target,2.5)
    if game.player.position.distance_to(e.target)<5:game.hurt(e.damage*1.5)
  game.play_sound("explosion");e.state="recover";e.recovery=0.8
+
+static func modern_step(game: Node,e: Dictionary,delta: float) -> void:
+ if e.hp<=0 or e.frozen>0:return
+ e.pos=EnemyTraversal.move(game,e,e.speed*(0.3 if e.slow>0 else 1),delta)
+ e.knock=e.knock.move_toward(Vector3.ZERO,delta*15)
+ e.state="move"
+ var distance=e.pos.distance_to(game.player.position+Vector3.UP*0.65)
+ if distance<e.radius+0.9 and e.cooldown<=0:game.hurt(e.damage);e.cooldown=1.2
+ if e.encounter=="chunkus":
+  if e.aoe_remaining>0:
+   e.aoe_remaining=maxf(0,e.aoe_remaining-delta)
+   if e.aoe_remaining==0:
+    game.flash(e.target,Color("ffad48"),5);game.combat_fx.burst("explosion_small",e.target,3);game.play_sound("explosion")
+    var point=game.player.position
+    if Vector2(point.x-e.target.x,point.z-e.target.z).length()<=5 and absf(point.y-e.target.y)<2.5:game.hurt(e.damage*1.6)
+  e.ability_clock-=delta
+  if e.ability_clock<=0:
+   e.ability_clock+=10;e.target=game.player.position;e.target.y=game.terrain_height(e.target.x,e.target.z)+0.1;e.aoe_remaining=1.5
+   game.telegraph(e.target,5,1.5,Color("ff7948"));game.combat_fx.burst("smoke_puff",e.target,1)
+ elif e.encounter=="rock_golem":
+  e.ability_clock-=delta
+  if e.ability_clock<=0:
+   e.ability_clock+=12
+   var count=0
+   for enemy in game.enemies:
+    if enemy.hp>0 and enemy.get("summon_owner","")==e.owner_key:count+=1
+   for i in mini(3,12-count):
+    var angle=float(i)*TAU/3+e.age
+    var point=e.pos+Vector3(cos(angle),0,sin(angle))*5
+    var summoned=game.spawn_enemy(12,point)
+    if not summoned.is_empty():summoned.summon_owner=e.owner_key
+   game.combat_fx.burst("smoke_puff",e.pos,2);game.flash(e.pos,Color("9cb9b0"),3)

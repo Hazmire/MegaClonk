@@ -18,6 +18,6 @@ static func mesh(model: String,state: String,frame: int) -> ArrayMesh:
  meshes[key]=result;return result
 
 static func prewarm() -> void:
- for model in ["Imp","Puglin"]:
+ for model in ["Imp","Puglin","Skeleton","Goblin","Knight","Golem"]:
   for frame in 8:mesh(model,"enemy_move",frame)
   for frame in 2:mesh(model,"enemy_idle",frame)

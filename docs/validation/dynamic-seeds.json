@@ -1,0 +1,1361 @@
+{
+  "center_elevations": {
+    "0.0": 34,
+    "11.1428575515747": 1,
+    "12.0": 31,
+    "3.0": 1,
+    "6.0": 28,
+    "7.7142858505249": 3,
+    "8.14285755157471": 1,
+    "9.0": 1
+  },
+  "errors": [],
+  "ramp_counts": [
+    "17",
+    "4",
+    "13",
+    "9",
+    "8",
+    "12",
+    "11",
+    "10",
+    "7",
+    "14",
+    "6",
+    "15",
+    "16"
+  ],
+  "records": [
+    {
+      "center_height": 6.0,
+      "drafts": 1,
+      "ramps": 17,
+      "regions": 15,
+      "seed": 0,
+      "side": "S",
+      "spawn": [
+        -26.0,
+        0.0,
+        73.0
+      ]
+    },
+    {
+      "center_height": 6.0,
+      "drafts": 1,
+      "ramps": 4,
+      "regions": 4,
+      "seed": 1,
+      "side": "SE",
+      "spawn": [
+        40.0,
+        6.0,
+        46.0
+      ]
+    },
+    {
+      "center_height": 12.0,
+      "drafts": 1,
+      "ramps": 13,
+      "regions": 11,
+      "seed": 2,
+      "side": "N",
+      "spawn": [
+        -26.0,
+        0.0,
+        -61.0
+      ]
+    },
+    {
+      "center_height": 12.0,
+      "drafts": 1,
+      "ramps": 9,
+      "regions": 7,
+      "seed": 3,
+      "side": "S",
+      "spawn": [
+        -24.0,
+        12.0,
+        54.0
+      ]
+    },
+    {
+      "center_height": 12.0,
+      "drafts": 1,
+      "ramps": 8,
+      "regions": 6,
+      "seed": 4,
+      "side": "SE",
+      "spawn": [
+        55.0,
+        0.0,
+        42.0
+      ]
+    },
+    {
+      "center_height": 12.0,
+      "drafts": 1,
+      "ramps": 12,
+      "regions": 10,
+      "seed": 5,
+      "side": "SW",
+      "spawn": [
+        -48.0,
+        12.0,
+        72.0
+      ]
+    },
+    {
+      "center_height": 6.0,
+      "drafts": 1,
+      "ramps": 11,
+      "regions": 9,
+      "seed": 6,
+      "side": "SE",
+      "spawn": [
+        66.0,
+        6.0,
+        61.0
+      ]
+    },
+    {
+      "center_height": 12.0,
+      "drafts": 1,
+      "ramps": 12,
+      "regions": 10,
+      "seed": 7,
+      "side": "SE",
+      "spawn": [
+        73.0,
+        0.0,
+        72.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 13,
+      "regions": 11,
+      "seed": 8,
+      "side": "E",
+      "spawn": [
+        63.0,
+        12.0,
+        26.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 10,
+      "regions": 8,
+      "seed": 9,
+      "side": "SW",
+      "spawn": [
+        -73.0,
+        12.0,
+        51.0
+      ]
+    },
+    {
+      "center_height": 6.0,
+      "drafts": 1,
+      "ramps": 7,
+      "regions": 6,
+      "seed": 10,
+      "side": "NE",
+      "spawn": [
+        66.0,
+        0.0,
+        -43.0
+      ]
+    },
+    {
+      "center_height": 12.0,
+      "drafts": 1,
+      "ramps": 11,
+      "regions": 9,
+      "seed": 11,
+      "side": "S",
+      "spawn": [
+        1.0,
+        0.0,
+        58.0
+      ]
+    },
+    {
+      "center_height": 12.0,
+      "drafts": 1,
+      "ramps": 17,
+      "regions": 15,
+      "seed": 12,
+      "side": "W",
+      "spawn": [
+        -58.0,
+        6.0,
+        -21.0
+      ]
+    },
+    {
+      "center_height": 6.0,
+      "drafts": 1,
+      "ramps": 8,
+      "regions": 6,
+      "seed": 13,
+      "side": "SE",
+      "spawn": [
+        49.0,
+        6.0,
+        49.0
+      ]
+    },
+    {
+      "center_height": 12.0,
+      "drafts": 1,
+      "ramps": 14,
+      "regions": 12,
+      "seed": 14,
+      "side": "E",
+      "spawn": [
+        44.0,
+        12.0,
+        19.0
+      ]
+    },
+    {
+      "center_height": 6.0,
+      "drafts": 1,
+      "ramps": 7,
+      "regions": 6,
+      "seed": 15,
+      "side": "SW",
+      "spawn": [
+        -67.0,
+        12.0,
+        50.0
+      ]
+    },
+    {
+      "center_height": 6.0,
+      "drafts": 1,
+      "ramps": 11,
+      "regions": 9,
+      "seed": 16,
+      "side": "NE",
+      "spawn": [
+        73.0,
+        0.0,
+        -65.0
+      ]
+    },
+    {
+      "center_height": 6.0,
+      "drafts": 1,
+      "ramps": 10,
+      "regions": 8,
+      "seed": 17,
+      "side": "E",
+      "spawn": [
+        46.0,
+        6.0,
+        1.0
+      ]
+    },
+    {
+      "center_height": 12.0,
+      "drafts": 1,
+      "ramps": 9,
+      "regions": 7,
+      "seed": 18,
+      "side": "NE",
+      "spawn": [
+        70.0,
+        0.0,
+        -43.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 9,
+      "regions": 7,
+      "seed": 19,
+      "side": "NE",
+      "spawn": [
+        72.0,
+        6.0,
+        -47.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 7,
+      "regions": 5,
+      "seed": 20,
+      "side": "SE",
+      "spawn": [
+        51.0,
+        12.0,
+        48.0
+      ]
+    },
+    {
+      "center_height": 7.7142858505249,
+      "drafts": 1,
+      "ramps": 9,
+      "regions": 7,
+      "seed": 21,
+      "side": "NE",
+      "spawn": [
+        47.0,
+        0.0,
+        -63.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 6,
+      "regions": 5,
+      "seed": 22,
+      "side": "NE",
+      "spawn": [
+        48.0,
+        6.0,
+        -52.0
+      ]
+    },
+    {
+      "center_height": 12.0,
+      "drafts": 1,
+      "ramps": 17,
+      "regions": 15,
+      "seed": 23,
+      "side": "N",
+      "spawn": [
+        -26.0,
+        12.0,
+        -71.0
+      ]
+    },
+    {
+      "center_height": 6.0,
+      "drafts": 1,
+      "ramps": 7,
+      "regions": 6,
+      "seed": 24,
+      "side": "NW",
+      "spawn": [
+        -61.0,
+        12.0,
+        -40.0
+      ]
+    },
+    {
+      "center_height": 9.0,
+      "drafts": 1,
+      "ramps": 13,
+      "regions": 11,
+      "seed": 25,
+      "side": "NE",
+      "spawn": [
+        53.0,
+        12.0,
+        -72.0
+      ]
+    },
+    {
+      "center_height": 6.0,
+      "drafts": 1,
+      "ramps": 10,
+      "regions": 8,
+      "seed": 26,
+      "side": "N",
+      "spawn": [
+        -26.0,
+        6.0,
+        -65.0
+      ]
+    },
+    {
+      "center_height": 7.7142858505249,
+      "drafts": 1,
+      "ramps": 7,
+      "regions": 5,
+      "seed": 27,
+      "side": "S",
+      "spawn": [
+        3.0,
+        6.0,
+        45.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 15,
+      "regions": 13,
+      "seed": 28,
+      "side": "W",
+      "spawn": [
+        -49.0,
+        12.0,
+        -23.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 14,
+      "regions": 12,
+      "seed": 29,
+      "side": "SE",
+      "spawn": [
+        72.0,
+        0.0,
+        62.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 16,
+      "regions": 14,
+      "seed": 30,
+      "side": "SE",
+      "spawn": [
+        64.0,
+        12.0,
+        72.0
+      ]
+    },
+    {
+      "center_height": 6.0,
+      "drafts": 1,
+      "ramps": 11,
+      "regions": 9,
+      "seed": 31,
+      "side": "SW",
+      "spawn": [
+        -46.0,
+        12.0,
+        67.0
+      ]
+    },
+    {
+      "center_height": 6.0,
+      "drafts": 1,
+      "ramps": 14,
+      "regions": 12,
+      "seed": 32,
+      "side": "SW",
+      "spawn": [
+        -67.0,
+        6.0,
+        72.0
+      ]
+    },
+    {
+      "center_height": 6.0,
+      "drafts": 1,
+      "ramps": 7,
+      "regions": 6,
+      "seed": 33,
+      "side": "NW",
+      "spawn": [
+        -67.0,
+        0.0,
+        -43.0
+      ]
+    },
+    {
+      "center_height": 12.0,
+      "drafts": 1,
+      "ramps": 13,
+      "regions": 11,
+      "seed": 34,
+      "side": "SE",
+      "spawn": [
+        44.0,
+        0.0,
+        70.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 9,
+      "regions": 7,
+      "seed": 35,
+      "side": "W",
+      "spawn": [
+        -61.0,
+        12.0,
+        3.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 10,
+      "regions": 8,
+      "seed": 36,
+      "side": "NW",
+      "spawn": [
+        -43.0,
+        12.0,
+        -63.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 8,
+      "regions": 7,
+      "seed": 37,
+      "side": "NW",
+      "spawn": [
+        -63.0,
+        12.0,
+        -43.0
+      ]
+    },
+    {
+      "center_height": 12.0,
+      "drafts": 1,
+      "ramps": 15,
+      "regions": 13,
+      "seed": 38,
+      "side": "NW",
+      "spawn": [
+        -72.0,
+        6.0,
+        -70.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 12,
+      "regions": 10,
+      "seed": 39,
+      "side": "SE",
+      "spawn": [
+        65.0,
+        12.0,
+        66.0
+      ]
+    },
+    {
+      "center_height": 6.0,
+      "drafts": 1,
+      "ramps": 8,
+      "regions": 6,
+      "seed": 40,
+      "side": "SW",
+      "spawn": [
+        -45.0,
+        12.0,
+        53.0
+      ]
+    },
+    {
+      "center_height": 6.0,
+      "drafts": 1,
+      "ramps": 11,
+      "regions": 9,
+      "seed": 41,
+      "side": "W",
+      "spawn": [
+        -61.0,
+        6.0,
+        -2.0
+      ]
+    },
+    {
+      "center_height": 12.0,
+      "drafts": 1,
+      "ramps": 12,
+      "regions": 10,
+      "seed": 42,
+      "side": "NW",
+      "spawn": [
+        -51.0,
+        12.0,
+        -70.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 10,
+      "regions": 8,
+      "seed": 43,
+      "side": "SW",
+      "spawn": [
+        -73.0,
+        6.0,
+        48.0
+      ]
+    },
+    {
+      "center_height": 12.0,
+      "drafts": 1,
+      "ramps": 11,
+      "regions": 9,
+      "seed": 44,
+      "side": "E",
+      "spawn": [
+        45.0,
+        12.0,
+        0.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 10,
+      "regions": 8,
+      "seed": 45,
+      "side": "SE",
+      "spawn": [
+        62.0,
+        12.0,
+        65.0
+      ]
+    },
+    {
+      "center_height": 6.0,
+      "drafts": 1,
+      "ramps": 11,
+      "regions": 9,
+      "seed": 46,
+      "side": "W",
+      "spawn": [
+        -72.0,
+        6.0,
+        -1.0
+      ]
+    },
+    {
+      "center_height": 6.0,
+      "drafts": 1,
+      "ramps": 13,
+      "regions": 11,
+      "seed": 47,
+      "side": "W",
+      "spawn": [
+        -67.0,
+        0.0,
+        -25.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 8,
+      "regions": 6,
+      "seed": 48,
+      "side": "NE",
+      "spawn": [
+        42.0,
+        0.0,
+        -46.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 8,
+      "regions": 6,
+      "seed": 49,
+      "side": "N",
+      "spawn": [
+        24.0,
+        0.0,
+        -47.0
+      ]
+    },
+    {
+      "center_height": 6.0,
+      "drafts": 1,
+      "ramps": 15,
+      "regions": 13,
+      "seed": 50,
+      "side": "SW",
+      "spawn": [
+        -65.0,
+        6.0,
+        71.0
+      ]
+    },
+    {
+      "center_height": 12.0,
+      "drafts": 1,
+      "ramps": 9,
+      "regions": 7,
+      "seed": 51,
+      "side": "NW",
+      "spawn": [
+        -47.0,
+        12.0,
+        -71.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 17,
+      "regions": 15,
+      "seed": 52,
+      "side": "NE",
+      "spawn": [
+        73.0,
+        6.0,
+        -72.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 12,
+      "regions": 10,
+      "seed": 53,
+      "side": "SE",
+      "spawn": [
+        64.0,
+        6.0,
+        73.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 10,
+      "regions": 8,
+      "seed": 54,
+      "side": "NW",
+      "spawn": [
+        -72.0,
+        0.0,
+        -51.0
+      ]
+    },
+    {
+      "center_height": 6.0,
+      "drafts": 1,
+      "ramps": 12,
+      "regions": 10,
+      "seed": 55,
+      "side": "N",
+      "spawn": [
+        23.0,
+        6.0,
+        -63.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 11,
+      "regions": 9,
+      "seed": 56,
+      "side": "SE",
+      "spawn": [
+        60.0,
+        12.0,
+        68.0
+      ]
+    },
+    {
+      "center_height": 6.0,
+      "drafts": 1,
+      "ramps": 14,
+      "regions": 12,
+      "seed": 57,
+      "side": "N",
+      "spawn": [
+        -23.0,
+        0.0,
+        -66.0
+      ]
+    },
+    {
+      "center_height": 12.0,
+      "drafts": 1,
+      "ramps": 8,
+      "regions": 6,
+      "seed": 58,
+      "side": "SE",
+      "spawn": [
+        49.0,
+        12.0,
+        48.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 4,
+      "regions": 4,
+      "seed": 59,
+      "side": "NE",
+      "spawn": [
+        44.0,
+        0.0,
+        -46.0
+      ]
+    },
+    {
+      "center_height": 6.0,
+      "drafts": 1,
+      "ramps": 13,
+      "regions": 11,
+      "seed": 60,
+      "side": "NE",
+      "spawn": [
+        70.0,
+        0.0,
+        -65.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 11,
+      "regions": 9,
+      "seed": 61,
+      "side": "SW",
+      "spawn": [
+        -52.0,
+        0.0,
+        72.0
+      ]
+    },
+    {
+      "center_height": 11.1428575515747,
+      "drafts": 1,
+      "ramps": 12,
+      "regions": 10,
+      "seed": 62,
+      "side": "S",
+      "spawn": [
+        -24.0,
+        6.0,
+        65.0
+      ]
+    },
+    {
+      "center_height": 12.0,
+      "drafts": 1,
+      "ramps": 12,
+      "regions": 10,
+      "seed": 63,
+      "side": "N",
+      "spawn": [
+        -21.0,
+        6.0,
+        -63.0
+      ]
+    },
+    {
+      "center_height": 3.0,
+      "drafts": 1,
+      "ramps": 14,
+      "regions": 12,
+      "seed": 64,
+      "side": "W",
+      "spawn": [
+        -73.0,
+        6.0,
+        -24.0
+      ]
+    },
+    {
+      "center_height": 6.0,
+      "drafts": 1,
+      "ramps": 17,
+      "regions": 15,
+      "seed": 65,
+      "side": "S",
+      "spawn": [
+        -22.0,
+        0.0,
+        74.0
+      ]
+    },
+    {
+      "center_height": 12.0,
+      "drafts": 1,
+      "ramps": 12,
+      "regions": 10,
+      "seed": 66,
+      "side": "SE",
+      "spawn": [
+        67.0,
+        0.0,
+        68.0
+      ]
+    },
+    {
+      "center_height": 12.0,
+      "drafts": 1,
+      "ramps": 10,
+      "regions": 8,
+      "seed": 67,
+      "side": "NE",
+      "spawn": [
+        63.0,
+        0.0,
+        -65.0
+      ]
+    },
+    {
+      "center_height": 6.0,
+      "drafts": 1,
+      "ramps": 8,
+      "regions": 6,
+      "seed": 68,
+      "side": "SE",
+      "spawn": [
+        72.0,
+        12.0,
+        41.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 15,
+      "regions": 13,
+      "seed": 69,
+      "side": "S",
+      "spawn": [
+        -2.0,
+        6.0,
+        72.0
+      ]
+    },
+    {
+      "center_height": 6.0,
+      "drafts": 1,
+      "ramps": 9,
+      "regions": 7,
+      "seed": 70,
+      "side": "NE",
+      "spawn": [
+        72.0,
+        6.0,
+        -48.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 8,
+      "regions": 6,
+      "seed": 71,
+      "side": "S",
+      "spawn": [
+        23.0,
+        0.0,
+        50.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 16,
+      "regions": 14,
+      "seed": 72,
+      "side": "E",
+      "spawn": [
+        67.0,
+        0.0,
+        -25.0
+      ]
+    },
+    {
+      "center_height": 12.0,
+      "drafts": 1,
+      "ramps": 16,
+      "regions": 14,
+      "seed": 73,
+      "side": "N",
+      "spawn": [
+        24.0,
+        6.0,
+        -71.0
+      ]
+    },
+    {
+      "center_height": 12.0,
+      "drafts": 1,
+      "ramps": 14,
+      "regions": 12,
+      "seed": 74,
+      "side": "NW",
+      "spawn": [
+        -59.0,
+        12.0,
+        -73.0
+      ]
+    },
+    {
+      "center_height": 12.0,
+      "drafts": 1,
+      "ramps": 13,
+      "regions": 11,
+      "seed": 75,
+      "side": "W",
+      "spawn": [
+        -65.0,
+        12.0,
+        -25.0
+      ]
+    },
+    {
+      "center_height": 8.14285755157471,
+      "drafts": 1,
+      "ramps": 7,
+      "regions": 5,
+      "seed": 76,
+      "side": "NE",
+      "spawn": [
+        55.0,
+        12.0,
+        -50.0
+      ]
+    },
+    {
+      "center_height": 7.7142858505249,
+      "drafts": 1,
+      "ramps": 12,
+      "regions": 10,
+      "seed": 77,
+      "side": "E",
+      "spawn": [
+        71.0,
+        12.0,
+        2.0
+      ]
+    },
+    {
+      "center_height": 12.0,
+      "drafts": 1,
+      "ramps": 9,
+      "regions": 7,
+      "seed": 78,
+      "side": "E",
+      "spawn": [
+        58.0,
+        12.0,
+        2.0
+      ]
+    },
+    {
+      "center_height": 6.0,
+      "drafts": 1,
+      "ramps": 12,
+      "regions": 10,
+      "seed": 79,
+      "side": "SE",
+      "spawn": [
+        60.0,
+        0.0,
+        66.0
+      ]
+    },
+    {
+      "center_height": 12.0,
+      "drafts": 1,
+      "ramps": 12,
+      "regions": 10,
+      "seed": 80,
+      "side": "E",
+      "spawn": [
+        60.0,
+        0.0,
+        5.0
+      ]
+    },
+    {
+      "center_height": 12.0,
+      "drafts": 1,
+      "ramps": 11,
+      "regions": 9,
+      "seed": 81,
+      "side": "NW",
+      "spawn": [
+        -66.0,
+        0.0,
+        -65.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 12,
+      "regions": 10,
+      "seed": 82,
+      "side": "S",
+      "spawn": [
+        -5.0,
+        12.0,
+        63.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 10,
+      "regions": 8,
+      "seed": 83,
+      "side": "SE",
+      "spawn": [
+        44.0,
+        12.0,
+        64.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 8,
+      "regions": 6,
+      "seed": 84,
+      "side": "SW",
+      "spawn": [
+        -50.0,
+        12.0,
+        50.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 9,
+      "regions": 8,
+      "seed": 85,
+      "side": "SE",
+      "spawn": [
+        73.0,
+        6.0,
+        45.0
+      ]
+    },
+    {
+      "center_height": 6.0,
+      "drafts": 1,
+      "ramps": 8,
+      "regions": 6,
+      "seed": 86,
+      "side": "S",
+      "spawn": [
+        4.0,
+        6.0,
+        47.0
+      ]
+    },
+    {
+      "center_height": 12.0,
+      "drafts": 1,
+      "ramps": 11,
+      "regions": 9,
+      "seed": 87,
+      "side": "NE",
+      "spawn": [
+        46.0,
+        12.0,
+        -73.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 15,
+      "regions": 13,
+      "seed": 88,
+      "side": "W",
+      "spawn": [
+        -71.0,
+        12.0,
+        23.0
+      ]
+    },
+    {
+      "center_height": 6.0,
+      "drafts": 1,
+      "ramps": 10,
+      "regions": 8,
+      "seed": 89,
+      "side": "SW",
+      "spawn": [
+        -65.0,
+        0.0,
+        65.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 12,
+      "regions": 10,
+      "seed": 90,
+      "side": "E",
+      "spawn": [
+        72.0,
+        6.0,
+        -3.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 7,
+      "regions": 5,
+      "seed": 91,
+      "side": "SW",
+      "spawn": [
+        -66.0,
+        12.0,
+        50.0
+      ]
+    },
+    {
+      "center_height": 12.0,
+      "drafts": 1,
+      "ramps": 11,
+      "regions": 9,
+      "seed": 92,
+      "side": "NW",
+      "spawn": [
+        -66.0,
+        0.0,
+        -64.0
+      ]
+    },
+    {
+      "center_height": 12.0,
+      "drafts": 1,
+      "ramps": 4,
+      "regions": 4,
+      "seed": 93,
+      "side": "NE",
+      "spawn": [
+        43.0,
+        12.0,
+        -49.0
+      ]
+    },
+    {
+      "center_height": 12.0,
+      "drafts": 1,
+      "ramps": 6,
+      "regions": 5,
+      "seed": 94,
+      "side": "S",
+      "spawn": [
+        7.0,
+        0.0,
+        49.0
+      ]
+    },
+    {
+      "center_height": 12.0,
+      "drafts": 1,
+      "ramps": 17,
+      "regions": 15,
+      "seed": 95,
+      "side": "NW",
+      "spawn": [
+        -60.0,
+        12.0,
+        -73.0
+      ]
+    },
+    {
+      "center_height": 6.0,
+      "drafts": 1,
+      "ramps": 14,
+      "regions": 12,
+      "seed": 96,
+      "side": "N",
+      "spawn": [
+        -2.0,
+        12.0,
+        -73.0
+      ]
+    },
+    {
+      "center_height": 12.0,
+      "drafts": 1,
+      "ramps": 8,
+      "regions": 6,
+      "seed": 97,
+      "side": "NW",
+      "spawn": [
+        -71.0,
+        0.0,
+        -53.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 9,
+      "regions": 7,
+      "seed": 98,
+      "side": "SE",
+      "spawn": [
+        73.0,
+        0.0,
+        50.0
+      ]
+    },
+    {
+      "center_height": 0.0,
+      "drafts": 1,
+      "ramps": 13,
+      "regions": 11,
+      "seed": 99,
+      "side": "SE",
+      "spawn": [
+        71.0,
+        0.0,
+        61.0
+      ]
+    }
+  ],
+  "region_counts": [
+    "15",
+    "4",
+    "11",
+    "7",
+    "6",
+    "10",
+    "9",
+    "8",
+    "12",
+    "5",
+    "13",
+    "14"
+  ],
+  "seeds": 100,
+  "sides": {
+    "E": 9,
+    "N": 9,
+    "NE": 16,
+    "NW": 13,
+    "S": 11,
+    "SE": 21,
+    "SW": 12,
+    "W": 9
+  },
+  "spawn_elevations": {
+    "0.0": 34,
+    "12.0": 39,
+    "6.0": 27
+  },
+  "unique_layouts": 100
+}

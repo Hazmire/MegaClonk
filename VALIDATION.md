@@ -1,3 +1,41 @@
+# Dynamic Forest validation
+
+Godot4.7.2, unchanged engine. Ten suites cover **382 gameplay assertions** (the previous335 plus47
+new checks),100 mathematical layouts,100 actual collision/navigation worlds, and a100-seed variety
+report. Final publication details are in `releases/BUILD_INFO.md`. Earlier results below are historical.
+
+The new checks exercise per-spawn choices and saved RNG,75/20/5 weighting, live pursuit during
+emergence, bug warning/detonation, actual cliff ascent and upper landing, boundary rejection,
+elite activation/emblems/live save/load/reward-once, boss UI/duplicate protection, fixed captured
+AOE/escape/damage, golem cadence/cap/cleanup, and actual fitted skeletal stance-foot height.
+All36 weapon patterns still deal damage; progression, menus and stage travel retain their checks.
+Legacy death explosions remain tested separately from the new proximity-only Bug.
+
+Map distribution over seeds0–99:100 unique layouts; region counts4–15; ramps4–17 (mean10.93).
+Spawns: N9,S11,E9,W9,NE16,NW13,SE21,SW12. Spawn heights:0m34,6m27,12m39.
+Centre:0m34,6m28,12m31, with seven sloped centre samples. All tested graph drafts succeeded first
+attempt. Physical worlds use run seeds0–99 (stage map seeds73–172), checking every unblocked flow
+cell plus POIs/spawn/statue, real native spawn-to-portal paths, ramp rays and perimeter rays.
+The physical suite casts5,218 rays; reports distinguish first-attempt and repaired/final results.
+
+Ten map screenshots plus close Ranger/roster/elite/boss views were rendered and inspected under
+Xvfb/Mesa compatibility OpenGL. Images are in `docs/images/dynamic/`. Full software-rendered visual
+fixtures report no script/resource errors; unsupported VSync warnings are expected.
+
+Validation corrected narrow perimeter seams, cliff-side decoration pockets, rigid Warrior attachment
+baking, old centre-low combat fixtures, and native region iteration readiness. The last issue could
+produce empty native maps even with synchronous map iterations: region iterations must also be
+synchronous. Stages now own their maps and verify a real native path before allowing enemy spawning.
+
+Headless performance baseline this session:400 legacy enemies5.39ms/tick before changes. Current
+mixed compatibility benchmark is about7.5ms; the new400-enemy ordinary roster is about9ms/tick.
+These include simulation, instanced transforms and spatial rebuilding, exclude rendering, and are
+not a60FPS or full late-game combat guarantee. Exact final timings appear in the appended report.
+Native Windows execution, audible output and target-GPU FPS remain unverified.
+
+---
+Previous validation history follows.
+
 # Forest overhaul validation — 2026-10-25
 
 Pinned Godot 4.7.2. Final `tools/validate.sh`: **335 checks, zero failures** across integration

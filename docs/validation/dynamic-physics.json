@@ -1,0 +1,10 @@
+{
+  "collision_rays": 5218,
+  "failed": [],
+  "final_passed": 100,
+  "first_attempt_failures": [],
+  "first_attempt_passed": 100,
+  "milliseconds": 25537,
+  "repaired_count": 0,
+  "seeds": 100
+}

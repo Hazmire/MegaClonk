@@ -62,6 +62,8 @@ static func library(rig: Skeleton3D,key: String) -> AnimationLibrary:
   if not ("arm" in path or "hand" in path or "clavicle" in path):continue
   var at=crouch.add_track(Animation.TYPE_ROTATION_3D);crouch.track_set_path(at,idle.track_get_path(track))
   var rotation=idle.track_get_key_value(track,0);crouch.rotation_track_insert_key(at,0,rotation);crouch.rotation_track_insert_key(at,1,rotation)
+ if key=="ranger":
+  result.remove_animation("move");result.add_animation("move",RangerStride.make(rig))
  result.add_animation("crouch",crouch)
  libraries[key]=result;return result
 static func reset() -> void:

@@ -52,3 +52,10 @@ Publisher: https://quaternius.com/
 - Stylized Nature MegaKit Standard: nine trees/foliage/rock models, CC0. Instanced seeded placement and simplified colliders. `assets/quaternius/nature/`.
 
 Complete licences are retained in each pack directory and Windows distribution. Bestiary is not CC0. See `docs/ASSETS_V1_INVENTORY.md` for verified archive hashes and limitations.
+
+## Dynamic Forest update
+
+- KayKit Character Pack: Skeletons1.1 FREE, Kay Lousberg, https://kaylousberg.com/ . Uploaded `KayKit_Skeletons_1.1_FREE.zip`, licence CC0 (included). Selected Skeleton_Minion, Skeleton_Warrior, skeleton_texture, Rig_Medium_MovementBasic and General. `assets/kaykit/skeletons/`; idle/walk baked into `assets/quaternius/baked/Skeleton_*` and `Knight_*`. Naming of the shared bake folder does not imply Quaternius authorship.
+- Original Ranger two-bone stride fitted to the existing supplied65-bone rig; original articulated Goblin frames. `scripts/art/ranger_stride.gd`, `tools/bake_original_encounters.gd`.
+- Rock Golem and lesser golems: original assembly/animation using Quaternius Nature MegaKit Rock_Medium_1 (CC0), shared baked frames `assets/quaternius/baked/Golem_*`.
+- Standout7 `Skeletons_Free.zip` inspected; its included licence allows game use and prohibits standalone redistribution. Not selected: KayKit provides compatible walking clips. The Wrapper V2 is not integrated; it is not needed by this roster.

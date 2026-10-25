@@ -37,6 +37,8 @@ func run() -> void:
  game.progress=Progress.new()
  game.progress.storage_path="user://test-game-profile.json"
  game.sandbox=true
+ # Deterministic flat combat fixture; map variety has separate 100-seed coverage.
+ game.map_seed_override=9
  game.begin_run()
  game.settings.invincible=true
  game.spawn_clock=999

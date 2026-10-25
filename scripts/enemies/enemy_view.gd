@@ -3,11 +3,13 @@ extends Node3D
 # Shared textured animation-frame batches; no per-enemy scene/physics/skeleton.
 var batches: Dictionary={}
 var counts: Dictionary={}
+var last_transforms: Dictionary={}
 var models: Dictionary={}
 var distant_models: Dictionary={}
+var emblem_mesh: Mesh=ModelBuilder.cone(0.18,0.4)
 var material: ShaderMaterial
 func _init() -> void:
- material=ShaderMaterial.new();material.shader=preload("res://shaders/enemy_feedback.gdshader")
+ material=ShaderMaterial.new();material.shader=preload("res://shaders/enemy_feedback.gdshader");emblem_mesh.material=material
 func batch(key: String, mesh: Mesh, capacity: int) -> MultiMesh:
  if batches.has(key): return batches[key].multimesh
  var node=MultiMeshInstance3D.new()
@@ -24,7 +26,7 @@ func batch(key: String, mesh: Mesh, capacity: int) -> MultiMesh:
  batches[key]=node
  return node.multimesh
 func begin_frame() -> void:
- counts.clear()
+ counts.clear();last_transforms.clear()
 func put(key: String, mesh: Mesh, transform: Transform3D, color: Color, capacity: int = 500, spectral: bool=false) -> void:
  var mm=batch(key,mesh,capacity)
  var index=int(counts.get(key,0))
@@ -54,7 +56,13 @@ func draw_enemy(e: Dictionary, viewer: Vector3) -> void:
  elif e.poison>0:color=Color("bcff83")
  elif e.burn>0:color=Color("ffc086")
  if e.state=="windup" and e.action=="explode":scale_value*=1+0.12*sin(e.age*24)
- var base=Transform3D(Basis.from_euler(Vector3(tilt,facing,0)).scaled(Vector3.ONE*scale_value),e.pos-Vector3.UP*0.65)
+ var emergence=smoothstep(0,OrdinaryRoster.SETTINGS.spawn_seconds,e.age)
+ var below=(1-emergence)*2.0*scale_value
+ if not e.get("climb",{}).is_empty():tilt=-0.25
+ var base=Transform3D(Basis.from_euler(Vector3(tilt,facing,0)).scaled(Vector3.ONE*scale_value),e.pos-Vector3.UP*(0.65+below))
+ last_transforms[e.variant.id]=base
  put(key,mesh,base,color,500,e.get("encounter","")=="ghost")
+ if e.get("elite",false):
+  put("elite_emblems",emblem_mesh,Transform3D(Basis(Vector3.FORWARD,PI),e.pos+Vector3.UP*2.7),Color("ffd365"))
 func end_frame() -> void:
  for key in batches: batches[key].multimesh.visible_instance_count=int(counts.get(key,0))

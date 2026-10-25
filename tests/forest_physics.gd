@@ -13,7 +13,7 @@ func run():
   var data=game.map_layout;var reasons=[]
   if not data.first_attempt_valid or not data.decoration_first_attempt_valid:first_failures.append({"run_seed":seed_value,"map_seed":data.seed,"reason":"First attempt needed repair"})
   var space=game.get_world_3d().direct_space_state
-  var points=data.pois.duplicate();points.append(data.portal);points.append(Vector3.ZERO)
+  var points=data.pois.duplicate();points.append(data.portal);points.append(data.spawn);points.append(data.elite)
   for ramp in data.ramps:
    for t in [0.05,0.5,0.95]:
     var p=ramp.rect.get_center()
@@ -26,8 +26,8 @@ func run():
    if hit.is_empty():reasons.append("Missing collision at "+str(point))
    elif absf(hit.position.y-point.y)>0.03:reasons.append("Collision-height mismatch "+str(point))
    if not game.forest_navigation.reachable(point):reasons.append("Navigation unreachable "+str(point))
-  var path=game.forest_navigation.server_path(Vector3.ZERO,data.portal)
-  if path.is_empty() or path[-1].distance_to(data.portal)>1:reasons.append("Godot navigation path missing")
+  var path=game.forest_navigation.server_path(data.spawn,data.portal)
+  if path.is_empty() or path[-1].distance_to(data.portal)>1:reasons.append("Godot navigation path missing: end=%s target=%s start=%s closest=%s"%[str(path[-1]) if not path.is_empty() else "empty",str(data.portal),str(data.spawn),str(NavigationServer3D.map_get_closest_point(game.forest_navigation.navigation_map,data.portal))])
   var connected=0;var expected=game.forest_navigation.edges.size()-game.forest_navigation.blocked.size()
   for cost in game.forest_navigation.distances:
    if cost>=0:connected+=1

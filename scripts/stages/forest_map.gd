@@ -1,6 +1,6 @@
 class_name ForestMap
 extends RefCounted
-# Full coverage terraces: nine seeded broad rectangular regions. Ramps are carved
+# Full coverage staggered partitions with variable region counts. Ramps are carved
 # across shared boundaries, never bridges above a second traversable floor.
 const SETTINGS=preload("res://assets/config/forest.tres")
 const CELL=2.0
@@ -10,62 +10,42 @@ static var cache: Dictionary={}
 static func layout(seed_value: int) -> Dictionary:
  if cache.has(seed_value):return cache[seed_value]
  var rng=RandomNumberGenerator.new();rng.seed=seed_value
- var regions=[];var ramps=[]
- var cuts_x=[-96.0,float(rng.randi_range(-9,-8)*4),float(rng.randi_range(8,9)*4),96.0]
- var cuts_z=[-96.0,float(rng.randi_range(-9,-8)*4),float(rng.randi_range(8,9)*4),96.0]
- for z in 3:
-  for x in 3:
-   var index=z*3+x
-   regions.append({"id":index,"rect":Rect2(cuts_x[x],cuts_z[z],cuts_x[x+1]-cuts_x[x],cuts_z[z+1]-cuts_z[z]),"height":0.0 if index==4 else float(rng.randi_range(0,2)*SETTINGS.elevation_step)})
- var elevated=[0,1,2,3,5,6,7,8]
- var first=rng.randi_range(0,7);regions[elevated[first]].height=SETTINGS.elevation_step;regions[elevated[(first+3)%8]].height=SETTINGS.elevation_step*2
- for z in 3:
-  for x in 3:
-   var a=z*3+x
-   for axis in [0,1]:
-    if (axis==0 and x==2) or (axis==1 and z==2):continue
-    var b=a+(1 if axis==0 else 3)
-    var offset=0.0
-    var span=regions[a].rect.size.y if axis==0 else regions[a].rect.size.x
-    var width=16.0 if span>=44 and rng.randf()<0.5 else SETTINGS.minimum_ramp_width
-    var offset_cells=mini(1,maxi(0,floori((span/2-14-width/2)/2)))
-    offset=rng.randi_range(-offset_cells,offset_cells)*2.0
-    var length=maxf(SETTINGS.preferred_ramp_length,ceilf(absf(regions[a].height-regions[b].height)/tan(deg_to_rad(SETTINGS.maximum_ramp_slope))/2)*2)
-    var center=Vector2(cuts_x[x+1],roundf(regions[a].rect.get_center().y/2)*2+offset) if axis==0 else Vector2(roundf(regions[a].rect.get_center().x/2)*2+offset,cuts_z[z+1])
-    var rect=Rect2(center-Vector2(length,width)/2,Vector2(length,width)) if axis==0 else Rect2(center-Vector2(width,length)/2,Vector2(width,length))
-    ramps.append({"from":a,"to":b,"axis":axis,"rect":rect,"h0":regions[a].height,"h1":regions[b].height,"length":length,"width":width})
- # Random spanning backbone first, then optional loop connections.
- var parents=range(9);var ordered=ramps.duplicate();ramps=[]
- for i in range(ordered.size()-1,0,-1):
-  var j=rng.randi_range(0,i);var swap=ordered[i];ordered[i]=ordered[j];ordered[j]=swap
- var extra=[]
- for ramp in ordered:
-  var a=ramp.from;var b=ramp.to
-  while parents[a]!=a:a=parents[a]
-  while parents[b]!=b:b=parents[b]
-  if a!=b:parents[a]=b;ramp.backbone=true;ramps.append(ramp)
-  else:ramp.backbone=false;extra.append(ramp)
- for i in extra.size():
-  if i<SETTINGS.extra_connections or rng.randf()<SETTINGS.extra_connection_frequency:ramps.append(extra[i])
+ var draft=draft_regions(rng)
+ var regions: Array=draft.regions;var ramps: Array=draft.ramps
+ # Objectives/spawn are selected from verified flat interiors before scenery.
+ var peripheral=[]
+ for region in regions:
+  var r: Rect2=region.rect
+  if r.position.x==-96 or r.position.y==-96 or r.end.x==96 or r.end.y==96:peripheral.append(region.id)
+ var spawn_region=peripheral[rng.randi_range(0,peripheral.size()-1)]
+ var spawn2: Vector2=regions[spawn_region].rect.get_center()
+ var portal_region=spawn_region;var farthest=0.0
+ for region in regions:
+  var distance=region.rect.get_center().distance_to(spawn2)
+  if distance>farthest:farthest=distance;portal_region=region.id
+ var portal2: Vector2=regions[portal_region].rect.get_center()
  var pois=[]
- # Objectives stay on large flat interiors, outside the maximum ramp cut depth.
  for i in 12:
-  var region=[0,1,2,3,5,6,7,8][i%8];var r=regions[region].rect
-  var sign_value=-1 if i<8 else 1
-  var room=regions[region].rect.size
-  var amount=5 if maxf(room.x,room.y)>=52 else 3
-  var offset=Vector2(amount*sign_value,0) if room.x>=room.y else Vector2(0,amount*sign_value)
-  var p=r.get_center()+offset
-  if region==4:p+=Vector2(8,8)
-  pois.append(Vector3(p.x,regions[region].height,p.y))
- var data={"seed":seed_value,"regions":regions,"ramps":ramps,"pois":pois,"portal":Vector3(regions[8].rect.get_center().x+8,regions[8].height,regions[8].rect.get_center().y+8),"cuts_x":cuts_x,"cuts_z":cuts_z}
+  var region=regions[(i+spawn_region+1)%regions.size()]
+  var center: Vector2=region.rect.get_center()
+  var offset=Vector2(-4,0) if i<regions.size() else Vector2(4,0)
+  var point=center+offset
+  pois.append(Vector3(point.x,region.height,point.y))
+ var elite_region=(spawn_region+int(regions.size()/2))%regions.size()
+ var elite2: Vector2=regions[elite_region].rect.get_center()
+ var data={"seed":seed_value,"regions":regions,"ramps":ramps,"pois":pois,
+  "spawn":Vector3(spawn2.x,regions[spawn_region].height,spawn2.y),"spawn_region":spawn_region,
+  "elite":Vector3(elite2.x,regions[elite_region].height,elite2.y),
+  "portal":Vector3(portal2.x,regions[portal_region].height,portal2.y),"generation_attempts":draft.attempts}
  # Cell plane uses the center to choose its region; edge queries use that
  # SAME plane, avoiding heightmap interpolation across vertical cliff faces.
  var planes=[]
  for z in SIDE:
   for x in SIDE:
    var p=Vector2(-96+x*2+1,-96+z*2+1)
-   var region=(0 if p.y<cuts_z[1] else (1 if p.y<cuts_z[2] else 2))*3+(0 if p.x<cuts_x[1] else (1 if p.x<cuts_x[2] else 2))
+   var region=0
+   for candidate in regions:
+    if candidate.rect.has_point(p):region=candidate.id;break
    var plane=Vector3(0,regions[region].height,0) # y = plane.x*x + plane.y + plane.z*z
    for ramp in ramps:
     if ramp.rect.has_point(p):
@@ -89,10 +69,65 @@ static func layout(seed_value: int) -> Dictionary:
   for ramp in ramps:ramp.h0=0.0;ramp.h1=0.0
   for i in planes.size():planes[i]=Vector3.ZERO
   for i in pois.size():pois[i].y=0.0
-  data.portal.y=0.0
+  data.portal.y=0.0;data.spawn.y=0.0;data.elite.y=0.0
   push_warning("Repaired forest seed %s: %s"%[seed_value,data.failure_reason])
  if cache.size()>=4:cache.erase(cache.keys()[0])
  cache[seed_value]=data;return data
+# Independently partition each seeded row. Different row/column counts and cuts
+# create T junctions and irregular adjacency graphs, rather than a rotated 3x3 grid.
+static func partition(rng: RandomNumberGenerator,count: int) -> Array:
+ var widths=[];var remaining=96-count*22
+ for i in count:widths.append(22)
+ for i in remaining:widths[rng.randi_range(0,count-1)]+=1
+ var cuts=[-96.0];var x=-96.0
+ for width in widths:x+=width*2;cuts.append(x)
+ return cuts
+static func draft_regions(rng: RandomNumberGenerator) -> Dictionary:
+ for attempt in 64:
+  var regions=[];var candidates=[]
+  var rows=partition(rng,rng.randi_range(2,4))
+  for row in rows.size()-1:
+   var columns=partition(rng,rng.randi_range(2,4))
+   for col in columns.size()-1:
+    regions.append({"id":regions.size(),"rect":Rect2(columns[col],rows[row],columns[col+1]-columns[col],rows[row+1]-rows[row]),"height":float(rng.randi_range(0,2)*SETTINGS.elevation_step)})
+  # Ensure a mixed elevation palette without imposing any spatial relationship.
+  var high=rng.randi_range(0,regions.size()-1);regions[high].height=SETTINGS.elevation_step*2
+  regions[(high+1)%regions.size()].height=0.0
+  for a in regions.size():
+   for b in range(a+1,regions.size()):
+    var ra: Rect2=regions[a].rect;var rb: Rect2=regions[b].rect
+    var axis=-1;var boundary=0.0;var lo=0.0;var hi=0.0
+    if ra.end.x==rb.position.x or rb.end.x==ra.position.x:
+     axis=0;boundary=maxf(ra.position.x,rb.position.x);lo=maxf(ra.position.y,rb.position.y);hi=minf(ra.end.y,rb.end.y)
+    elif ra.end.y==rb.position.y or rb.end.y==ra.position.y:
+     axis=1;boundary=maxf(ra.position.y,rb.position.y);lo=maxf(ra.position.x,rb.position.x);hi=minf(ra.end.x,rb.end.x)
+    if axis<0 or hi-lo<20:continue
+    var first=a;var second=b
+    if (axis==0 and ra.position.x>rb.position.x) or (axis==1 and ra.position.y>rb.position.y):first=b;second=a
+    for center in range(int(lo+8),int(hi-6),2):
+     var p=Vector2(boundary,center) if axis==0 else Vector2(center,boundary)
+     var size=Vector2(28,12) if axis==0 else Vector2(12,28)
+     candidates.append({"from":first,"to":second,"axis":axis,"rect":Rect2(p-size/2,size),"h0":regions[first].height,"h1":regions[second].height,"length":28.0,"width":12.0})
+  for i in range(candidates.size()-1,0,-1):
+   var j=rng.randi_range(0,i);var temp=candidates[i];candidates[i]=candidates[j];candidates[j]=temp
+  var parents=range(regions.size());var ramps=[];var used={}
+  for loops in [false,true]:
+   for ramp in candidates:
+    var a=ramp.from;var b=ramp.to
+    while parents[a]!=a:a=parents[a]
+    while parents[b]!=b:b=parents[b]
+    if not loops and a==b:continue
+    if loops and (used.has(str(ramp.from)+":"+str(ramp.to)) or rng.randf()>0.35):continue
+    var clear=true
+    for selected in ramps:
+     if selected.rect.grow(1).intersects(ramp.rect.grow(1)):clear=false;break
+    if not clear:continue
+    ramp.backbone=not loops;ramps.append(ramp);parents[a]=b;used[str(ramp.from)+":"+str(ramp.to)]=true
+    if loops and ramps.size()>=regions.size()+SETTINGS.extra_connections:break
+   if not loops and ramps.size()!=regions.size()-1:break
+  if ramps.size()>=regions.size()-1:return {"regions":regions,"ramps":ramps,"attempts":attempt+1}
+ assert(false,"Unable to construct connected region graph")
+ return {}
 static func index(x: float,z: float) -> int:
  return clampi(floori((z+96)/2),0,SIDE-1)*SIDE+clampi(floori((x+96)/2),0,SIDE-1)
 static func plane_height(plane: Vector3,x: float,z: float) -> float:return plane.x*x+plane.y+plane.z*z
@@ -106,7 +141,7 @@ static func is_ramp(data: Dictionary,p: Vector2,margin: float=0) -> bool:
   if ramp.rect.grow(margin).has_point(p):return true
  return false
 static func protected(data: Dictionary,p: Vector2,margin: float=0) -> bool:
- if p.length()<12+margin or p.distance_to(Vector2(data.portal.x,data.portal.z))<10+margin:return true
+ if p.distance_to(Vector2(data.spawn.x,data.spawn.z))<12+margin or p.distance_to(Vector2(data.elite.x,data.elite.z))<10+margin or p.distance_to(Vector2(data.portal.x,data.portal.z))<10+margin:return true
  if is_ramp(data,p,4+margin):return true
  for pos in data.pois:
   if p.distance_to(Vector2(pos.x,pos.z))<5+margin:return true
@@ -162,7 +197,7 @@ static func geometry(data: Dictionary) -> ArrayMesh:
    var lo_a=a;var lo_b=b
    if boundary:
     # Continuous visible perimeter wall, 24m above each local surface.
-    lo_a.y+=24;lo_b.y+=24
+    lo_a.y+=24;lo_b.y+=24;a.y=-4;b.y=-4
    elif n>=0 and n<SIDE*SIDE:
     lo_a.y=plane_height(data.planes[n],a.x,a.z);lo_b.y=plane_height(data.planes[n],b.x,b.z)
     if maxf(a.y-lo_a.y,b.y-lo_b.y)<=0.01:continue
