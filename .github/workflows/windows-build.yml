@@ -13,6 +13,8 @@ concurrency:
   cancel-in-progress: true
 jobs:
   windows-build:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -35,3 +37,13 @@ jobs:
           path: builds/windows/
           if-no-files-found: error
           retention-days: 30
+      - name: Publish durable Windows playtest download
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view forest-playtest-v2 >/dev/null 2>&1; then
+            gh release upload forest-playtest-v2 builds/BONK_INFINITY_Windows_x64.zip --clobber
+          else
+            gh release create forest-playtest-v2 builds/BONK_INFINITY_Windows_x64.zip --target "$GITHUB_SHA" --prerelease --title "MEGACLONK — Terraced Forest Playtest" --notes-file docs/FOREST_RELEASE.md
+          fi
