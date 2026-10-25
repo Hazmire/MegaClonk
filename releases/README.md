@@ -1,10 +1,10 @@
 # Current Windows playtest
 
-[Download the Terraced Forest Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/forest-playtest-v2/BONK_INFINITY_Windows_x64.zip).
+[Download the Dynamic Forest Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/dynamic-forest-v3.1/BONK_INFINITY_Windows_x64.zip).
 
-Extract all files and launch BONK_INFINITY.exe, or Launch_Compatibility.bat for OpenGL.
-See [build provenance](BUILD_INFO.md) and [checksum](FOREST_SHA256SUMS).
+Extract everything and launch BONK_INFINITY.exe, or Launch_Compatibility.bat for OpenGL.
+See [provenance](BUILD_INFO.md), [checksum](DYNAMIC_SHA256SUMS) and [validation](DYNAMIC_VALIDATION.json).
 
-The ZIP tracked directly in this directory is an older build. GitHub Releases now hosts the
-current build because it exceeds GitHub's 100MiB per-file Git limit. The Actions artifact is
-also available from the successful workflow linked in BUILD_INFO.md.
+The ZIP tracked directly in this directory is an older build. GitHub Releases hosts the current
+build because it exceeds GitHub's100MiB per-file Git limit. The successful Actions run also has a
+Windows artifact. Previous Forest playtest: release `forest-playtest-v2` / `FOREST_SHA256SUMS`.

@@ -1,8 +1,8 @@
 # Dynamic Forest validation
 
-Godot4.7.2, unchanged engine. Ten suites cover **382 gameplay assertions** (the previous335 plus47
+Godot4.7.2, unchanged engine. Ten suites cover **383 gameplay assertions** (the previous335 plus47
 new checks),100 mathematical layouts,100 actual collision/navigation worlds, and a100-seed variety
-report. Final publication details are in `releases/BUILD_INFO.md`. Earlier results below are historical.
+report. CI40246730637 passed and published `dynamic-forest-v3.1`. The final follow-up also verifies100 seeds keep elite statues separate from portal interactions, and checks the actual interaction prompt. Final publication details are in `releases/BUILD_INFO.md`. Earlier results below are historical.
 
 The new checks exercise per-spawn choices and saved RNG,75/20/5 weighting, live pursuit during
 emergence, bug warning/detonation, actual cliff ascent and upper landing, boundary rejection,
@@ -30,7 +30,7 @@ synchronous. Stages now own their maps and verify a real native path before allo
 Headless performance baseline this session:400 legacy enemies5.39ms/tick before changes. Current
 mixed compatibility benchmark is about7.5ms; the new400-enemy ordinary roster is about9ms/tick.
 These include simulation, instanced transforms and spatial rebuilding, exclude rendering, and are
-not a60FPS or full late-game combat guarantee. Exact final timings appear in the appended report.
+not a60FPS or full late-game combat guarantee. Exact final timings:7.53ms compatibility mix,8.74ms ordinary roster; see `releases/DYNAMIC_VALIDATION.json`.
 Native Windows execution, audible output and target-GPU FPS remain unverified.
 
 ---

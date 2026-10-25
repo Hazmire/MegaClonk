@@ -1,0 +1,17 @@
+{
+  "source": "d5be3a4ad32ea4d1b43a6a3dbaf56b9a6bb4edf3",
+  "gameplay_assertions": 383,
+  "failures": 0,
+  "layout_seeds": 100,
+  "physical_worlds": 100,
+  "variety_seeds": 100,
+  "collision_rays": 5218,
+  "repairs": 0,
+  "new_roster_400_mean_ms": 8.74,
+  "legacy_baseline_400_mean_ms": 5.39,
+  "mixed_compatibility_mean_ms": 7.53,
+  "rendering_included_in_cpu_profile": false,
+  "native_windows_executed": false,
+  "rendered_map_examples": 10,
+  "elite_portal_separation_seeds": 100
+}

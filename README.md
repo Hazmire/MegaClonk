@@ -9,7 +9,7 @@ a three-category enemy roster, cliff climbing, one-use elite statues and two new
 ## Download and play
 
 - [Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/dynamic-forest-v3.1/BONK_INFINITY_Windows_x64.zip)
-- [GitHub Actions builds](https://github.com/Hazmire/MegaClonk/actions/workflows/windows-build.yml)
+- [GitHub Actions builds](https://github.com/Hazmire/MegaClonk/actions/runs/40246730637)
 - [PR #3 — merge into Full-Release](https://github.com/Hazmire/MegaClonk/pull/3)
 
 Extract and launch **BONK_INFINITY.exe**, or **Launch_Compatibility.bat** if Vulkan

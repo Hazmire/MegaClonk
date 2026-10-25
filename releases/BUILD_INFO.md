@@ -1,30 +1,33 @@
-# Forest playtest publication — 2026-10-25
+# Dynamic Forest playtest publication
 
-Download: https://github.com/Hazmire/MegaClonk/releases/download/forest-playtest-v2/BONK_INFINITY_Windows_x64.zip
-Release: https://github.com/Hazmire/MegaClonk/releases/tag/forest-playtest-v2
+[Download the Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/dynamic-forest-v3.1/BONK_INFINITY_Windows_x64.zip).
 
-- Clean source: `5fe086c5c549273d72e890307d61be90c683ee2e`, branch `megaclonk-menu-loadouts`.
-- Successful GitHub Actions run: https://github.com/Hazmire/MegaClonk/actions/runs/40237119122
-- Release asset ID: `676215692`; size **107,058,902 bytes**.
-- Release ZIP SHA256: `6a5ef826faa4ac07c70493beea9c371e70d9971d07d910ece861dd9ceb9beb30`.
-- Actions artifact: `BONK_INFINITY-Windows-x64`, ID `12615397512`, **107,955,250 bytes**, not expired at verification.
-- Artifact SHA256: `c932383c4a989d3f86dd22cc6a31884411e2ca28498592428f1e22d5099f479b`.
-- Artifact ZIP wraps the exported directory; its bytes differ from the separately packaged release ZIP.
+- Release: https://github.com/Hazmire/MegaClonk/releases/tag/dynamic-forest-v3.1
+- Clean source: `d5be3a4ad32ea4d1b43a6a3dbaf56b9a6bb4edf3`, `megaclonk-menu-loadouts`.
+- Successful Actions run: https://github.com/Hazmire/MegaClonk/actions/runs/40246730637
+- Release asset: `676461991`, **111,201,896 bytes**.
+- Release ZIP SHA256: `f28073c27fe79eaaebbd18dcae8b08128043f4d93c10c98d4ddfca5db06b64df`.
+- Actions artifact: `BONK_INFINITY-Windows-x64`, `12618179949`, **112,102,438 bytes**, not expired at verification.
+- Artifact SHA256: `9d71ec544c82604b784535298b03469efe290bb47eb03cc4cc64b9ba6985fc0a`.
 
-CI imported the committed assets, passed all eight suites, exported Windows x86-64, uploaded the
-artifact and published the durable release ZIP. Publication IDs, sizes and digests were verified
-through GitHub's API. The release ZIP was downloaded again: its byte count and SHA256 matched, all ZIP CRCs passed, and BUILD_INFO confirms clean source5fe086c plus all four Quaternius licences. The cloud workspace's direct uploads endpoint was forbidden; the authorized
-manual GitHub Actions release step performed publication successfully.
+CI imported the committed runtime assets, passed all ten suites, exported Windows x86-64 and
+published both downloads. Release and artifact sizes/digests were verified through GitHub's API.
+The Actions artifact wraps the exported directory; its bytes differ from the release ZIP.
 
-A clean local export from runtime-equivalent `54c94df234fc08277b692ca8f832ca359bb98f4f` also passed
-ZIP CRC checks. Its Windows executable is PE32+ x86-64. Linux Godot loaded its embedded game data
-for a 180-frame practice run and a rendered 90-frame asset-showcase run, without resource/script
-errors. This checks exported resources, **not execution of the Windows binary on Windows**.
-The downloaded CI release executable’s embedded game data also completed a 180-frame practice run under Linux Godot without errors. Native Windows execution and gaming-GPU performance remain local playtest tasks.
+The published ZIP was downloaded again: byte count and SHA256 match GitHub, all ZIP CRCs pass,
+and BUILD_INFO confirms clean source d5be3a4. The KayKit licence is present alongside all four
+Quaternius notices. Its executable is PE32+ Windows x86-64 with embedded game data. Linux Godot
+loaded that downloaded data for a180-frame headless practice run and a120-frame rendered compatibility
+practice run without script/resource errors. Driver VSync/shader-cache warnings are expected on
+software OpenGL. This validates exported resources; **native Windows execution remains untested**.
 
-Source PR: https://github.com/Hazmire/MegaClonk/pull/3 (base `Full-Release`). Merge it to put this
-source on the default branch; the release download is available independently of merging.
+Validation:383 gameplay assertions,100 layouts,100 actual collision/native-navigation worlds,
+100 distribution samples,5,218 collision rays, zero repairs/failures. New-roster400-enemy simulation
+averaged8.74ms/tick, rendering excluded. See `DYNAMIC_VALIDATION.json` and `VALIDATION.md`.
 
-The old tracked `releases/BONK_INFINITY_Windows_x64.zip` is an earlier build. Use the release URL
-above for this update. Its old checksum remains in `SHA256SUMS`; the new published ZIP checksum
-is in `FOREST_SHA256SUMS`.
+Source PR: https://github.com/Hazmire/MegaClonk/pull/3 . Merge into `Full-Release` to update the default
+branch. The release download is available independently of merging. The ZIP tracked directly in
+this directory is an older release; use the URL above. The previous Forest playtest remains at
+release `forest-playtest-v2`; its checksum is in `FOREST_SHA256SUMS`.
+
+Version3.1 keeps the elite statue in a separate region from the portal/player spawn. All100 variety seeds verify interaction-zone separation, and the gameplay suite checks the actual E prompt.
