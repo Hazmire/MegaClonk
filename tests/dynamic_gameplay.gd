@@ -74,6 +74,7 @@ func run():
   if object.kind=="Elite Statue":statue=object
  verify(not statue.is_empty() and game.forest_navigation.reachable(statue.node.position),"One reachable elite statue is generated")
  game.player.position=statue.node.position
+ game.update_interactions(0.01);verify(game.notice.text.contains("summon Elite Enemies"),"Elite statue exposes its actual interaction prompt independently of portal")
  verify(game.activate_elite_statue(statue),"Elite statue activates")
  verify(game.enemies.size()==3 and game.enemies[0].elite and game.enemies[0].variant.visual_model=="Knight","Statue creates three distinct-model marked elites")
  verify(not game.activate_elite_statue(statue),"Statue cannot reactivate")

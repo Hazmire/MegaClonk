@@ -8,8 +8,8 @@ a three-category enemy roster, cliff climbing, one-use elite statues and two new
 
 ## Download and play
 
-- [Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/dynamic-forest-v3/BONK_INFINITY_Windows_x64.zip)
-- [GitHub Actions builds](https://github.com/Hazmire/MegaClonk/actions/runs/40237119122)
+- [Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/dynamic-forest-v3.1/BONK_INFINITY_Windows_x64.zip)
+- [GitHub Actions builds](https://github.com/Hazmire/MegaClonk/actions/workflows/windows-build.yml)
 - [PR #3 — merge into Full-Release](https://github.com/Hazmire/MegaClonk/pull/3)
 
 Extract and launch **BONK_INFINITY.exe**, or **Launch_Compatibility.bat** if Vulkan
@@ -41,10 +41,10 @@ vanish after one successful purchase. Hover stats/equipment in Tab for rules and
 
 ## Assets and limits
 
-Runtime assets include the supplied Quaternius Ranger, UAL2 animation library, Imp/Puglin and
-Nature MegaKit, alongside existing icons, sounds and particles. [Credits](ASSET_CREDITS.md).
-[Verified package inventory](docs/ASSETS_V1_INVENTORY.md). Only two monster species are supplied;
-behaviour variants retain their existing mechanics. The ranger uses the supplied mannequin head.
+Runtime art includes Quaternius Ranger/UAL2/Nature/Bestiary, new KayKit Minion/Warrior skeletons,
+existing icons, sounds and particles. Goblin is original geometry; Rock Golem is assembled from
+supplied Nature rocks. [Credits](ASSET_CREDITS.md) and [current asset choices](docs/DYNAMIC_FOREST.md).
+The supplied Bestiary has two species; no additional imported species are claimed.
 
 ## Development
 

@@ -32,6 +32,7 @@ static func layout(seed_value: int) -> Dictionary:
   var point=center+offset
   pois.append(Vector3(point.x,region.height,point.y))
  var elite_region=(spawn_region+int(regions.size()/2))%regions.size()
+ while elite_region in [spawn_region,portal_region]:elite_region=(elite_region+1)%regions.size()
  var elite2: Vector2=regions[elite_region].rect.get_center()
  var data={"seed":seed_value,"regions":regions,"ramps":ramps,"pois":pois,
   "spawn":Vector3(spawn2.x,regions[spawn_region].height,spawn2.y),"spawn_region":spawn_region,

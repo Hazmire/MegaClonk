@@ -68,7 +68,7 @@ A timeout recovers from interrupted climbs. Climbing and its phase persist in ne
 
 ## Elite statue
 
-One optional statue is placed in a protected flat clearing (`elite_statues`:0 or1). Press E nearby
+One optional statue is placed in a separate region from the portal/spawn, in a protected flat clearing (`elite_statues`:0 or1). Press E nearby
 to activate it once. It creates three350HP,2.8speed,15damage Obsidian Sentinels using the newly
 imported KayKit Skeleton Warrior, with gold diamond emblems and common pursuit/climbing. Defeating
 the final elite grants90 gold in addition to ordinary kill rewards. Used/completed/active state and

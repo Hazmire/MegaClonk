@@ -42,8 +42,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if gh release view dynamic-forest-v3 >/dev/null 2>&1; then
-            gh release upload dynamic-forest-v3 builds/BONK_INFINITY_Windows_x64.zip --clobber
+          if gh release view dynamic-forest-v3.1 >/dev/null 2>&1; then
+            gh release upload dynamic-forest-v3.1 builds/BONK_INFINITY_Windows_x64.zip --clobber
           else
-            gh release create dynamic-forest-v3 builds/BONK_INFINITY_Windows_x64.zip --target "$GITHUB_SHA" --prerelease --title "MEGACLONK — Dynamic Forest Playtest" --notes-file docs/DYNAMIC_RELEASE.md
+            gh release create dynamic-forest-v3.1 builds/BONK_INFINITY_Windows_x64.zip --target "$GITHUB_SHA" --prerelease --title "MEGACLONK — Dynamic Forest Playtest" --notes-file docs/DYNAMIC_RELEASE.md
           fi

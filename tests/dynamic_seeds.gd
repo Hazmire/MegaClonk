@@ -8,6 +8,7 @@ func run():
   sides[side]=sides.get(side,0)+1;elevations[str(p.y)]=elevations.get(str(p.y),0)+1
   var center=ForestMap.height(seed_value,0,0);centers[str(center)]=centers.get(str(center),0)+1;counts[str(data.regions.size())]=true;ramps[str(data.ramps.size())]=true
   var checksum=hash(str(data.regions)+str(data.ramps)+str(data.spawn));layouts[checksum]=true
+  if data.elite.distance_to(data.portal)<16:errors.append("Elite statue overlaps portal interaction zone")
   if Vector2(p.x,p.z).length()<24:errors.append("Central spawn "+str(seed_value))
   if ForestMap.normal(seed_value,p.x,p.z).dot(Vector3.UP)<0.999:errors.append("Sloped spawn")
   if not data.first_attempt_valid:errors.append("Repaired terrain "+str(seed_value))
