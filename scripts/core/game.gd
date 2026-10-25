@@ -27,6 +27,7 @@ var items: Array = []
 var effects: Array[Dictionary] = []
 var grid: Dictionary = {}
 var prop_batches: Dictionary = {}
+var decoration_checksum=0
 var projectile_meshes: Dictionary = {}
 var obstacles: Dictionary = {}
 var mode = "menu"
@@ -57,6 +58,11 @@ var boss_spawned = false
 var boss_dead = false
 var portal: Node3D
 var terrain_noise = FastNoiseLite.new()
+var map_layout: Dictionary={}
+var map_seed_override=-1
+var map_debug=false
+var map_debug_node: MeshInstance3D
+var forest_navigation: ForestNavigation
 var selected_character = 0
 var selected_biome = 0
 var selected_tier = 1
@@ -124,6 +130,10 @@ func _ready() -> void:
  build_menu_world()
  main_menu()
  smoke_mode = "--smoke" in OS.get_cmdline_user_args()
+ for argument in OS.get_cmdline_user_args():
+  if argument.begins_with("--map-seed="):map_seed_override=int(argument.get_slice("=",1))
+ if "--showcase" in OS.get_cmdline_user_args() and not Engine.has_meta("showcase_started"):
+  Engine.set_meta("showcase_started",true);get_tree().call_deferred("change_scene_to_file","res://scenes/showcase/assets.tscn")
  if smoke_mode or "--practice" in OS.get_cmdline_user_args():
   sandbox = true
   begin_run()
@@ -181,6 +191,8 @@ func main_menu() -> void:
 
 func build_menu_world() -> void:
  if is_instance_valid(world):
+  if is_instance_valid(forest_navigation) and is_instance_valid(forest_navigation.region):
+   NavigationServer3D.region_set_map(forest_navigation.region.get_rid(),RID())
   remove_child(world)
   world.queue_free()
  world = Node3D.new()
@@ -209,7 +221,7 @@ func build_menu_world() -> void:
  mesh_node(cylinder(8, 1), Color("31575a"), world, Vector3(10, -1, -10))
  create_avatar(world, selected_character, Vector3(10,0,-10)).scale = Vector3.ONE * 3
 func create_avatar(parent: Node3D, index: int, pos: Vector3) -> Node3D:
- var node=JacobVisual.new()
+ var node=RangerVisual.new()
  parent.add_child(node)
  node.position=pos
  node.set_meta("character_index",index)
@@ -261,7 +273,7 @@ func equip(id: int) -> void:
  if weapons.has(id): weapons[id].level = mini(10, weapons[id].level + 1)
  elif weapons.size() < weapon_limit(): weapons[id] = {"level":1,"clock":0.1,"visuals":[],"summons":[],"upgrades":{},"legacy_damage":1.0}
 func terrain_height(x: float, z: float) -> float:
- return ForestMap.height(run_seed+stage*73,x,z)
+ return ForestMap.height(stage_map_seed(),x,z)
 func build_stage() -> void:
  var previous_seed=rng.seed
  var previous_state=rng.state
@@ -274,7 +286,7 @@ func build_stage() -> void:
  effects.clear()
  interactables.clear();landmarks.clear()
  grid.clear()
- prop_batches.clear()
+ prop_batches.clear();decoration_checksum=0
  obstacles.clear()
  for id in weapons:
   weapons[id]["visuals"] = []
@@ -302,74 +314,9 @@ func build_stage() -> void:
  env.fog_enabled = true
  env.fog_light_color = env.background_color
  env.fog_density = 0.003 if biome < 2 else 0.009
- var surface = SurfaceTool.new()
- surface.begin(Mesh.PRIMITIVE_TRIANGLES)
- for x in range(-90, 90, 3):
-  for z in range(-90, 90, 3):
-   for offset in [Vector2(0,0),Vector2(3,0),Vector2(0,3),Vector2(3,0),Vector2(3,3),Vector2(0,3)]:
-    var px = x + offset.x
-    var pz = z + offset.y
-    surface.set_color(colors[biome].lightened(rng.randf_range(-0.07, 0.08)))
-    surface.add_vertex(Vector3(px, terrain_height(px,pz), pz))
- surface.generate_normals()
- var terrain = mesh_node(surface.commit(), Color.WHITE, world)
- var terrain_mat = terrain.material_override as StandardMaterial3D
- terrain_mat.vertex_color_use_as_albedo = true
- var terrain_shader=ShaderMaterial.new()
- terrain_shader.shader=preload("res://shaders/terrain.gdshader")
- terrain.material_override=terrain_shader
- terrain.create_trimesh_collision()
- # Repeated biome props are instanced, with collision only for large rocks/ruins.
- for i in range(150):
-  var p = Vector3(rng.randf_range(-84,84),0,rng.randf_range(-84,84))
-  if Vector2(p.x,p.z).length() < 10 or Vector2(p.x-48,p.z-24).length()<9: continue
-  p.y = terrain_height(p.x,p.z)
-  if biome == 0:
-   prop_collider(p,0.4,4.0)
-   var type=1+i%3
-   prop_instance("forest_tree"+str(type),ImportedArt.mesh("res://assets/vendor/environment/Tree_%d.fbx"%type,7),Color.WHITE,p,Vector3.ONE,true)
-  elif biome == 1:
-   var rock_height=rng.randf_range(2,5)
-   prop_instance("rocks",rock_mesh(),Color("997448"),p+Vector3.UP*rock_height*0.35,Vector3(1,rock_height/2,1))
-   prop_collider(p,0.85,rock_height*0.8)
-  else:
-   prop_collider(p,0.5,1.6)
-   prop_instance("stones",box(Vector3(1,1.6,0.4)),Color("72798a"),p+Vector3.UP*0.8)
-   if i % 5 == 0:
-    prop_instance("dead_trees",box(Vector3(0.25,3,0.25)),Color("343743"),p+Vector3.UP*1.5)
- # Low-cost ground cover and broken ruins use the same instancing pipeline.
- for i in range(240):
-  var p=Vector3(rng.randf_range(-85,85),0,rng.randf_range(-85,85))
-  if Vector2(p.x,p.z).length()<8: continue
-  p.y=terrain_height(p.x,p.z)
-  if biome==0:
-   prop_instance("forest_grass",ImportedArt.mesh("res://assets/vendor/environment/Grass_1.fbx",0.65),Color.WHITE,p,Vector3.ONE,true)
-   if i%7==0: prop_instance("forest_bush",ImportedArt.mesh("res://assets/vendor/environment/Bush_1.fbx",1.4),Color.WHITE,p,Vector3.ONE,true)
-   if i%17==0:
-    var rock=ImportedArt.mesh("res://assets/vendor/environment/Rock_1.fbx",1.6,3)
-    prop_instance("forest_rock",rock,Color.WHITE,p,Vector3.ONE,true)
-    prop_collider(p,maxf(rock.get_aabb().size.x,rock.get_aabb().size.z)/2,rock.get_aabb().size.y)
-  elif i%3==0: prop_instance("pebbles",rock_mesh(),Color("aa946d") if biome==1 else Color("697583"),p+Vector3.UP*0.2,Vector3.ONE*0.3)
- for i in 4:
-  var angle=i*TAU/4
-  var base=Vector3(cos(angle)*56,0,sin(angle)*56)
-  for side in [-1,1]:
-   var p=base+Vector3(side*2.2,0,0)
-   p.y=terrain_height(p.x,p.z)
-   prop_instance("ruin_columns",box(Vector3(0.85,3.5,0.85)),Color("9ca995") if biome==0 else Color("aaa08d"),p+Vector3.UP*1.75)
-   prop_collider(p,0.5,3.5)
-  var top=base+Vector3.UP*(terrain_height(base.x,base.z)+3.6)
-  prop_instance("ruin_lintels",box(Vector3(5.3,0.6,1.0)),Color("a5ad9b"),top)
- # Supplied Ancient Reliques landmark; deliberately clear of portal/spawn routes.
- var relic_pos=Vector3(-42,terrain_height(-42,30),30);landmarks.append(relic_pos)
- prop_instance("ancient_relic",ImportedArt.mesh("res://assets/vendor/relics/AncientReliques-3-Head_Totem.obj",4),Color.WHITE,relic_pos,Vector3.ONE,true)
- prop_collider(relic_pos,1,4)
+ ForestWorld.build(self)
  for i in range(12):
-  var angle = i * TAU / 12
-  var p = Vector3(cos(angle),0,sin(angle)) * (20 + (i%3)*14)
-  p=avoid_props(p)
-  p.y = terrain_height(p.x,p.z)
-  assert(ForestMap.reachable(run_seed+stage*73,Vector2(p.x,p.z)))
+  var p: Vector3=map_layout.pois[i]
   var kind = ["Chest","Heal","Charge Shrine","Shop","Risk Shrine","Stat Shrine"][i % 6]
   var model = Node3D.new()
   world.add_child(model)
@@ -381,7 +328,7 @@ func build_stage() -> void:
   if kind=="Shop":
    object.tier=ShopSystem.tier(rng)
    for child in model.get_children():child.queue_free()
-   var seller=JacobVisual.new();model.add_child(seller);seller.name="Seller"
+   var seller=RangerVisual.new();model.add_child(seller);seller.name="Seller"
    mesh_node(cylinder(1.1,0.15),Color("e6b64d") if object.tier=="Legendary" else (Color("9c80e2") if object.tier=="Rare" else Color("77c797")),model,Vector3.UP*0.1,true)
   interactables.append(object)
  combat_fx=CombatFX.new();world.add_child(combat_fx)
@@ -416,6 +363,7 @@ func build_stage() -> void:
  rng.seed=previous_seed
  rng.state=previous_state
  make_portal()
+ if map_debug:map_debug=false;toggle_map_debug()
  toast("Stage %d • Explore the forest. Activate the portal to challenge the stage guardian."%stage)
 func resume() -> void:
  mode = "run"
@@ -448,7 +396,9 @@ func _unhandled_input(event: InputEvent) -> void:
   elif mode in ["play","unlocks","quests"]: main_menu()
  if event.is_action_pressed("inspect") and mode == "run": show_build()
  if event is InputEventKey and event.pressed and event.keycode==KEY_F8 and sandbox:
-  stage+=1;build_stage();resume()
+  map_seed_override=stage_map_seed()+1;build_stage();resume()
+ if event is InputEventKey and event.pressed and sandbox and event.keycode==KEY_F7:build_stage();resume()
+ if event is InputEventKey and event.pressed and sandbox and event.keycode==KEY_F6:toggle_map_debug()
 func _notification(what: int) -> void:
  if what == NOTIFICATION_APPLICATION_FOCUS_OUT and settings.focus_pause and mode == "run" and not smoke_mode: pause_menu()
 func _physics_process(delta: float) -> void:
@@ -477,7 +427,7 @@ func _physics_process(delta: float) -> void:
  if player.fall_hit > 0:
   hurt(player.fall_hit)
   player.fall_hit = 0
- if player.position.y < -30 or absf(player.position.x)>89 or absf(player.position.z)>89:
+ if player.position.y < -30 or absf(player.position.x)>102 or absf(player.position.z)>102:
   hurt(12)
   player.position = Vector3(0,4,0)
  if player.velocity.length() > 3: moving_time += delta
@@ -537,11 +487,11 @@ func spawn_enemy(kind: int = -1, at: Vector3 = Vector3.INF) -> Dictionary:
   if stage>2 and kind==1 and rng.randf()<0.25:kind=5
  var angle = rng.randf()*TAU
  var pos = player.position + Vector3(cos(angle),0,sin(angle))*rng.randf_range(25,38) if at == Vector3.INF else at
- pos.x = clampf(pos.x,-68,68)
- pos.z = clampf(pos.z,-68,68)
+ pos.x = clampf(pos.x,-92,92)
+ pos.z = clampf(pos.z,-92,92)
  if at==Vector3.INF and pos.distance_to(player.position)<18:
   var inward=-Vector3(player.position.x,0,player.position.z).normalized()
-  pos=player.position+inward*28;pos.x=clampf(pos.x,-68,68);pos.z=clampf(pos.z,-68,68)
+  pos=player.position+inward*28;pos.x=clampf(pos.x,-92,92);pos.z=clampf(pos.z,-92,92)
  pos.y = terrain_height(pos.x,pos.z)+0.7
  var overtime=maxf(0,stage_time-STAGE_SECONDS)
  var scale_factor = (1+elapsed/140.0)*(1+overtime/60.0) * (1+(tier-1)*0.5) * (1+(stage-1)*0.5) * stats.difficulty
@@ -566,9 +516,13 @@ func spawn_enemy(kind: int = -1, at: Vector3 = Vector3.INF) -> Dictionary:
   enemy["hit_time"]=0.0
  if kind>=8:
   Encounters.initialize(self,enemy,boss_variant if kind==8 else ("champion" if kind==9 else ("hunter" if kind==10 else "ghost")))
+ if is_instance_valid(forest_navigation):
+  enemy.pos=avoid_props(enemy.pos)
+  if not forest_navigation.reachable(enemy.pos):return {}
  enemies.append(enemy)
  return enemy
 func update_enemies(delta: float) -> void:
+ if is_instance_valid(forest_navigation):forest_navigation.tick(delta,player.position)
  var colors = [Color("ee7d70"),Color("ffc05f"),Color("a28cae"),Color("e0d3a0"),Color("f55e67"),Color("b0dafa"),Color("aeef7a"),Color("80b9cb"),Color("cf7aff")]
  var mm = enemy_mesh.multimesh
  var boss_count=0
@@ -742,7 +696,7 @@ func kill_enemy(index: int) -> void:
    e.detonated=true
    schedule_blast(e.pos,e.variant.blast_radius,e.damage,0.4)
   var corpse=mesh_node(load(e.variant.model),Color.WHITE,world,e.pos-Vector3.UP*0.65)
-  corpse.material_override=ModelBuilder.material()
+  corpse.material_override=null
   if effects.size()<90: effects.append({"node":corpse,"life":0.45,"death":true})
   else: corpse.queue_free()
   impact(e.pos,Color("d5d9b6"),3)
@@ -759,7 +713,7 @@ func kill_enemy(index: int) -> void:
   run_metrics["minibosses"]=int(run_metrics.get("minibosses",0))+1;gold+=25
  if e.kind>=8:
   var corpse=mesh_node(e.variant.mesh,Color.WHITE,world,e.pos)
-  corpse.material_override=ModelBuilder.material();corpse.scale=Vector3.ONE*e.scale
+  corpse.material_override=null;corpse.scale=Vector3.ONE*e.scale
   effects.append({"node":corpse,"life":0.6,"death":true})
   combat_fx.burst("smoke_puff",e.pos,2)
  if e.kind == 8:
@@ -797,9 +751,9 @@ func stage_event(event_id: String) -> void:
    tone(90,0.6)
 func make_portal() -> void:
  if is_instance_valid(portal):return
- assert(ForestMap.reachable(run_seed+stage*73,Vector2(48,24)))
+ assert(forest_navigation.reachable(map_layout.portal))
  portal=Node3D.new();world.add_child(portal)
- portal.position=Vector3(48,terrain_height(48,24),24)
+ portal.position=map_layout.portal
  var torus=TorusMesh.new();torus.inner_radius=1.5;torus.outer_radius=2
  var ring=mesh_node(torus,Color("bba0ff"),portal,Vector3.UP*2,true)
  ring.name="Ring";ring.rotation.x=PI/2
@@ -825,6 +779,7 @@ func advance_stage() -> bool:
  # Persist both sides of the transition; an interrupted generation can resume safely.
  if not save_run():toast("Cannot advance: checkpoint save failed");return false
  stage+=1
+ map_seed_override=-1
  run_metrics["stage"]=maxi(stage,int(run_metrics.get("stage",1)))
  if stage_time<STAGE_SECONDS:run_metrics["early_stage"]=int(run_metrics.get("early_stage",0))+1
  if stage_time<=300:run_metrics["fast_clear"]=int(run_metrics.get("fast_clear",0))+1
@@ -958,9 +913,11 @@ func update_projectiles(delta: float) -> void:
    if not target.is_empty(): p.velocity=p.velocity.lerp((target.pos-previous).normalized()*24*stats.projectile_speed,delta*6)
   if p.kind=="return" and p.age>0.6: p.velocity=(player.position+Vector3.UP-previous).normalized()*26*stats.projectile_speed
   if p.kind=="lob": p.velocity.y-=15*delta
-  p.node.position+=p.velocity*delta
-  if p.node.position.y<terrain_height(p.node.position.x,p.node.position.z)+0.08:
-   p.node.position.y=terrain_height(p.node.position.x,p.node.position.z)+0.1
+  var next_position=p.node.position+p.velocity*delta
+  var collision=get_world_3d().direct_space_state.intersect_ray(PhysicsRayQueryParameters3D.create(previous,next_position,1))
+  p.node.position=collision.position if not collision.is_empty() else next_position
+  if not collision.is_empty() or p.node.position.y<terrain_height(p.node.position.x,p.node.position.z)+0.08:
+   if collision.is_empty():p.node.position.y=terrain_height(p.node.position.x,p.node.position.z)+0.1
    combat_fx.burst("impact_concrete",p.node.position,1.5)
    if not p.hostile and p.kind in ["fireball","rocket","lob","dice"]:
     combat_fx.burst("explosion_small",p.node.position,1.5);area(p.node.position,3.5*stats.size,p.damage*0.7,p.weapon)
@@ -997,6 +954,7 @@ func update_projectiles(delta: float) -> void:
 func make_field(pos: Vector3, radius: float, damage: float, id: int, color: Color, status: String, duration: float, mine: bool = false) -> void:
  if fields.size()>=55: return
  var node = mesh_node(cylinder(radius,0.08),color.darkened(0.2),world,Vector3(pos.x,terrain_height(pos.x,pos.z)+0.12,pos.z),true)
+ node.quaternion=Quaternion(Vector3.UP,ForestMap.normal(stage_map_seed(),pos.x,pos.z))
  fields.append({"node":node,"radius":radius,"damage":damage,"weapon":id,"status":status,"life":duration*(1+WeaponUpgrades.value(weapons[id],"duration") if weapons.has(id) else 1),"clock":0.3,"mine":mine})
 func update_fields(delta: float) -> void:
  for i in range(fields.size()-1,-1,-1):
@@ -1210,6 +1168,11 @@ func sandbox_menu() -> void:
   weapons.clear())
  button("Add random tome",col,func(): var names=Catalog.TOMES.keys(); var name=names[rng.randi_range(0,names.size()-1)]; apply_upgrade({"type":"tome","id":name}))
  button("Add item",col,award_item)
+ title("Map seed: %s • F6 overlay • F7 repeat • F8 next"%stage_map_seed(),col,18)
+ var seed_input=LineEdit.new();seed_input.text=str(stage_map_seed());seed_input.placeholder_text="Map seed";col.add_child(seed_input)
+ button("Generate entered seed",col,func():
+  if seed_input.text.is_valid_int():map_seed_override=int(seed_input.text);build_stage();resume())
+ button("Show regions / ramps / navigation",col,toggle_map_debug)
  button("Spawn 100 enemies",col,func(): for i in 100: spawn_enemy())
  button("Spawn Warden",col,func(): spawn_enemy(8))
  button("Add XP +100 / gold +100",col,func(): xp+=100; gold+=100)
@@ -1322,6 +1285,7 @@ func update_special_visuals(delta: float) -> void:
      summon.clock=0.9/stats.haste/(1+WeaponUpgrades.value(state,"haste"))
 
 func _exit_tree() -> void:
+ RigClips.reset()
  if is_instance_valid(music):
   music.stop()
   music.stream=null
@@ -1330,7 +1294,7 @@ func _exit_tree() -> void:
    audio.stop()
    audio.stream=null
 
-func prop_instance(key: String, mesh: Mesh, color: Color, pos: Vector3, size: Vector3 = Vector3.ONE, source_materials: bool=false) -> void:
+func prop_instance(key: String, mesh: Mesh, color: Color, pos: Vector3, size: Vector3 = Vector3.ONE, source_materials: bool=false, yaw_rotation: float=0) -> void:
  if not prop_batches.has(key):
   var batch=MultiMeshInstance3D.new()
   batch.multimesh=MultiMesh.new()
@@ -1345,9 +1309,10 @@ func prop_instance(key: String, mesh: Mesh, color: Color, pos: Vector3, size: Ve
   if not source_materials:batch.material_override=material
   world.add_child(batch)
   prop_batches[key]=batch
+ decoration_checksum=hash(str(decoration_checksum)+key+str(pos)+str(size)+str(yaw_rotation))
  var mm=prop_batches[key].multimesh
  var index=mm.visible_instance_count
- mm.set_instance_transform(index,Transform3D(Basis.IDENTITY.scaled(size),pos))
+ mm.set_instance_transform(index,Transform3D(Basis(Vector3.UP,yaw_rotation).scaled(size),pos))
  mm.set_instance_color(index,color)
  mm.visible_instance_count+=1
 func build_enemy_mesh() -> ArrayMesh:
@@ -1399,7 +1364,7 @@ func save_run(path: String = "user://active-run.json") -> bool:
  var saved_enemies=[]
  for e in enemies:
   var record=e.duplicate(true)
-  record.erase("variant")
+  record.erase("variant");record.erase("move_direction")
   for key in ["pos","knock","target","charge_direction"]:
    if record.has(key): record[key]=[record[key].x,record[key].y,record[key].z]
   saved_enemies.append(record)
@@ -1407,7 +1372,7 @@ func save_run(path: String = "user://active-run.json") -> bool:
  for pickup in pickups: saved_pickups.append({"position":[pickup.node.position.x,pickup.node.position.y,pickup.node.position.z],"value":pickup.value,"age":pickup.age})
  var used=[]
  for object in interactables: used.append({"used":object.used,"charge":object.charge,"tier":object.get("tier","Common"),"offers":object.get("offers",null),"sold":object.get("sold",[])})
- var data={"version":2,"stage_clock":stage_clock.serialize(),"boss_variant":boss_variant,"ghost_budget":ghost_budget,"portal_state":portal_state,"loadout":loadout_runtime.serialize(),"selected_weapon":selected_weapon,"run_metrics":run_metrics,"chests_opened":chests_opened,"legacy_weapon_slots":legacy_weapon_slots,"legacy_tome_slots":legacy_tome_slots,"minimap":serialize_minimap(),"variants":variants.serialize(),"rng_state":str(rng.state),"character":character,"biome":biome,"selected_biome":selected_biome,"tier":tier,"stage":stage,"elapsed":elapsed,"stage_time":stage_time,"stats":stats,"health":health,"xp":xp,"level":level,"kills":kills,"gold":gold,"weapons":saved_weapons,"tomes":tomes,"items":items,"sandbox":sandbox,"position":[player.position.x,player.position.y,player.position.z],"enemies":saved_enemies,"boss_spawned":boss_spawned,"boss_dead":boss_dead,"interactables":used,"damage_total":damage_total,"rerolls":rerolls,"banished":banished,"pickups":saved_pickups,"damage_by_weapon":damage_by_weapon,"gold_fraction":gold_fraction,"camera":[player.yaw,player.pitch,player.zoom]}
+ var data={"version":2,"terrain_version":2,"map_seed_override":map_seed_override,"stage_clock":stage_clock.serialize(),"boss_variant":boss_variant,"ghost_budget":ghost_budget,"portal_state":portal_state,"loadout":loadout_runtime.serialize(),"selected_weapon":selected_weapon,"run_metrics":run_metrics,"chests_opened":chests_opened,"legacy_weapon_slots":legacy_weapon_slots,"legacy_tome_slots":legacy_tome_slots,"minimap":serialize_minimap(),"variants":variants.serialize(),"rng_state":str(rng.state),"character":character,"biome":biome,"selected_biome":selected_biome,"tier":tier,"stage":stage,"elapsed":elapsed,"stage_time":stage_time,"stats":stats,"health":health,"xp":xp,"level":level,"kills":kills,"gold":gold,"weapons":saved_weapons,"tomes":tomes,"items":items,"sandbox":sandbox,"position":[player.position.x,player.position.y,player.position.z],"enemies":saved_enemies,"boss_spawned":boss_spawned,"boss_dead":boss_dead,"interactables":used,"damage_total":damage_total,"rerolls":rerolls,"banished":banished,"pickups":saved_pickups,"damage_by_weapon":damage_by_weapon,"gold_fraction":gold_fraction,"camera":[player.yaw,player.pitch,player.zoom]}
  var file=FileAccess.open(path+".tmp",FileAccess.WRITE)
  if not file: return false
  file.store_string(JSON.stringify(data)); file.close()
@@ -1424,7 +1389,7 @@ func load_run(path: String = "user://active-run.json") -> bool:
  variants=restored
  weapon_damage_windows.clear()
  run_seed=variants.seed_value
- character=-1;biome=0;tier=int(data.tier);stage=maxi(1,int(data.stage))
+ character=-1;biome=0;tier=int(data.tier);stage=maxi(1,int(data.stage));map_seed_override=int(data.get("map_seed_override",-1))
  loadout_runtime.restore(data.get("loadout",{}));selected_trait=loadout_runtime.trait_id;selected_ultimate=loadout_runtime.ultimate_id
  selected_weapon=int(data.get("selected_weapon",1));run_metrics=data.get("run_metrics",{});chests_opened=int(data.get("chests_opened",0))
  selected_character=character; selected_biome=int(data.get("selected_biome",biome)); selected_tier=tier
@@ -1454,6 +1419,7 @@ func load_run(path: String = "user://active-run.json") -> bool:
   var model=pool.acquire("xp",projectile_mesh("xp"),Color("6dffd8"),pos)
   pickups.append({"node":model,"value":record.value,"age":record.age})
  player.position=Vector3(data.position[0],data.position[1],data.position[2])
+ if int(data.get("terrain_version",1))<2:player.position=Vector3(0,1,0)
  for record in data.enemies:
   var e=spawn_enemy(int(record.kind),Vector3(record.pos[0],record.pos[1],record.pos[2]))
   if e.is_empty(): continue
@@ -1479,7 +1445,7 @@ func load_run(path: String = "user://active-run.json") -> bool:
  return true
 
 func prop_collider(pos: Vector3, radius: float, height: float) -> void:
- var body=StaticBody3D.new()
+ var body=StaticBody3D.new();body.set_meta("forest_decoration",true)
  var shape=CollisionShape3D.new()
  var cylinder_shape=CylinderShape3D.new()
  cylinder_shape.radius=radius
@@ -1624,3 +1590,37 @@ func weapon_tooltip(id: int) -> String:
  for attribute in state.get("upgrades",{}):
   if attribute in ["range","radius","duration"]:result+="\n%s bonus +%.0f%%"%[attribute.capitalize(),WeaponUpgrades.value(state,attribute)*100]
  return result+"\nMeasured DPS (last 10s): %.1f\nEstimated base single-target DPS: %.1f"%[measured_dps(id),damage/cooldown]
+
+func navigation_direction(pos: Vector3,target: Vector3) -> Vector3:
+ return forest_navigation.direction(pos,target) if is_instance_valid(forest_navigation) else Vector3(target.x-pos.x,0,target.z-pos.z).normalized()
+func constrain_enemy_motion(previous: Vector3,next: Vector3) -> Vector3:
+ return forest_navigation.constrain(previous,next) if is_instance_valid(forest_navigation) else next
+
+func stage_map_seed() -> int:return map_seed_override if map_seed_override>=0 else run_seed+stage*73
+func toggle_map_debug() -> void:
+ if not sandbox:return
+ map_debug=not map_debug
+ if is_instance_valid(map_debug_node):map_debug_node.queue_free()
+ if not map_debug:return
+ var mesh=ImmediateMesh.new();mesh.surface_begin(Mesh.PRIMITIVE_LINES)
+ for region in map_layout.regions:
+  var r: Rect2=region.rect;var corners=[r.position,Vector2(r.end.x,r.position.y),r.end,Vector2(r.position.x,r.end.y)]
+  for i in 4:
+   for p in [corners[i],corners[(i+1)%4]]:mesh.surface_set_color(Color.CYAN);mesh.surface_add_vertex(Vector3(p.x,region.height+0.2,p.y))
+ for i in range(0,forest_navigation.edges.size(),2):
+  for n in forest_navigation.edges[i]:
+   if n<i:continue
+   for cell in [i,n]:
+    var p=Vector3(-95+(cell%ForestMap.SIDE)*2,0,-95+int(cell/ForestMap.SIDE)*2);p.y=terrain_height(p.x,p.z)+0.12
+    mesh.surface_set_color(Color(0.8,0.9,0.1));mesh.surface_add_vertex(p)
+ mesh.surface_end();map_debug_node=MeshInstance3D.new();map_debug_node.mesh=mesh
+ var mat=StandardMaterial3D.new();mat.vertex_color_use_as_albedo=true;mat.shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED;map_debug_node.material_override=mat;world.add_child(map_debug_node)
+ for i in map_layout.regions.size():
+  var region=map_layout.regions[i];var p=region.rect.get_center();var label=Label3D.new();label.text="Region %d • %.0fm"%[i,region.height];label.billboard=BaseMaterial3D.BILLBOARD_ENABLED;label.pixel_size=0.03;map_debug_node.add_child(label);label.position=Vector3(p.x,region.height+3,p.y)
+ var points=map_layout.pois.duplicate();points.append(map_layout.portal);points.append(Vector3.ZERO)
+ for i in points.size():
+  var label=Label3D.new();label.text="POI %d"%i if i<12 else ("BOSS PORTAL" if i==12 else "PLAYER SPAWN");label.billboard=BaseMaterial3D.BILLBOARD_ENABLED;label.pixel_size=0.02;label.no_depth_test=true;map_debug_node.add_child(label);label.position=points[i]+Vector3.UP*2
+ toast("DEBUG MAP SEED %s"%stage_map_seed())
+
+func enemy_line_clear(pos: Vector3,target: Vector3) -> bool:
+ return get_world_3d().direct_space_state.intersect_ray(PhysicsRayQueryParameters3D.create(pos+Vector3.UP,target+Vector3.UP,1)).is_empty()

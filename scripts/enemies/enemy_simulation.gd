@@ -26,7 +26,7 @@ static func step(game: Node, e: Dictionary, delta: float) -> void:
  var difference=game.player.position-e.pos
  difference.y=0
  var distance=difference.length()
- var direction=difference.normalized()
+ var direction=game.navigation_direction(e.pos,game.player.position)
  var speed=e.speed*(0.2 if e.slow>0 else 1)
  e.hit_time=maxf(0,e.hit_time-delta)
  if e.frozen>0:
@@ -77,14 +77,15 @@ static func step(game: Node, e: Dictionary, delta: float) -> void:
   elif "reposition" in modules and distance<9: direction=-direction; speed=e.speed
   elif "ranged" in modules and distance<config.range*0.8: speed=0
   if e.cooldown<=0:
-   if "proximity" in modules and distance<config.range: begin_attack(game,e,"explode")
+   if "proximity" in modules and e.pos.distance_to(game.player.position+Vector3.UP*0.65)<config.range: begin_attack(game,e,"explode")
    elif "ranged" in modules and distance<config.range: begin_attack(game,e,"shoot")
-   elif "charge" in modules and distance<16: begin_attack(game,e,"charge")
-   elif "slam" in modules and distance<config.range: begin_attack(game,e,"slam")
-   elif "melee" in modules and distance<config.range: begin_attack(game,e,"melee")
- e.pos+=(direction*speed+e.knock)*delta
+   elif "charge" in modules and distance<16 and game.enemy_line_clear(e.pos,game.player.position): begin_attack(game,e,"charge")
+   elif "slam" in modules and distance<config.range and absf(e.pos.y-game.player.position.y)<2.5: begin_attack(game,e,"slam")
+   elif "melee" in modules and distance<config.range and absf(game.player.position.y-e.pos.y)<2.5: begin_attack(game,e,"melee")
+ e["move_direction"]=direction
+ e.pos=game.constrain_enemy_motion(e.pos,e.pos+(direction*speed+e.knock)*delta)
  e.knock=e.knock.move_toward(Vector3.ZERO,delta*15)
  if not "flying" in modules: e.pos=game.avoid_props(e.pos)
- e.pos.x=clampf(e.pos.x,-86,86)
- e.pos.z=clampf(e.pos.z,-86,86)
+ e.pos.x=clampf(e.pos.x,-95,95)
+ e.pos.z=clampf(e.pos.z,-95,95)
  e.pos.y=game.terrain_height(e.pos.x,e.pos.z)+0.65+(1.3+sin(e.age*3)*0.25 if "flying" in modules else 0)

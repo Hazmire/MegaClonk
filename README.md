@@ -2,13 +2,14 @@
 
 A native Godot4.7.2 survival roguelike with ten-minute forest stages, player-triggered
 boss encounters, continued runs, configurable loadouts and permanent silver progression.
-This update adds two bosses, timed minibosses, endless ghosts, supplied forest/UI/audio
-assets, weapon attribute upgrades, tiered NPC shops, combat particles and red damage flashes.
+This update replaces rolling hills with connected flat terraces and wide ramps, integrates
+Quaternius Ranger/Bestiary/Nature assets and retargeted animation, and preserves existing gameplay.
+[Forest guide and limitations](docs/FOREST_OVERHAUL.md).
 
 ## Download and play
 
-- [Windows ZIP](https://github.com/Hazmire/MegaClonk/raw/refs/heads/megaclonk-menu-loadouts/releases/BONK_INFINITY_Windows_x64.zip)
-- [GitHub Actions builds](https://github.com/Hazmire/MegaClonk/actions/runs/40023925327)
+- [Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/forest-playtest-v2/BONK_INFINITY_Windows_x64.zip)
+- [GitHub Actions builds](https://github.com/Hazmire/MegaClonk/actions/workflows/windows-build.yml)
 - [PR #3 — merge into Full-Release](https://github.com/Hazmire/MegaClonk/pull/3)
 
 Extract and launch **BONK_INFINITY.exe**, or **Launch_Compatibility.bat** if Vulkan
@@ -33,16 +34,15 @@ vanish after one successful purchase. Hover stats/equipment in Tab for rules and
 
 [Full rules and controls](docs/CORE_OVERHAUL.md) · [Playtest guide](docs/PLAYTEST.md)
 
-![Supplied forest and combat feedback](docs/images/core-combat.png)
-![Boss health bars](docs/images/core-bosses.png)
+![Terraced Forest](docs/images/forest-overhead.png)
+![Ranger and supplied monsters](docs/images/forest-showcase.png)
 
 ## Assets and limits
 
-Integrated uploads: Jacob, Kurland, ability demo icons, Undead skill/loot icons, forest models,
-Ancient Reliques landmark, RPG sounds, PSX FX and Electric FX. [Credits](ASSET_CREDITS.md).
-The missing Quaternius pack's storage download remains blocked; original distinct enemy/boss
-models remain. The linked scroll pack is paid and absent, so supplied loot scrolls serve as
-tome icons. [Exact asset status](docs/ASSET_ACCESS.md).
+Runtime assets include the supplied Quaternius Ranger, UAL2 animation library, Imp/Puglin and
+Nature MegaKit, alongside existing icons, sounds and particles. [Credits](ASSET_CREDITS.md).
+[Verified package inventory](docs/ASSETS_V1_INVENTORY.md). Only two monster species are supplied;
+behaviour variants retain their existing mechanics. The ranger uses the supplied mannequin head.
 
 ## Development
 
@@ -54,10 +54,10 @@ tools/export.sh
 ```
 
 Use writable BONK_TOOLS_ROOT and BONK_RUNTIME_ROOT on other Linux machines. CI installs
-checksum-verified Godot/templates, imports committed assets, runs five suites and exports
+checksum-verified Godot/templates, imports committed assets, runs eight suites and exports
 Windows x64. Ability/run balance Resources live in assets/config. Extraction of uploaded
 archives is reproducible with tools/integrate_uploads.py (libarchive required for RAR);
 CI uses the already committed runtime assets.
 
-[Validation evidence](VALIDATION.md) · [Milestone checklist](TODO_STAGE_LOOP.md) · [Current status](docs/STATUS.md).
+[Validation evidence](VALIDATION.md) · [Forest milestone checklist](TODO_FOREST_VISUAL.md) · [Current status](docs/STATUS.md).
 Profiles migrate to V3 silver while preserving existing statistics, settings, unlocks and saves.

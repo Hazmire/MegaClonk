@@ -25,6 +25,10 @@ cp docs/CORE_OVERHAUL.md builds/windows/CORE_OVERHAUL.md
 cp assets/vendor/psx_fx/LICENSE.txt builds/windows/PSX_FX_LICENSE.txt
 cp assets/vendor/electric/license.txt builds/windows/ELECTRIC_FX_LICENSE.txt
 cp docs/licenses/PUBLISHER_VERIFICATION.md builds/windows/ASSET_TERMS.md
+cp docs/FOREST_OVERHAUL.md docs/ASSETS_V1_INVENTORY.md builds/windows/
+for pack in ranger animations bestiary nature; do
+ cp "assets/quaternius/$pack/LICENSE.txt" "builds/windows/QUATERNIUS_${pack}_LICENSE.txt"
+done
 cat > builds/windows/Launch_Compatibility.bat <<'BAT'
 @echo off
 cd /d "%~dp0"
@@ -36,7 +40,7 @@ from zipfile import ZipFile, ZIP_DEFLATED
 import subprocess
 commit = subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
 dirty = bool(subprocess.check_output(['git','status','--porcelain'],text=True).strip())
-Path('builds/windows/BUILD_INFO.txt').write_text('MEGACLONK core overhaul and combat feedback\nGodot 4.7.2\nSource commit: '+commit+'\nUncommitted source at build time: '+str(dirty)+'\nWindows execution requires native playtesting.\n')
+Path('builds/windows/BUILD_INFO.txt').write_text('MEGACLONK terraced Forest and character overhaul\nGodot 4.7.2\nSource commit: '+commit+'\nUncommitted source at build time: '+str(dirty)+'\nWindows execution requires native playtesting.\n')
 with ZipFile('builds/BONK_INFINITY_Windows_x64.zip','w',ZIP_DEFLATED) as z:
  for p in sorted(Path('builds/windows').iterdir()):
   if p.is_file(): z.write(p,p.name)

@@ -1,6 +1,6 @@
 class_name EnemyView
 extends Node3D
-# Three instanced parts per active variant; no per-enemy scene/physics/skeleton.
+# Shared textured animation-frame batches; no per-enemy scene/physics/skeleton.
 var batches: Dictionary={}
 var counts: Dictionary={}
 var models: Dictionary={}
@@ -18,52 +18,43 @@ func batch(key: String, mesh: Mesh, capacity: int) -> MultiMesh:
  node.multimesh.mesh=mesh
  node.multimesh.instance_count=capacity
  node.multimesh.visible_instance_count=0
- node.material_override=material
+ # Each baked surface keeps its supplied texture material and feedback shader.
+ # No full-mesh override, which would erase the imported atlas.
  add_child(node)
  batches[key]=node
  return node.multimesh
 func begin_frame() -> void:
  counts.clear()
-func put(key: String, mesh: Mesh, transform: Transform3D, color: Color, capacity: int = 500) -> void:
+func put(key: String, mesh: Mesh, transform: Transform3D, color: Color, capacity: int = 500, spectral: bool=false) -> void:
  var mm=batch(key,mesh,capacity)
  var index=int(counts.get(key,0))
  if index>=capacity: return
  mm.set_instance_transform(index,transform)
  mm.set_instance_color(index,color)
- mm.set_instance_custom_data(index,Color(1 if color==Color("ff0804") else 0,1 if key=="ghost" else 0,0,0))
+ mm.set_instance_custom_data(index,Color(1 if color==Color("ff0804") else 0,1 if spectral else 0,0,0))
  counts[key]=index+1
 func draw_enemy(e: Dictionary, viewer: Vector3) -> void:
- var key=e.variant.id
- if not models.has(key): models[key]=e.variant.mesh if e.variant.has("mesh") else load(e.variant.model)
- var body: Mesh=models[key]
- var limb: Mesh=preload("res://assets/generated/limb.res")
- var direction=viewer-e.pos
+ var model=str(e.variant.get("visual_model","Puglin" if e.kind in [8,9] and e.get("encounter","")!="sovereign" else "Imp"))
+ var walking=e.state in ["move","charging"] and e.speed>0 and not "flying" in e.variant.get("modules",[])
+ var cycle=e.age*clampf(e.speed/2.5,0.4,3)
+ var state="enemy_move" if walking else "enemy_idle"
+ var frame=int(cycle*8)%8 if walking else int(e.age*2)%2
+ if e.pos.distance_squared_to(viewer)>900:frame=(frame/4)*4 if walking else 0
+ var mesh=BestiaryFrames.mesh(model,state,frame)
+ var key=model+state+str(frame)
+ models[e.variant.id]=mesh
+ var direction=e.get("move_direction",viewer-e.pos) if walking else viewer-e.pos
  var facing=atan2(direction.x,direction.z)
- var phase=e.age*e.speed*2.8
- var walking=e.state=="move" and e.speed>0
- var far=e.pos.distance_squared_to(viewer)>324
- if far: phase=floorf(phase*3)/3
- var bob=absf(sin(phase))*0.06 if walking else sin(e.age*3)*0.02
- var tilt=-0.25 if e.state=="windup" else (0.4 if e.state=="charging" else 0.0)
- if e.hit_time>0: tilt=-0.25
- var swell=1+0.18*sin(e.age*24) if e.state=="windup" and e.action=="explode" else 1.0
- var color=Color.WHITE
- if e.hit_time>0: color=Color("ff0804")
- elif e.frozen>0: color=Color("91dfff")
- elif e.poison>0: color=Color("bcff83")
- elif e.burn>0: color=Color("ffc086")
- elif e.state=="windup": color=Color("ffd59f")
- var base=Transform3D(Basis.from_euler(Vector3(tilt,facing,0)).scaled(Vector3.ONE*e.scale*swell),e.pos-Vector3.UP*0.65+Vector3.UP*bob)
- if far and not key in ["wolf","spider","scarab","beetle","bat","wisp","cactus","mushroom"]:
-  if not distant_models.has(key):
-   distant_models[key]=ModelBuilder.bake([{"mesh":body,"transform":Transform3D.IDENTITY,"color":Color.WHITE},{"mesh":limb,"transform":Transform3D(Basis.IDENTITY,Vector3(-0.24,0.6,0)),"color":Color.WHITE},{"mesh":limb,"transform":Transform3D(Basis.IDENTITY,Vector3(0.24,0.6,0)),"color":Color.WHITE}])
-  put(key+"_distant",distant_models[key],base,color)
-  return
- put(key,body,base,color)
- # Multi-legged bodies already include their legs; animate them by body sway.
- if key in ["wolf","spider","scarab","beetle","bat","wisp","cactus","mushroom"]: return
- for side in [-1,1]:
-  var pivot=Transform3D(Basis(Vector3.RIGHT,sin(phase)*side*0.65 if walking else 0),Vector3(side*0.24,0.6,0))
-  put(key+"_legs",limb,base*pivot,color,1000)
+ var tilt=-0.2 if e.state=="windup" else (0.35 if e.state=="charging" else 0.0)
+ if e.hit_time>0:tilt=-0.15
+ var scale_value=e.scale*float(e.variant.get("visual_scale",1))
+ var color: Color=e.variant.get("visual_tint",Color.WHITE)
+ if e.hit_time>0:color=Color("ff0804")
+ elif e.frozen>0:color=Color("91dfff")
+ elif e.poison>0:color=Color("bcff83")
+ elif e.burn>0:color=Color("ffc086")
+ if e.state=="windup" and e.action=="explode":scale_value*=1+0.12*sin(e.age*24)
+ var base=Transform3D(Basis.from_euler(Vector3(tilt,facing,0)).scaled(Vector3.ONE*scale_value),e.pos-Vector3.UP*0.65)
+ put(key,mesh,base,color,500,e.get("encounter","")=="ghost")
 func end_frame() -> void:
  for key in batches: batches[key].multimesh.visible_instance_count=int(counts.get(key,0))

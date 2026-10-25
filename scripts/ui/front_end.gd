@@ -385,7 +385,7 @@ func _process(delta: float) -> void:
  if game.mode!="run":
   game.message_time-=delta
   if game.message_time<=0:game.notice.text=""
- if menu.visible and is_instance_valid(menu_camera) and game.mode in ["menu","play","unlocks","quests","settings"]:
+ if menu.visible and is_instance_valid(menu_camera) and menu_camera.is_inside_tree() and game.mode in ["menu","play","unlocks","quests","settings"]:
   if preview_mode=="home":
    orbit+=delta*0.035;menu_camera.h_offset=0;menu_camera.position=Vector3(cos(orbit)*28,16,sin(orbit)*28);menu_camera.look_at(Vector3(0,0,0))
   else:

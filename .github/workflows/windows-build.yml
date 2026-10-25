@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Install checksum-verified Godot 4.7.2 and export templates
         run: python3 tools/install_engine.py
-      - name: Import project and run all five regression suites
+      - name: Import project and run all eight regression and seeded-world suites
         run: tools/validate.sh
       - name: Export Windows x64 with embedded game resources
         run: tools/export.sh

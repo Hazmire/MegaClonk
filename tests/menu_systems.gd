@@ -115,7 +115,7 @@ func run() -> void:
  check(game.buy_shop(shop,1,15) and game.gold==15 and shop.sold==[1],"Shop purchase applies item and deducts gold")
  check(not game.buy_shop(shop,1,15) and game.gold==15,"Shop stock cannot be purchased twice")
  check(not game.buy_shop({"offers":[1]},1,1),"Shop validates configured price")
- check(game.terrain_height(88,0)>18 and game.terrain_height(-88,0)>18 and game.terrain_height(0,88)>18,"Forest cliff boundary covers world edges")
+ check(game.terrain_height(106,0)>18 and game.terrain_height(-106,0)>18 and game.terrain_height(0,106)>18,"Forest cliff boundary covers world edges")
  game.loadout_runtime.reset("seer","ghost");game.loadout_runtime.cooldown=42;game.selected_trait="seer";game.selected_ultimate="ghost";game.frontend.minimap.reset(true)
  check(game.save_run("user://menu-loadout-run.json"),"Run saves loadout and ultimate state")
  game.begin_run()

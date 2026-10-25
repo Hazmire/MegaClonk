@@ -40,3 +40,15 @@ Original project code, procedural enemy/boss geometry/poses, terrain generation,
 shaders, weapon geometry and supplemental effects were created for MEGACLONK.
 The Quaternius Bestiary and paid 48 Scroll packs are not integrated; see docs/ASSET_ACCESS.md.
 Godot engine notices are bundled separately in GODOT_COPYRIGHT.txt.
+
+## Quaternius assets-v1 Forest integration
+
+Creator: Quaternius. Source release: https://github.com/Hazmire/MegaClonk/releases/tag/assets-v1
+Publisher: https://quaternius.com/
+
+- Modular Character Outfits – Fantasy Standard: Male_Ranger outfit/rig/textures, CC0. Texture import capped at 2K; retargeted UAL2 clips and mannequin head added. `assets/quaternius/ranger/`.
+- Universal Animation Library 2 Standard: non-root-motion clips and mannequin head geometry, CC0. Rest-space retargeting, movement arm adaptation, reversed lay/death and original crouch stepping. `assets/quaternius/animations/`.
+- Bestiary – Dungeon Monsters Kit Standard: Imp/Puglin, Quaternius Asset License v1.0 (2026-08-28). Retargeted idle/walk baked into instanced meshes; tints/scales/damage shader. `assets/quaternius/bestiary/` and `baked/`.
+- Stylized Nature MegaKit Standard: nine trees/foliage/rock models, CC0. Instanced seeded placement and simplified colliders. `assets/quaternius/nature/`.
+
+Complete licences are retained in each pack directory and Windows distribution. Bestiary is not CC0. See `docs/ASSETS_V1_INVENTORY.md` for verified archive hashes and limitations.

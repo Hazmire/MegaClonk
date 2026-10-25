@@ -1,3 +1,8 @@
+# Current work
+
+See [Forest visual milestone](TODO_FOREST_VISUAL.md) and [implementation guide](docs/FOREST_OVERHAUL.md).
+Earlier milestone history follows.
+
 # Gameplay, movement and visual overhaul
 
 Baseline: branch `bonk-infinity-playable`, Godot 4.7.2. Existing 30 checks pass; 400-enemy update + spatial rebuild mean 1.61 ms/tick (headless, rendering excluded).

@@ -166,6 +166,11 @@ func run() -> void:
  game.health=100
  for i in 400: game.spawn_enemy(i%8)
  game.rebuild_grid()
+ # Load each shared animation frame before measuring steady-state simulation.
+ for model in ["Imp","Puglin"]:
+  for frame in 8:BestiaryFrames.mesh(model,"enemy_move",frame)
+  for frame in 2:BestiaryFrames.mesh(model,"enemy_idle",frame)
+ for i in 10:game.update_enemies(1.0/60);game.rebuild_grid()
  var began=Time.get_ticks_usec()
  for i in 120:
   game.update_enemies(1.0/60)

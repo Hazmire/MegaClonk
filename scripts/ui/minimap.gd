@@ -5,19 +5,19 @@ var explored: Dictionary={}
 var reveal_all=false
 func reset(revealed: bool) -> void:
  explored.clear(); reveal_all=revealed
-func cell(pos: Vector3) -> Vector2i: return Vector2i(floori((pos.x+90)/10),floori((pos.z+90)/10))
+func cell(pos: Vector3) -> Vector2i: return Vector2i(floori((pos.x+96)/12),floori((pos.z+96)/12))
 func reveal(pos: Vector3) -> void:
  var c=cell(pos)
  for x in range(c.x-2,c.x+3):
   for y in range(c.y-2,c.y+3): explored[Vector2i(x,y)]=true
 func visible_at(pos: Vector3) -> bool: return reveal_all or explored.has(cell(pos))
-func point(pos: Vector3) -> Vector2: return Vector2((pos.x+90)/180*size.x,(pos.z+90)/180*size.y)
+func point(pos: Vector3) -> Vector2: return Vector2((pos.x+96)/192*size.x,(pos.z+96)/192*size.y)
 func _draw() -> void:
  draw_rect(Rect2(Vector2.ZERO,size),Color("101c21"))
- for x in 18:
-  for y in 18:
+ for x in 16:
+  for y in 16:
    if reveal_all or explored.has(Vector2i(x,y)):
-    draw_rect(Rect2(Vector2(x,y)*size/18,size/18+Vector2.ONE),Color("344f42"))
+    draw_rect(Rect2(Vector2(x,y)*size/16,size/16+Vector2.ONE),Color("344f42"))
  if not is_instance_valid(game) or not is_instance_valid(game.player): return
  for pos in game.landmarks:
   if visible_at(pos):draw_circle(point(pos),3,Color("c3c7a1"))

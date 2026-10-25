@@ -22,7 +22,7 @@ func run():
  for seed_value in range(30):
   for point in [Vector2(48,24),Vector2(-48,-24),Vector2(0,48),Vector2(-42,30)]:all_reachable=all_reachable and ForestMap.reachable(seed_value,point)
   for x in range(-66,67,6):
-   for z in range(-66,67,6):smooth=smooth and absf(ForestMap.height(seed_value,x+3,z)-ForestMap.height(seed_value,x,z))<3
+   for z in range(-66,67,6):smooth=smooth and ForestMap.normal(seed_value,x,z).y>=cos(deg_to_rad(28))
  check(all_reachable,"30 forest seeds have connected portal/objective regions")
  check(smooth,"Broad planar terrain has no steep internal noise spikes")
  var random=RandomNumberGenerator.new();random.seed=25
@@ -34,7 +34,7 @@ func run():
  check(not "ricochet" in WeaponUpgrades.pool(0) and not "count" in WeaponUpgrades.pool(13),"Inapplicable attributes excluded from melee/beam pools")
  game=load("res://scenes/main/main.tscn").instantiate();root.add_child(game);await process_frame
  game.progress=Progress.new();game.progress.storage_path="user://milestone-profile.json";game.selected_weapon=7;game.next_run_seed=453;game.selected_trait="momentum";game.begin_run();game.mode="pause";game.player.active=false;game.enemies.clear();game.stats.crit=0
- check(ImportedArt.mesh("res://assets/vendor/environment/Tree_1.fbx",7).get_surface_count()>0,"Supplied forest model loads and batches")
+ check(ImportedArt.mesh("res://assets/quaternius/nature/CommonTree_1.gltf",7).get_surface_count()>0,"Supplied forest model loads and batches")
  check(UIAssets.icon("weapons","0").resource_path.contains("vendor/weapons"),"Undead skill icon is used")
  check(UIAssets.icon("items","0").resource_path.contains("vendor/items"),"Undead loot icon is used")
  check(game.sound_bank.has("hit") and game.sound_bank.has("level"),"Supplied sound events load")

@@ -1,3 +1,38 @@
+# Forest overhaul validation — 2026-10-25
+
+Pinned Godot 4.7.2. Final `tools/validate.sh`: **335 checks, zero failures** across integration
+31, movement/variants78, menus55, stage loop39, milestones112, physical traversal/animation20.
+Additionally, 100 graph/determinism layouts and 100 physical stage worlds pass on first attempt;
+zero repairs, zero final failures. The physical suite uses 5,208 rays, checks decorated flow-field
+reachability and Godot native paths to elevated portals. Reports: `docs/validation/`.
+
+Player CharacterBody and enemy simulation traverse a real planar ramp uphill/downhill.
+Stage rebuild disposes old collision/nav and reproduces seeded decoration. Actual baked mesh
+vertices differ between walk samples for both monsters. All 36 weapon patterns retain damage.
+
+Rendered inspection: Forest overview, grounded player idle/run/jump/fall/crouch/slide, sixteen
+behaviour configurations using Imp/Puglin, navigation overlay and asset showcase, plus the existing
+menu/combat visual fixtures, under Xvfb/Mesa OpenGL. Committed examples: `docs/images/forest-*`.
+No script/resource errors; software-driver VSync warnings are expected.
+
+400 enemies, steady-state update + spatial rebuild: **5.32 ms/tick**, rendering excluded.
+Earlier baseline this session: 4.16 ms/tick (~28% increase). Cold animation-resource loading initially
+inflated the measurement to 30 ms/tick; resources now prewarm during stage setup and the measured
+loop warms explicitly. This is not a target-GPU FPS guarantee or a full late-game combat profile.
+100 physical map builds/checks took 24.565 seconds total; graph timings are in the JSON report.
+
+Validation fixed reversed terrain winding, stale asynchronous navigation iterations and the old
+region remaining registered during rebuild. Native navigation now uses synchronous iteration and
+explicit old-region detachment; query budgets cover the full map rather than the default4096 cells.
+A detached menu-camera look_at was also corrected. Tests retain true 3D explosion proximity;
+paused ground-combat fixtures now place the player on the ground.
+
+Windows export/publication evidence is maintained in `releases/BUILD_INFO.md`.
+Native Windows execution, audible speaker output and stable60FPS on gaming hardware remain unverified.
+
+---
+Earlier release history follows.
+
 # Validation record — 2026-10-23
 
 Engine: official Godot `4.7.2.stable.official.ed1daf0bf`, Linux x86_64. Engine archive and export-template archive were verified against official release SHA512 digests before use. No TLS or signature checks were disabled.

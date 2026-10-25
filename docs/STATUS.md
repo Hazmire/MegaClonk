@@ -1,3 +1,7 @@
+# Current Forest update
+
+The supplied assets-v1 packages are now downloaded and integrated. See [Forest overhaul](FOREST_OVERHAUL.md) and [verified inventory](ASSETS_V1_INVENTORY.md) for current terrain, models, controls and limitations. Earlier release notes below are historical.
+
 # Current status
 
 The core gameplay milestones and combat-feedback update are implemented:
