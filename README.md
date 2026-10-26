@@ -2,11 +2,10 @@
 
 A native Godot4.7.2 survival roguelike with ten-minute forest stages, player-triggered
 boss encounters, continued runs, configurable loadouts and permanent silver progression.
-The latest increment adds a shared five-tier rarity foundation and weighted reward selection.
-The larger terrain, XP and interface overhaul is pending; see [milestone status](TODO_RARITY_WORLD.md)
-and [rarity tests and architecture](docs/rewards/RARITY_FOUNDATION.md). Previous combat polish
-includes cliff dropping, simple player animation, weapon effects and forest atmosphere.
-[Scope and limitations](docs/POLISH_UPDATE.md) · [Before/after measurements](docs/PERFORMANCE_POLISH.md).
+The latest source adds a four-band vertical Forest, adaptive ramps, a layered cloud sky,
+and constrained world-object placement, following the shared five-tier rarity foundation.
+See [world guide and twelve previews](docs/VERTICAL_FOREST.md), [performance](docs/VERTICAL_PERFORMANCE.md),
+and [remaining XP/UI milestones](TODO_RARITY_WORLD.md).
 
 ## Download and play
 

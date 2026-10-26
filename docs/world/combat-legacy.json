@@ -1,0 +1,175 @@
+{
+  "aoe250": {
+    "damage_numbers_peak": 0,
+    "death_pipeline": {
+      "mean_ms": 0.0143875,
+      "p95_ms": 0.029,
+      "p99_ms": 0.982,
+      "worst_ms": 0.982
+    },
+    "draw_calls_peak": 0.0,
+    "enemy_count_end": 0,
+    "engine_physics": {
+      "mean_ms": 0.0684375000000001,
+      "p95_ms": 0.072,
+      "p99_ms": 0.072,
+      "worst_ms": 0.072
+    },
+    "flipbooks_peak": 24.0,
+    "fps_from_frame_mean": 145.943589154202,
+    "frame": {
+      "mean_ms": 6.8519625,
+      "p95_ms": 7.891,
+      "p99_ms": 10.878,
+      "worst_ms": 10.878
+    },
+    "hit_pipeline": {
+      "mean_ms": 0.0145,
+      "p95_ms": 0.001,
+      "p99_ms": 1.118,
+      "worst_ms": 1.118
+    },
+    "memory_bytes_peak": 293486125.0,
+    "node_peak": 967.0,
+    "script_work": {
+      "mean_ms": 0.90135,
+      "p95_ms": 6.95,
+      "p99_ms": 9.608,
+      "worst_ms": 9.608
+    },
+    "xp_entities_peak": 15
+  },
+  "context": {
+    "engine": "4.7.2-stable (official)",
+    "note": "Frame durations include process-frame scheduling; script_work isolates manually advanced combat. Dummy audio. Physics monitor excludes the manually driven enemy simulation.",
+    "origin": [
+      -71.0,
+      12.0200004577637,
+      -71.0
+    ],
+    "rendered": false,
+    "renderer": "headless",
+    "samples_per_case": 80,
+    "terrain_version": 3
+  },
+  "continuous_weapons": {
+    "damage_numbers_peak": 0,
+    "death_pipeline": {
+      "mean_ms": 0.0128375,
+      "p95_ms": 0.014,
+      "p99_ms": 0.02,
+      "worst_ms": 0.02
+    },
+    "draw_calls_peak": 0.0,
+    "enemy_count_end": 100,
+    "engine_physics": {
+      "mean_ms": 0.026,
+      "p95_ms": 0.026,
+      "p99_ms": 0.026,
+      "worst_ms": 0.026
+    },
+    "flipbooks_peak": 24.0,
+    "fps_from_frame_mean": 145.576035273073,
+    "frame": {
+      "mean_ms": 6.8692625,
+      "p95_ms": 6.959,
+      "p99_ms": 7.056,
+      "worst_ms": 7.056
+    },
+    "hit_pipeline": {
+      "mean_ms": 0.0002875,
+      "p95_ms": 0.001,
+      "p99_ms": 0.001,
+      "worst_ms": 0.001
+    },
+    "memory_bytes_peak": 291451113.0,
+    "node_peak": 888.0,
+    "script_work": {
+      "mean_ms": 2.5489625,
+      "p95_ms": 3.065,
+      "p99_ms": 3.827,
+      "worst_ms": 3.827
+    },
+    "xp_entities_peak": 0
+  },
+  "deaths100": {
+    "damage_numbers_peak": 0,
+    "death_pipeline": {
+      "mean_ms": 0.00585,
+      "p95_ms": 0.012,
+      "p99_ms": 0.385,
+      "worst_ms": 0.385
+    },
+    "draw_calls_peak": 0.0,
+    "enemy_count_end": 0,
+    "engine_physics": {
+      "mean_ms": 0.0720000000000001,
+      "p95_ms": 0.072,
+      "p99_ms": 0.072,
+      "worst_ms": 0.072
+    },
+    "flipbooks_peak": 24.0,
+    "fps_from_frame_mean": 142.131258216963,
+    "frame": {
+      "mean_ms": 7.03575,
+      "p95_ms": 7.009,
+      "p99_ms": 23.855,
+      "worst_ms": 23.855
+    },
+    "hit_pipeline": {
+      "mean_ms": 0.0102125,
+      "p95_ms": 0.001,
+      "p99_ms": 0.787,
+      "worst_ms": 0.787
+    },
+    "memory_bytes_peak": 292457145.0,
+    "node_peak": 966.0,
+    "script_work": {
+      "mean_ms": 0.777025,
+      "p95_ms": 6.01,
+      "p99_ms": 21.913,
+      "worst_ms": 21.913
+    },
+    "xp_entities_peak": 13
+  },
+  "enemies250": {
+    "damage_numbers_peak": 0,
+    "death_pipeline": {
+      "mean_ms": 0.0292625,
+      "p95_ms": 0.03,
+      "p99_ms": 0.042,
+      "worst_ms": 0.042
+    },
+    "draw_calls_peak": 0.0,
+    "enemy_count_end": 250,
+    "engine_physics": {
+      "mean_ms": 805.1248,
+      "p95_ms": 4293.888,
+      "p99_ms": 4293.888,
+      "worst_ms": 4293.888
+    },
+    "flipbooks_peak": 24.0,
+    "fps_from_frame_mean": 145.602265571252,
+    "frame": {
+      "mean_ms": 6.868025,
+      "p95_ms": 6.956,
+      "p99_ms": 11.453,
+      "worst_ms": 11.453
+    },
+    "hit_pipeline": {
+      "mean_ms": 0.00035,
+      "p95_ms": 0.001,
+      "p99_ms": 0.001,
+      "worst_ms": 0.001
+    },
+    "memory_bytes_peak": 291891369.0,
+    "node_peak": 794.0,
+    "script_work": {
+      "mean_ms": 5.7587625,
+      "p95_ms": 5.943,
+      "p99_ms": 10.577,
+      "worst_ms": 10.577
+    },
+    "xp_entities_peak": 0
+  }
+}

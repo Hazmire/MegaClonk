@@ -7,10 +7,14 @@ const CELL=2.0
 const HALF=96.0
 const SIDE=96
 static var cache: Dictionary={}
+static var generation_version=4
 static func layout(seed_value: int) -> Dictionary:
- if cache.has(seed_value):return cache[seed_value]
+ var cache_key=seed_value
+ if cache.has(cache_key) and int(cache[cache_key].terrain_version)==generation_version:return cache[cache_key]
+ var started=Time.get_ticks_usec()
  var rng=RandomNumberGenerator.new();rng.seed=seed_value
- var draft=draft_regions(rng)
+ var draft=ForestRegions.draft(rng,SETTINGS) if generation_version>=4 else draft_regions(rng)
+ var draft_done=Time.get_ticks_usec()
  var regions: Array=draft.regions;var ramps: Array=draft.ramps
  # Objectives/spawn are selected from verified flat interiors before scenery.
  var peripheral=[]
@@ -18,23 +22,23 @@ static func layout(seed_value: int) -> Dictionary:
   var r: Rect2=region.rect
   if r.position.x==-96 or r.position.y==-96 or r.end.x==96 or r.end.y==96:peripheral.append(region.id)
  var spawn_region=peripheral[rng.randi_range(0,peripheral.size()-1)]
- var spawn2: Vector2=regions[spawn_region].rect.get_center()
+ var spawn2: Vector2=regions[spawn_region].get("anchor",regions[spawn_region].rect.get_center())
  var portal_region=spawn_region;var farthest=0.0
  for region in regions:
   var distance=region.rect.get_center().distance_to(spawn2)
   if distance>farthest:farthest=distance;portal_region=region.id
- var portal2: Vector2=regions[portal_region].rect.get_center()
+ var portal2: Vector2=regions[portal_region].get("anchor",regions[portal_region].rect.get_center())
  var pois=[]
  for i in 12:
   var region=regions[(i+spawn_region+1)%regions.size()]
   var center: Vector2=region.rect.get_center()
   var offset=Vector2(-4,0) if i<regions.size() else Vector2(4,0)
-  var point=center+offset
+  var point=region.anchors[1+(int(i/regions.size())%maxi(1,region.anchors.size()-1))] if generation_version>=4 else center+offset
   pois.append(Vector3(point.x,region.height,point.y))
  var elite_region=(spawn_region+int(regions.size()/2))%regions.size()
  while elite_region in [spawn_region,portal_region]:elite_region=(elite_region+1)%regions.size()
- var elite2: Vector2=regions[elite_region].rect.get_center()
- var data={"seed":seed_value,"regions":regions,"ramps":ramps,"pois":pois,
+ var elite2: Vector2=regions[elite_region].get("anchor",regions[elite_region].rect.get_center())
+ var data={"seed":seed_value,"terrain_version":generation_version,"regions":regions,"ramps":ramps,"pois":pois,
   "spawn":Vector3(spawn2.x,regions[spawn_region].height,spawn2.y),"spawn_region":spawn_region,
   "elite":Vector3(elite2.x,regions[elite_region].height,elite2.y),
   "portal":Vector3(portal2.x,regions[portal_region].height,portal2.y),"generation_attempts":draft.attempts}
@@ -45,8 +49,10 @@ static func layout(seed_value: int) -> Dictionary:
   for x in SIDE:
    var p=Vector2(-96+x*2+1,-96+z*2+1)
    var region=0
-   for candidate in regions:
-    if candidate.rect.has_point(p):region=candidate.id;break
+   if generation_version>=4:region=ForestRegions.region_at(regions,ramps,p,seed_value,SETTINGS.cliff_edge_variation)
+   else:
+    for candidate in regions:
+     if candidate.rect.has_point(p):region=candidate.id;break
    var plane=Vector3(0,regions[region].height,0) # y = plane.x*x + plane.y + plane.z*z
    for ramp in ramps:
     if ramp.rect.has_point(p):
@@ -56,6 +62,7 @@ static func layout(seed_value: int) -> Dictionary:
      break
    planes.append(plane)
  data.planes=planes
+ var planes_done=Time.get_ticks_usec()
  var links=graph(data);var pending=PackedInt32Array([index(0,0)]);var reached={pending[0]:true};var head=0
  while head<pending.size():
   var at=pending[head];head+=1
@@ -72,8 +79,11 @@ static func layout(seed_value: int) -> Dictionary:
   for i in pois.size():pois[i].y=0.0
   data.portal.y=0.0;data.spawn.y=0.0;data.elite.y=0.0
   push_warning("Repaired forest seed %s: %s"%[seed_value,data.failure_reason])
+ var graph_done=Time.get_ticks_usec()
+ if generation_version>=4 and data.first_attempt_valid:ForestPlacement.populate(data,SETTINGS)
+ data.generation_metrics={"draft_ms":(draft_done-started)/1000.0,"planes_ms":(planes_done-draft_done)/1000.0,"connectivity_ms":(graph_done-planes_done)/1000.0,"placement_ms":(Time.get_ticks_usec()-graph_done)/1000.0,"total_ms":(Time.get_ticks_usec()-started)/1000.0}
  if cache.size()>=4:cache.erase(cache.keys()[0])
- cache[seed_value]=data;return data
+ cache[cache_key]=data;return data
 # Independently partition each seeded row. Different row/column counts and cuts
 # create T junctions and irregular adjacency graphs, rather than a rotated 3x3 grid.
 static func partition(rng: RandomNumberGenerator,count: int) -> Array:
@@ -90,9 +100,9 @@ static func draft_regions(rng: RandomNumberGenerator) -> Dictionary:
   for row in rows.size()-1:
    var columns=partition(rng,rng.randi_range(2,4))
    for col in columns.size()-1:
-    regions.append({"id":regions.size(),"rect":Rect2(columns[col],rows[row],columns[col+1]-columns[col],rows[row+1]-rows[row]),"height":float(rng.randi_range(0,2)*SETTINGS.elevation_step)})
+    regions.append({"id":regions.size(),"rect":Rect2(columns[col],rows[row],columns[col+1]-columns[col],rows[row+1]-rows[row]),"height":float(rng.randi_range(0,2)*6.0)})
   # Ensure a mixed elevation palette without imposing any spatial relationship.
-  var high=rng.randi_range(0,regions.size()-1);regions[high].height=SETTINGS.elevation_step*2
+  var high=rng.randi_range(0,regions.size()-1);regions[high].height=12.0
   regions[(high+1)%regions.size()].height=0.0
   for a in regions.size():
    for b in range(a+1,regions.size()):
@@ -124,7 +134,7 @@ static func draft_regions(rng: RandomNumberGenerator) -> Dictionary:
      if selected.rect.grow(1).intersects(ramp.rect.grow(1)):clear=false;break
     if not clear:continue
     ramp.backbone=not loops;ramps.append(ramp);parents[a]=b;used[str(ramp.from)+":"+str(ramp.to)]=true
-    if loops and ramps.size()>=regions.size()+SETTINGS.extra_connections:break
+    if loops and ramps.size()>=regions.size()+2:break
    if not loops and ramps.size()!=regions.size()-1:break
   if ramps.size()>=regions.size()-1:return {"regions":regions,"ramps":ramps,"attempts":attempt+1}
  assert(false,"Unable to construct connected region graph")
@@ -184,7 +194,7 @@ static func top(data: Dictionary,i: int) -> PackedVector3Array:
  var x=-96+(i%SIDE)*2;var z=-96+int(i/SIDE)*2;var p: Vector3=data.planes[i]
  return PackedVector3Array([Vector3(x,plane_height(p,x,z),z),Vector3(x+2,plane_height(p,x+2,z),z),Vector3(x+2,plane_height(p,x+2,z+2),z+2),Vector3(x,plane_height(p,x,z+2),z+2)])
 static func geometry(data: Dictionary) -> ArrayMesh:
- var tool=SurfaceTool.new();tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+ var tool=SurfaceTool.new();tool.begin(Mesh.PRIMITIVE_TRIANGLES);tool.set_smooth_group(-1)
  for i in SIDE*SIDE:
   var corners=top(data,i);var sloped=absf(data.planes[i].x)+absf(data.planes[i].z)>0.001
   var color=Color("526b3c").srgb_to_linear() if sloped else Color("4d713f").lightened(float(data.planes[i].y)/160).srgb_to_linear()
@@ -218,4 +228,5 @@ static func wall_vertex(point: Vector3,seed_value: int,t: float) -> Vector3:
  var noise=sin(point.x*0.074+float(seed_value%31))*cos(point.z*0.093+float(seed_value%17))
  var height=84+noise*16
  var out=-0.4 if t<=0.25 else (t-0.25)*12+sin(point.x*0.18+point.z*0.15)*t*2
- return Vector3(point.x,-4+(height+4)*t,point.z)+radial*out
+ var base_height=point.y if generation_version>=4 else 0.0
+ return Vector3(point.x,base_height-4+(height+4)*t,point.z)+radial*out

@@ -1,3 +1,7 @@
+# Latest increment: Vertical Forest
+
+Milestones 2–4 add four elevation bands, adaptive ramps, layered sky, fog and seeded constrained object placement. Version-3 saves retain their old terrain. See VERTICAL_FOREST.md and VERTICAL_PERFORMANCE.md. XP gems and level-up/chest/shop/build UI remain pending in TODO_RARITY_WORLD.md. Windows publication verification is in progress. Historical status follows.
+
 # Latest combat and atmosphere polish
 
 See [current update](POLISH_UPDATE.md), [performance evidence](PERFORMANCE_POLISH.md) and [weapon audit](WEAPON_VFX_AUDIT.md). Older notes below are historical. The Mesa shutdown diagnostic and Windows/GPU verification limits are disclosed in those guides.

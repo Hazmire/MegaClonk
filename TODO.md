@@ -1,3 +1,7 @@
+# Active milestone status
+
+The rarity foundation and Vertical Forest terrain/atmosphere/placement increments are implemented. See [remaining XP and reward UI work](TODO_RARITY_WORLD.md), [world previews](docs/VERTICAL_FOREST.md) and [performance](docs/VERTICAL_PERFORMANCE.md). Earlier history follows.
+
 # Current work
 
 See [performance and polish checklist](TODO_POLISH.md) and [update guide](docs/POLISH_UPDATE.md). Earlier milestones follow.

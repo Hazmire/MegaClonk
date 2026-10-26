@@ -33,7 +33,7 @@ func run():
  check("ricochet" in WeaponUpgrades.pool(7) and "velocity" in WeaponUpgrades.pool(7),"Revolver supports ricochet and velocity")
  check(not "ricochet" in WeaponUpgrades.pool(0) and not "count" in WeaponUpgrades.pool(13),"Inapplicable attributes excluded from melee/beam pools")
  game=load("res://scenes/main/main.tscn").instantiate();root.add_child(game);await process_frame
- game.progress=Progress.new();game.progress.storage_path="user://milestone-profile.json";game.selected_weapon=7;game.next_run_seed=453;game.selected_trait="momentum";game.map_seed_override=9;game.begin_run();game.mode="pause";game.player.active=false;game.enemies.clear();game.stats.crit=0
+ game.progress=Progress.new();game.progress.storage_path="user://milestone-profile.json";game.selected_weapon=7;game.next_run_seed=453;game.selected_trait="momentum";game.map_seed_override=9;game.begin_run();game.terrain_version=3;game.build_stage();game.resume();game.mode="pause";game.player.active=false;game.enemies.clear();game.stats.crit=0
  check(ImportedArt.mesh("res://assets/quaternius/nature/CommonTree_1.gltf",7).get_surface_count()>0,"Supplied forest model loads and batches")
  check(UIAssets.icon("weapons","0").resource_path.contains("vendor/weapons"),"Undead skill icon is used")
  check(UIAssets.icon("items","0").resource_path.contains("vendor/items"),"Undead loot icon is used")

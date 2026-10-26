@@ -10,6 +10,8 @@ func verify(condition: bool, description: String) -> void:
  else: print("PASS: " + description)
 func _initialize() -> void:
  call_deferred("run")
+# Combat fixtures retain the original seed-9 flat patch; new terrain has
+# dedicated 200-seed collision/navigation and traversal coverage.
 func run() -> void:
  var stats = Catalog.base_stats()
  verify(Catalog.damage(10,stats,false)==10,"Base damage")
@@ -39,7 +41,7 @@ func run() -> void:
  game.sandbox=true
  # Deterministic flat combat fixture; map variety has separate 100-seed coverage.
  game.map_seed_override=9
- game.begin_run()
+ game.begin_run();game.terrain_version=3;game.build_stage();game.resume()
  game.settings.invincible=true
  game.spawn_clock=999
  game.weapons.clear()

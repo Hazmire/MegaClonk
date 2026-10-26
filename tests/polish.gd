@@ -13,7 +13,7 @@ func run():
  await physics_frame;await physics_frame
  verify(game.world.get_node("TerraceTerrain").material_override.shader.resource_path.ends_with("forest_floor.gdshader"),"World-space floor shader replaces flat ground")
  var env=game.world.get_child(0).environment
- verify(env.background_mode==Environment.BG_SKY and env.sky!=null and env.fog_density>=0.01,"Dark blue sky and meaningful distance fog are configured")
+ verify(env.background_mode==Environment.BG_SKY and env.sky!=null and env.fog_enabled and env.fog_density>=0.003 and env.fog_density<=0.008,"Layered blue sky and readable distance fog are configured")
  var min_crest=1000.0
  for i in range(-96,97,8):min_crest=minf(min_crest,ForestMap.wall_vertex(Vector3(i,0,96),9,1).y)
  verify(min_crest>60,"Irregular rocky perimeter rises above sixty metres")
@@ -63,7 +63,7 @@ func run():
  # Find real downward edges for all orientations and both elevation differences.
  var passed=0;var attempted=0
  for direction in [Vector3.RIGHT,Vector3.LEFT,Vector3.BACK,Vector3.FORWARD]:
-  for height in [6,12]:
+  for height in [12,24]:
    var found={}
    for index in game.map_layout.planes.size():
     var x=-95+(index%96)*2;var z=-95+int(index/96)*2
@@ -75,7 +75,7 @@ func run():
      if game.forest_navigation.blocked.has(ForestMap.index(point.x,point.z)) or ForestMap.normal(9,point.x,point.z).y<0.99:clear=false
     if clear:found={"high":high,"low":low+direction*5};break
    if found.is_empty():continue
-   attempted+=1;game.enemies.clear();game.player.position=found.low-Vector3.UP*0.65
+   attempted+=1;game.enemies.clear();game.player.position=found.low-Vector3.UP*0.65;game.player.position.y=game.terrain_height(game.player.position.x,game.player.position.z);game.forest_navigation.refresh(game.player.position)
    var e=game.spawn_enemy(0,found.high);e.cooldown=999;var fell=false;var min_y=e.pos.y
    for tick in 700:
     EnemySimulation.step(game,e,1.0/60)

@@ -27,8 +27,19 @@ func fill(count: int,near: bool=false):
 func run():
  rendered=DisplayServer.get_name()!="headless";samples=40 if rendered else 80
  game=load("res://scenes/main/main.tscn").instantiate();root.add_child(game);await process_frame
- game.map_seed_override=9;game.next_run_seed=1234;game.sandbox=true;game.settings.focus_pause=false;game.settings.invincible=true;game.begin_run();game.mode="pause";Input.mouse_mode=Input.MOUSE_MODE_VISIBLE;game.player.active=false;game.set_physics_process(false);game.player.position=Vector3(0,0.02,0)
- var cam=Camera3D.new();game.world.add_child(cam);cam.position=Vector3(8,12,15);cam.look_at(Vector3(0,1,0));cam.current=true
+ game.map_seed_override=9;game.next_run_seed=1234;game.sandbox=true;game.settings.focus_pause=false;game.settings.invincible=true;game.begin_run();game.mode="pause";Input.mouse_mode=Input.MOUSE_MODE_VISIBLE;game.player.active=false;game.set_physics_process(false)
+ for argument in OS.get_cmdline_user_args():
+  if argument=="--legacy-terrain":game.terrain_version=3;game.build_stage();game.player.active=false
+ var origin=game.map_layout.regions[0].get("anchor",game.map_layout.regions[0].rect.get_center())
+ var candidates=ForestPlacement.candidates(game.map_layout)
+ for candidate in candidates:
+  var clear=true
+  for i in 16:
+   var point=candidate+Vector3(cos(i*TAU/16),0,sin(i*TAU/16))*18
+   if maxf(absf(point.x),absf(point.z))>90 or absf(game.terrain_height(point.x,point.z)-candidate.y)>0.1:clear=false;break
+  if clear:origin=Vector2(candidate.x,candidate.z);break
+ var center=Vector3(origin.x,game.terrain_height(origin.x,origin.y)+0.02,origin.y);game.player.position=center
+ var cam=Camera3D.new();game.world.add_child(cam);cam.position=center+Vector3(8,12,15);cam.look_at(center+Vector3.UP);cam.current=true
  await physics_frame;await physics_frame
  var scenarios=["idle","moving","enemies25","enemies100","enemies250","continuous_weapons","repeated_hits","deaths100","aoe250","boss","elite","grass_off","wind_on","wind_off"]
  for arg in OS.get_cmdline_user_args():
@@ -39,9 +50,9 @@ func run():
   if name in ["continuous_weapons","repeated_hits","deaths100","aoe250"]:fill(250 if name=="aoe250" else 100,true)
   if name=="continuous_weapons":
    for id in [1,4,7,33]:game.equip(id)
-  if name=="boss":game.spawn_enemy(8,Vector3(10,0,0))
+  if name=="boss":game.spawn_enemy(8,center+Vector3(10,0,0))
   if name=="elite":
-   for i in 3:game.spawn_enemy(13,Vector3(i*3,0,-8))
+   for i in 3:game.spawn_enemy(13,center+Vector3(i*3,0,-8))
   if name=="grass_off":
    for key in game.prop_batches:
     if 'grass' in str(key).to_lower() or 'Fern' in str(key) or 'Flower' in str(key):game.prop_batches[key].hide()
@@ -51,7 +62,7 @@ func run():
   var frame=[];var work=[];var hits=[];var deaths=[];var draw=[];var physics=[];var nodes=[];var particles=[];var memory=[];var max_pickups=0;var max_numbers=0
   for step in samples:
    var began=Time.get_ticks_usec();game.elapsed+=1.0/60
-   if name=="moving":game.player.position.x=sin(float(step)*0.03)*3
+   if name=="moving":game.player.position.x=center.x+sin(float(step)*0.03)*3
    game.update_enemies(1.0/60);game.rebuild_grid()
    if name=="continuous_weapons":game.update_weapons(1.0/60);game.update_projectiles(1.0/60);game.update_special_visuals(1.0/60)
    var hit_start=Time.get_ticks_usec()
@@ -82,6 +93,6 @@ func run():
  var output="res://builds/combat-profile.json"
  for arg in OS.get_cmdline_user_args():
   if arg.begins_with("--out="):output=arg.trim_prefix("--out=")
- report["context"]={"rendered":rendered,"renderer":"Mesa software OpenGL" if rendered else "headless","samples_per_case":samples,"engine":Engine.get_version_info().string,"note":"Frame durations include process-frame scheduling; script_work isolates manually advanced combat. Dummy audio. Physics monitor excludes the manually driven enemy simulation."}
+ report["context"]={"terrain_version":game.terrain_version,"origin":[center.x,center.y,center.z],"rendered":rendered,"renderer":"Mesa software OpenGL" if rendered else "headless","samples_per_case":samples,"engine":Engine.get_version_info().string,"note":"Frame durations include process-frame scheduling; script_work isolates manually advanced combat. Dummy audio. Physics monitor excludes the manually driven enemy simulation."}
  DirAccess.make_dir_recursive_absolute("res://builds");var file=FileAccess.open(output,FileAccess.WRITE);file.store_string(JSON.stringify(report,"  "));file.close()
  clear_case();game.queue_free();await process_frame;await process_frame;quit()

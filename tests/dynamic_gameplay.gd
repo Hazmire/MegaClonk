@@ -9,7 +9,7 @@ func verify(value: bool,label: String):
 func _initialize():call_deferred("run")
 func run():
  game=load("res://scenes/main/main.tscn").instantiate();root.add_child(game);await process_frame
- game.progress.storage_path="user://dynamic-test-profile.json";game.next_run_seed=42;game.map_seed_override=9;game.begin_run();game.mode="pause";game.player.active=false;game.settings.invincible=false
+ game.progress.storage_path="user://dynamic-test-profile.json";game.next_run_seed=42;game.map_seed_override=9;game.begin_run();game.terrain_version=3;game.build_stage();game.resume();game.mode="pause";game.player.active=false;game.settings.invincible=false
  await physics_frame;await physics_frame
  verify(game.player.position.distance_to(game.map_layout.spawn)<0.5,"Player starts at deterministic peripheral spawn")
  verify(OrdinaryRoster.variant(0,0).health==OrdinaryRoster.variant(0,1).health and OrdinaryRoster.variant(0,0).speed==OrdinaryRoster.variant(0,1).speed and OrdinaryRoster.variant(0,0).damage==OrdinaryRoster.variant(0,1).damage,"Goblin and Skeleton share identical gameplay stats")

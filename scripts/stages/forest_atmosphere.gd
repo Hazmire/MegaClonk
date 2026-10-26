@@ -17,10 +17,11 @@ static func grass_material() -> ShaderMaterial:
   grass.set_shader_parameter("wind_velocity",Vector2(0.7,0.35));grass.set_shader_parameter("billboard",false);grass.set_shader_parameter("alpha_mode",2)
  return grass
 static func apply(environment: Environment) -> void:
- var sky=Sky.new();var material=ProceduralSkyMaterial.new();material.sky_top_color=Color("071329");material.sky_horizon_color=Color("20354c");material.ground_bottom_color=Color("070f20");material.ground_horizon_color=Color("20354c");sky.sky_material=material
+ var sky=Sky.new();var material=ShaderMaterial.new();material.shader=preload("res://shaders/forest_sky.gdshader")
+ sky.sky_material=material;sky.process_mode=Sky.PROCESS_MODE_QUALITY;sky.radiance_size=Sky.RADIANCE_SIZE_128
  environment.background_mode=Environment.BG_SKY;environment.sky=sky
- environment.ambient_light_source=Environment.AMBIENT_SOURCE_COLOR;environment.ambient_light_color=Color("a5bfd3");environment.ambient_light_energy=0.7
- environment.fog_enabled=true;environment.fog_light_color=Color("243a52");environment.fog_density=0.013;environment.fog_sun_scatter=0.1
+ environment.ambient_light_source=Environment.AMBIENT_SOURCE_COLOR;environment.ambient_light_color=Color("a5bfd3");environment.ambient_light_energy=0.75
+ environment.fog_enabled=true;environment.fog_light_color=Color("516078");environment.fog_density=0.0045;environment.fog_sun_scatter=0.15;environment.fog_sky_affect=0.25
 static func add_grass(game: Node,data: Dictionary,rng: RandomNumberGenerator) -> void:
  var mesh=QuadMesh.new();mesh.size=Vector2(0.75,0.65);mesh.center_offset=Vector3(0,0.325,0);mesh.material=grass_material()
  for i in 650:

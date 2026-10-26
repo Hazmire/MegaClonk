@@ -70,6 +70,7 @@ var portal: Node3D
 var terrain_noise = FastNoiseLite.new()
 var map_layout: Dictionary={}
 var map_seed_override=-1
+var terrain_version=4
 var map_debug=false
 var map_debug_node: MeshInstance3D
 var forest_navigation: ForestNavigation
@@ -238,6 +239,7 @@ func create_avatar(parent: Node3D, index: int, pos: Vector3) -> Node3D:
  node.set_meta("character_index",index)
  return node
 func begin_run() -> void:
+ terrain_version=4
  MetaProgress.migrate(progress.data)
  character = -1
  selected_character=0
@@ -286,6 +288,7 @@ func equip(id: int) -> void:
 func terrain_height(x: float, z: float) -> float:
  return ForestMap.height(stage_map_seed(),x,z)
 func build_stage() -> void:
+ ForestMap.generation_version=terrain_version
  var previous_seed=rng.seed
  var previous_state=rng.state
  rng.seed=run_seed+stage*65537+biome*101
@@ -333,7 +336,7 @@ func build_stage() -> void:
   if child is DirectionalLight3D:child.sky_mode=DirectionalLight3D.SKY_MODE_LIGHT_ONLY
  ForestWorld.build(self)
  if OrdinaryRoster.SETTINGS.elite_statues>0:create_elite_statue()
- for i in range(12):
+ for i in range(map_layout.pois.size()):
   var p: Vector3=map_layout.pois[i]
   var kind = ["Chest","Heal","Charge Shrine","Shop","Risk Shrine","Stat Shrine"][i % 6]
   var model = Node3D.new()
@@ -1424,7 +1427,7 @@ func save_run(path: String = "user://active-run.json") -> bool:
  for pickup in pickups: saved_pickups.append({"position":[pickup.node.position.x,pickup.node.position.y,pickup.node.position.z],"value":pickup.value,"age":pickup.age})
  var used=[]
  for object in interactables: used.append({"kind":object.kind,"used":object.used,"charge":object.charge,"tier":object.get("tier","Common"),"offers":object.get("offers",null),"sold":object.get("sold",[])})
- var data={"version":2,"terrain_version":3,"map_seed_override":map_seed_override,"stage_clock":stage_clock.serialize(),"boss_variant":boss_variant,"ghost_budget":ghost_budget,"portal_state":portal_state,"loadout":loadout_runtime.serialize(),"selected_weapon":selected_weapon,"run_metrics":run_metrics,"chests_opened":chests_opened,"legacy_weapon_slots":legacy_weapon_slots,"legacy_tome_slots":legacy_tome_slots,"minimap":serialize_minimap(),"variants":variants.serialize(),"spawn_rng_state":str(spawn_rng.state),"elite_active":elite_active,"elite_rewarded":elite_rewarded,"rng_state":str(rng.state),"character":character,"biome":biome,"selected_biome":selected_biome,"tier":tier,"stage":stage,"elapsed":elapsed,"stage_time":stage_time,"stats":stats,"health":health,"xp":xp,"level":level,"kills":kills,"gold":gold,"weapons":saved_weapons,"tomes":tomes,"items":items,"sandbox":sandbox,"position":[player.position.x,player.position.y,player.position.z],"enemies":saved_enemies,"boss_spawned":boss_spawned,"boss_dead":boss_dead,"interactables":used,"damage_total":damage_total,"rerolls":rerolls,"banished":banished,"pickups":saved_pickups,"damage_by_weapon":damage_by_weapon,"gold_fraction":gold_fraction,"camera":[player.yaw,player.pitch,player.zoom]}
+ var data={"version":2,"terrain_version":terrain_version,"map_seed_override":map_seed_override,"stage_clock":stage_clock.serialize(),"boss_variant":boss_variant,"ghost_budget":ghost_budget,"portal_state":portal_state,"loadout":loadout_runtime.serialize(),"selected_weapon":selected_weapon,"run_metrics":run_metrics,"chests_opened":chests_opened,"legacy_weapon_slots":legacy_weapon_slots,"legacy_tome_slots":legacy_tome_slots,"minimap":serialize_minimap(),"variants":variants.serialize(),"spawn_rng_state":str(spawn_rng.state),"elite_active":elite_active,"elite_rewarded":elite_rewarded,"rng_state":str(rng.state),"character":character,"biome":biome,"selected_biome":selected_biome,"tier":tier,"stage":stage,"elapsed":elapsed,"stage_time":stage_time,"stats":stats,"health":health,"xp":xp,"level":level,"kills":kills,"gold":gold,"weapons":saved_weapons,"tomes":tomes,"items":items,"sandbox":sandbox,"position":[player.position.x,player.position.y,player.position.z],"enemies":saved_enemies,"boss_spawned":boss_spawned,"boss_dead":boss_dead,"interactables":used,"damage_total":damage_total,"rerolls":rerolls,"banished":banished,"pickups":saved_pickups,"damage_by_weapon":damage_by_weapon,"gold_fraction":gold_fraction,"camera":[player.yaw,player.pitch,player.zoom]}
  var file=FileAccess.open(path+".tmp",FileAccess.WRITE)
  if not file: return false
  file.store_string(JSON.stringify(data)); file.close()
@@ -1433,12 +1436,14 @@ func load_run(path: String = "user://active-run.json") -> bool:
  if not FileAccess.file_exists(path): return false
  var data=JSON.parse_string(FileAccess.get_file_as_string(path))
  if not data is Dictionary or not int(data.get("version",0)) in [1,2]: return false
+ if int(data.get("terrain_version",1))>4:return false
  var restored=RunEnemyVariants.new()
  if not restored.restore(data.get("variants",{})): return false
  for key in ["character","biome","tier","stage","stats","position","weapons","enemies"]:
   if not data.has(key): return false
  if data.position.size()!=3 or not data.stats is Dictionary: return false
  variants=restored
+ terrain_version=3 if int(data.get("terrain_version",1))==3 else 4
  weapon_damage_windows.clear()
  run_seed=variants.seed_value
  character=-1;biome=0;tier=int(data.tier);stage=maxi(1,int(data.stage));map_seed_override=int(data.get("map_seed_override",-1))

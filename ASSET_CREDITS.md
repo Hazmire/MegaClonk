@@ -66,3 +66,7 @@ Complete licences are retained in each pack directory and Windows distribution. 
 - Original procedural forest noise and digit atlas: `tools/generate_forest_texture.gd`, `tools/generate_number_atlas.gd`, `assets/config/forest_variation.png`, `combat_digits.png`. Original forest floor / number billboard shaders.
 - Player core motion: KayKit General Idle_A, MovementBasic Running_A / Jump_Idle and Quaternius UAL2 Slide (all supplied CC0 packs). Rest-space retargeting and baked Ranger library in `assets/config/player_core.res`; original player rig/outfit and head credits above remain.
 - Chunkers: Quaternius Nature MegaKit Rock_Medium_1, CC0, centered and instanced for weapon/debris. Original shield/blade/bone/banana/axe/dice meshes in WeaponArt. Stone audio uses the existing Clutch RPG stone-footfall sample, not a claimed dedicated new recording.
+
+## Vertical Forest increment
+
+The static cloud/gradient sky (`shaders/forest_sky.gdshader`), region/placement algorithms, and map-preview captures (`docs/images/vertical/`) are original project work. No additional external assets were downloaded. Existing trees, rocks, vegetation, characters and materials retain the licences recorded above. The overview montage combines actual renders; individual unaltered captures are included.

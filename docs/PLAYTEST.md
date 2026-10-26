@@ -1,3 +1,7 @@
+# Vertical Forest playtest
+
+Start a **new run** to see the new 0/12/24/36m terrain, cloud sky and randomized world objects. Existing terrain-version-3 checkpoints deliberately retain their original maps. Extract the entire ZIP and launch BONK_INFINITY.exe; Launch_Compatibility.bat selects OpenGL. See VERTICAL_FOREST.md and VERTICAL_PERFORMANCE.md included beside the executable. XP gemstones and reward-screen redesigns are still pending. Native Windows execution remains untested. Previous playtest notes follow.
+
 # Latest combat and atmosphere polish
 
 See [current update](POLISH_UPDATE.md), [performance evidence](PERFORMANCE_POLISH.md) and [weapon audit](WEAPON_VFX_AUDIT.md). Older notes below are historical. The Mesa shutdown diagnostic and Windows/GPU verification limits are disclosed in those guides.

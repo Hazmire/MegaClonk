@@ -25,6 +25,7 @@ cp docs/CORE_OVERHAUL.md builds/windows/CORE_OVERHAUL.md
 cp assets/vendor/psx_fx/LICENSE.txt builds/windows/PSX_FX_LICENSE.txt
 cp assets/vendor/electric/license.txt builds/windows/ELECTRIC_FX_LICENSE.txt
 cp docs/licenses/PUBLISHER_VERIFICATION.md builds/windows/ASSET_TERMS.md
+cp docs/VERTICAL_FOREST.md docs/VERTICAL_PERFORMANCE.md builds/windows/
 cp docs/rewards/RARITY_FOUNDATION.md builds/windows/
 cp docs/POLISH_UPDATE.md docs/PERFORMANCE_POLISH.md docs/WEAPON_VFX_AUDIT.md builds/windows/
 cp docs/FOREST_OVERHAUL.md docs/ASSETS_V1_INVENTORY.md docs/DYNAMIC_FOREST.md builds/windows/
@@ -43,7 +44,7 @@ from zipfile import ZipFile, ZIP_DEFLATED
 import subprocess
 commit = subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
 dirty = bool(subprocess.check_output(['git','status','--porcelain'],text=True).strip())
-Path('builds/windows/BUILD_INFO.txt').write_text('MEGACLONK rarity foundation (world and UI overhaul pending)\nGodot 4.7.2\nSource commit: '+commit+'\nUncommitted source at build time: '+str(dirty)+'\nWindows execution requires native playtesting.\n')
+Path('builds/windows/BUILD_INFO.txt').write_text('MEGACLONK vertical forest (XP gems and UI overhaul pending)\nGodot 4.7.2\nSource commit: '+commit+'\nUncommitted source at build time: '+str(dirty)+'\nWindows execution requires native playtesting.\n')
 with ZipFile('builds/BONK_INFINITY_Windows_x64.zip','w',ZIP_DEFLATED) as z:
  for p in sorted(Path('builds/windows').iterdir()):
   if p.is_file(): z.write(p,p.name)

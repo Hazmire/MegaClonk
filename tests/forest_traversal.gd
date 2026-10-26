@@ -23,10 +23,12 @@ func run():
   var direction=Vector3(to.x-from.x,0,to.y-from.y).normalized();player.yaw=atan2(-direction.x,-direction.z)
   await physics_frame
   player.active=true;Input.action_press("forward")
-  for i in 220:player._physics_process(1.0/60)
+  for i in ceili(ramp.length/4.0*60):
+   if Vector2(player.position.x-to.x,player.position.z-to.y).length()<0.5:break
+   player._physics_process(1.0/60)
   Input.action_release("forward");player.active=false
   var traveled=Vector2(player.position.x-from.x,player.position.z-from.y).length()
-  check(traveled>23,"Player traverses planar ramp "+("up" if up else "down"))
+  check(traveled>ramp.length-4,"Player traverses planar ramp "+("up" if up else "down"))
   check(absf(player.position.y-game.terrain_height(player.position.x,player.position.z))<0.3,"Player stays grounded at ramp endpoint")
  player.active=false
  var original=Vector3(low.x,game.terrain_height(low.x,low.y)+0.65,low.y)
@@ -35,7 +37,9 @@ func run():
   var from=original if not reverse else target+Vector3.UP*0.65;var to=target if not reverse else original-Vector3.UP*0.65
   player.position=to;game.forest_navigation.refresh(to);game.enemies.clear()
   var enemy=game.spawn_enemy(0,from);enemy.cooldown=999;enemy.state="move"
-  for i in 1200:EnemySimulation.step(game,enemy,1.0/60)
+  for i in ceili((ramp.length+20)/2.0*60):
+   if Vector2(enemy.pos.x-to.x,enemy.pos.z-to.z).length()<2:break
+   EnemySimulation.step(game,enemy,1.0/60)
   check(Vector2(enemy.pos.x-to.x,enemy.pos.z-to.z).length()<3,"Enemy pursues across elevation "+("down" if reverse else "up"))
   check(absf(enemy.pos.y-game.terrain_height(enemy.pos.x,enemy.pos.z)-0.65)<0.05,"Enemy stays aligned to collision surface")
  var actor=player.avatar

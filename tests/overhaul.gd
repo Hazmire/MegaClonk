@@ -24,7 +24,7 @@ func run() -> void:
  game.next_run_seed=500
  # Deterministic flat combat fixture; map variety has separate 100-seed coverage.
  game.map_seed_override=9
- game.begin_run()
+ game.begin_run();game.terrain_version=3;game.build_stage();game.resume()
  game.mode="pause"
  game.player.active=true
  var p=game.player
@@ -173,7 +173,7 @@ func run() -> void:
  verify(game.save_run("user://overhaul-run-test.json"),"Active run snapshot write")
  var saved_variants=game.variants.selections.duplicate()
  var saved_kills=game.kills
- game.begin_run()
+ game.begin_run();game.terrain_version=3;game.build_stage();game.resume()
  verify(game.load_run("user://overhaul-run-test.json") and game.variants.selections==saved_variants and game.kills==saved_kills,"Actual run resume preserves variant registry and run state")
  game.mode="pause"
  verify(game.projectile_mesh("fireball")!=game.projectile_mesh("pierce"),"Distinct fire and arrow projectile meshes")
