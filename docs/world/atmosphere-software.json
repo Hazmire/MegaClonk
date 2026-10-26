@@ -2,27 +2,27 @@
   "cases": {
     "clouds": {
       "draw_calls_peak": 211,
-      "mean_ms": 290.9197,
-      "p95_ms": 312.025,
-      "worst_ms": 312.025
+      "mean_ms": 288.96765,
+      "p95_ms": 321.078,
+      "worst_ms": 321.078
     },
     "clouds_no_fog": {
       "draw_calls_peak": 211,
-      "mean_ms": 293.4819,
-      "p95_ms": 338.886,
-      "worst_ms": 338.886
+      "mean_ms": 289.6344,
+      "p95_ms": 328.063,
+      "worst_ms": 328.063
     },
     "clouds_no_wind_grass": {
       "draw_calls_peak": 209,
-      "mean_ms": 290.91135,
-      "p95_ms": 322.344,
-      "worst_ms": 322.344
+      "mean_ms": 280.9942,
+      "p95_ms": 357.549,
+      "worst_ms": 357.549
     },
     "gradient": {
       "draw_calls_peak": 211,
-      "mean_ms": 286.36365,
-      "p95_ms": 323.073,
-      "worst_ms": 323.073
+      "mean_ms": 305.63735,
+      "p95_ms": 446.723,
+      "worst_ms": 446.723
     }
   },
   "context": "Mesa llvmpipe software OpenGL, 1280x720, Dummy audio, frozen world, same camera. 20 frames per case after two warmup frames. Process-frame duration includes scheduling; no gaming-GPU FPS claim.",

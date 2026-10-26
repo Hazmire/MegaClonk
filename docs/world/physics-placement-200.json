@@ -1,11 +1,12 @@
 {
-  "collision_rays": 9914,
+  "collision_rays": 101114,
+  "enemy_traversal_checks": 400,
   "failed": [],
   "final_passed": 200,
   "first_attempt_failures": [],
   "first_attempt_passed": 200,
   "interaction_checks": 1000,
-  "milliseconds": 57029,
+  "milliseconds": 60617,
   "placement_records": [
     {
       "candidates": 249,

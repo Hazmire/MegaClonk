@@ -4,6 +4,7 @@ var failures=[]
 var first_failures=[]
 var placement_records=[]
 var interactions=0
+var traversal_checks=0
 func _initialize():call_deferred("run")
 func run():
  game=load("res://scenes/main/main.tscn").instantiate();root.add_child(game);await process_frame
@@ -35,10 +36,18 @@ func run():
   for cost in game.forest_navigation.distances:
    if cost>=0:connected+=1
   if connected!=expected:reasons.append("Decorated navigation pockets %d/%d"%[connected,expected])
-  for axis in [Vector3.RIGHT,Vector3.LEFT,Vector3.FORWARD,Vector3.BACK]:
-   var p=axis*94;p.y=game.terrain_height(p.x,p.z)+1
-   var hit=space.intersect_ray(PhysicsRayQueryParameters3D.create(p,p+axis*5,1));total_rays+=1
-   if hit.is_empty():reasons.append("Missing perimeter collision")
+  # Cover the whole perimeter at walking/jumping heights, including where
+  # neighboring plateaus have different floors. Local-floor rays missed gaps.
+  for coordinate in range(-88,89,8):
+   for axis in [Vector3.RIGHT,Vector3.LEFT,Vector3.FORWARD,Vector3.BACK]:
+    var p=axis*94
+    if axis.x!=0:p.z=coordinate
+    else:p.x=coordinate
+    for height in [1,13,25,37,43]:
+     p.y=height
+     var hit=space.intersect_ray(PhysicsRayQueryParameters3D.create(p,p+axis*5,1));total_rays+=1
+     if hit.is_empty():reasons.append("Perimeter gap at "+str(p))
+  reasons.append_array(test_enemy_traversal(data));traversal_checks+=2
   var placed=data.pois+[data.portal,data.elite,data.spawn]
   for i in placed.size():
    var p=placed[i]
@@ -78,7 +87,39 @@ func run():
    interactions+=1;game.mode="pause";game.player.active=false
   if not reasons.is_empty():failures.append({"seed":seed_value,"reasons":reasons})
   if seed_value%20==0:print("PHYSICS SEED ",seed_value," ",reasons)
- var report={"seeds":200,"first_attempt_passed":200-first_failures.size(),"first_attempt_failures":first_failures,"repaired_count":first_failures.size(),"final_passed":200-failures.size(),"failed":failures,"collision_rays":total_rays,"milliseconds":Time.get_ticks_msec()-start,"interaction_checks":interactions}
+ var report={"seeds":200,"first_attempt_passed":200-first_failures.size(),"first_attempt_failures":first_failures,"repaired_count":first_failures.size(),"final_passed":200-failures.size(),"failed":failures,"collision_rays":total_rays,"milliseconds":Time.get_ticks_msec()-start,"interaction_checks":interactions,"enemy_traversal_checks":traversal_checks}
  DirAccess.make_dir_recursive_absolute("res://builds")
  var file=FileAccess.open("res://builds/forest-physics-report.json",FileAccess.WRITE);file.store_string(JSON.stringify(report.merged({"placement_records":placement_records}),"  "));file.close();print(JSON.stringify(report))
  game.queue_free();await process_frame;await process_frame;quit(0 if failures.is_empty() else 1)
+
+func test_enemy_traversal(data: Dictionary) -> Array:
+ var sample={}
+ for index in data.planes.size():
+  if not sample.is_empty():break
+  var high=Vector3(-95+(index%96)*2,0,-95+int(index/96)*2)
+  if maxf(absf(high.x),absf(high.z))>78:continue
+  high.y=game.terrain_height(high.x,high.z)+0.65
+  for direction in [Vector3.RIGHT,Vector3.LEFT,Vector3.FORWARD,Vector3.BACK]:
+   var low=high+direction*6;low.y=game.terrain_height(low.x,low.z)+0.65
+   if high.y-low.y<11:continue
+   var clear=true
+   for point in [high,high-direction*2,low,low+direction*2,low+direction*4]:
+    var expected=high.y if point==high or point==high-direction*2 else low.y
+    for offset in [Vector3.ZERO,Vector3.RIGHT*0.7,Vector3.LEFT*0.7,Vector3.FORWARD*0.7,Vector3.BACK*0.7]:
+     var foot=point+offset
+     if game.forest_navigation.blocked.has(ForestMap.index(foot.x,foot.z)) or absf(game.terrain_height(foot.x,foot.z)+0.65-expected)>0.1:clear=false
+   if clear:sample={"high":high,"low":low,"up_target":high-direction*2,"down_target":low+direction*4};break
+ if sample.is_empty():return ["No clear cliff traversal fixture"]
+ var errors=[]
+ for climbing in [true,false]:
+  var start=sample.low if climbing else sample.high
+  var target=sample.up_target if climbing else sample.down_target
+  game.player.position=target-Vector3.UP*0.65;game.forest_navigation.refresh(game.player.position);game.enemies.clear()
+  var enemy=game.spawn_enemy(0,start);enemy.cooldown=999;var exercised=false
+  for tick in 1800:
+   EnemySimulation.step(game,enemy,1.0/60)
+   exercised=exercised or not enemy.get("climb" if climbing else "drop",{}).is_empty()
+   if enemy.pos.distance_to(target)<2 and enemy.get("climb",{}).is_empty() and enemy.get("drop",{}).is_empty():break
+  if not exercised or enemy.pos.distance_to(target)>=2 or not enemy.get("climb",{}).is_empty() or not enemy.get("drop",{}).is_empty():errors.append("Enemy "+("climb" if climbing else "drop")+" failed")
+ game.enemies.clear()
+ return errors

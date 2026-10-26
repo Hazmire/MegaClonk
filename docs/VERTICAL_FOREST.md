@@ -8,7 +8,7 @@ This increment follows the tested rarity foundation and completes the procedural
 
 The default palette is **0 / 12 / 24 / 36m**, tripling the previous 12m range. Cell-aligned cliff notches vary one axis per seed and taper smoothly near ramp mouths. Walkable surfaces remain planar. A ramp's length grows with the height difference, rounds to four-metre increments to meet the two-metre collision grid, and preserves a straight constant slope no steeper than 28°. Ramps do not overlap. No continuous rolling-hill noise is used.
 
-Flat cliff normals keep the ground shader's stone material separate from grass. Perimeter faces start relative to the local floor, closing the gap that appeared when using the old wall base on taller plateaus. Their irregular crests rise 68–100m above their adjacent floor. The collision mesh and rendered terrain share geometry.
+Flat cliff normals keep the ground shader's stone material separate from grass. Perimeter faces share one continuous base and crest across plateau boundaries. Their lower half stays inside the playable boundary, closing walking and airborne gaps. Default crests reach 104–136m absolute height, at least 68m above even the highest plateau. The collision mesh and rendered terrain share geometry.
 
 ### Designer controls
 
@@ -47,7 +47,7 @@ New saves record `terrain_version: 4`. Version-3 checkpoints retain the old gene
 
 ## Evidence
 
-All fourteen regression suites pass locally: **605 assertions**, **70 cliff-drop cases**, **200 deterministic layouts**, **200 decorated collision/navigation worlds**, **9,914 collision rays** and **1,000 real shop/chest/shrine/statue/portal interactions**. The 200 layout/physics cases use matching map seeds 0–199. Connectivity and first construction attempts passed without flattening or decoration repairs. Tests include player/enemy ramp traversal, 24m+ climbing, falling after damage, ramp landings, old/new checkpoint geometry and object-position preservation, and rejection of future terrain versions.
+All fourteen regression suites pass locally: **605 assertions**, **70 cliff-drop cases**, **200 deterministic layouts**, **200 decorated collision/navigation worlds**, **101,114 collision rays** and **1,000 real shop/chest/shrine/statue/portal interactions**, plus **400 per-world enemy climb/drop checks**. The 200 layout/physics cases use matching map seeds 0–199. Connectivity and first construction attempts passed without flattening or decoration repairs. Tests include player/enemy ramp traversal, 24m+ climbing, falling after damage, ramp landings, old/new checkpoint geometry and object-position preservation, and rejection of future terrain versions.
 
 | Measurement across 200 seeds | Minimum | Mean | Maximum |
 |---|---:|---:|---:|

@@ -226,7 +226,9 @@ static func geometry(data: Dictionary) -> ArrayMesh:
 static func wall_vertex(point: Vector3,seed_value: int,t: float) -> Vector3:
  var radial=Vector3(point.x,0,point.z).normalized()
  var noise=sin(point.x*0.074+float(seed_value%31))*cos(point.z*0.093+float(seed_value%17))
- var height=84+noise*16
- var out=-0.4 if t<=0.25 else (t-0.25)*12+sin(point.x*0.18+point.z*0.15)*t*2
- var base_height=point.y if generation_version>=4 else 0.0
- return Vector3(point.x,base_height-4+(height+4)*t,point.z)+radial*out
+ var height=84+noise*16+(SETTINGS.maximum_elevation if generation_version>=4 else 0.0)
+ # Shared base/crest at every boundary vertex make the perimeter watertight
+ # across plateau changes. The lower half stays inside all walkable floors.
+ var shoulder=0.5 if generation_version>=4 else 0.25
+ var out=-0.4 if t<=shoulder else (t-shoulder)*12+sin(point.x*0.18+point.z*0.15)*t*2
+ return Vector3(point.x,-4+(height+4)*t,point.z)+radial*out
