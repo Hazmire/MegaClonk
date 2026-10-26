@@ -9,7 +9,7 @@ if ! tools/godot.sh --headless --path . --export-release 'Windows Desktop' > "$l
  exit 1
 fi
 cat "$log_path"
-if rg -q 'SCRIPT ERROR|^ERROR:' "$log_path"; then exit 1; fi
+if grep -Eq 'SCRIPT ERROR|^ERROR:' "$log_path"; then exit 1; fi
 # Validate the exported resource pack, including release-only script defaults.
 # Linux Godot can read the embedded pack; this does not execute native Windows code.
 if ! tools/godot.sh --headless --path /tmp --main-pack "$PWD/builds/windows/BONK_INFINITY.exe" --quit-after 120 -- --practice --map-seed=9 > "$log_path" 2>&1; then
@@ -17,15 +17,15 @@ if ! tools/godot.sh --headless --path /tmp --main-pack "$PWD/builds/windows/BONK
  exit 1
 fi
 cat "$log_path"
-if rg -q 'SCRIPT ERROR|^ERROR:' "$log_path"; then exit 1; fi
+if grep -Eq 'SCRIPT ERROR|^ERROR:' "$log_path"; then exit 1; fi
 # Exercise paused reward screens from the compiled pack as well as the running world.
 if ! tools/godot.sh --headless --path /tmp --main-pack "$PWD/builds/windows/BONK_INFINITY.exe" --script "$PWD/tools/export_ui_smoke.gd" > "$log_path" 2>&1; then
  cat "$log_path"
  exit 1
 fi
 cat "$log_path"
-if rg -q 'SCRIPT ERROR|^ERROR:' "$log_path"; then exit 1; fi
-if ! rg -q 'EXPORTED REWARD UI SMOKE COMPLETE' "$log_path"; then exit 1; fi
+if grep -Eq 'SCRIPT ERROR|^ERROR:' "$log_path"; then exit 1; fi
+if ! grep -Eq 'EXPORTED REWARD UI SMOKE COMPLETE' "$log_path"; then exit 1; fi
 cp docs/REWARD_UI.md builds/windows/
 cp docs/PLAYTEST.md builds/windows/READ_ME_FIRST.txt
 cp docs/GODOT_COPYRIGHT.txt builds/windows/GODOT_COPYRIGHT.txt

@@ -21,6 +21,7 @@ jobs:
       - name: Configure writable tool directories
         run: |
           echo "BONK_TOOLS_ROOT=$RUNNER_TEMP/bonk-tools" >> "$GITHUB_ENV"
+          python3 -c 'import shutil; print("::notice title=Validation tools::grep=" + str(shutil.which("grep")) + ", ripgrep=" + str(shutil.which("rg")))'
           echo "BONK_RUNTIME_ROOT=$RUNNER_TEMP/bonk-runtime" >> "$GITHUB_ENV"
       - name: Check out source and generated models
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
@@ -36,7 +37,7 @@ jobs:
           import pathlib
           lines = pathlib.Path('/tmp/export.log').read_text().splitlines()
           errors = [line for line in lines if 'ERROR' in line or 'Error' in line or 'error' in line or 'SMOKE' in line]
-          message = '\n'.join(errors[-30:] or lines[-20:])[-6000:]
+          message = '\n'.join(errors[-20:] + lines[-20:])[-6000:]
           message = message.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
           print('::error title=Windows export diagnostic::' + message)
           PYLOG
