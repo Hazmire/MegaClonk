@@ -14,11 +14,15 @@ func run():
  for id in ["Might","Haste","Wisdom","Iron"]:game.apply_upgrade({"type":"tome","id":id})
  for id in Catalog.ITEMS.size():game.apply_item(id)
  game.apply_item(1);game.apply_item(1);game.apply_item(2)
+ for x in range(-72,73,24):
+  for z in [-48,-24,0]:game.frontend.minimap.reveal(Vector3(x,0,z))
  game.gold=245;game.level=12;game.elapsed=149;game.health=83
  for size in [Vector2i(1280,720),Vector2i(1920,1080),Vector2i(2560,1440)]:
   root.size=size;DisplayServer.window_set_size(size)
   game.frontend.upgrades();await capture("upgrades_"+str(size.x))
   game.frontend.inventory();await capture("build_"+str(size.x))
+  game.pause_menu();await capture("pause_"+str(size.x))
+  game.frontend.world_map(true);await capture("map_"+str(size.x))
  root.size=Vector2i(1280,720);DisplayServer.window_set_size(Vector2i(1280,720))
  game.frontend.shop({"tier":"Rare","offers":[0,6,8],"sold":[],"used":false});await capture("shop")
  game.frontend.reward(Catalog.ITEMS[10]);await create_timer(0.4).timeout;await capture("roulette");await create_timer(1.5).timeout;await capture("legendary_reveal")

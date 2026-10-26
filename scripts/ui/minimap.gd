@@ -2,34 +2,47 @@ class_name RunMinimap
 extends Control
 var game: Node
 var explored: Dictionary={}
+var terrain_colors: Dictionary={}
 var reveal_all=false
 func reset(revealed: bool) -> void:
- explored.clear(); reveal_all=revealed
-func cell(pos: Vector3) -> Vector2i: return Vector2i(floori((pos.x+96)/12),floori((pos.z+96)/12))
+ explored.clear();terrain_colors.clear();reveal_all=revealed
+func cell(pos: Vector3) -> Vector2i:return Vector2i(floori((pos.x+96)/12),floori((pos.z+96)/12))
 func reveal(pos: Vector3) -> void:
  var c=cell(pos)
  for x in range(c.x-2,c.x+3):
-  for y in range(c.y-2,c.y+3): explored[Vector2i(x,y)]=true
-func visible_at(pos: Vector3) -> bool: return reveal_all or explored.has(cell(pos))
-func point(pos: Vector3) -> Vector2: return Vector2((pos.x+96)/192*size.x,(pos.z+96)/192*size.y)
+  for y in range(c.y-2,c.y+3):explored[Vector2i(x,y)]=true
+func visible_at(pos: Vector3) -> bool:return reveal_all or explored.has(cell(pos))
+func extent() -> Vector2:return Vector2.ONE*minf(size.x,size.y)
+func origin() -> Vector2:return (size-extent())*0.5
+func point(pos: Vector3) -> Vector2:return origin()+Vector2((pos.x+96)/192,(pos.z+96)/192)*extent()
 func _draw() -> void:
- draw_rect(Rect2(Vector2.ZERO,size),Color("101c21"))
+ draw_rect(Rect2(Vector2.ZERO,size),Color("10171f"))
+ if not is_instance_valid(game) or not is_instance_valid(game.player):return
+ var span=extent();var offset=origin();var mark=clampf(span.x/210,1,2.2)
  for x in 16:
   for y in 16:
-   if reveal_all or explored.has(Vector2i(x,y)):
-    draw_rect(Rect2(Vector2(x,y)*size/16,size/16+Vector2.ONE),Color("344f42"))
- if not is_instance_valid(game) or not is_instance_valid(game.player): return
+   var key=Vector2i(x,y)
+   if reveal_all or explored.has(key):
+    if not terrain_colors.has(key):
+     var height=game.terrain_height(x*12-90,y*12-90)
+     terrain_colors[key]=Color("222e3a").lerp(Color("4d6257"),clampf(height/48,0,1))
+    draw_rect(Rect2(offset+Vector2(x,y)*span/16,span/16+Vector2.ONE),terrain_colors[key])
  for pos in game.landmarks:
-  if visible_at(pos):draw_circle(point(pos),3,Color("c3c7a1"))
+  if visible_at(pos):draw_circle(point(pos),2*mark,Color("9fa79d"))
  for obj in game.interactables:
-  if obj.used or not visible_at(obj.node.position): continue
-  var color=Color("f3cc6f") if obj.kind=="Chest" else (Color("b7a6ff") if obj.kind=="Shop" else Color("77d6d1"))
-  draw_rect(Rect2(point(obj.node.position)-Vector2.ONE*2,Vector2.ONE*4),color)
+  if obj.used or not visible_at(obj.node.position):continue
+  var p=point(obj.node.position);var color=Color("70dcd7")
+  match obj.kind:
+   "Chest":
+    draw_rect(Rect2(p-Vector2(3,2)*mark,Vector2(6,4)*mark),Color("f3cc6f"));draw_line(p-Vector2(3,0)*mark,p+Vector2(3,0)*mark,Color("66502b"),mark);continue
+   "Shop":color=Color("83d678")
+   "Heal":color=Color("f57579")
+   "Elite Statue":color=Color("ffac5e")
+  draw_colored_polygon(PackedVector2Array([p+Vector2(0,-3)*mark,p+Vector2(3,0)*mark,p+Vector2(0,3)*mark,p+Vector2(-3,0)*mark]),color)
  for e in game.enemies:
-  if e.hp>0 and visible_at(e.pos): draw_circle(point(e.pos),4 if e.kind==8 else (3 if e.get("elite",false) else 2),Color("ffd365") if e.get("elite",false) else Color("f3877a"))
- if is_instance_valid(game.portal) and visible_at(game.portal.position): draw_arc(point(game.portal.position),6,0,TAU,20,Color("b3fff1"),2)
- draw_circle(point(game.player.position),4,Color("fff6dc"))
- var angle=game.player.avatar.rotation.y
- var facing=Vector2(sin(angle),cos(angle))
- draw_line(point(game.player.position),point(game.player.position)+facing*10,Color("fff6dc"),2)
- draw_rect(Rect2(Vector2.ZERO,size),Color("c7a564"),false,2)
+  if e.hp>0 and visible_at(e.pos):draw_circle(point(e.pos),(4 if e.kind>=8 else 3 if e.get("elite",false) else 1.5)*mark,Color("ffd365") if e.get("elite",false) else Color("f387a0"))
+ if is_instance_valid(game.portal) and visible_at(game.portal.position):draw_arc(point(game.portal.position),6*mark,0,TAU,20,Color("6bd3ff"),2*mark)
+ draw_circle(point(game.player.position),4*mark,Color("fff6dc"))
+ var angle=game.player.avatar.rotation.y;var facing=Vector2(sin(angle),cos(angle))
+ draw_line(point(game.player.position),point(game.player.position)+facing*10*mark,Color("fff6dc"),2*mark)
+ draw_rect(Rect2(offset,span),Color("b7b4a5"),false,2)

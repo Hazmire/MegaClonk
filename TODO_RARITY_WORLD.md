@@ -18,3 +18,9 @@ The Vertical Forest increment completes Milestones 2–4 / Gates 2–3. Local ev
 - [x] Vertical Forest v6.1 publication verified: downloaded ZIP checksum/CRCs/clean source match, and its embedded game data passes a 180-frame smoke test. Native Windows execution remains untested.
 
 Milestones 5–10 are implemented: pooled blue/red gemstones, queued levels, shared reward/shop/build cards, animated treasure reel, live inventory/stats and bounded celebrations. All fifteen suites pass: 625 assertions plus seeded-world/traversal reports. See docs/REWARD_UI.md. Windows v7 publication, downloaded SHA256/CRCs/clean source and compiled world/UI smoke are verified in releases/BUILD_INFO.md; native Windows execution and gaming-GPU performance require playtesting.
+
+## Uploaded-reference follow-up
+- [x] Inspect all five images uploaded in fc17e6b and map each to an interface.
+- [x] Implement reference-based pause, expanded map, action buttons, card price/level headers and locked/empty equipment slots.
+- [x] Focused pause/map/reward checks: 27 passing.
+- [ ] Complete full regression/export checks and verify a new downloadable Windows release.

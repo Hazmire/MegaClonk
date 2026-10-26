@@ -9,6 +9,8 @@ and [reward UI and XP guide](docs/REWARD_UI.md).
 The latest source also adds reference-based inventory/stats sidebars, stacked upgrades,
 a slowing chest reel, shared shop/build screens and blue/red XP gemstones.
 
+The GitHub reference images now also inform the [pause, expanded map and UI refinements](docs/REFERENCE_UI.md). Press **M** in a run to open the discovered-world map.
+
 ## Download and play
 
 - [Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/rewards-ui-v7/BONK_INFINITY_Windows_x64.zip)

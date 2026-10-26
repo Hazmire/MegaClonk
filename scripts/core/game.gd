@@ -98,7 +98,7 @@ var legacy_weapon_slots=0
 var legacy_tome_slots=0
 var settings = {"visual_intensity":0.7,"render_scale":1.0,"quality":1,"master":0.7,"effects":0.7,"music":0.3,"sensitivity":0.0025,"invert":false,"reduced":false,"fps":false,"focus_pause":true,"shake":true,"numbers":true,"invincible":false}
 var pending_binding = ""
-var bindings = {"forward":KEY_W,"back":KEY_S,"left":KEY_A,"right":KEY_D,"jump":KEY_SPACE,"crouch":KEY_CTRL,"interact":KEY_E,"inspect":KEY_TAB,"ultimate":KEY_Q}
+var bindings = {"forward":KEY_W,"back":KEY_S,"left":KEY_A,"right":KEY_D,"jump":KEY_SPACE,"crouch":KEY_CTRL,"interact":KEY_E,"inspect":KEY_TAB,"ultimate":KEY_Q,"map":KEY_M}
 var music: AudioStreamPlayer
 var sfx: Array[AudioStreamPlayer] = []
 var sound_bank: Dictionary={}
@@ -395,7 +395,7 @@ func resume() -> void:
  if pending_upgrades>0:
   pending_upgrades-=1;show_upgrades();return
  mode = "run"
- panel.hide()
+ if is_instance_valid(panel):panel.hide()
  frontend.enter_run()
  hud.show()
  health_bar.show()
@@ -420,8 +420,16 @@ func _unhandled_input(event: InputEvent) -> void:
  if event.is_action_pressed("ui_cancel"):
   if mode == "run": pause_menu()
   elif mode in ["pause","build","sandbox","shop","reward"]: resume()
+  elif mode=="map":
+   if frontend.map_return_to_pause:pause_menu()
+   else:resume()
   elif mode=="settings":frontend.leave_settings()
   elif mode in ["play","unlocks","quests"]: main_menu()
+ if event.is_action_pressed("map"):
+  if mode in ["run","pause"]:frontend.world_map(mode=="pause")
+  elif mode=="map":
+   if frontend.map_return_to_pause:pause_menu()
+   else:resume()
  if event.is_action_pressed("inspect") and mode == "run": show_build()
  if event is InputEventKey and event.pressed and event.keycode==KEY_F8 and sandbox:
   map_seed_override=stage_map_seed()+1;build_stage();resume()
@@ -1176,15 +1184,7 @@ func update_hud() -> void:
 
 
 func pause_menu() -> void:
- mode="pause"
- var col=clear_panel("RUN PAUSED")
- button("Save run",col,func(): toast("Run saved" if save_run() else "Save failed"))
- button("Resume",col,resume).grab_focus()
- button("Inspect build",col,show_build)
- button("Settings",col,func(): settings_menu(pause_menu))
- if sandbox: button("Sandbox tools",col,sandbox_menu)
- button("Restart run",col,begin_run)
- button("Abandon run",col,func(): finish_run(false))
+ frontend.pause()
 func show_build() -> void:
  frontend.inventory()
 

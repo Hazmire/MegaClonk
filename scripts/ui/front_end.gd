@@ -32,6 +32,7 @@ var reward_generation=0
 var reward_consumed=false
 var reward_focus: Dictionary={}
 var reward_tweens: Array=[]
+var map_return_to_pause=false
 
 func setup(owner_game: Node) -> void:
  process_mode=Node.PROCESS_MODE_ALWAYS
@@ -283,6 +284,10 @@ func update_hud() -> void:
  if game.loadout_runtime.remaining>0:status_label.text+="\nULTIMATE ACTIVE • %.1fs"%game.loadout_runtime.remaining
  update_boss_bars()
  if game.settings.fps:status_label.text+="\n%d FPS"%Engine.get_frames_per_second()
+func pause() -> void:
+ RewardScreens.pause(self)
+func world_map(from_pause: bool=false) -> void:
+ RewardScreens.world_map(self,from_pause)
 func inventory() -> void:
  RewardScreens.inventory(self)
 func upgrades() -> void:

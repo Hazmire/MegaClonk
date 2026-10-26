@@ -1,11 +1,44 @@
 class_name RewardScreens
 extends RefCounted
 # Original framed UI inspired by the supplied composition; all content is live.
-static func style(color: Color=Color("b8b09a"),background: Color=Color("101b1b")) -> StyleBoxFlat:
+static func style(color: Color=Color("b8b09a"),background: Color=Color("202626")) -> StyleBoxFlat:
  var box=StyleBoxFlat.new();box.bg_color=background;box.border_color=color;box.set_border_width_all(2)
  box.shadow_color=Color(0,0,0,0.7);box.shadow_size=5
  box.content_margin_left=12;box.content_margin_right=12;box.content_margin_top=10;box.content_margin_bottom=10
  return box
+static func button(ui: FrontEnd,parent: Node,label: String,callback: Callable,tint: Color=Color("51585a")) -> Button:
+ var control=ui.action(label,parent,callback)
+ control.custom_minimum_size=Vector2(120,44)
+ for state in ["normal","hover","pressed","focus","disabled"]:
+  var box=style(Color("a6a89f") if state=="normal" else Color("fff0bf"),tint.darkened(0.25) if state=="pressed" else tint.lightened(0.15) if state in ["hover","focus"] else tint.darkened(0.55) if state=="disabled" else tint)
+  box.set_corner_radius_all(2);box.border_width_bottom=5;box.shadow_size=2
+  control.add_theme_stylebox_override(state,box)
+ return control
+static func pause(ui: FrontEnd) -> void:
+ var game=ui.game;game.mode="pause";ui.clear()
+ var shade=ColorRect.new();shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);shade.color=Color(0.005,0.025,0.04,0.72);shade.mouse_filter=Control.MOUSE_FILTER_IGNORE;ui.menu.add_child(shade)
+ equipment(ui,frame(ui,Vector2(24,80),Vector2(300,600),"Inventory"))
+ statistics(ui,frame(ui,Vector2(938,80),Vector2(318,600),"Stats"))
+ var title=ui.heading("PAUSED",ui.menu,48);title.position=Vector2(340,28);title.custom_minimum_size.x=560;title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+ var center=VBoxContainer.new();center.position=Vector2(490,110);center.custom_minimum_size.x=260;center.add_theme_constant_override("separation",12);ui.menu.add_child(center)
+ var summary=ui.heading("FOREST · STAGE %d"%game.stage,center,26);summary.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+ var details=ui.text("Level %d · %d kills · %d gold"%[game.level,game.kills,game.gold],center,16);details.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+ button(ui,center,"RESUME",game.resume).grab_focus()
+ button(ui,center,"MAP",func():ui.world_map(true))
+ button(ui,center,"INSPECT BUILD",game.show_build)
+ button(ui,center,"SETTINGS",func():game.settings_menu(game.pause_menu))
+ button(ui,center,"SAVE RUN",func():game.toast("Run saved" if game.save_run() else "Save failed"))
+ if game.sandbox:button(ui,center,"SANDBOX TOOLS",game.sandbox_menu)
+ button(ui,center,"RESTART RUN",game.begin_run)
+ button(ui,center,"ABANDON RUN",func():game.finish_run(false),Color("783c38"))
+static func world_map(ui: FrontEnd,from_pause: bool) -> void:
+ var game=ui.game;game.mode="map";ui.clear();ui.map_return_to_pause=from_pause;ui.minimap.reveal(game.player.position)
+ var shade=ColorRect.new();shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);shade.color=Color(0.005,0.025,0.04,0.45);shade.mouse_filter=Control.MOUSE_FILTER_IGNORE;ui.menu.add_child(shade)
+ var center=frame(ui,Vector2(24,28),Vector2(860,652),"FOREST · Stage %d · World map"%game.stage)
+ var map=RunMinimap.new();map.game=game;map.reveal_all=ui.minimap.reveal_all;map.explored=ui.minimap.explored;map.terrain_colors=ui.minimap.terrain_colors;map.custom_minimum_size=Vector2(560,470);map.size_flags_horizontal=Control.SIZE_EXPAND_FILL;center.add_child(map)
+ ui.text("N ↑    Gold: chest · Green: shop · Red: healing · Cyan: shrine\nOrange: elite · Blue ring: portal · White: you · Pink: enemies",center,14)
+ button(ui,center,"BACK" if from_pause else "RESUME",game.pause_menu if from_pause else game.resume).grab_focus()
+ statistics(ui,frame(ui,Vector2(938,28),Vector2(318,652),"Stats"))
 static func frame(ui: FrontEnd,pos: Vector2,dimensions: Vector2,title: String) -> VBoxContainer:
  var panel=RewardFrame.new();panel.position=pos;panel.custom_minimum_size=dimensions;panel.size=dimensions;panel.add_theme_stylebox_override("panel",style());ui.menu.add_child(panel)
  var stack=VBoxContainer.new();stack.size_flags_horizontal=Control.SIZE_EXPAND_FILL;panel.add_child(stack)
@@ -13,7 +46,7 @@ static func frame(ui: FrontEnd,pos: Vector2,dimensions: Vector2,title: String) -
  ui.heading(title,header,20)
  var scroll=ScrollContainer.new();scroll.size_flags_vertical=Control.SIZE_EXPAND_FILL;scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED;stack.add_child(scroll)
  var body=VBoxContainer.new();body.size_flags_horizontal=Control.SIZE_EXPAND_FILL;body.add_theme_constant_override("separation",10);scroll.add_child(body)
- if pos.x==322:ui.game.panel=panel
+ if pos.x==24 or pos.x==322:ui.game.panel=panel
  return body
 static func icon(ui: FrontEnd,parent: Node,category: String,id: String,rank: String="",edge: Color=Color("786f60"),size: int=48) -> Control:
  var slot=PanelContainer.new();slot.custom_minimum_size=Vector2(size,size+16);slot.add_theme_stylebox_override("panel",style(edge,Color("152321")));parent.add_child(slot)
@@ -35,6 +68,10 @@ static func equipment(ui: FrontEnd,parent: Node) -> void:
    var rank=int(owned[id].level) if category=="weapons" else int(owned[id])
    var meta=RewardCatalog.entry(category,id,rank)
    var tile=icon(ui,grid,category,str(id),"Lv %d"%rank,Rarity.definition(meta.rarity).color,46);tile.tooltip_text=game.weapon_tooltip(int(id)) if category=="weapons" else meta.description
+  var limit=game.weapon_limit() if category=="weapons" else game.tome_limit()
+  for index in range(owned.size(),maxi(4,limit)):
+   var empty=PanelContainer.new();empty.custom_minimum_size=Vector2(46,62);empty.add_theme_stylebox_override("panel",style(Color("4e5553"),Color("171c1b")));empty.tooltip_text=("Empty " if index<limit else "Locked ")+category.trim_suffix("s")+" slot";grid.add_child(empty)
+   var mark=ui.text("—" if index<limit else "LOCK",empty,12);mark.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;mark.vertical_alignment=VERTICAL_ALIGNMENT_CENTER;mark.modulate=Color("6e7875")
  ui.heading("Items",parent,20)
  var items_grid=GridContainer.new();items_grid.columns=5;parent.add_child(items_grid)
  for id in Catalog.ITEMS.size():
@@ -83,9 +120,11 @@ static func offer(ui: FrontEnd,parent: Node,category: String,id: Variant,rank: i
  var row=HBoxContainer.new();row.add_theme_constant_override("separation",14);margin.add_child(row)
  icon(ui,row,category,str(id),"",tier.color,66)
  var body=VBoxContainer.new();body.size_flags_horizontal=Control.SIZE_EXPAND_FILL;row.add_child(body)
- var rarity=ui.text(tier.name+"   ·   "+("NEW" if rank==0 else ("Owned ×%d → ×%d" if category=="items" else "Lv %d → %d")%[rank,rank+1]),body,14);rarity.add_theme_color_override("font_color",tier.color)
+ var headline=HBoxContainer.new();body.add_child(headline)
+ var rarity=ui.text(tier.name,headline,14);rarity.add_theme_color_override("font_color",tier.color);rarity.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+ var progression=ui.text(button_text if button_text!="" else "NEW" if rank==0 else ("Owned ×%d → ×%d" if category=="items" else "Lv %d → %d")%[rank,rank+1],headline,14);progression.add_theme_color_override("font_color",Color("ffcf65"))
  ui.heading(meta.name,body,22)
- var effects=ui.text(description+("\n"+button_text if button_text!="" else ""),body,15);effects.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+ var effects=ui.text(description+("\nOwned ×%d → ×%d"%[rank,rank+1] if category=="items" else ""),body,15);effects.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
  for node in descendants(button):
   if node is Control:node.mouse_filter=Control.MOUSE_FILTER_IGNORE
  button.mouse_filter=Control.MOUSE_FILTER_STOP
@@ -122,11 +161,11 @@ static func upgrades(ui: FrontEnd) -> void:
   button.mouse_entered.connect(func():ui.reward_focus=choice)
   if first==null:first=button;ui.reward_focus=choice
  var controls=HBoxContainer.new();controls.add_theme_constant_override("separation",8);center.add_child(controls)
- ui.action("BANISH",controls,func():
-  if not ui.reward_focus.is_empty():game.banished.append(ui.reward_focus.key);game.resume())
- ui.action("SKIP · heal 10",controls,func():game.health=minf(game.stats.max_health,game.health+10);game.resume())
- ui.action("REFRESH (%d)"%game.rerolls,controls,func():
-  if game.rerolls>0:game.rerolls-=1;upgrades(ui)).disabled=game.rerolls<=0
+ button(ui,controls,"BANISH",func():
+  if not ui.reward_focus.is_empty():game.banished.append(ui.reward_focus.key);game.resume(),Color("9d353a"))
+ button(ui,controls,"SKIP · heal 10",func():game.health=minf(game.stats.max_health,game.health+10);game.resume(),Color("306942"))
+ button(ui,controls,"REFRESH (%d)"%game.rerolls,func():
+  if game.rerolls>0:game.rerolls-=1;upgrades(ui),Color("276292")).disabled=game.rerolls<=0
  if first!=null:first.grab_focus()
 static func inventory(ui: FrontEnd) -> void:
  var game=ui.game;game.mode="build";var center=layout(ui,"Your build & character stats")
@@ -145,10 +184,10 @@ static func shop(ui: FrontEnd,object: Dictionary) -> void:
  for id_value in object.offers:
   var id=int(id_value);var price=ShopSystem.price(id);var sold=id in object.get("sold",[])
   var button=offer(ui,center,"items",id,game.items.count(Catalog.ITEMS[id][0]),Catalog.item_description(id),func():
-   if not game.buy_shop(object,id,price):ui.reward_consumed=false;game.toast("Purchase unavailable"),"SOLD" if sold else "BUY · %d gold"%price)
+   if not game.buy_shop(object,id,price):ui.reward_consumed=false;game.toast("Purchase unavailable"),"SOLD" if sold or object.get("used",false) else "NEED %d gold"%price if game.gold<price else "BUY · %d gold"%price)
   button.disabled=sold or game.gold<price or object.get("used",false) or not id in game.available_items()
  if object.offers.is_empty():ui.paragraph("No enabled items available",center,520)
- ui.action("LEAVE SHOP",center,game.resume).grab_focus()
+ button(ui,center,"LEAVE SHOP",game.resume).grab_focus()
 static func reward(ui: FrontEnd,item: Array) -> void:
  var game=ui.game;game.mode="reward";var center=layout(ui,"Treasure discovered")
  var id=Catalog.ITEMS.find(item);var tier=Rarity.definition(item[1])
@@ -164,7 +203,7 @@ static func reward(ui: FrontEnd,item: Array) -> void:
  var slot=CenterContainer.new();slot.custom_minimum_size.y=230;center.add_child(slot);var tile=icon(ui,slot,"items",str(id),"",tier.color,144);slot.hide()
  ui.text("Added to your build · reward fixed before reveal",center,14)
  var controls=HBoxContainer.new();center.add_child(controls)
- var proceed=ui.action("CONTINUE",controls,game.resume);proceed.disabled=true
+ var proceed=button(ui,controls,"CONTINUE",game.resume,Color("276292"));proceed.disabled=true
  var generation=ui.reward_generation
  var reveal=func():
   if ui.reward_generation!=generation or not is_instance_valid(tile) or tile.get_meta("revealed",false):return
@@ -178,5 +217,5 @@ static func reward(ui: FrontEnd,item: Array) -> void:
   var tick=int((246-value)/100)
   if tick%3==0 and tile.get_meta("tick",-1)!=tick:tile.set_meta("tick",tick);game.play_sound("menu"),246.0,246.0-26*100,1.6).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
  tween.tween_callback(reveal)
- var skip=ui.action("SKIP REVEAL",controls,func():tween.kill();reveal.call());skip.grab_focus()
+ var skip=button(ui,controls,"SKIP REVEAL",func():tween.kill();reveal.call());skip.grab_focus()
  if game.settings.reduced:tween.kill();reveal.call()

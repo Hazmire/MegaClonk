@@ -75,3 +75,6 @@ The static cloud/gradient sky (`shaders/forest_sky.gdshader`), region/placement 
 - Faceted XP gemstone geometry: original procedural double-cone mesh in `scripts/rewards/xp_gems.gd`, using existing ModelBuilder primitives; shared blue/red materials.
 - Metal-corner frames, roulette composition, rainbow/confetti/flying-gem draws: original project code in `scripts/ui/reward_frame.gd`, `reward_screens.gd` and `reward_celebration.gd`. User screenshots are layout references, not redistributed artwork.
 - Existing project icons, Kurland font and menu/level audio are reused under the licences recorded above; no additional third-party asset download is introduced.
+
+## GitHub UI references (2026-10-26)
+The five root-level `Megabonk_*` / `firefox_WjCOcSAmyE.png` screenshots uploaded by the user are layout references only. Original frames, button styling and map markers are implemented in project code. Screenshots are excluded from playable exports; no reference-game icons or pixels are extracted. See docs/REFERENCE_UI.md for the reference-to-screen mapping.

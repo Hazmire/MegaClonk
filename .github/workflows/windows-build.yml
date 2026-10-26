@@ -56,8 +56,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if gh release view rewards-ui-v7 >/dev/null 2>&1; then
-            gh release upload rewards-ui-v7 builds/BONK_INFINITY_Windows_x64.zip --clobber
+          if gh release view reference-ui-v7.1 >/dev/null 2>&1; then
+            gh release upload reference-ui-v7.1 builds/BONK_INFINITY_Windows_x64.zip --clobber
           else
-            gh release create rewards-ui-v7 builds/BONK_INFINITY_Windows_x64.zip --target "$GITHUB_SHA" --prerelease --title "MEGACLONK — Rewards and XP Playtest 7" --notes-file docs/REWARD_UI_RELEASE.md
+            gh release create reference-ui-v7.1 builds/BONK_INFINITY_Windows_x64.zip --target "$GITHUB_SHA" --prerelease --title "MEGACLONK — Reference UI Playtest 7.1" --notes-file docs/REFERENCE_UI_RELEASE.md
           fi

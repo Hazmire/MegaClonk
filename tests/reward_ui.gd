@@ -65,5 +65,28 @@ func run():
  event=InputEventAction.new();event.action="ui_accept";event.pressed=true;root.push_input(event)
  event=InputEventAction.new();event.action="ui_accept";event.pressed=false;root.push_input(event);await process_frame
  check(game.mode=="run","Keyboard/controller UI-accept applies the focused offer")
+ game.pending_upgrades=0;game.pause_menu();await process_frame
+ var pause_labels=[]
+ for node in descendants(game.frontend.menu):
+  if node is Label:pause_labels.append(node.text)
+ check("PAUSED" in pause_labels and "Inventory" in pause_labels and "Stats" in pause_labels,"Reference pause shows inventory and real stats sidebars")
+ var map_button: Button
+ for node in descendants(game.frontend.menu):
+  if node is Button and node.text=="MAP":map_button=node
+ map_button.pressed.emit();await process_frame
+ var expanded: RunMinimap
+ for node in descendants(game.frontend.menu):
+  if node is RunMinimap:expanded=node
+ check(game.mode=="map" and expanded!=null,"Pause map button opens the expanded world map")
+ check(expanded.explored==game.frontend.minimap.explored and expanded.reveal_all==game.frontend.minimap.reveal_all,"Expanded map preserves current fog of war")
+ check(is_equal_approx(expanded.extent().x,expanded.extent().y),"Expanded map keeps world aspect ratio")
+ var elapsed=game.elapsed;game._physics_process(0.25)
+ check(game.elapsed==elapsed and not game.player.active,"Expanded map pauses gameplay simulation")
+ var cancel=InputEventAction.new();cancel.action="ui_cancel";cancel.pressed=true;game._unhandled_input(cancel)
+ check(game.mode=="pause","Escape from pause map returns to pause")
+ game.resume();var map_event=InputEventAction.new();map_event.action="map";map_event.pressed=true;game._unhandled_input(map_event)
+ check(game.mode=="map" and InputMap.has_action("map") and game.bindings.has("map"),"World-map action uses existing rebindable input system")
+ game._unhandled_input(cancel)
+ check(game.mode=="run" and game.player.active,"Escape from gameplay map resumes normally")
  game.queue_free();await process_frame;await process_frame
  print("REWARD UI: %d checks, %d failures"%[checks,failures.size()]);quit(0 if failures.is_empty() else 1)
