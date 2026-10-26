@@ -16,4 +16,4 @@ not Windows/gaming-GPU FPS. Audio Dummy cannot establish audible audio performan
 
 Known remaining verification: native Windows/audio and gaming-GPU60FPS. Mesa shutdown retains two texture handles; documented, not claimed fixed.
 
-Functional work and local validation complete; Windows publication verification is the remaining delivery step.
+Functional work, local validation and Windows publication verification complete. Published ZIP checksum/CRC and clean source verified; exported game data passed a 180-frame headless smoke test. See releases/BUILD_INFO.md.
