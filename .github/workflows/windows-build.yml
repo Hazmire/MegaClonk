@@ -26,7 +26,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Install checksum-verified Godot 4.7.2 and export templates
         run: python3 tools/install_engine.py
-      - name: Import project and run all ten regression and seeded-world suites
+      - name: Import project and run all twelve regression and seeded-world suites
         run: tools/validate.sh
       - name: Export Windows x64 with embedded game resources
         run: tools/export.sh
@@ -42,8 +42,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if gh release view dynamic-forest-v3.1 >/dev/null 2>&1; then
-            gh release upload dynamic-forest-v3.1 builds/BONK_INFINITY_Windows_x64.zip --clobber
+          if gh release view combat-polish-v4 >/dev/null 2>&1; then
+            gh release upload combat-polish-v4 builds/BONK_INFINITY_Windows_x64.zip --clobber
           else
-            gh release create dynamic-forest-v3.1 builds/BONK_INFINITY_Windows_x64.zip --target "$GITHUB_SHA" --prerelease --title "MEGACLONK — Dynamic Forest Playtest" --notes-file docs/DYNAMIC_RELEASE.md
+            gh release create combat-polish-v4 builds/BONK_INFINITY_Windows_x64.zip --target "$GITHUB_SHA" --prerelease --title "MEGACLONK — Combat and Atmosphere Playtest" --notes-file docs/POLISH_RELEASE.md
           fi

@@ -141,7 +141,6 @@ func _physics_process(delta: float) -> void:
  if direction.length_squared()>0.1: avatar.rotation.y=lerp_angle(previous,atan2(direction.x,direction.z),12*delta)
  var animation="idle"
  if dead: animation="death"
- elif hurt_time>0: animation="hit"
  elif not is_on_floor(): animation="jump" if velocity.y>0 else ("glide" if can_glide and Input.is_action_pressed("jump") else "fall")
  elif posture=="sliding": animation="slide"
  elif posture=="crouching": animation="crouch"

@@ -197,8 +197,13 @@ static func geometry(data: Dictionary) -> ArrayMesh:
    var boundary=(side==0 and z==0) or (side==1 and x==SIDE-1) or (side==2 and z==SIDE-1) or (side==3 and x==0)
    var lo_a=a;var lo_b=b
    if boundary:
-    # Continuous visible perimeter wall, 24m above each local surface.
-    lo_a.y+=24;lo_b.y+=24;a.y=-4;b.y=-4
+    # Faceted, irregular high rock faces; lower vertices lean inward so no
+    # gap opens between the walkable floor and the physical perimeter.
+    for level in 4:
+     var p0=wall_vertex(a,data.seed,float(level)/4);var p1=wall_vertex(b,data.seed,float(level)/4)
+     var p2=wall_vertex(a,data.seed,float(level+1)/4);var p3=wall_vertex(b,data.seed,float(level+1)/4)
+     for v in [p0,p3,p1,p0,p2,p3]:tool.set_color(Color("77715e").srgb_to_linear());tool.add_vertex(v)
+    continue
    elif n>=0 and n<SIDE*SIDE:
     lo_a.y=plane_height(data.planes[n],a.x,a.z);lo_b.y=plane_height(data.planes[n],b.x,b.z)
     if maxf(a.y-lo_a.y,b.y-lo_b.y)<=0.01:continue
@@ -207,3 +212,10 @@ static func geometry(data: Dictionary) -> ArrayMesh:
     if (triangle[1]-triangle[0]).cross(triangle[2]-triangle[0]).length_squared()>0.00001:
      for v in triangle:tool.set_color(Color("77715e").srgb_to_linear());tool.add_vertex(v)
  tool.generate_normals();return tool.commit()
+
+static func wall_vertex(point: Vector3,seed_value: int,t: float) -> Vector3:
+ var radial=Vector3(point.x,0,point.z).normalized()
+ var noise=sin(point.x*0.074+float(seed_value%31))*cos(point.z*0.093+float(seed_value%17))
+ var height=84+noise*16
+ var out=-0.4 if t<=0.25 else (t-0.25)*12+sin(point.x*0.18+point.z*0.15)*t*2
+ return Vector3(point.x,-4+(height+4)*t,point.z)+radial*out

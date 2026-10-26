@@ -20,8 +20,8 @@ func run():
  var close_camera=Camera3D.new();game.world.add_child(close_camera);close_camera.position=origin+Vector3(7,3.7,8);close_camera.look_at(origin+Vector3.UP);close_camera.current=true
  close_camera.position=origin+Vector3(2.8,1.7,4);close_camera.look_at(origin+Vector3.UP)
  for frame in [0.0,0.165,0.33,0.495]:
-  game.player.avatar.animate("run",RangerStride.METRES_PER_SECOND,0.016)
-  game.player.avatar.playback.seek(frame,true);game.player.avatar.playback.advance(0);label.text="Ranger fitted skeletal stride • t=%.3f"%frame;await capture("stride_"+str(frame))
+  game.player.avatar.animate("run",SimpleRangerClips.SPEED,0.016)
+  game.player.avatar.playback.seek(frame,true);game.player.avatar.playback.advance(0);label.text="Ranger generic four-state locomotion • t=%.3f"%frame;await capture("stride_"+str(frame))
  close_camera.position=origin+Vector3(7,3.7,8);close_camera.look_at(origin+Vector3.UP)
  game.enemies.clear()
  for i in 5:

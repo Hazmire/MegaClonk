@@ -16,7 +16,7 @@ func _ready() -> void:
  rig=model.get_node("Armature/Skeleton3D")
  playback=AnimationPlayer.new();playback.name="AnimationPlayer";model.add_child(playback)
  playback.callback_mode_process=AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_MANUAL
- playback.add_animation_library("",RigClips.library(rig,"ranger"))
+ playback.add_animation_library("",SimpleRangerClips.library(rig))
  attach_head()
  playback.play("idle");playback.advance(0)
 func attach_head() -> void:
@@ -46,25 +46,12 @@ func attach_head() -> void:
  var head=MeshInstance3D.new();head.name="UAL_Head";head.mesh=head_mesh;head.skin=head_skin;rig.add_child(head);head.skeleton=NodePath("..")
 func animate(state: String,speed: float,delta: float) -> void:
  if not is_instance_valid(playback):return
- var wanted=state
- if state=="run" or state=="turn":wanted="move"
- if state=="jump":
-  if not previous_input in ["jump","fall","glide"]:air_clock=0
-  air_clock+=delta
-  wanted="jump_start" if air_clock<0.2 else "airborne"
- if state in ["fall","glide"]:wanted="fall"
- if state in ["idle","run","turn"] and previous_input in ["jump","fall","glide"]:state_time=0;wanted="land"
- elif animation_state=="land" and state_time<0.16 and state in ["idle","run","turn"]:wanted="land"
- if state=="death":wanted="death"
- if not playback.has_animation(wanted):wanted="idle"
- if wanted!=animation_state:animation_state=wanted;playback.play(wanted,0.15,-2.5 if wanted=="death" else 1.0,wanted=="death");state_time=0
- state_time+=delta;previous_input=state
- playback.speed_scale=clampf(speed/RangerStride.METRES_PER_SECOND,0.1,4.0) if wanted=="move" else 1
+ var wanted="slide" if state in ["slide","crouch"] else ("jump" if state in ["jump","fall","glide","airborne","jump_start"] else ("move" if speed>0.2 else "idle"))
+ if wanted!=animation_state:
+  animation_state=wanted;playback.play(wanted,0.08)
+ playback.speed_scale=clampf(speed/SimpleRangerClips.SPEED,0.15,3.5) if wanted=="move" else 1.0
  playback.advance(delta)
- if state=="crouch" and speed>0.5:
-  for side in ["l","r"]:
-   var bone=rig.find_bone("thigh_"+side)
-   rig.set_bone_pose_rotation(bone,rig.get_bone_pose_rotation(bone)*Quaternion(Vector3.RIGHT,sin(state_time*speed*2)*(0.12 if side=="l" else -0.12)))
+ if state=="crouch":playback.seek(playback.get_animation("slide").length*0.35,true);playback.advance(0)
 func set_damage_flash(value: bool) -> void:
  if flashing==value:return
  flashing=value

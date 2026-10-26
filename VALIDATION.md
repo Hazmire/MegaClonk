@@ -1,3 +1,25 @@
+# Combat and atmosphere polish validation
+
+Current:444 assertions,55 concrete cliff traversal scenarios and three100-seed suites pass.
+The cliff cases include6m/12m, all orientations, ordinary/elite/boss agents, damage during a fall
+and a ramp landing. Animation checks inspect joint offsets/lengths, physics-root immobility and
+locomotion during damage. All36 weapon damage tests still pass; Chunkers counts/positions share
+its authoritative orbit functions and XP/gold totals survive aggregation.
+
+Controlled before/after profiling was repeated in a detached unchanged baseline checkout and the
+updated project, sequentially without another game process.100/250-enemy death pipelines measured
+314.122/314.502ms before and0.402/0.869ms after. Original exploratory traces measured392/322ms.
+Raw headless and rendered mean/P95/P99/worst, nodes/memory/draw/FX counts and context are in
+`docs/performance/`; full scope and limits in `docs/PERFORMANCE_POLISH.md`.
+
+Rendered inspection covers idle/run/jump/slide/crouch, Chunkers stones/debris, impacts/digits,
+soil/moss ground, sparse wind grass, dark sky/fog and high rock cliffs. The cloud uses Mesa software
+OpenGL. It still emits two retained-texture diagnostics on shutdown; this is disclosed rather than
+called an error-free graphics run. Native Windows/audio, driver-specific first-use stalls and target
+60FPS require local playtesting. Windows publication evidence is in releases/BUILD_INFO.md.
+
+Earlier validation history follows.
+
 # Dynamic Forest validation
 
 Godot4.7.2, unchanged engine. Ten suites cover **383 gameplay assertions** (the previous335 plus47

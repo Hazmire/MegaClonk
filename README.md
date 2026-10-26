@@ -2,14 +2,14 @@
 
 A native Godot4.7.2 survival roguelike with ten-minute forest stages, player-triggered
 boss encounters, continued runs, configurable loadouts and permanent silver progression.
-This update adds staggered random terrain and peripheral spawns, corrected Ranger locomotion,
-a three-category enemy roster, cliff climbing, one-use elite statues and two new main bosses.
-[Current rules, assets and limitations](docs/DYNAMIC_FOREST.md).
+This update removes measured CPU death stalls, adds cliff dropping, simplifies player animation,
+and improves weapon effects, ground, grass, dark blue sky, distance fog and high rocky boundaries.
+[Scope and limitations](docs/POLISH_UPDATE.md) · [Before/after measurements](docs/PERFORMANCE_POLISH.md).
 
 ## Download and play
 
-- [Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/dynamic-forest-v3.1/BONK_INFINITY_Windows_x64.zip)
-- [GitHub Actions builds](https://github.com/Hazmire/MegaClonk/actions/runs/40246730637)
+- [Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/combat-polish-v4/BONK_INFINITY_Windows_x64.zip)
+- [GitHub Actions builds](https://github.com/Hazmire/MegaClonk/actions/workflows/windows-build.yml)
 - [PR #3 — merge into Full-Release](https://github.com/Hazmire/MegaClonk/pull/3)
 
 Extract and launch **BONK_INFINITY.exe**, or **Launch_Compatibility.bat** if Vulkan
@@ -35,9 +35,8 @@ vanish after one successful purchase. Hover stats/equipment in Tab for rules and
 
 [Full rules and controls](docs/CORE_OVERHAUL.md) · [Playtest guide](docs/PLAYTEST.md)
 
-![Randomized Forest](docs/images/dynamic/dynamic_seed_00.png)
-![New roster](docs/images/dynamic/dynamic_roster.png)
-![Elite and Rock Golem](docs/images/dynamic/dynamic_elite_golem.png)
+![Chunkers stones and new ground](docs/images/polish/polish_chunkers.png)
+![Simple player animation](docs/images/polish/polish_slide.png)
 
 ## Assets and limits
 
@@ -56,10 +55,10 @@ tools/export.sh
 ```
 
 Use writable BONK_TOOLS_ROOT and BONK_RUNTIME_ROOT on other Linux machines. CI installs
-checksum-verified Godot/templates, imports committed assets, runs ten suites and exports
+checksum-verified Godot/templates, imports committed assets, runs twelve suites and exports
 Windows x64. Ability/run balance Resources live in assets/config. Extraction of uploaded
 archives is reproducible with tools/integrate_uploads.py (libarchive required for RAR);
 CI uses the already committed runtime assets.
 
-[Validation evidence](VALIDATION.md) · [Dynamic Forest checklist](TODO_DYNAMIC_FOREST.md) · [Current status](docs/STATUS.md).
+[Validation evidence](VALIDATION.md) · [Polish checklist](TODO_POLISH.md) · [Current status](docs/STATUS.md).
 Profiles migrate to V3 silver while preserving existing statistics, settings, unlocks and saves.

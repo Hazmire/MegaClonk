@@ -1,0 +1,89 @@
+{
+  "context": {
+    "engine": "4.7.2-stable (official)",
+    "note": "Frame durations include process-frame scheduling; script_work isolates manually advanced combat. Dummy audio. Physics monitor excludes the manually driven enemy simulation.",
+    "rendered": true,
+    "renderer": "Mesa software OpenGL",
+    "samples_per_case": 40
+  },
+  "wind_off": {
+    "damage_numbers_peak": 0,
+    "death_pipeline": {
+      "mean_ms": 0.001825,
+      "p95_ms": 0.003,
+      "p99_ms": 0.003,
+      "worst_ms": 0.003
+    },
+    "draw_calls_peak": 194.0,
+    "enemy_count_end": 0,
+    "engine_physics": {
+      "mean_ms": 0.393725,
+      "p95_ms": 3.804,
+      "p99_ms": 3.804,
+      "worst_ms": 3.804
+    },
+    "flipbooks_peak": 0.0,
+    "fps_from_frame_mean": 2.65672590678372,
+    "frame": {
+      "mean_ms": 376.40315,
+      "p95_ms": 418.171,
+      "p99_ms": 422.898,
+      "worst_ms": 422.898
+    },
+    "hit_pipeline": {
+      "mean_ms": 0.0017,
+      "p95_ms": 0.002,
+      "p99_ms": 0.003,
+      "worst_ms": 0.003
+    },
+    "memory_bytes_peak": 83706842.0,
+    "node_peak": 738.0,
+    "script_work": {
+      "mean_ms": 0.125425,
+      "p95_ms": 0.1,
+      "p99_ms": 1.784,
+      "worst_ms": 1.784
+    },
+    "xp_entities_peak": 0
+  },
+  "wind_on": {
+    "damage_numbers_peak": 0,
+    "death_pipeline": {
+      "mean_ms": 0.002025,
+      "p95_ms": 0.003,
+      "p99_ms": 0.003,
+      "worst_ms": 0.003
+    },
+    "draw_calls_peak": 195.0,
+    "enemy_count_end": 0,
+    "engine_physics": {
+      "mean_ms": 122.794925,
+      "p95_ms": 5.304,
+      "p99_ms": 4838.699,
+      "worst_ms": 4838.699
+    },
+    "flipbooks_peak": 0.0,
+    "fps_from_frame_mean": 2.74576087127386,
+    "frame": {
+      "mean_ms": 364.197775,
+      "p95_ms": 392.075,
+      "p99_ms": 414.856,
+      "worst_ms": 414.856
+    },
+    "hit_pipeline": {
+      "mean_ms": 0.00215,
+      "p95_ms": 0.003,
+      "p99_ms": 0.003,
+      "worst_ms": 0.003
+    },
+    "memory_bytes_peak": 83712170.0,
+    "node_peak": 738.0,
+    "script_work": {
+      "mean_ms": 0.2126,
+      "p95_ms": 0.106,
+      "p99_ms": 5.35,
+      "worst_ms": 5.35
+    },
+    "xp_entities_peak": 0
+  }
+}

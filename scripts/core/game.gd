@@ -29,6 +29,13 @@ var grid: Dictionary = {}
 var prop_batches: Dictionary = {}
 var decoration_checksum=0
 var projectile_meshes: Dictionary = {}
+var effect_meshes: Dictionary={}
+var numbers: CombatNumbers
+var combat_counters={"hits":0,"deaths":0,"xp_drops":0,"xp_merged":0}
+var debug_combat=false
+var combat_debug_label: Label
+var combat_pool_start=0
+var combat_burst_start=0
 var obstacles: Dictionary = {}
 var mode = "menu"
 var sandbox = false
@@ -224,6 +231,7 @@ func build_menu_world() -> void:
  mesh_node(cylinder(8, 1), Color("31575a"), world, Vector3(10, -1, -10))
  create_avatar(world, selected_character, Vector3(10,0,-10)).scale = Vector3.ONE * 3
 func create_avatar(parent: Node3D, index: int, pos: Vector3) -> Node3D:
+ if debug_combat:combat_counters["scenes"]=int(combat_counters.get("scenes",0))+1
  var node=RangerVisual.new()
  parent.add_child(node)
  node.position=pos
@@ -292,6 +300,7 @@ func build_stage() -> void:
  prop_batches.clear();decoration_checksum=0
  obstacles.clear()
  for id in weapons:
+  weapons[id].erase("debris")
   weapons[id]["visuals"] = []
   weapons[id]["summons"] = []
  stage_time = 0
@@ -319,6 +328,9 @@ func build_stage() -> void:
  env.fog_enabled = true
  env.fog_light_color = env.background_color
  env.fog_density = 0.003 if biome < 2 else 0.009
+ ForestAtmosphere.apply(env)
+ for child in world.get_children():
+  if child is DirectionalLight3D:child.sky_mode=DirectionalLight3D.SKY_MODE_LIGHT_ONLY
  ForestWorld.build(self)
  if OrdinaryRoster.SETTINGS.elite_statues>0:create_elite_statue()
  for i in range(12):
@@ -340,6 +352,8 @@ func build_stage() -> void:
  combat_fx=CombatFX.new();world.add_child(combat_fx)
  pool = MeshPool.new()
  world.add_child(pool)
+ numbers=CombatNumbers.new();world.add_child(numbers);numbers.prewarm()
+ prewarm_combat()
  player = BonkPlayer.new()
  player.stats = stats
  world.add_child(player)
@@ -528,6 +542,9 @@ func spawn_enemy(kind: int = -1, at: Vector3 = Vector3.INF) -> Dictionary:
  if effects.size()<70:combat_fx.burst("smoke_puff",enemy.pos-Vector3.UP*0.5,0.5)
  return enemy
 func update_enemies(delta: float) -> void:
+ if debug_combat:
+  combat_pool_start=pool.created;combat_burst_start=combat_fx.bursts_created
+  combat_counters={"hits":0,"deaths":0,"xp_drops":0,"xp_merged":0,"scenes":0,"freed_nodes":0}
  if is_instance_valid(forest_navigation):forest_navigation.tick(delta,player.position)
  var colors = [Color("ee7d70"),Color("ffc05f"),Color("a28cae"),Color("e0d3a0"),Color("f55e67"),Color("b0dafa"),Color("aeef7a"),Color("80b9cb"),Color("cf7aff")]
  var mm = enemy_mesh.multimesh
@@ -656,6 +673,7 @@ func hurt(amount: float) -> void:
  play_sound("hit")
 func hit(e: Dictionary, base: float, weapon: int) -> void:
  if e.is_empty() or e.hp<=0: return
+ if debug_combat:combat_counters.hits+=1
  var critical = rng.randf()<minf(1,stats.crit+(WeaponUpgrades.value(weapons[weapon],"crit") if weapons.has(weapon) else 0))
  var amount = Catalog.damage(base,stats,critical)*loadout_runtime.damage_multiplier()
  e["last_weapon"]=weapon
@@ -665,7 +683,9 @@ func hit(e: Dictionary, base: float, weapon: int) -> void:
  if character == 16 and e.hp/e.max_hp<0.1: amount = e.hp+1
  if e.kind<8 and "shield" in e.variant.modules and e.hp/e.max_hp>0.5: amount*=0.5
  e["hit_time"]=0.15
- if is_instance_valid(combat_fx):combat_fx.burst("impact_concrete",e.pos,1.5)
+ if is_instance_valid(combat_fx):
+  if weapon>=0:WeaponVFX.contact(self,weapon,e.pos)
+  else:combat_fx.burst("impact_concrete",e.pos,0.5)
  var actual=minf(amount,maxf(0,e.hp))
  e.hp -= amount
  if weapon>=0:
@@ -676,16 +696,9 @@ func hit(e: Dictionary, base: float, weapon: int) -> void:
   else:samples.append({"time":bucket,"damage":actual})
   while samples.size()>21:samples.pop_front()
  e.knock += (e.pos-player.position).normalized()*stats.knockback*2*(e.variant.knockback if e.kind<8 else 0.2)
- if settings.numbers and effects.size()<60 and DisplayServer.get_name()!="headless":
-  var number=Label3D.new()
-  number.text=str(int(amount))+("!" if critical else "")
-  number.font_size=42 if critical else 32
-  number.modulate=Color("ffe6a0") if critical else (Color("acdf76") if weapon in [23,33] else (Color("ffb370") if weapon in [1,3,25] else Color.WHITE))
-  number.billboard=BaseMaterial3D.BILLBOARD_ENABLED
-  number.no_depth_test=true
-  world.add_child(number)
-  number.position=e.pos+Vector3.UP
-  effects.append({"node":number,"life":0.55})
+ if settings.numbers and DisplayServer.get_name()!="headless":
+  var color=Color("ffe6a0") if critical else (Color("acdf76") if weapon in [23,33] else (Color("ffb370") if weapon in [1,3,25] else Color.WHITE))
+  numbers.show_damage(e.pos+Vector3.UP,amount,critical,color,elapsed)
  damage_total += actual
  damage_by_weapon[weapon] = damage_by_weapon.get(weapon,0.0)+actual
  health = minf(stats.max_health,health+actual*stats.lifesteal)
@@ -697,15 +710,17 @@ func area(pos: Vector3, radius: float, damage: float, weapon: int, status: Strin
   if status == "poison": e.poison = 4.0*stats.duration;e["poison_source"]=weapon
 func kill_enemy(index: int) -> void:
  var e = enemies[index]
+ if debug_combat:combat_counters.deaths+=1
  if e.kind<8:
   if "death_blast" in e.variant.modules and not e.detonated:
    e.detonated=true
    schedule_blast(e.pos,e.variant.blast_radius,e.damage,0.4)
-  var corpse=mesh_node(load(e.variant.model),Color.WHITE,world,e.pos-Vector3.UP*0.65)
-  corpse.material_override=null
-  if effects.size()<90: effects.append({"node":corpse,"life":0.45,"death":true})
-  else: corpse.queue_free()
-  impact(e.pos,Color("d5d9b6"),3)
+  if effects.size()<48:
+   var model=e.variant.get("visual_model","Puglin")
+   var corpse=pool.acquire("corpse_"+model,BestiaryFrames.mesh(model,"enemy_idle",0),Color.WHITE,e.pos-Vector3.UP*0.65,true)
+   corpse.scale=Vector3.ONE*float(e.variant.get("visual_scale",1))*e.scale
+   effects.append({"node":corpse,"life":0.4,"death":true})
+  combat_fx.burst("smoke_puff",e.pos,0.5,0.25)
  if character == 13 and e.poison>0: area(e.pos,4,12,23,"poison")
  if character == 12 and (e.slow>0 or e.frozen>0): health = minf(stats.max_health,health+2)
  if e.spore:
@@ -718,9 +733,10 @@ func kill_enemy(index: int) -> void:
  if e.kind in [9,10]:
   run_metrics["minibosses"]=int(run_metrics.get("minibosses",0))+1;gold+=25
  if e.kind>=8:
-  var corpse=mesh_node(e.variant.mesh,Color.WHITE,world,e.pos)
-  corpse.material_override=null;corpse.scale=Vector3.ONE*e.scale
-  effects.append({"node":corpse,"life":0.6,"death":true})
+  if effects.size()<48:
+   var model=e.variant.get("visual_model","Puglin" if e.get("encounter","") in ["colossus","champion"] else "Imp")
+   var corpse=pool.acquire("corpse_"+model,e.variant.mesh,Color.WHITE,e.pos,true);corpse.scale=Vector3.ONE*e.scale
+   effects.append({"node":corpse,"life":0.6,"death":true})
   combat_fx.burst("smoke_puff",e.pos,2)
  if e.kind == 8:
   for summoned in enemies:
@@ -733,8 +749,7 @@ func kill_enemy(index: int) -> void:
   gold += 50
   award_item()
  for i in (6 if e.kind==8 else 1):
-  var model = pool.acquire("xp",projectile_mesh("xp"),Color("6dffd8"),e.pos+Vector3(rng.randf()-0.5,0,rng.randf()-0.5))
-  pickups.append({"node":model,"value":(e.variant.reward if e.has("variant") else 5),"age":0.0})
+  add_xp_drop(e.pos+Vector3(rng.randf()-0.5,0,rng.randf()-0.5),float(e.variant.reward if e.has("variant") else 5))
  # Gold is automatically collected on every kill; no per-coin physics objects.
  gold_fraction+=stats.gold_gain
  var gained=int(gold_fraction)
@@ -820,6 +835,7 @@ func update_weapons(delta: float) -> void:
   var color = Color(w[5])
   var origin = player.position+Vector3.UP
   var direction = (target.pos-origin).normalized() if not target.is_empty() else Vector3.FORWARD.rotated(Vector3.UP,player.yaw)
+  WeaponVFX.attack(self,id,origin,target.pos if not target.is_empty() else origin)
   match w[1]:
    "aura","sweep","corrupt","reap","dash_slash","cone":
     var r = float(w[4])*radius
@@ -831,11 +847,11 @@ func update_weapons(delta: float) -> void:
     else: slash_arc(origin,direction,r,color)
     if w[1]=="reap": health = minf(stats.max_health,health+1)
    "orbit","chrono":
-    for i in range(2+count):
-     var angle = elapsed*3+i*TAU/(2+count)
-     var p = origin+Vector3(cos(angle),0,sin(angle))*float(w[4])*radius
+    for i in orbit_count(id):
+     var p = orbit_position(id,i)
      area(p,2*radius,power,id,"slow" if w[1]=="chrono" else "")
-     flash(p,color,0.7)
+     if id!=4:flash(p,color,0.7)
+
     if w[1]=="chrono" and rank>=6:
      for e in nearby(origin,7*radius): e.frozen=0.6*stats.duration
    "trail","frost_trail","mine":
@@ -948,7 +964,7 @@ func update_projectiles(delta: float) -> void:
     if e in p.hits or segment_distance(e.pos,previous,p.node.position)>maxf(1.0,float(e.get("radius",0.5)))*stats.size: continue
     hit(e,p.damage,p.weapon)
     if p.kind=="fireball": e.burn=3*stats.duration;e["burn_source"]=p.weapon
-    impact(e.pos,Color(Catalog.WEAPONS[p.weapon][5]),3)
+    impact(e.pos,Color(Catalog.WEAPONS[p.weapon][5]),2)
     p.hits.append(e)
     if p.kind in ["poison","spore"]:
      make_field(p.node.position,4*stats.size,p.damage*0.4,p.weapon,Color(Catalog.WEAPONS[p.weapon][5]),"poison",(3+p.rank*0.15)*stats.duration)
@@ -991,20 +1007,15 @@ func update_fields(delta: float) -> void:
     if f.mine and targets.size()>0: flash(f.node.position,Color("ffc56a"),f.radius); f.life=0
   if f.life<=0: f.node.queue_free(); fields.remove_at(i)
 func flash(pos: Vector3, color: Color, radius: float) -> void:
- if effects.size() >= effect_budget(): return
- var ring = TorusMesh.new()
- ring.inner_radius = radius*0.85
- ring.outer_radius = radius
- ring.rings = 12
- ring.ring_segments = 8
- var node = mesh_node(ring,color,world,pos,true)
+ if effects.size()>=effect_budget():return
+ var node=pool.acquire("flash"+color.to_html(),effect_mesh("ring"),color,pos);node.scale=Vector3.ONE*radius
  effects.append({"node":node,"life":0.3})
-func beam(a: Vector3, b: Vector3, color: Color) -> void:
- if a.distance_squared_to(b)<0.01 or effects.size()>90: return
- var node = mesh_node(box(Vector3(0.1,0.1,a.distance_to(b))),color,world,(a+b)*0.5,true)
- node.look_at(b)
- effects.append({"node":node,"life":0.13})
+func beam(a: Vector3,b: Vector3,color: Color) -> void:
+ if a.distance_squared_to(b)<0.01 or effects.size()>=effect_budget():return
+ var node=pool.acquire("beam"+color.to_html(),effect_mesh("beam"),color,(a+b)*0.5)
+ node.scale=Vector3(1,1,a.distance_to(b));node.look_at(b);effects.append({"node":node,"life":0.13})
 func update_effects(delta: float) -> void:
+ if is_instance_valid(numbers):numbers.tick(delta)
  for i in range(effects.size()-1,-1,-1):
   effects[i].life-=delta
   if effects[i].has("velocity"):
@@ -1018,7 +1029,9 @@ func update_effects(delta: float) -> void:
   if effects[i].node is Label3D: effects[i].node.position.y+=delta*2
   if effects[i].life<=0:
    if effects[i].node.has_meta("pool_key"): pool.release(effects[i].node)
-   else: effects[i].node.queue_free()
+   else:
+    effects[i].node.queue_free()
+    if debug_combat:combat_counters.freed_nodes+=1
    effects.remove_at(i)
 func update_pickups(delta: float) -> void:
  for i in range(pickups.size()-1,-1,-1):
@@ -1132,6 +1145,10 @@ func update_interactions(delta: float) -> void:
  tone(600,0.15)
 func update_hud() -> void:
  frontend.update_hud()
+ if is_instance_valid(combat_debug_label):
+  combat_debug_label.visible=debug_combat
+  if debug_combat:combat_debug_label.text="COMBAT / frame: hits %d deaths %d new pooled nodes %d scenes %d frees %d\nFX %d (spawned %d) XP entities %d (merged %d) numbers %d"%[combat_counters.get("hits",0),combat_counters.get("deaths",0),pool.created-combat_pool_start,combat_counters.get("scenes",0),combat_counters.get("freed_nodes",0),combat_fx.active.size(),combat_fx.bursts_created-combat_burst_start,pickups.size(),combat_counters.get("xp_merged",0),numbers.active.size()]
+
 
 func pause_menu() -> void:
  mode="pause"
@@ -1193,6 +1210,11 @@ func sandbox_menu() -> void:
  button("Generate entered seed",col,func():
   if seed_input.text.is_valid_int():map_seed_override=int(seed_input.text);build_stage();resume())
  button("Show regions / ramps / navigation",col,toggle_map_debug)
+ button("Combat counters: "+str(debug_combat),col,func():
+  debug_combat=not debug_combat
+  if not is_instance_valid(combat_debug_label):
+   combat_debug_label=Label.new();combat_debug_label.position=Vector2(20,180);combat_debug_label.add_theme_font_size_override("font_size",16);ui.add_child(combat_debug_label)
+  combat_debug_label.visible=debug_combat;resume())
  button("Spawn 100 enemies",col,func(): for i in 100: spawn_enemy())
  button("Spawn Warden",col,func(): spawn_enemy(8))
  button("Add XP +100 / gold +100",col,func(): xp+=100; gold+=100)
@@ -1213,6 +1235,7 @@ func apply_settings() -> void:
  music.volume_db=linear_to_db(maxf(0.001,settings.music))
  if is_instance_valid(player): player.sensitivity=settings.sensitivity; player.inverted=settings.invert
 func setup_audio() -> void:
+ sound_bank["stone"]=preload("res://assets/vendor/audio/Running_stone___Boot__1_1766767186839.mp3")
  var manifest=load("res://assets/vendor/audio/manifest.json") as JSON
  var tokens={"hit":"Sword_hit_flesh","death":"Enemy_death","purchase":"Coin_pickup","level":"Level_up","menu":"Inventory_open","explosion":"Fire_spell_impact","ready":"Buff_spell","cast":"Fire_spell_cast","shot":"Bow_and_arrow_shot","swing":"Sword_swing","ambient":"Forest_ambience"}
  for event in tokens:
@@ -1246,7 +1269,7 @@ func setup_audio() -> void:
 func play_sound(event: String) -> void:
  if AudioServer.get_driver_name()=="Dummy" or not sound_bank.has(event):return
  var now=Time.get_ticks_msec()
- if event in ["hit","death","explosion","shot","swing","cast"] and now-int(sound_last.get(event,-1000))<80:return
+ if event in ["hit","death","explosion","shot","swing","cast","stone"] and now-int(sound_last.get(event,-1000))<80:return
  sound_last[event]=now
  var audio=sfx[sfx_cursor%sfx.size()];sfx_cursor+=1;audio.stream=sound_bank[event];audio.volume_db=linear_to_db(maxf(0.001,float(settings.effects)));audio.play()
 func tone(frequency: float, duration: float, loudness: float = 0.3) -> void:
@@ -1273,18 +1296,20 @@ func update_special_visuals(delta: float) -> void:
   var state = weapons[id]
   var rank = state.level
   if w[1] in ["orbit","chrono"]:
-   var count = mini(12,2+int(stats.count)+rank/3)
+   var count=orbit_count(id)
    while state.visuals.size()<count:
-    var node=Node3D.new()
-    world.add_child(node)
-    mesh_node(box(Vector3(0.16,0.35,1.5)),Color(w[5]),node,Vector3.ZERO,true)
-    mesh_node(box(Vector3(0.6,0.12,0.12)),Color("edf7ff"),node,Vector3(0,0,-0.5))
-    state.visuals.append(node)
+    var node=MeshInstance3D.new();node.mesh=WeaponArt.mesh("stone" if id==4 else ("shield" if id==8 else "blade"));world.add_child(node);state.visuals.append(node)
+   while state.visuals.size()>count:state.visuals.pop_back().queue_free()
+   var size_multiplier=stats.size*(1+WeaponUpgrades.value(state,"radius"))
    for i in state.visuals.size():
-    var angle=elapsed*3+i*TAU/count
-    var radius=w[4]*stats.size*(1+WeaponUpgrades.value(state,"radius"))
-    state.visuals[i].position=player.position+Vector3(cos(angle)*radius,1.1,sin(angle)*radius)
-    state.visuals[i].rotation.y=-angle
+    state.visuals[i].position=orbit_position(id,i);state.visuals[i].scale=Vector3.ONE*size_multiplier
+    state.visuals[i].rotation=Vector3(elapsed*0.45+i,-elapsed*1.2+i*2,elapsed*0.3) if id==4 else Vector3(0,-elapsed*3-i*TAU/count,0)
+   if id==4:
+    if not state.has("debris"):
+     var debris=MultiMeshInstance3D.new();debris.multimesh=MultiMesh.new();debris.multimesh.transform_format=MultiMesh.TRANSFORM_3D;debris.multimesh.mesh=WeaponArt.mesh("stone");debris.multimesh.instance_count=12;world.add_child(debris);state.debris=debris
+    for i in 12:
+     var angle=elapsed*1.3+i*TAU/12;var p=player.position+Vector3(cos(angle)*(0.8+i%3*0.3),0.2+sin(elapsed*2+i)*0.12,sin(angle)*(0.8+i%3*0.3))
+     state.debris.multimesh.set_instance_transform(i,Transform3D(Basis.from_euler(Vector3(angle,i,angle)).scaled(Vector3.ONE*0.08),p))
   if w[1]=="summon":
    var count=mini(8,1+int(stats.count)/2+rank/3)
    while state.summons.size()<count:
@@ -1305,6 +1330,8 @@ func update_special_visuals(delta: float) -> void:
      summon.clock=0.9/stats.haste/(1+WeaponUpgrades.value(state,"haste"))
 
 func _exit_tree() -> void:
+ CombatFX.frames.clear()
+ ForestAtmosphere.reset()
  RigClips.reset()
  if is_instance_valid(music):
   music.stop()
@@ -1347,6 +1374,8 @@ func build_enemy_mesh() -> ArrayMesh:
 
 func projectile_mesh(kind: String) -> Mesh:
  if projectile_meshes.has(kind): return projectile_meshes[kind]
+ if kind in ["bullet","scatter","bounce","return","lob","dice","wave"]:
+  projectile_meshes[kind]=WeaponArt.mesh(kind);return projectile_meshes[kind]
  var parts: Array=[]
  match kind:
   "xp":
@@ -1364,19 +1393,17 @@ func projectile_mesh(kind: String) -> Mesh:
  projectile_meshes[kind]=ModelBuilder.bake(parts)
  return projectile_meshes[kind]
 func trail(pos: Vector3, color: Color) -> void:
- var node=pool.acquire("trail"+color.to_html(),box(Vector3(0.08,0.08,0.18)),color,pos)
+ var node=pool.acquire("trail"+color.to_html(),effect_mesh("trail"),color,pos)
  effects.append({"node":node,"life":0.12})
 func impact(pos: Vector3, color: Color, count: int) -> void:
  if settings.reduced: count=mini(count,2)
  for i in mini(count,maxi(0,80-effects.size())):
-  var node=pool.acquire("spark"+color.to_html(),ModelBuilder.cone(0.06,0.28),color,pos+Vector3(rng.randf_range(-0.4,0.4),rng.randf_range(0,0.5),rng.randf_range(-0.4,0.4)))
+  var node=pool.acquire("spark"+color.to_html(),effect_mesh("spark"),color,pos+Vector3(rng.randf_range(-0.4,0.4),rng.randf_range(0,0.5),rng.randf_range(-0.4,0.4)))
   node.rotation=Vector3(rng.randf()*PI,0,rng.randf()*TAU)
   effects.append({"node":node,"life":0.22,"velocity":Vector3(rng.randf_range(-3,3),rng.randf_range(1,4),rng.randf_range(-3,3))})
-func telegraph(pos: Vector3, radius: float, duration: float, color: Color) -> void:
- var ring=TorusMesh.new()
- ring.inner_radius=maxf(0.1,radius-0.12)
- ring.outer_radius=radius
- var node=mesh_node(ring,color,world,Vector3(pos.x,terrain_height(pos.x,pos.z)+0.1,pos.z),true)
+func telegraph(pos: Vector3,radius: float,duration: float,color: Color) -> void:
+ var node=pool.acquire("warning"+color.to_html(),effect_mesh("warning"),color,Vector3(pos.x,terrain_height(pos.x,pos.z)+0.1,pos.z))
+ node.basis=Basis(Quaternion(Vector3.UP,ForestMap.normal(stage_map_seed(),pos.x,pos.z))).scaled(Vector3(radius,1,radius))
  effects.append({"node":node,"life":duration,"telegraph":true})
 func save_run(path: String = "user://active-run.json") -> bool:
  var saved_weapons={}
@@ -1514,26 +1541,14 @@ func grass_mesh() -> Mesh:
 
 func effect_budget() -> int:
  return 28 if settings.reduced else 30+int(settings.visual_intensity*65)
-func slash_arc(origin: Vector3, direction: Vector3, radius: float, color: Color) -> void:
- if effects.size()>=effect_budget(): return
- var surface=SurfaceTool.new()
- surface.begin(Mesh.PRIMITIVE_TRIANGLES)
- var facing=atan2(direction.x,direction.z)
- for i in 12:
-  var a=facing-1.1+i*2.2/12
-  var b=a+2.2/12
-  var outer_a=Vector3(sin(a),0,cos(a))*radius
-  var inner_a=outer_a*0.8
-  var outer_b=Vector3(sin(b),0,cos(b))*radius
-  var inner_b=outer_b*0.8
-  for point in [inner_a,outer_a,inner_b,inner_b,outer_a,outer_b]:
-   surface.set_normal(Vector3.UP)
-   surface.add_vertex(point)
- var node=mesh_node(surface.commit(),color,world,origin,true)
+func slash_arc(origin: Vector3,direction: Vector3,radius: float,color: Color) -> void:
+ if effects.size()>=effect_budget():return
+ var node=pool.acquire("slash"+color.to_html(),effect_mesh("slash"),color,origin)
+ node.rotation.y=atan2(direction.x,direction.z);node.scale=Vector3.ONE*radius
  node.material_override.cull_mode=BaseMaterial3D.CULL_DISABLED
  effects.append({"node":node,"life":0.18})
 func lightning_arc(a: Vector3, b: Vector3, color: Color) -> void:
- if is_instance_valid(combat_fx):combat_fx.lightning(b)
+ if is_instance_valid(combat_fx):combat_fx.burst("sparks_shower",b,0.4,0.16)
  var previous=a
  for i in range(1,6):
   var point=a.lerp(b,float(i)/5)
@@ -1552,7 +1567,7 @@ func update_blasts(delta: float) -> void:
   combat_fx.burst("explosion_small",blast.pos,clampf(blast.radius/2,1,4))
   flash(blast.pos,Color("ffaf67"),blast.radius)
   impact(blast.pos,Color("ffd49b"),8)
-  tone(85,0.2)
+  play_sound("explosion")
   if player.position.distance_to(blast.pos)<blast.radius: hurt(blast.damage)
   area(blast.pos,blast.radius,blast.damage*0.6,-1)
   pending_blasts.remove_at(i)
@@ -1673,3 +1688,57 @@ func activate_elite_statue(statue: Dictionary) -> bool:
   var point=statue.node.position+Vector3(cos(angle),0,sin(angle))*6
   spawn_enemy(13,point)
  combat_fx.burst("sparks_shower",statue.node.position,2);announce("ELITE ENCOUNTER • Obsidian Sentinels");return true
+
+func effect_mesh(kind: String) -> Mesh:
+ if effect_meshes.has(kind):return effect_meshes[kind]
+ var mesh: Mesh
+ match kind:
+  "ring":
+   var ring=TorusMesh.new();ring.inner_radius=0.85;ring.outer_radius=1;ring.rings=12;ring.ring_segments=8;mesh=ring
+  "warning":
+   var ring=TorusMesh.new();ring.inner_radius=0.97;ring.outer_radius=1;ring.rings=16;ring.ring_segments=8;mesh=ring
+  "beam":mesh=box(Vector3(0.055,0.055,1))
+  "trail":mesh=box(Vector3(0.06,0.06,0.18))
+  "spark":mesh=ModelBuilder.cone(0.06,0.28)
+  "slash":
+   var tool=SurfaceTool.new();tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+   for i in 12:
+    var a=-1.1+i*2.2/12;var b=a+2.2/12
+    var outer_a=Vector3(sin(a),0,cos(a));var outer_b=Vector3(sin(b),0,cos(b))
+    for point in [outer_a*0.8,outer_a,outer_b*0.8,outer_b*0.8,outer_a,outer_b]:tool.set_normal(Vector3.UP);tool.add_vertex(point)
+   mesh=tool.commit()
+ effect_meshes[kind]=mesh;return mesh
+func prewarm_combat() -> void:
+ for body in ["stone","shield","blade"]:WeaponArt.mesh(body)
+ for kind in ["ring","beam","trail","spark","slash","warning"]:effect_mesh(kind)
+ for weapon in Catalog.WEAPONS:
+  var color=Color(weapon[5])
+  for pair in [["flash","ring"],["beam","beam"],["trail","trail"],["spark","spark"],["slash","slash"]]:
+   var node=pool.acquire(pair[0]+color.to_html(),effect_mesh(pair[1]),color,Vector3.ZERO);pool.release(node)
+ for w in Catalog.WEAPONS:projectile_mesh(w[1])
+ projectile_mesh("xp")
+ for id in ["impact_concrete","smoke_puff","blood_burst","explosion_small","muzzle_front","fire_torch","sparks_shower"]:CombatFX.sprite_frames(id)
+ for model in ["Goblin","Skeleton","Imp","Puglin","Knight","Golem"]:
+  for i in 4:
+   var node=pool.acquire("corpse_"+model,BestiaryFrames.mesh(model,"enemy_idle",0),Color.WHITE,Vector3.ZERO,true);pool.release(node)
+ var waiting=[]
+ for i in 128:waiting.append(pool.acquire("xp",projectile_mesh("xp"),Color("6dffd8"),Vector3.ZERO))
+ for node in waiting:pool.release(node)
+func add_xp_drop(pos: Vector3,value: float) -> void:
+ if debug_combat:combat_counters.xp_drops+=1
+ # Merge spatially close rewards. All XP is retained, including boss multi-drops.
+ for pickup in pickups:
+  if pickup.node.position.distance_squared_to(pos)<9:
+   pickup.value+=value
+   pickup.node.scale=Vector3.ONE*clampf(1+sqrt(pickup.value)*0.04,1,2)
+   if debug_combat:combat_counters.xp_merged+=1
+   return
+ var node=pool.acquire("xp",projectile_mesh("xp"),Color("6dffd8"),pos)
+ pickups.append({"node":node,"value":value,"age":0.0})
+
+func orbit_count(id: int) -> int:
+ return 2+mini(16,int(stats.count)+int(WeaponUpgrades.value(weapons[id],"count")))
+func orbit_position(id: int,index: int) -> Vector3:
+ var angle=elapsed*3+index*TAU/orbit_count(id)
+ var radius=Catalog.WEAPONS[id][4]*stats.size*(1+WeaponUpgrades.value(weapons[id],"radius"))
+ return player.position+Vector3(cos(angle)*radius,1.0,sin(angle)*radius)

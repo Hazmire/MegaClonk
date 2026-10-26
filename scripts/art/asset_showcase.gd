@@ -17,7 +17,7 @@ func _ready() -> void:
  var layer=CanvasLayer.new();add_child(layer);var box=VBoxContainer.new();box.position=Vector2(25,25);layer.add_child(box)
  var label=Label.new();label.text="ASSET SHOWCASE • Ranger / Imp / Puglin • Nature MegaKit";box.add_child(label)
  var choose=OptionButton.new()
- for name in ["idle","run","jump","airborne","fall","land","crouch","slide","hit","death","glide"]:choose.add_item(name)
+ for name in ["idle","run","jump","slide","crouch"]:choose.add_item(name)
  box.add_child(choose);choose.item_selected.connect(func(i):state=choose.get_item_text(i))
  var note=Label.new();note.text="Enemy rigs: retargeted UAL locomotion. Escape returns to menu.";box.add_child(note)
 func _process(delta: float) -> void:ranger.animate(state,4 if state in ["run","crouch"] else 0,delta)

@@ -14,15 +14,15 @@ static func detonate(game: Node, e: Dictionary) -> void:
  e.detonated=true
  game.flash(e.pos,Color("ffb05d"),e.variant.blast_radius)
  game.impact(e.pos,Color("ffab55"),10)
- game.tone(85,0.22)
+ game.play_sound("explosion")
  if (game.player.position+Vector3.UP*0.65).distance_to(e.pos)<e.variant.blast_radius: game.hurt(e.damage)
  # Nearby enemies are affected, but death processing is deferred to the usual loop.
  for other in game.nearby(e.pos,e.variant.blast_radius):
   if other!=e: game.hit(other,e.damage*0.6,-1)
  e.hp=0
 static func step(game: Node, e: Dictionary, delta: float) -> void:
- if e.frozen>0:return
- if not e.get("climb",{}).is_empty():
+ if e.frozen>0 and e.get("drop",{}).is_empty():return
+ if not e.get("climb",{}).is_empty() or not e.get("drop",{}).is_empty():
   e.pos=EnemyTraversal.move(game,e,e.speed,delta);return
  var config=e.variant
  var modules=config.modules
@@ -89,7 +89,7 @@ static func step(game: Node, e: Dictionary, delta: float) -> void:
  if e.get("ordinary",false):e.pos=EnemyTraversal.move(game,e,speed,delta)
  else:e.pos=game.constrain_enemy_motion(e.pos,e.pos+(direction*speed+e.knock)*delta)
  e.knock=e.knock.move_toward(Vector3.ZERO,delta*15)
- if e.get("climb",{}).is_empty():
+ if e.get("climb",{}).is_empty() and e.get("drop",{}).is_empty():
   if not "flying" in modules:e.pos=game.avoid_props(e.pos)
   e.pos.x=clampf(e.pos.x,-95,95);e.pos.z=clampf(e.pos.z,-95,95)
   e.pos.y=game.terrain_height(e.pos.x,e.pos.z)+0.65+(1.3+sin(e.age*3)*0.25 if "flying" in modules else 0)

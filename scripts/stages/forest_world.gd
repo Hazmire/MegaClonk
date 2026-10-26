@@ -18,7 +18,7 @@ static func build(game: Node) -> void:
  game.map_layout=data
  var terrain=game.mesh_node(ForestMap.geometry(data),Color.WHITE,game.world)
  terrain.name="TerraceTerrain"
- var material=StandardMaterial3D.new();material.vertex_color_use_as_albedo=true;material.roughness=1.0;terrain.material_override=material
+ terrain.material_override=ForestAtmosphere.floor_material()
  terrain.create_trimesh_collision()
  # Dedicated generator only. Decoration never consumes combat RNG.
  var rng=RandomNumberGenerator.new();rng.seed=data.seed+1337
@@ -51,6 +51,7 @@ static func build(game: Node) -> void:
   var position=Vector3(p.x,game.terrain_height(p.x,p.y),p.y)
   if not spaced(game,position,1.8):continue
   game.prop_instance("mega_rock",mesh,Color.WHITE,position,Vector3.ONE,true);game.prop_collider(position,1.8,mesh.get_aabb().size.y)
+ ForestAtmosphere.add_grass(game,data,rng)
  # One navigation surface/flow field, built only after all blockers are known.
  game.forest_navigation=ForestNavigation.new();game.world.add_child(game.forest_navigation)
  game.forest_navigation.setup(data,game.obstacles)

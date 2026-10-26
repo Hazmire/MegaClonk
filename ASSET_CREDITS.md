@@ -59,3 +59,10 @@ Complete licences are retained in each pack directory and Windows distribution. 
 - Original Ranger two-bone stride fitted to the existing supplied65-bone rig; original articulated Goblin frames. `scripts/art/ranger_stride.gd`, `tools/bake_original_encounters.gd`.
 - Rock Golem and lesser golems: original assembly/animation using Quaternius Nature MegaKit Rock_Medium_1 (CC0), shared baked frames `assets/quaternius/baked/Golem_*`.
 - Standout7 `Skeletons_Free.zip` inspected; its included licence allows game use and prohibits standalone redistribution. Not selected: KayKit provides compatible walking clips. The Wrapper V2 is not integrated; it is not needed by this roster.
+
+## Combat / atmosphere polish
+
+- User-supplied `SourceCode.zip` / BinbunGrass shaders, mask textures and palette: selected source under `assets/BinbunGrass/`. No licence text is present in the archive; integrated for the user's explicitly authorized personal project, without claiming CC0. Adapted cutout/light/sampler handling; the dense demo is excluded.
+- Original procedural forest noise and digit atlas: `tools/generate_forest_texture.gd`, `tools/generate_number_atlas.gd`, `assets/config/forest_variation.png`, `combat_digits.png`. Original forest floor / number billboard shaders.
+- Player core motion: KayKit General Idle_A, MovementBasic Running_A / Jump_Idle and Quaternius UAL2 Slide (all supplied CC0 packs). Rest-space retargeting and baked Ranger library in `assets/config/player_core.res`; original player rig/outfit and head credits above remain.
+- Chunkers: Quaternius Nature MegaKit Rock_Medium_1, CC0, centered and instanced for weapon/debris. Original shield/blade/bone/banana/axe/dice meshes in WeaponArt. Stone audio uses the existing Clutch RPG stone-footfall sample, not a claimed dedicated new recording.

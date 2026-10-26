@@ -7,8 +7,12 @@ static var definitions: Dictionary={}
 var active: Array[Dictionary]=[]
 var idle: Array[AnimatedSprite3D]=[]
 var electric: Array[Dictionary]=[]
+var bursts_created=0
 var intensity=0.7
 var reduced=false
+func _ready() -> void:
+ for i in LIMIT:
+  var sprite=AnimatedSprite3D.new();add_child(sprite);sprite.hide();idle.append(sprite)
 static func definition(id: String) -> Dictionary:
  if definitions.is_empty():
   var data=load("res://assets/vendor/psx_fx/sheets/effects.json") as JSON
@@ -35,6 +39,7 @@ func burst(id: String, pos: Vector3, size_multiplier: float=1, duration: float=-
  sprite.texture_filter=BaseMaterial3D.TEXTURE_FILTER_NEAREST;sprite.alpha_cut=SpriteBase3D.ALPHA_CUT_DISCARD;sprite.shaded=false
  sprite.pixel_size=float(d.metres)/float(d.cell["64"][1])*size_multiplier
  sprite.position=pos;sprite.modulate=Color(1,1,1,clampf(intensity+0.3,0,1));sprite.show()
+ bursts_created+=1
  active.append({"sprite":sprite,"age":0.0,"life":duration if duration>0 else float(d.frames)/d.fps,"data":d})
  return true
 func lightning(pos: Vector3) -> bool:
@@ -59,3 +64,8 @@ func tick(delta: float, running: bool=true) -> void:
  for i in range(electric.size()-1,-1,-1):
   electric[i].age+=delta
   if electric[i].age>0.6:electric[i].node.queue_free();electric.remove_at(i)
+func _exit_tree() -> void:
+ for child in get_children():
+  if child is AnimatedSprite3D:
+   child.stop();child.sprite_frames=null
+ active.clear();idle.clear();electric.clear()

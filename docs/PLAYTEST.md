@@ -1,3 +1,7 @@
+# Latest combat and atmosphere polish
+
+See [current update](POLISH_UPDATE.md), [performance evidence](PERFORMANCE_POLISH.md) and [weapon audit](WEAPON_VFX_AUDIT.md). Older notes below are historical. The Mesa shutdown diagnostic and Windows/GPU verification limits are disclosed in those guides.
+
 # Latest Dynamic Forest update
 
 See [current gameplay/asset guide](DYNAMIC_FOREST.md). New KayKit Minion and Warrior models are integrated. The active ordinary roster is now Basic/Special/Large, with per-spawn choices; the main bosses are Big Chunkus and Rock Golem. Earlier release notes below are historical.

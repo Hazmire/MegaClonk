@@ -24,6 +24,8 @@ static func initialize(game: Node, e: Dictionary, id: String) -> void:
 static func step(game: Node, e: Dictionary, delta: float) -> void:
  if e.encounter in ["chunkus","rock_golem","statue_elite","lesser_golem"]:
   modern_step(game,e,delta);return
+ if e.encounter!="ghost" and (not e.get("drop",{}).is_empty() or not e.get("climb",{}).is_empty()):
+  e.pos=EnemyTraversal.move(game,e,e.speed,delta);return
  var d=e.variant
  for key in e.special_cds:e.special_cds[key]=maxf(0,e.special_cds[key]-delta)
  if e.encounter=="ghost":e.speed=minf(game.RUN_RULES.ghost_speed_cap,5.5+maxf(0,game.stage_time-game.STAGE_SECONDS)/game.RUN_RULES.ghost_growth_seconds)
@@ -56,7 +58,7 @@ static func step(game: Node, e: Dictionary, delta: float) -> void:
   if e.recovery>0:e.state="recover"
   else:
    e.state="move"
-   e.pos=game.constrain_enemy_motion(e.pos,e.pos+direction*e.speed*delta)*(0.3 if e.slow>0 else 1.0)
+   e.pos=EnemyTraversal.move(game,e,e.speed*(0.3 if e.slow>0 else 1.0),delta)
    if e.cooldown<=0:
     var candidates=[]
     for action in d.attacks:
@@ -101,9 +103,10 @@ static func execute(game: Node,e: Dictionary) -> void:
  game.play_sound("explosion");e.state="recover";e.recovery=0.8
 
 static func modern_step(game: Node,e: Dictionary,delta: float) -> void:
- if e.hp<=0 or e.frozen>0:return
+ if e.hp<=0 or (e.frozen>0 and e.get("drop",{}).is_empty()):return
  e.pos=EnemyTraversal.move(game,e,e.speed*(0.3 if e.slow>0 else 1),delta)
  e.knock=e.knock.move_toward(Vector3.ZERO,delta*15)
+ if e.frozen>0:return
  e.state="move"
  var distance=e.pos.distance_to(game.player.position+Vector3.UP*0.65)
  if distance<e.radius+0.9 and e.cooldown<=0:game.hurt(e.damage);e.cooldown=1.2

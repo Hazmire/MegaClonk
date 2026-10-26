@@ -1,3 +1,7 @@
+# Current work
+
+See [performance and polish checklist](TODO_POLISH.md) and [update guide](docs/POLISH_UPDATE.md). Earlier milestones follow.
+
 # Latest update
 
 See [Dynamic Forest milestones](TODO_DYNAMIC_FOREST.md) and [current gameplay guide](docs/DYNAMIC_FOREST.md).

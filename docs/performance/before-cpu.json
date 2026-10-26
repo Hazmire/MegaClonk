@@ -1,0 +1,489 @@
+{
+  "aoe250": {
+    "damage_numbers_peak": 0,
+    "death_pipeline": {
+      "mean_ms": 4.0271,
+      "p95_ms": 0.027,
+      "p99_ms": 322.013,
+      "worst_ms": 322.013
+    },
+    "draw_calls_peak": 0.0,
+    "enemy_count_end": 0,
+    "engine_physics": {
+      "mean_ms": 0.0665375000000001,
+      "p95_ms": 0.073,
+      "p99_ms": 0.073,
+      "worst_ms": 0.073
+    },
+    "flipbooks_peak": 24.0,
+    "fps_from_frame_mean": 92.3500667806421,
+    "frame": {
+      "mean_ms": 10.8283625,
+      "p95_ms": 7.049,
+      "p99_ms": 330.1,
+      "worst_ms": 330.1
+    },
+    "hit_pipeline": {
+      "mean_ms": 0.0136875,
+      "p95_ms": 0.001,
+      "p99_ms": 1.064,
+      "worst_ms": 1.064
+    },
+    "memory_bytes_peak": 385754219.0,
+    "node_peak": 1047.0,
+    "script_work": {
+      "mean_ms": 4.9238,
+      "p95_ms": 6.459,
+      "p99_ms": 329.293,
+      "worst_ms": 329.293
+    },
+    "xp_entities_peak": 250
+  },
+  "boss": {
+    "damage_numbers_peak": 0,
+    "death_pipeline": {
+      "mean_ms": 0.0007125,
+      "p95_ms": 0.001,
+      "p99_ms": 0.011,
+      "worst_ms": 0.011
+    },
+    "draw_calls_peak": 0.0,
+    "enemy_count_end": 1,
+    "engine_physics": {
+      "mean_ms": 0.062,
+      "p95_ms": 0.062,
+      "p99_ms": 0.062,
+      "worst_ms": 0.062
+    },
+    "flipbooks_peak": 1.0,
+    "fps_from_frame_mean": 144.99188951618,
+    "frame": {
+      "mean_ms": 6.8969375,
+      "p95_ms": 6.917,
+      "p99_ms": 6.981,
+      "worst_ms": 6.981
+    },
+    "hit_pipeline": {
+      "mean_ms": 0.0002375,
+      "p95_ms": 0.001,
+      "p99_ms": 0.001,
+      "worst_ms": 0.001
+    },
+    "memory_bytes_peak": 281795113.0,
+    "node_peak": 787.0,
+    "script_work": {
+      "mean_ms": 0.052725,
+      "p95_ms": 0.097,
+      "p99_ms": 0.114,
+      "worst_ms": 0.114
+    },
+    "xp_entities_peak": 0
+  },
+  "context": {
+    "engine": "4.7.2-stable (official)",
+    "note": "Frame durations include process-frame scheduling; script_work isolates manually advanced combat. Dummy audio. Physics monitor excludes the manually driven enemy simulation.",
+    "rendered": false,
+    "renderer": "headless",
+    "samples_per_case": 80
+  },
+  "continuous_weapons": {
+    "damage_numbers_peak": 0,
+    "death_pipeline": {
+      "mean_ms": 0.011575,
+      "p95_ms": 0.013,
+      "p99_ms": 0.015,
+      "worst_ms": 0.015
+    },
+    "draw_calls_peak": 0.0,
+    "enemy_count_end": 100,
+    "engine_physics": {
+      "mean_ms": 0.062,
+      "p95_ms": 0.062,
+      "p99_ms": 0.062,
+      "worst_ms": 0.062
+    },
+    "flipbooks_peak": 24.0,
+    "fps_from_frame_mean": 145.631951650192,
+    "frame": {
+      "mean_ms": 6.866625,
+      "p95_ms": 6.934,
+      "p99_ms": 7.124,
+      "worst_ms": 7.124
+    },
+    "hit_pipeline": {
+      "mean_ms": 0.0004125,
+      "p95_ms": 0.001,
+      "p99_ms": 0.001,
+      "worst_ms": 0.001
+    },
+    "memory_bytes_peak": 280206045.0,
+    "node_peak": 483.0,
+    "script_work": {
+      "mean_ms": 2.5419375,
+      "p95_ms": 3.06,
+      "p99_ms": 4.027,
+      "worst_ms": 4.027
+    },
+    "xp_entities_peak": 0
+  },
+  "deaths100": {
+    "damage_numbers_peak": 0,
+    "death_pipeline": {
+      "mean_ms": 4.9037875,
+      "p95_ms": 0.011,
+      "p99_ms": 392.22,
+      "worst_ms": 392.22
+    },
+    "draw_calls_peak": 0.0,
+    "enemy_count_end": 0,
+    "engine_physics": {
+      "mean_ms": 0.0710000000000001,
+      "p95_ms": 0.073,
+      "p99_ms": 0.073,
+      "worst_ms": 0.073
+    },
+    "flipbooks_peak": 24.0,
+    "fps_from_frame_mean": 85.8646408335739,
+    "frame": {
+      "mean_ms": 11.6462375,
+      "p95_ms": 6.945,
+      "p99_ms": 395.534,
+      "worst_ms": 395.534
+    },
+    "hit_pipeline": {
+      "mean_ms": 0.0054375,
+      "p95_ms": 0.001,
+      "p99_ms": 0.393,
+      "worst_ms": 0.393
+    },
+    "memory_bytes_peak": 383141639.0,
+    "node_peak": 735.0,
+    "script_work": {
+      "mean_ms": 5.3767,
+      "p95_ms": 2.503,
+      "p99_ms": 395.118,
+      "worst_ms": 395.118
+    },
+    "xp_entities_peak": 100
+  },
+  "elite": {
+    "damage_numbers_peak": 0,
+    "death_pipeline": {
+      "mean_ms": 0.0017125,
+      "p95_ms": 0.001,
+      "p99_ms": 0.063,
+      "worst_ms": 0.063
+    },
+    "draw_calls_peak": 0.0,
+    "enemy_count_end": 3,
+    "engine_physics": {
+      "mean_ms": 0.0660000000000001,
+      "p95_ms": 0.067,
+      "p99_ms": 0.067,
+      "worst_ms": 0.067
+    },
+    "flipbooks_peak": 3.0,
+    "fps_from_frame_mean": 145.009498122127,
+    "frame": {
+      "mean_ms": 6.8961,
+      "p95_ms": 6.918,
+      "p99_ms": 6.935,
+      "worst_ms": 6.935
+    },
+    "hit_pipeline": {
+      "mean_ms": 0.000275,
+      "p95_ms": 0.001,
+      "p99_ms": 0.001,
+      "worst_ms": 0.001
+    },
+    "memory_bytes_peak": 281837269.0,
+    "node_peak": 796.0,
+    "script_work": {
+      "mean_ms": 0.099325,
+      "p95_ms": 0.157,
+      "p99_ms": 0.245,
+      "worst_ms": 0.245
+    },
+    "xp_entities_peak": 0
+  },
+  "enemies100": {
+    "damage_numbers_peak": 0,
+    "death_pipeline": {
+      "mean_ms": 0.0113125,
+      "p95_ms": 0.012,
+      "p99_ms": 0.026,
+      "worst_ms": 0.026
+    },
+    "draw_calls_peak": 0.0,
+    "enemy_count_end": 100,
+    "engine_physics": {
+      "mean_ms": 0.161,
+      "p95_ms": 0.161,
+      "p99_ms": 0.161,
+      "worst_ms": 0.161
+    },
+    "flipbooks_peak": 24.0,
+    "fps_from_frame_mean": 145.431540828996,
+    "frame": {
+      "mean_ms": 6.8760875,
+      "p95_ms": 6.924,
+      "p99_ms": 6.957,
+      "worst_ms": 6.957
+    },
+    "hit_pipeline": {
+      "mean_ms": 0.0002875,
+      "p95_ms": 0.001,
+      "p99_ms": 0.001,
+      "worst_ms": 0.001
+    },
+    "memory_bytes_peak": 279522817.0,
+    "node_peak": 445.0,
+    "script_work": {
+      "mean_ms": 2.349925,
+      "p95_ms": 2.528,
+      "p99_ms": 4.288,
+      "worst_ms": 4.288
+    },
+    "xp_entities_peak": 0
+  },
+  "enemies25": {
+    "damage_numbers_peak": 0,
+    "death_pipeline": {
+      "mean_ms": 0.0033,
+      "p95_ms": 0.004,
+      "p99_ms": 0.004,
+      "worst_ms": 0.004
+    },
+    "draw_calls_peak": 0.0,
+    "enemy_count_end": 25,
+    "engine_physics": {
+      "mean_ms": 0.2392,
+      "p95_ms": 0.297,
+      "p99_ms": 0.297,
+      "worst_ms": 0.297
+    },
+    "flipbooks_peak": 24.0,
+    "fps_from_frame_mean": 145.407750596626,
+    "frame": {
+      "mean_ms": 6.8772125,
+      "p95_ms": 6.917,
+      "p99_ms": 6.96,
+      "worst_ms": 6.96
+    },
+    "hit_pipeline": {
+      "mean_ms": 0.000225,
+      "p95_ms": 0.001,
+      "p99_ms": 0.001,
+      "worst_ms": 0.001
+    },
+    "memory_bytes_peak": 279055157.0,
+    "node_peak": 445.0,
+    "script_work": {
+      "mean_ms": 0.6533125,
+      "p95_ms": 0.754,
+      "p99_ms": 0.836,
+      "worst_ms": 0.836
+    },
+    "xp_entities_peak": 0
+  },
+  "enemies250": {
+    "damage_numbers_peak": 0,
+    "death_pipeline": {
+      "mean_ms": 0.028225,
+      "p95_ms": 0.042,
+      "p99_ms": 0.065,
+      "worst_ms": 0.065
+    },
+    "draw_calls_peak": 0.0,
+    "enemy_count_end": 250,
+    "engine_physics": {
+      "mean_ms": 0.0966499999999999,
+      "p95_ms": 0.161,
+      "p99_ms": 0.161,
+      "worst_ms": 0.161
+    },
+    "flipbooks_peak": 24.0,
+    "fps_from_frame_mean": 137.805346502931,
+    "frame": {
+      "mean_ms": 7.2566125,
+      "p95_ms": 6.946,
+      "p99_ms": 46.055,
+      "worst_ms": 46.055
+    },
+    "hit_pipeline": {
+      "mean_ms": 0.0003125,
+      "p95_ms": 0.001,
+      "p99_ms": 0.001,
+      "worst_ms": 0.001
+    },
+    "memory_bytes_peak": 280438161.0,
+    "node_peak": 445.0,
+    "script_work": {
+      "mean_ms": 6.3191375,
+      "p95_ms": 6.893,
+      "p99_ms": 45.894,
+      "worst_ms": 45.894
+    },
+    "xp_entities_peak": 0
+  },
+  "grass_off": {
+    "damage_numbers_peak": 0,
+    "death_pipeline": {
+      "mean_ms": 0.0001875,
+      "p95_ms": 0.001,
+      "p99_ms": 0.001,
+      "worst_ms": 0.001
+    },
+    "draw_calls_peak": 0.0,
+    "enemy_count_end": 0,
+    "engine_physics": {
+      "mean_ms": 0.0670000000000001,
+      "p95_ms": 0.067,
+      "p99_ms": 0.067,
+      "worst_ms": 0.067
+    },
+    "flipbooks_peak": 0.0,
+    "fps_from_frame_mean": 144.943028330927,
+    "frame": {
+      "mean_ms": 6.8992625,
+      "p95_ms": 6.916,
+      "p99_ms": 6.946,
+      "worst_ms": 6.946
+    },
+    "hit_pipeline": {
+      "mean_ms": 0.0003375,
+      "p95_ms": 0.001,
+      "p99_ms": 0.013,
+      "worst_ms": 0.013
+    },
+    "memory_bytes_peak": 281821505.0,
+    "node_peak": 796.0,
+    "script_work": {
+      "mean_ms": 0.0180875,
+      "p95_ms": 0.031,
+      "p99_ms": 0.043,
+      "worst_ms": 0.043
+    },
+    "xp_entities_peak": 0
+  },
+  "idle": {
+    "damage_numbers_peak": 0,
+    "death_pipeline": {
+      "mean_ms": 0.00045,
+      "p95_ms": 0.001,
+      "p99_ms": 0.003,
+      "worst_ms": 0.003
+    },
+    "draw_calls_peak": 0.0,
+    "enemy_count_end": 0,
+    "engine_physics": {
+      "mean_ms": 3284.1697875,
+      "p95_ms": 4237.557,
+      "p99_ms": 4237.557,
+      "worst_ms": 4237.557
+    },
+    "flipbooks_peak": 0.0,
+    "fps_from_frame_mean": 147.225263855278,
+    "frame": {
+      "mean_ms": 6.7923125,
+      "p95_ms": 6.999,
+      "p99_ms": 7.217,
+      "worst_ms": 7.217
+    },
+    "hit_pipeline": {
+      "mean_ms": 0.0005,
+      "p95_ms": 0.002,
+      "p99_ms": 0.002,
+      "worst_ms": 0.002
+    },
+    "memory_bytes_peak": 278374997.0,
+    "node_peak": 389.0,
+    "script_work": {
+      "mean_ms": 0.0744375,
+      "p95_ms": 0.066,
+      "p99_ms": 4.633,
+      "worst_ms": 4.633
+    },
+    "xp_entities_peak": 0
+  },
+  "moving": {
+    "damage_numbers_peak": 0,
+    "death_pipeline": {
+      "mean_ms": 0.0003375,
+      "p95_ms": 0.001,
+      "p99_ms": 0.001,
+      "worst_ms": 0.001
+    },
+    "draw_calls_peak": 0.0,
+    "enemy_count_end": 0,
+    "engine_physics": {
+      "mean_ms": 0.297,
+      "p95_ms": 0.297,
+      "p99_ms": 0.297,
+      "worst_ms": 0.297
+    },
+    "flipbooks_peak": 0.0,
+    "fps_from_frame_mean": 144.952745404998,
+    "frame": {
+      "mean_ms": 6.8988,
+      "p95_ms": 7.037,
+      "p99_ms": 7.06,
+      "worst_ms": 7.06
+    },
+    "hit_pipeline": {
+      "mean_ms": 0.000475,
+      "p95_ms": 0.001,
+      "p99_ms": 0.002,
+      "worst_ms": 0.002
+    },
+    "memory_bytes_peak": 278382561.0,
+    "node_peak": 389.0,
+    "script_work": {
+      "mean_ms": 0.0777,
+      "p95_ms": 0.038,
+      "p99_ms": 5.227,
+      "worst_ms": 5.227
+    },
+    "xp_entities_peak": 0
+  },
+  "repeated_hits": {
+    "damage_numbers_peak": 0,
+    "death_pipeline": {
+      "mean_ms": 0.0116625,
+      "p95_ms": 0.013,
+      "p99_ms": 0.014,
+      "worst_ms": 0.014
+    },
+    "draw_calls_peak": 0.0,
+    "enemy_count_end": 100,
+    "engine_physics": {
+      "mean_ms": 0.0629125,
+      "p95_ms": 0.063,
+      "p99_ms": 0.063,
+      "worst_ms": 0.063
+    },
+    "flipbooks_peak": 24.0,
+    "fps_from_frame_mean": 145.538958050215,
+    "frame": {
+      "mean_ms": 6.8710125,
+      "p95_ms": 6.923,
+      "p99_ms": 6.994,
+      "worst_ms": 6.994
+    },
+    "hit_pipeline": {
+      "mean_ms": 0.103475,
+      "p95_ms": 0.174,
+      "p99_ms": 0.497,
+      "worst_ms": 0.497
+    },
+    "memory_bytes_peak": 280379773.0,
+    "node_peak": 497.0,
+    "script_work": {
+      "mean_ms": 2.5864875,
+      "p95_ms": 3.202,
+      "p99_ms": 3.576,
+      "worst_ms": 3.576
+    },
+    "xp_entities_peak": 0
+  }
+}
