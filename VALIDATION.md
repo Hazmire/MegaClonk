@@ -1,6 +1,6 @@
 # Vertical Forest validation
 
-Fourteen suites: 606 assertions (full regression plus final targeted extension), 200 deterministic layouts, 200 matching decorated physics/placement worlds, 101,114 collision rays, 1,000 live interactions and 70 cliff-drop cases. No repairs/failures. Twelve seed renders and two atmosphere views inspected. Old/new saves preserve geometry and object positions; unsupported future terrain is rejected. Reports: docs/world/ and docs/VERTICAL_PERFORMANCE.md. Native Windows execution remains untested. Prior reports follow.
+Fourteen suites: 606 assertions (complete clean CI regression), 200 deterministic layouts, 200 matching decorated physics/placement worlds, 101,114 collision rays, 1,000 live interactions and 70 cliff-drop cases. No repairs/failures. Twelve seed renders and two atmosphere views inspected. Old/new saves preserve geometry and object positions; unsupported future terrain is rejected. Reports: docs/world/ and docs/VERTICAL_PERFORMANCE.md. Native Windows execution remains untested. Windows v6.1 publication and exported-game smoke checks are verified in releases/BUILD_INFO.md. Prior reports follow.
 
 # Combat and atmosphere polish validation
 

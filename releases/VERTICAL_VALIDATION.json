@@ -1,0 +1,22 @@
+{
+  "release": "vertical-forest-v6.1",
+  "scope": "Terrain, atmosphere and placement; XP and reward UI pending",
+  "source": "9ce8efb892847209ac50ea1e1b6a661605c12651",
+  "workflow": 40363304658,
+  "assertions": 606,
+  "layout_seeds": 200,
+  "decorated_worlds": 200,
+  "collision_rays": 101114,
+  "enemy_traversal_checks": 400,
+  "live_interactions": 1000,
+  "detailed_drop_cases": 70,
+  "rendered_seed_previews": 12,
+  "zip_sha256": "7121675ffce1fdac3e864655611bd2d1614cc5cf91c0e247c1ba32d48133bc60",
+  "zip_crc_pass": true,
+  "source_clean": true,
+  "ci_embedded_pack_smoke_frames": 120,
+  "downloaded_embedded_pack_smoke_frames": 180,
+  "local_export_rendered_on_linux": true,
+  "native_windows_tested": false,
+  "gaming_gpu_60fps_verified": false
+}

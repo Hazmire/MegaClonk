@@ -1,6 +1,6 @@
 # Latest increment: Vertical Forest
 
-Milestones 2–4 add four elevation bands, adaptive ramps, layered sky, fog and seeded constrained object placement. Version-3 saves retain their old terrain. See VERTICAL_FOREST.md and VERTICAL_PERFORMANCE.md. XP gems and level-up/chest/shop/build UI remain pending in TODO_RARITY_WORLD.md. Windows publication verification is in progress. Historical status follows.
+Milestones 2–4 add four elevation bands, adaptive ramps, layered sky, fog and seeded constrained object placement. Version-3 saves retain their old terrain. See VERTICAL_FOREST.md and VERTICAL_PERFORMANCE.md. XP gems and level-up/chest/shop/build UI remain pending in TODO_RARITY_WORLD.md. Windows v6.1 publication is verified; see releases/BUILD_INFO.md. Native Windows execution remains untested. Historical status follows.
 
 # Latest combat and atmosphere polish
 

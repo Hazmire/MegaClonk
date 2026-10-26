@@ -1,6 +1,6 @@
 # Rarity-first rewards and world overhaul
 
-The user's new specification requires Gate 1 before terrain or UI work. The published rarity-foundation-v5 playtest remains available while the Vertical Forest publication is verified.
+The user's new specification requires Gate 1 before terrain or UI work. Vertical Forest v6.1 is published and verified; see releases/BUILD_INFO.md.
 
 - [x] Audit inventory, upgrades, chest/shop probabilities, unlocks and saves.
 - [x] Implement five-tier registry, shared catalog adapter and weighted selection.
@@ -15,6 +15,6 @@ The user's new specification requires Gate 1 before terrain or UI work. The publ
 
 The Vertical Forest increment completes Milestones 2–4 / Gates 2–3. Local evidence: 606 assertions, 200 deterministic layouts, 200 decorated worlds, 101,114 collision rays, 1,000 live interactions, 70 cliff-drop cases and 12 rendered seed previews. Terrain-version-3 saves keep the legacy generator; new runs use version 4.
 
-- [ ] Verify the Vertical Forest Windows publication and downloaded archive.
+- [x] Vertical Forest v6.1 publication verified: downloaded ZIP checksum/CRCs/clean source match, and its embedded game data passes a 180-frame smoke test. Native Windows execution remains untested.
 
 XP gems, level-up/chest/shop/build UI and the final full-overhaul release gate remain pending. See docs/VERTICAL_FOREST.md and docs/VERTICAL_PERFORMANCE.md.

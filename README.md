@@ -9,10 +9,11 @@ and [remaining XP/UI milestones](TODO_RARITY_WORLD.md).
 
 ## Download and play
 
-- [Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/rarity-foundation-v5/BONK_INFINITY_Windows_x64.zip)
+- [Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/vertical-forest-v6.1/BONK_INFINITY_Windows_x64.zip)
 - [GitHub Actions builds](https://github.com/Hazmire/MegaClonk/actions/workflows/windows-build.yml)
 - [PR #3 — merge into Full-Release](https://github.com/Hazmire/MegaClonk/pull/3)
 
+Start a **new run** to see the new terrain; older checkpoints retain their original maps.
 Extract and launch **BONK_INFINITY.exe**, or **Launch_Compatibility.bat** if Vulkan
 is unavailable. The executable name and BONK INFINITY save folder remain for compatibility.
 No engine installation/account/network is needed to play. Publication/source/checksums are
