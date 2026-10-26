@@ -25,7 +25,7 @@ The specified distribution is a *tier* probability, not a per-item probability; 
 
 ## Gate evidence
 
-`tests/rarity.gd`: 107 checks passed. 100,000 rolls, seed 123456:
+`tests/rarity.gd`: 143 checks passed. 100,000 rolls, seed 123456:
 
 | Tier | Rolls | Percent | Target |
 |---|---:|---:|---:|
@@ -35,6 +35,6 @@ The specified distribution is a *tier* probability, not a per-item probability; 
 | Epic | 6,046 | 6.046% | 6% |
 | Legendary | 2,032 | 2.032% | 2% |
 
-Tests cover every metadata entry/icon/description/ID, exact colors, empty and zero-weight pools, missing tiers, max levels, disabled candidates, deterministic sequences, unique draws, actual banished/maxed level-up eligibility, unchanged weapon/tome effects, all shop prices, seller constraints and version-2 save/load. The simulated selector loop took about 914 ms for 100,000 rolls in the cloud; this is not a combat or GPU benchmark.
+Tests cover every metadata entry/icon/description/ID and each weapon’s supported upgrade attributes, exact colors, empty and zero-weight pools, missing tiers, max levels, disabled candidates, deterministic sequences, unique draws, actual banished/maxed level-up eligibility, unchanged weapon/tome effects, all shop prices, seller constraints and version-2 save/load. The simulated selector loop took about 914 ms for 100,000 rolls in the cloud; this is not a combat or GPU benchmark.
 
 Later terrain/UI/XP milestones remain pending; see TODO_RARITY_WORLD.md.

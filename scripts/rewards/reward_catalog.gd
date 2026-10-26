@@ -9,7 +9,8 @@ static func entry(category: String,id: Variant,level: int=0) -> Dictionary:
  match category:
   "weapons":
    if int(id)<0 or int(id)>=Catalog.WEAPONS.size():return {}
-   var w=Catalog.WEAPONS[int(id)];name=w[0];description="%s • %.0f base damage • %.2fs cooldown"%[w[1],w[2],w[3]];rarity=WEAPON_RARITIES[int(id)];effects=WeaponUpgrades.STEPS.duplicate();unlock=LoadoutCatalog.entry(category,str(id))
+   var w=Catalog.WEAPONS[int(id)];name=w[0];description="%s • %.0f base damage • %.2fs cooldown"%[w[1],w[2],w[3]];rarity=WEAPON_RARITIES[int(id)];unlock=LoadoutCatalog.entry(category,str(id))
+   for attribute in WeaponUpgrades.pool(int(id)):effects[attribute]=WeaponUpgrades.STEPS[attribute]
   "tomes":
    if not Catalog.TOMES.has(str(id)):return {}
    var t=Catalog.TOMES[str(id)];name=str(id)+" Tome";description="%s %+.2f per level"%[str(t[0]).replace("_"," "),t[1]];rarity=TOME_RARITIES.get(str(id),"common");effects={t[0]:t[1]}

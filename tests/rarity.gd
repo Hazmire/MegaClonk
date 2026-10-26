@@ -16,6 +16,7 @@ func run():
  for entry in RewardCatalog.all_entries():
   check(not ids.has(entry.uid) and Rarity.valid(entry.rarity) and not entry.description.is_empty() and entry.icon!=null and not entry.name.is_empty(),"Valid unique metadata: "+entry.uid)
   ids[entry.uid]=true
+  if entry.category=="weapons":check(entry.effects.keys()==WeaponUpgrades.pool(int(entry.id)),"Metadata exposes only supported upgrades: "+entry.uid)
  for tier in Rarity.IDS:
   counts[tier]=0;candidates.append({"metadata":{"uid":tier,"rarity":tier,"level":0,"max_level":10}})
  var rng=RandomNumberGenerator.new();rng.seed=123456

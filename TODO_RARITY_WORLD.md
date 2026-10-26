@@ -5,7 +5,7 @@ The user's new specification requires Gate 1 before terrain or UI work. Existing
 - [x] Audit inventory, upgrades, chest/shop probabilities, unlocks and saves.
 - [x] Implement five-tier registry, shared catalog adapter and weighted selection.
 - [x] Test seeded distribution, eligibility, upgrades, prices and run saves.
-- [x] Full existing regression suite passes; final rarity suite passes 107 checks.
+- [x] Full existing regression suite passes; final rarity suite passes 143 checks.
 - [ ] Verify Windows artifact publication for this foundation increment.
 - [ ] Gate 2: substantially more vertical, irregular connected terrain, configurable bands/coverage/ramps; 200-seed metrics and 12 rendered seed previews.
 - [ ] Gate 3: layered fantasy sky/clouds and constrained, reachable randomized objects; 200-seed placement records.
