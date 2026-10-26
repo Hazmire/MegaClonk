@@ -1070,7 +1070,16 @@ func upgrade_pool() -> Array:
    if not name in banished: pool.append({"type":"tome","id":name,"key":name})
  if pool.is_empty():
   for i in 3:pool.append({"type":"supply","id":str(i),"key":"supply"+str(i)})
+ for choice in pool:
+  if choice.type=="supply":continue
+  var category="weapons" if choice.type=="weapon" else "tomes"
+  var rank=int(weapons[choice.id].level) if choice.type=="weapon" and weapons.has(choice.id) else int(tomes.get(choice.id,0)) if choice.type=="tome" else 0
+  choice["metadata"]=RewardCatalog.entry(category,choice.id,rank)
  return pool
+func upgrade_choices(count: int=3) -> Array:
+ var candidates=upgrade_pool()
+ if not candidates.is_empty() and candidates[0].type=="supply":return candidates.slice(0,count)
+ return RewardSelector.draw(candidates,count,rng)
 func show_upgrades() -> void:
  frontend.upgrades()
  play_sound("level")
@@ -1096,13 +1105,9 @@ func apply_upgrade(choice: Dictionary) -> void:
 func award_item() -> Array:
  var available=available_items()
  if available.is_empty():return []
- var roll=rng.randf()+minf(stats.luck*0.2,0.4)
- var rarity="epic" if roll>0.92 else ("rare" if roll>0.58 else "common")
- var candidates=[]
- for id in available:
-  if Catalog.ITEMS[id][1]==rarity:candidates.append(id)
- if candidates.is_empty():candidates=available
- var id=int(candidates[rng.randi_range(0,candidates.size()-1)])
+ var selected=RewardSelector.choose(RewardSelector.items(available),rng,Rarity.reward_weights(stats.luck))
+ if selected.is_empty():return []
+ var id=int(selected.id)
  apply_item(id)
  return Catalog.ITEMS[id]
 func update_interactions(delta: float) -> void:

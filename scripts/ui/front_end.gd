@@ -303,10 +303,10 @@ func inventory() -> void:
  action("Resume",col,game.resume)
 func upgrades() -> void:
  game.mode="upgrade";var col=page("Level %d • Choose your power"%game.level)
- game.choices.clear();var pool=game.upgrade_pool()
+ game.choices.clear();var pool=game.upgrade_choices()
  var row=HBoxContainer.new();row.add_theme_constant_override("separation",16);col.add_child(row)
  for i in mini(3,pool.size()):
-  var choice=pool.pop_at(game.rng.randi_range(0,pool.size()-1));game.choices.append(choice)
+  var choice=pool.pop_front();game.choices.append(choice)
   var container=PanelContainer.new();container.custom_minimum_size=Vector2(365,340)
   var style=StyleBoxFlat.new();style.bg_color=Color("1b3035");style.border_color=Color("4c6d68");style.set_border_width_all(1);style.set_corner_radius_all(5);style.content_margin_left=14;style.content_margin_right=14;style.content_margin_top=14;style.content_margin_bottom=14;container.add_theme_stylebox_override("panel",style);row.add_child(container)
   var card_body=VBoxContainer.new();card_body.add_theme_constant_override("separation",18);container.add_child(card_body)
