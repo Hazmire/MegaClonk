@@ -13,7 +13,7 @@ The user's new specification requires Gate 1 before terrain or UI work. The publ
 - [ ] Gate 5: shared rarity cards/effects, shop and actual-data build screen; 720p/1080p/1440p/controller verification.
 - [ ] Gate 6: full integration/performance measurements and verified final Windows release.
 
-The Vertical Forest increment completes Milestones 2–4 / Gates 2–3. Local evidence: 605 assertions, 200 deterministic layouts, 200 decorated worlds, 101,114 collision rays, 1,000 live interactions, 70 cliff-drop cases and 12 rendered seed previews. Terrain-version-3 saves keep the legacy generator; new runs use version 4.
+The Vertical Forest increment completes Milestones 2–4 / Gates 2–3. Local evidence: 606 assertions, 200 deterministic layouts, 200 decorated worlds, 101,114 collision rays, 1,000 live interactions, 70 cliff-drop cases and 12 rendered seed previews. Terrain-version-3 saves keep the legacy generator; new runs use version 4.
 
 - [ ] Verify the Vertical Forest Windows publication and downloaded archive.
 

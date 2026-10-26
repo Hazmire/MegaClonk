@@ -42,8 +42,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if gh release view vertical-forest-v6 >/dev/null 2>&1; then
-            gh release upload vertical-forest-v6 builds/BONK_INFINITY_Windows_x64.zip --clobber
+          if gh release view vertical-forest-v6.1 >/dev/null 2>&1; then
+            gh release upload vertical-forest-v6.1 builds/BONK_INFINITY_Windows_x64.zip --clobber
           else
-            gh release create vertical-forest-v6 builds/BONK_INFINITY_Windows_x64.zip --target "$GITHUB_SHA" --prerelease --title "MEGACLONK — Vertical Forest Playtest" --notes-file docs/VERTICAL_RELEASE.md
+            gh release create vertical-forest-v6.1 builds/BONK_INFINITY_Windows_x64.zip --target "$GITHUB_SHA" --prerelease --title "MEGACLONK — Vertical Forest Playtest 6.1" --notes-file docs/VERTICAL_RELEASE.md
           fi

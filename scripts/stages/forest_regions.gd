@@ -4,7 +4,7 @@ extends RefCounted
 # graph. Heights are sampled independently of distance from the map centre.
 static func choose_band(rng: RandomNumberGenerator,settings: ForestSettings) -> int:
  var weights=settings.elevation_band_weights
- if weights.size()!=settings.elevation_bands-1:return rng.randi_range(1,settings.elevation_bands-1)
+ if weights==null or weights.size()!=settings.elevation_bands-1:return rng.randi_range(1,settings.elevation_bands-1)
  var total=0.0
  for weight in weights:total+=maxf(0,weight)
  if total<=0:return rng.randi_range(1,settings.elevation_bands-1)

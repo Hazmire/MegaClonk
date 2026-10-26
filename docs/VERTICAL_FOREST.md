@@ -47,7 +47,7 @@ New saves record `terrain_version: 4`. Version-3 checkpoints retain the old gene
 
 ## Evidence
 
-All fourteen regression suites pass locally: **605 assertions**, **70 cliff-drop cases**, **200 deterministic layouts**, **200 decorated collision/navigation worlds**, **101,114 collision rays** and **1,000 real shop/chest/shrine/statue/portal interactions**, plus **400 per-world enemy climb/drop checks**. The 200 layout/physics cases use matching map seeds 0–199. Connectivity and first construction attempts passed without flattening or decoration repairs. Tests include player/enemy ramp traversal, 24m+ climbing, falling after damage, ramp landings, old/new checkpoint geometry and object-position preservation, and rejection of future terrain versions.
+All fourteen regression suites pass locally: **606 assertions**, **70 cliff-drop cases**, **200 deterministic layouts**, **200 decorated collision/navigation worlds**, **101,114 collision rays** and **1,000 real shop/chest/shrine/statue/portal interactions**, plus **400 per-world enemy climb/drop checks**. The 200 layout/physics cases use matching map seeds 0–199. Connectivity and first construction attempts passed without flattening or decoration repairs. Tests include player/enemy ramp traversal, 24m+ climbing, falling after damage, ramp landings, old/new checkpoint geometry and object-position preservation, and rejection of future terrain versions.
 
 | Measurement across 200 seeds | Minimum | Mean | Maximum |
 |---|---:|---:|---:|
@@ -70,3 +70,5 @@ Overview captures disable fog and use an elevated debug camera to expose geometr
 ![Sky inspection](images/vertical/sky.png)
 
 These final two views retain normal fog. Rendering was inspected using Mesa software OpenGL. Native Windows rendering and gaming-GPU frame rate remain untested. See [performance and limitations](VERTICAL_PERFORMANCE.md).
+
+Version 6.1 handles missing exported height weights with the same uniform default. The export script now runs the actual embedded game pack before publishing; editor validation alone did not catch the v6 initialization issue.

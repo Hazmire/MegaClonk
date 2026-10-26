@@ -47,7 +47,7 @@ This machine renders this view at roughly **3.4FPS**, not 60FPS. Clouds have no 
 
 ## Validation and inspection
 
-Fourteen suites pass: 605 assertions, 70 ordinary/elite/boss cliff-drop cases and 200 matching seeds for deterministic geometry and decorated physics/navigation/placement. The world suite performs 101,114 collision rays (including the whole perimeter at five heights), 400 enemy climb/drop checks and 1,000 actual interactions (shop purchase, chest opening, charge-shrine completion, elite activation, boss portal activation), with no failures or repairs. The live reward tests reset each world's economy so chest-price accumulation does not invalidate affordability.
+Fourteen suites pass: 606 assertions, 70 ordinary/elite/boss cliff-drop cases and 200 matching seeds for deterministic geometry and decorated physics/navigation/placement. The world suite performs 101,114 collision rays (including the whole perimeter at five heights), 400 enemy climb/drop checks and 1,000 actual interactions (shop purchase, chest opening, charge-shrine completion, elite activation, boss portal activation), with no failures or repairs. The live reward tests reset each world's economy so chest-price accumulation does not invalidate affordability.
 
 Old combat tests use the legacy seed-9 flat patch to isolate weapon/progression behavior from terrain changes. New-world coverage includes player/enemy ramps, 24m+ climbs, 12/24/36m drops, damage while falling, ramp landings, high-plateau boss telegraphs/damage, near-target cliff probes, checkpoint object/geometry preservation and future-version rejection. Twelve actual seed renders plus two atmosphere views were inspected; overview fog is explicitly disabled only in debug captures.
 

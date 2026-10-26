@@ -90,5 +90,9 @@ func run():
  var sampler=RandomNumberGenerator.new();sampler.seed=77;var weighted=true
  for i in 100:weighted=weighted and ForestRegions.choose_band(sampler,config)==2
  check(weighted,"Configured non-zero height-band weights are honored")
+ config.elevation_band_weights=null;var null_safe=true
+ for i in 100:
+  var band=ForestRegions.choose_band(sampler,config);null_safe=null_safe and band>=1 and band<=3
+ check(null_safe,"Missing exported height weights safely fall back to uniform bands")
  game.queue_free();await process_frame;await process_frame
  print("VERTICAL GAMEPLAY: %d checks, %d failures"%[checks,failures.size()]);quit(0 if failures.is_empty() else 1)
