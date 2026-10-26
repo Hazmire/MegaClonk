@@ -5,7 +5,9 @@ boss encounters, continued runs, configurable loadouts and permanent silver prog
 The latest source adds a four-band vertical Forest, adaptive ramps, a layered cloud sky,
 and constrained world-object placement, following the shared five-tier rarity foundation.
 See [world guide and twelve previews](docs/VERTICAL_FOREST.md), [performance](docs/VERTICAL_PERFORMANCE.md),
-and [remaining XP/UI milestones](TODO_RARITY_WORLD.md).
+and [reward UI and XP guide](docs/REWARD_UI.md).
+The latest source also adds reference-based inventory/stats sidebars, stacked upgrades,
+a slowing chest reel, shared shop/build screens and blue/red XP gemstones.
 
 ## Download and play
 

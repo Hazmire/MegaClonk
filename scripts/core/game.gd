@@ -71,6 +71,8 @@ var terrain_noise = FastNoiseLite.new()
 var map_layout: Dictionary={}
 var map_seed_override=-1
 var terrain_version=4
+var gem_rng=RandomNumberGenerator.new()
+var pending_upgrades=0
 var map_debug=false
 var map_debug_node: MeshInstance3D
 var forest_navigation: ForestNavigation
@@ -249,6 +251,7 @@ func begin_run() -> void:
  stage = 1
  run_seed=next_run_seed if next_run_seed>=0 else rng.randi()
  variants.initialize(run_seed)
+ gem_rng.seed=run_seed+719477;pending_upgrades=0
  rng.seed=run_seed
  stats = Catalog.base_stats()
  match character:
@@ -389,6 +392,8 @@ func build_stage() -> void:
  if map_debug:map_debug=false;toggle_map_debug()
  toast("Stage %d • Explore the forest. Activate the portal to challenge the stage guardian."%stage)
 func resume() -> void:
+ if pending_upgrades>0:
+  pending_upgrades-=1;show_upgrades();return
  mode = "run"
  panel.hide()
  frontend.enter_run()
@@ -753,6 +758,7 @@ func kill_enemy(index: int) -> void:
   award_item()
  for i in (6 if e.kind==8 else 1):
   add_xp_drop(e.pos+Vector3(rng.randf()-0.5,0,rng.randf()-0.5),float(e.variant.reward if e.has("variant") else 5))
+ if XPGems.eligible(e) and gem_rng.randf()<XPGems.RED_CHANCE:add_red_gem(e.pos)
  # Gold is automatically collected on every kill; no per-coin physics objects.
  gold_fraction+=stats.gold_gain
  var gained=int(gold_fraction)
@@ -1040,18 +1046,29 @@ func update_pickups(delta: float) -> void:
  for i in range(pickups.size()-1,-1,-1):
   var p = pickups[i]
   p.age+=delta
+  p.node.rotation.y+=delta*0.85
+  p.node.position.y+=(sin(p.age*2)-sin((p.age-delta)*2))*0.06
   var distance = p.node.position.distance_to(player.position+Vector3.UP)
   if distance<5*stats.pickup or p.age>25:
    p.node.position=p.node.position.move_toward(player.position+Vector3.UP,delta*maxf(10,18-distance))
   if distance<1.2:
-   xp+=p.value*stats.xp
+   if p.get("red",false):grant_red_level()
+   else:xp+=p.value*stats.xp
    pool.release(p.node)
    pickups.remove_at(i)
- if xp>=Catalog.threshold(level):
+ while xp>=Catalog.threshold(level):
   xp-=Catalog.threshold(level)
   level+=1
-  on_level()
-  show_upgrades()
+  on_level();pending_upgrades+=1
+ if pending_upgrades>0 and mode in ["run","pause"]:
+  pending_upgrades-=1;show_upgrades()
+func grant_red_level() -> void:
+ while xp>=Catalog.threshold(level):
+  xp-=Catalog.threshold(level);level+=1;on_level();pending_upgrades+=1
+ var fraction=xp/Catalog.threshold(level)
+ level+=1;on_level();xp=fraction*Catalog.threshold(level);pending_upgrades+=1
+func add_red_gem(pos: Vector3) -> void:
+ pickups.append({"node":XPGems.acquire(self,pos,true),"value":0.0,"age":0.0,"red":true})
 func on_level() -> void:
  match character:
   0: stats.luck+=0.03
@@ -1386,8 +1403,7 @@ func projectile_mesh(kind: String) -> Mesh:
   projectile_meshes[kind]=WeaponArt.mesh(kind);return projectile_meshes[kind]
  var parts: Array=[]
  match kind:
-  "xp":
-   parts=[ModelBuilder.part(ModelBuilder.cone(0.16,0.22),Vector3(0,0.11,0),"aaffdd"),ModelBuilder.part(ModelBuilder.cone(0.16,0.22),Vector3(0,-0.11,0),"66ddb5",Vector3(PI,0,0))]
+  "xp":return XPGems.mesh()
   "arrow","pierce":
    parts=[ModelBuilder.part(ModelBuilder.cube(Vector3(0.07,0.07,0.85)),Vector3.ZERO,"e8c990"),ModelBuilder.part(ModelBuilder.cone(0.17,0.35),Vector3(0,0,-0.5),"d9f2ee",Vector3(-PI/2,0,0))]
   "rocket":
@@ -1424,10 +1440,10 @@ func save_run(path: String = "user://active-run.json") -> bool:
    if record.has(key): record[key]=[record[key].x,record[key].y,record[key].z]
   saved_enemies.append(record)
  var saved_pickups=[]
- for pickup in pickups: saved_pickups.append({"position":[pickup.node.position.x,pickup.node.position.y,pickup.node.position.z],"value":pickup.value,"age":pickup.age})
+ for pickup in pickups: saved_pickups.append({"position":[pickup.node.position.x,pickup.node.position.y,pickup.node.position.z],"value":pickup.value,"age":pickup.age,"red":pickup.get("red",false)})
  var used=[]
  for object in interactables: used.append({"kind":object.kind,"used":object.used,"charge":object.charge,"tier":object.get("tier","Common"),"offers":object.get("offers",null),"sold":object.get("sold",[])})
- var data={"version":2,"terrain_version":terrain_version,"map_seed_override":map_seed_override,"stage_clock":stage_clock.serialize(),"boss_variant":boss_variant,"ghost_budget":ghost_budget,"portal_state":portal_state,"loadout":loadout_runtime.serialize(),"selected_weapon":selected_weapon,"run_metrics":run_metrics,"chests_opened":chests_opened,"legacy_weapon_slots":legacy_weapon_slots,"legacy_tome_slots":legacy_tome_slots,"minimap":serialize_minimap(),"variants":variants.serialize(),"spawn_rng_state":str(spawn_rng.state),"elite_active":elite_active,"elite_rewarded":elite_rewarded,"rng_state":str(rng.state),"character":character,"biome":biome,"selected_biome":selected_biome,"tier":tier,"stage":stage,"elapsed":elapsed,"stage_time":stage_time,"stats":stats,"health":health,"xp":xp,"level":level,"kills":kills,"gold":gold,"weapons":saved_weapons,"tomes":tomes,"items":items,"sandbox":sandbox,"position":[player.position.x,player.position.y,player.position.z],"enemies":saved_enemies,"boss_spawned":boss_spawned,"boss_dead":boss_dead,"interactables":used,"damage_total":damage_total,"rerolls":rerolls,"banished":banished,"pickups":saved_pickups,"damage_by_weapon":damage_by_weapon,"gold_fraction":gold_fraction,"camera":[player.yaw,player.pitch,player.zoom]}
+ var data={"version":2,"gem_rng_state":str(gem_rng.state),"pending_upgrades":pending_upgrades+(1 if mode=="upgrade" else 0),"terrain_version":terrain_version,"map_seed_override":map_seed_override,"stage_clock":stage_clock.serialize(),"boss_variant":boss_variant,"ghost_budget":ghost_budget,"portal_state":portal_state,"loadout":loadout_runtime.serialize(),"selected_weapon":selected_weapon,"run_metrics":run_metrics,"chests_opened":chests_opened,"legacy_weapon_slots":legacy_weapon_slots,"legacy_tome_slots":legacy_tome_slots,"minimap":serialize_minimap(),"variants":variants.serialize(),"spawn_rng_state":str(spawn_rng.state),"elite_active":elite_active,"elite_rewarded":elite_rewarded,"rng_state":str(rng.state),"character":character,"biome":biome,"selected_biome":selected_biome,"tier":tier,"stage":stage,"elapsed":elapsed,"stage_time":stage_time,"stats":stats,"health":health,"xp":xp,"level":level,"kills":kills,"gold":gold,"weapons":saved_weapons,"tomes":tomes,"items":items,"sandbox":sandbox,"position":[player.position.x,player.position.y,player.position.z],"enemies":saved_enemies,"boss_spawned":boss_spawned,"boss_dead":boss_dead,"interactables":used,"damage_total":damage_total,"rerolls":rerolls,"banished":banished,"pickups":saved_pickups,"damage_by_weapon":damage_by_weapon,"gold_fraction":gold_fraction,"camera":[player.yaw,player.pitch,player.zoom]}
  var file=FileAccess.open(path+".tmp",FileAccess.WRITE)
  if not file: return false
  file.store_string(JSON.stringify(data)); file.close()
@@ -1443,6 +1459,7 @@ func load_run(path: String = "user://active-run.json") -> bool:
   if not data.has(key): return false
  if data.position.size()!=3 or not data.stats is Dictionary: return false
  variants=restored
+ pending_upgrades=int(data.get("pending_upgrades",0));gem_rng.seed=int(data.get("variants",{}).get("seed",0))+719477;gem_rng.state=int(data.get("gem_rng_state",gem_rng.state))
  terrain_version=3 if int(data.get("terrain_version",1))==3 else 4
  weapon_damage_windows.clear()
  run_seed=variants.seed_value
@@ -1475,8 +1492,8 @@ func load_run(path: String = "user://active-run.json") -> bool:
  invulnerability=0.5
  for record in data.get("pickups",[]):
   var pos=Vector3(record.position[0],record.position[1],record.position[2])
-  var model=pool.acquire("xp",projectile_mesh("xp"),Color("6dffd8"),pos)
-  pickups.append({"node":model,"value":record.value,"age":record.age})
+  var model=XPGems.acquire(self,pos,bool(record.get("red",false)))
+  pickups.append({"node":model,"value":record.value,"age":record.age,"red":bool(record.get("red",false))})
  player.position=Vector3(data.position[0],data.position[1],data.position[2])
  if int(data.get("terrain_version",1))<3:player.position=map_layout.spawn+Vector3.UP
  for record in data.enemies:
@@ -1732,18 +1749,19 @@ func prewarm_combat() -> void:
   for i in 4:
    var node=pool.acquire("corpse_"+model,BestiaryFrames.mesh(model,"enemy_idle",0),Color.WHITE,Vector3.ZERO,true);pool.release(node)
  var waiting=[]
- for i in 128:waiting.append(pool.acquire("xp",projectile_mesh("xp"),Color("6dffd8"),Vector3.ZERO))
+ for i in 128:waiting.append(XPGems.acquire(self,Vector3.ZERO))
+ for i in 8:waiting.append(XPGems.acquire(self,Vector3.ZERO,true))
  for node in waiting:pool.release(node)
 func add_xp_drop(pos: Vector3,value: float) -> void:
  if debug_combat:combat_counters.xp_drops+=1
  # Merge spatially close rewards. All XP is retained, including boss multi-drops.
  for pickup in pickups:
-  if pickup.node.position.distance_squared_to(pos)<9:
+  if not pickup.get("red",false) and pickup.node.position.distance_squared_to(pos)<9:
    pickup.value+=value
    pickup.node.scale=Vector3.ONE*clampf(1+sqrt(pickup.value)*0.04,1,2)
    if debug_combat:combat_counters.xp_merged+=1
    return
- var node=pool.acquire("xp",projectile_mesh("xp"),Color("6dffd8"),pos)
+ var node=XPGems.acquire(self,pos)
  pickups.append({"node":node,"value":value,"age":0.0})
 
 func orbit_count(id: int) -> int:

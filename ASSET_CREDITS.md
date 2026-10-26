@@ -70,3 +70,8 @@ Complete licences are retained in each pack directory and Windows distribution. 
 ## Vertical Forest increment
 
 The static cloud/gradient sky (`shaders/forest_sky.gdshader`), region/placement algorithms, and map-preview captures (`docs/images/vertical/`) are original project work. No additional external assets were downloaded. Existing trees, rocks, vegetation, characters and materials retain the licences recorded above. The overview montage combines actual renders; individual unaltered captures are included.
+
+## Original reward presentation (2026-10-26)
+- Faceted XP gemstone geometry: original procedural double-cone mesh in `scripts/rewards/xp_gems.gd`, using existing ModelBuilder primitives; shared blue/red materials.
+- Metal-corner frames, roulette composition, rainbow/confetti/flying-gem draws: original project code in `scripts/ui/reward_frame.gd`, `reward_screens.gd` and `reward_celebration.gd`. User screenshots are layout references, not redistributed artwork.
+- Existing project icons, Kurland font and menu/level audio are reused under the licences recorded above; no additional third-party asset download is introduced.

@@ -28,8 +28,13 @@ var shop_object: Dictionary={}
 var shop_offers: Array=[]
 var headline_font: Font
 var card_gold=Color("d8b575")
+var reward_generation=0
+var reward_consumed=false
+var reward_focus: Dictionary={}
+var reward_tweens: Array=[]
 
 func setup(owner_game: Node) -> void:
+ process_mode=Node.PROCESS_MODE_ALWAYS
  game=owner_game
  layer=2
  root=Control.new();root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);root.mouse_filter=Control.MOUSE_FILTER_IGNORE
@@ -84,7 +89,15 @@ func card(parent: Node, pos: Vector2, dimensions: Vector2) -> VBoxContainer:
  var column=VBoxContainer.new();column.size_flags_horizontal=Control.SIZE_EXPAND_FILL;column.add_theme_constant_override("separation",10);scroll.add_child(column)
  game.panel=panel
  return column
+func stop_reward_animations() -> void:
+ for tween in reward_tweens:
+  if tween!=null and tween.is_valid():tween.kill()
+ reward_tweens.clear()
+func _exit_tree() -> void:
+ stop_reward_animations()
 func clear() -> void:
+ stop_reward_animations()
+ reward_generation+=1;reward_consumed=false
  if is_instance_valid(game.notice):game.notice.text=""
  for child in menu.get_children():menu.remove_child(child);child.queue_free()
  menu.show();hud_root.hide();Input.mouse_mode=Input.MOUSE_MODE_VISIBLE
@@ -233,6 +246,7 @@ func quests() -> void:
     if MetaProgress.claim(game.progress.data,q.id):game.progress.save();quests())
    claim.disabled=claimed or MetaProgress.quest_value(game.progress.data,q.metric)<q.target
 func enter_run() -> void:
+ stop_reward_animations()
  in_run=true;icon_fingerprint=""
  menu.hide();hud_root.show();game.player.camera.current=true
 func update_hud() -> void:
@@ -270,81 +284,13 @@ func update_hud() -> void:
  update_boss_bars()
  if game.settings.fps:status_label.text+="\n%d FPS"%Engine.get_frames_per_second()
 func inventory() -> void:
- game.mode="build";var col=page("Your build & character stats")
- text("Stage %d • Gold %d • Level %d • %.0fs survived"%[game.stage,game.gold,game.level,game.elapsed],col,16)
- var row=HBoxContainer.new();col.add_child(row)
- var left=VBoxContainer.new();row.add_child(left)
- heading("Equipment",left,22)
- for id in game.weapons:
-  var weapon_row=icon_row(left,"weapons",str(id),"%s • Level %d"%[Catalog.WEAPONS[id][0],game.weapons[id].level]);weapon_row.tooltip_text=game.weapon_tooltip(id)
- for id in game.tomes:icon_row(left,"tomes",str(id),"%s • Level %d"%[id,game.tomes[id]])
- for category in ["traits","ultimates"]:
-  var id=game.loadout_runtime.trait_id if category=="traits" else game.loadout_runtime.ultimate_id
-  icon_row(left,category,id,LoadoutCatalog.entry(category,id).get("name",id),true)
- var middle=VBoxContainer.new();row.add_child(middle);heading("Items",middle,22)
- if game.items.is_empty():text("No items yet",middle,16)
- var counts={}
- for id in game.items:counts[id]=int(counts.get(id,0))+1
- for name in counts:
-  var index=0
-  for i in Catalog.ITEMS.size():
-   if Catalog.ITEMS[i][0]==name:index=i;break
-  var item_row=icon_row(middle,"items",str(index),"%s ×%d"%[name,counts[name]]);item_row.tooltip_text=Catalog.item_description(index)
- var right=VBoxContainer.new();row.add_child(right);heading("Live statistics",right,22)
- var stats_grid=GridContainer.new();stats_grid.columns=2;right.add_child(stats_grid)
- for key in game.stats:
-  var name_label=text(key.replace("_"," ").capitalize(),stats_grid,15);name_label.tooltip_text=BuildStats.help(key);name_label.mouse_filter=Control.MOUSE_FILTER_STOP
-  var value_label=text(BuildStats.value(key,game.stats[key]),stats_grid,15);value_label.tooltip_text=BuildStats.help(key);value_label.mouse_filter=Control.MOUSE_FILTER_STOP
- var multiplier=game.loadout_runtime.damage_multiplier()
- var trait_multiplier=multiplier/(1.75 if game.loadout_runtime.remaining>0 and game.loadout_runtime.ultimate_id=="berserk" else 1.0)
- text("Trait damage bonus +%.0f%%"%((trait_multiplier-1)*100),right,14)
- text("Combined damage bonus +%.0f%%"%((game.stats.damage*multiplier-1)*100),right,14)
- var reduction=text("Damage reduction %.0f%%"%((1-game.loadout_runtime.incoming_multiplier()*100/(100+game.stats.armor*5))*100),right,14);reduction.tooltip_text=BuildStats.help("armor");reduction.mouse_filter=Control.MOUSE_FILTER_STOP
- action("Resume",col,game.resume)
+ RewardScreens.inventory(self)
 func upgrades() -> void:
- game.mode="upgrade";var col=page("Level %d • Choose your power"%game.level)
- game.choices.clear();var pool=game.upgrade_choices()
- var row=HBoxContainer.new();row.add_theme_constant_override("separation",16);col.add_child(row)
- for i in mini(3,pool.size()):
-  var choice=pool.pop_front();game.choices.append(choice)
-  var container=PanelContainer.new();container.custom_minimum_size=Vector2(365,340)
-  var style=StyleBoxFlat.new();style.bg_color=Color("1b3035");style.border_color=Color("4c6d68");style.set_border_width_all(1);style.set_corner_radius_all(5);style.content_margin_left=14;style.content_margin_right=14;style.content_margin_top=14;style.content_margin_bottom=14;container.add_theme_stylebox_override("panel",style);row.add_child(container)
-  var card_body=VBoxContainer.new();card_body.add_theme_constant_override("separation",18);container.add_child(card_body)
-  var title="";var description="";var category="weapons"
-  if choice.type=="weapon":
-   var id=int(choice.id);var rank=int(game.weapons[id].level) if game.weapons.has(id) else 0
-   title=Catalog.WEAPONS[id][0];description="New weapon • "+Catalog.WEAPONS[id][1] if rank==0 else "Level %d → %d\n%s"%[rank,rank+1,WeaponUpgrades.description(id,game.weapons[id],choice.attribute)]
-  elif choice.type=="tome":
-   category="tomes";var stat=Catalog.TOMES[choice.id][0];title=str(choice.id)+" Tome";description="Level %d → %d\n%s %.2f → %.2f"%[game.tomes.get(choice.id,0),game.tomes.get(choice.id,0)+1,stat,game.stats[stat],game.stats[stat]+Catalog.TOMES[choice.id][1]]
-  else:title="Field supplies";description="Restore 25 health."
-  icon_row(card_body,category,str(choice.id),title);paragraph(description,card_body,300).custom_minimum_size.y=110
-  action("Choose",card_body,func():game.apply_upgrade(choice);game.resume())
-  action("Banish",card_body,func():game.banished.append(choice.key);game.resume())
- var controls=HBoxContainer.new();col.add_child(controls)
- action("Reroll (%d)"%game.rerolls,controls,func():
-  if game.rerolls>0:game.rerolls-=1;upgrades()).disabled=game.rerolls<=0
- action("Skip • heal 10",controls,func():game.health=minf(game.stats.max_health,game.health+10);game.resume())
+ RewardScreens.upgrades(self)
 func shop(object: Dictionary) -> void:
- game.mode="shop";shop_object=object
- if not object.has("offers"):object.offers=ShopSystem.offers(object.get("tier","Common"),game.available_items(),game.rng)
- shop_offers=object.offers
- var col=page(object.get("tier","Common")+" shop");paragraph("Run gold: %d • One purchase per seller."%game.gold,col,850)
- var row=HBoxContainer.new();row.add_theme_constant_override("separation",15);col.add_child(row)
- for i in shop_offers.size():
-  var id=int(shop_offers[i]);var item=Catalog.ITEMS[id];var price=ShopSystem.price(id)
-  var box=VBoxContainer.new();box.custom_minimum_size=Vector2(345,280);row.add_child(box)
-  icon_row(box,"items",str(id),item[0]);paragraph(item[1].capitalize()+"\n"+Catalog.item_description(id),box,300)
-  var sold=id in object.get("sold",[])
-  var buy=action("SOLD" if sold else "Buy • %d gold"%price,box,func():
-   if game.buy_shop(object,id,price):return
-   else:game.toast("Not enough run gold"))
-  buy.disabled=sold or game.gold<price
- if shop_offers.is_empty():paragraph("No enabled items are available. Enable items from Unlocks between runs.",col,900)
- action("Leave shop",col,game.resume)
+ RewardScreens.shop(self,object)
 func reward(item: Array) -> void:
- game.mode="reward";var col=page("Treasure discovered")
- var id=Catalog.ITEMS.find(item);icon_row(col,"items",str(id),item[0]);paragraph(item[1].capitalize()+" • "+Catalog.item_description(id)+"\nApplied to your build immediately.",col,850)
- action("Continue",col,game.resume)
+ RewardScreens.reward(self,item)
 func settings(back: Callable) -> void:
  settings_back=back
  game.mode="settings";var col=page("Settings")
