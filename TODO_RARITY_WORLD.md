@@ -23,4 +23,4 @@ Milestones 5–10 are implemented: pooled blue/red gemstones, queued levels, sha
 - [x] Inspect all five images uploaded in fc17e6b and map each to an interface.
 - [x] Implement reference-based pause, expanded map, action buttons, card price/level headers and locked/empty equipment slots.
 - [x] Focused pause/map/reward checks: 27 passing.
-- [ ] Complete full regression/export checks and verify a new downloadable Windows release.
+- [x] All fifteen regression suites pass (633 named checks); reference-ui-v7.1 Windows release, source/SHA256/CRCs and downloaded compiled world/pause/map/UI checks verified. See releases/BUILD_INFO.md.

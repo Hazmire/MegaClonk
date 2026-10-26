@@ -1,20 +1,20 @@
-# Verified Rewards and XP v7 publication
+# Verified Reference UI v7.1 publication
 
-[Download Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/rewards-ui-v7/BONK_INFINITY_Windows_x64.zip). Extract everything and launch `BONK_INFINITY.exe`, or `Launch_Compatibility.bat` for OpenGL.
+[Download Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/reference-ui-v7.1/BONK_INFINITY_Windows_x64.zip). Extract and launch `BONK_INFINITY.exe`, or `Launch_Compatibility.bat` for OpenGL.
 
-- Clean source: `9b762af6659b0b0d12be99e35e62543afe6ee983`.
-- Successful workflow: https://github.com/Hazmire/MegaClonk/actions/runs/40376476581
-- Release asset ID `679058946`; 111,605,506 bytes.
-- ZIP SHA256: `41bebcaf7e5bad54473c66c3c12ff6ed68e351d76ad513b2d15bb7726aba5f2c`.
-- Actions artifact ID `12675635685`, `BONK_INFINITY-Windows-x64`; 112,508,821 bytes; not expired at verification.
-- Artifact SHA256: `4c8d069f72db5f8bbb4603ff5b09c7ef88924aa1b07632baf88b2c73f5ce4c45`.
+- Clean source: `0b9a6082fd16f331b14318937ac55010dbae8f1f`.
+- Successful workflow: https://github.com/Hazmire/MegaClonk/actions/runs/40401832094
+- Release asset ID `679498463`; 111,612,559 bytes.
+- ZIP SHA256: `08682c9d43c895c4ac0bae020d1b6ea80e33bc034cccc76a3c663e074dc01c56`.
+- Actions artifact ID `12688743851`, `BONK_INFINITY-Windows-x64`; 112,516,002 bytes; not expired at verification.
+- Artifact SHA256: `df8efbf4b9578524e2fd6155f03f57f22c253a5e74697780fda985042bf06856`.
 
-The published ZIP was downloaded and checked against GitHub's size and SHA256. Every archive CRC passes, and BUILD_INFO confirms the clean source above. Linux Godot loaded the downloaded embedded game data for 180 practice frames and an explicit reward-screen smoke without script/resource errors. The local export's upgrade, build, shop, roulette and reveal screens were also rendered and visually inspected. This validates compiled resources; **native Windows executable execution remains untested**.
+The actual published ZIP was downloaded. Size and SHA256 match GitHub, every archive CRC passes, and BUILD_INFO confirms clean source. Linux Godot loaded its embedded game data for a 180-frame practice run and an explicit pause/map/reward-screen smoke without script/resource errors. The smoke also verifies that the five uploaded reference screenshots are excluded from the game pack.
 
-All fifteen regression suites pass, with 625 named assertions plus seeded-world reports: 200 layouts, 200 decorated worlds, 101,114 collision rays, 400 enemy traversals, 1,000 live interactions and 70 detailed cliff-drop cases. Nineteen reward checks include queued save/load, exact-level red gems, duplicate prevention, affordability and synthetic navigation. Screens were rendered at 720p, 1080p and 1440p. See [reward guide](../docs/REWARD_UI.md), [validation](REWARDS_VALIDATION.json) and [world guide](../docs/VERTICAL_FOREST.md).
+All fifteen regression suites pass: 633 named assertions, including 27 focused reward/UI checks, plus seeded-world reports. The world validation retains 200 layouts, 200 decorated worlds, 101,114 collision rays, 400 enemy traversals, 1,000 live interactions and 70 detailed cliff-drop cases. Pause, map and reward screens were rendered at 720p/1080p/1440p and inspected; the local exported pack's pause/map views were also rendered and viewed.
 
-CI exposed a missing `rg` executable on the runner. Validation/export guards now use standard `grep`, including the positive compiled-UI completion check, and export failures include API-readable annotations. The final clean CI run passed with these corrected guards.
+The five references and implemented UI changes are mapped in [REFERENCE_UI.md](../docs/REFERENCE_UI.md). Press M (rebindable) in gameplay to inspect the discovered world, or use Map from pause. Existing rewards, prices, combat, progression and save compatibility are preserved.
 
-CPU results and limits are in docs/REWARD_UI.md and docs/VERTICAL_PERFORMANCE.md. Physical controllers, audible audio and gaming-PC 60FPS remain unverified. Mesa software OpenGL still reports retained sky texture handles on shutdown. Creating 1,000 unmerged gems in one burst can hitch; the normal path retains merging and prewarming.
+These checks validate compiled resources and Linux rendering; **native Windows execution remains untested**. Physical controllers, audible audio and gaming-PC 60FPS remain unverified. The known Mesa sky-texture shutdown diagnostic and large XP-burst hitch limit remain documented in docs/REWARD_UI.md and docs/VERTICAL_PERFORMANCE.md.
 
-All rarity/world/XP/reward-interface milestones now have evidence and a Windows playtest build. Source PR: https://github.com/Hazmire/MegaClonk/pull/3 . Merge it into Full-Release to update the default branch; the release download works independently of merging. The ZIP tracked directly in this directory is an older build. [Vertical Forest v6.1](https://github.com/Hazmire/MegaClonk/releases/tag/vertical-forest-v6.1) remains a fallback; its historical verification is retained in VERTICAL_VALIDATION.json.
+Source PR: https://github.com/Hazmire/MegaClonk/pull/3 . Merge into Full-Release to update the default branch; this download works independently of merging. [Rewards and XP v7](https://github.com/Hazmire/MegaClonk/releases/tag/rewards-ui-v7) remains a fallback, with historical REWARDS_VALIDATION.json and checksum preserved. The ZIP tracked directly in this directory is an older build.

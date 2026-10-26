@@ -1,0 +1,34 @@
+{
+  "release": "reference-ui-v7.1",
+  "source": "0b9a6082fd16f331b14318937ac55010dbae8f1f",
+  "asset_id": 679498463,
+  "bytes": 111612559,
+  "sha256": "08682c9d43c895c4ac0bae020d1b6ea80e33bc034cccc76a3c663e074dc01c56",
+  "archive_crc_pass": true,
+  "clean_source": true,
+  "download_url": "https://github.com/Hazmire/MegaClonk/releases/download/reference-ui-v7.1/BONK_INFINITY_Windows_x64.zip",
+  "workflow": 40401832094,
+  "suites": 15,
+  "assertions": 633,
+  "reward_ui_checks": 27,
+  "ci_embedded_pack_smoke_frames": 120,
+  "downloaded_embedded_pack_smoke_frames": 180,
+  "downloaded_pause_map_reward_smoke": true,
+  "reference_screenshots_excluded_from_pack": true,
+  "rendered_resolutions": [
+    "1280x720",
+    "1920x1080",
+    "2560x1440"
+  ],
+  "local_export_rendered_on_linux": true,
+  "native_windows_tested": false,
+  "physical_controller_tested": false,
+  "gaming_gpu_60fps_verified": false,
+  "artifact": {
+    "id": 12688743851,
+    "name": "BONK_INFINITY-Windows-x64",
+    "size_in_bytes": 112516002,
+    "digest": "sha256:df8efbf4b9578524e2fd6155f03f57f22c253a5e74697780fda985042bf06856",
+    "expired": false
+  }
+}
