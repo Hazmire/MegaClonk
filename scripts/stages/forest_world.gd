@@ -13,13 +13,16 @@ static func spaced(game: Node,p: Vector3,radius: float) -> bool:
  return true
 static func build(game: Node) -> void:
  # Load shared animation resources during stage setup, never during horde ticks.
+ var started=Time.get_ticks_usec()
  BestiaryFrames.prewarm()
  var data=ForestMap.layout(game.stage_map_seed())
  game.map_layout=data
+ var layout_done=Time.get_ticks_usec()
  var terrain=game.mesh_node(ForestMap.geometry(data),Color.WHITE,game.world)
  terrain.name="TerraceTerrain"
  terrain.material_override=ForestAtmosphere.floor_material()
  terrain.create_trimesh_collision()
+ var collision_done=Time.get_ticks_usec()
  # Dedicated generator only. Decoration never consumes combat RNG.
  var rng=RandomNumberGenerator.new();rng.seed=data.seed+1337
  var clusters=[]
@@ -51,7 +54,9 @@ static func build(game: Node) -> void:
   var position=Vector3(p.x,game.terrain_height(p.x,p.y),p.y)
   if not spaced(game,position,1.8):continue
   game.prop_instance("mega_rock",mesh,Color.WHITE,position,Vector3.ONE,true);game.prop_collider(position,1.8,mesh.get_aabb().size.y)
+ var props_done=Time.get_ticks_usec()
  ForestAtmosphere.add_grass(game,data,rng)
+ var grass_done=Time.get_ticks_usec()
  # One navigation surface/flow field, built only after all blockers are known.
  game.forest_navigation=ForestNavigation.new();game.world.add_child(game.forest_navigation)
  game.forest_navigation.setup(data,game.obstacles)
@@ -75,3 +80,4 @@ static func build(game: Node) -> void:
  for p in data.pois:
   assert(game.forest_navigation.reachable(p),"Unreachable objective in seed %s"%data.seed)
  assert(game.forest_navigation.reachable(data.portal),"Unreachable portal in seed %s"%data.seed)
+ data.world_metrics={"layout_ms":(layout_done-started)/1000.0,"mesh_collision_ms":(collision_done-layout_done)/1000.0,"props_ms":(props_done-collision_done)/1000.0,"grass_setup_ms":(grass_done-props_done)/1000.0,"navigation_ms":(Time.get_ticks_usec()-grass_done)/1000.0,"total_ms":(Time.get_ticks_usec()-started)/1000.0}
