@@ -29,7 +29,20 @@ jobs:
       - name: Import project and run all fifteen regression and seeded-world suites
         run: tools/validate.sh
       - name: Export Windows x64 with embedded game resources
-        run: tools/export.sh
+        run: |
+          if ! tools/export.sh > /tmp/export.log 2>&1; then
+            cat /tmp/export.log
+            python3 - <<'PYLOG'
+          import pathlib
+          lines = pathlib.Path('/tmp/export.log').read_text().splitlines()
+          errors = [line for line in lines if 'ERROR' in line or 'Error' in line or 'error' in line or 'SMOKE' in line]
+          message = '\n'.join(errors[-30:] or lines[-20:])[-6000:]
+          message = message.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+          print('::error title=Windows export diagnostic::' + message)
+          PYLOG
+            exit 1
+          fi
+          cat /tmp/export.log
       - name: Upload playable Windows ZIP artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
