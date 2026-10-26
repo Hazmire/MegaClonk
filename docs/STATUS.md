@@ -1,6 +1,6 @@
 # Latest increment: Vertical Forest
 
-Milestones 2–4 add four elevation bands, adaptive ramps, layered sky, fog and seeded constrained object placement. Version-3 saves retain their old terrain. See VERTICAL_FOREST.md and VERTICAL_PERFORMANCE.md. Milestones 5–10 add blue/red XP gems, queued levels and reference-based upgrade/chest/shop/build screens; see REWARD_UI.md. All fifteen regression suites pass. Windows v6.1 publication is verified; see releases/BUILD_INFO.md. Native Windows execution remains untested. Historical status follows.
+Milestones 2–4 add four elevation bands, adaptive ramps, layered sky, fog and seeded constrained object placement. Version-3 saves retain their old terrain. See VERTICAL_FOREST.md and VERTICAL_PERFORMANCE.md. Milestones 5–10 add blue/red XP gems, queued levels and reference-based upgrade/chest/shop/build screens; see REWARD_UI.md. All fifteen regression suites pass. Windows v7 reward/UI publication and downloaded compiled-world/UI checks are verified; see releases/BUILD_INFO.md. Native Windows execution remains untested. Historical status follows.
 
 # Latest combat and atmosphere polish
 

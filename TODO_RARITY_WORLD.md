@@ -1,6 +1,6 @@
 # Rarity-first rewards and world overhaul
 
-The user's new specification requires Gate 1 before terrain or UI work. Vertical Forest v6.1 is published and verified; see releases/BUILD_INFO.md.
+The user's new specification requires Gate 1 before terrain or UI work. Rewards and XP v7 is published and verified; see releases/BUILD_INFO.md.
 
 - [x] Audit inventory, upgrades, chest/shop probabilities, unlocks and saves.
 - [x] Implement five-tier registry, shared catalog adapter and weighted selection.
@@ -11,10 +11,10 @@ The user's new specification requires Gate 1 before terrain or UI work. Vertical
 - [x] Gate 3: layered fantasy sky/clouds and constrained, reachable randomized objects; 200-seed placement records.
 - [x] Gate 4: blue gemstone XP, rare red exact-level gems, stacked level-up UI and chest roulette.
 - [x] Gate 5: shared rarity cards/effects, shop and actual-data build screen; 720p/1080p/1440p rendered inspection and synthetic controller-action verification (physical hardware untested).
-- [ ] Gate 6: full integration/performance measurements and verified final Windows release.
+- [x] Gate 6: fifteen-suite regression/integration, reported CPU measurements and verified Windows v7 publication/download. Native Windows, physical controller and gaming-GPU validation remain playtest limitations.
 
 The Vertical Forest increment completes Milestones 2–4 / Gates 2–3. Local evidence: 606 assertions, 200 deterministic layouts, 200 decorated worlds, 101,114 collision rays, 1,000 live interactions, 70 cliff-drop cases and 12 rendered seed previews. Terrain-version-3 saves keep the legacy generator; new runs use version 4.
 
 - [x] Vertical Forest v6.1 publication verified: downloaded ZIP checksum/CRCs/clean source match, and its embedded game data passes a 180-frame smoke test. Native Windows execution remains untested.
 
-Milestones 5–10 are implemented: pooled blue/red gemstones, queued levels, shared reward/shop/build cards, animated treasure reel, live inventory/stats and bounded celebrations. All fifteen suites pass: 625 assertions plus seeded-world/traversal reports. See docs/REWARD_UI.md. Final Windows publication verification remains pending for this increment; native Windows execution and gaming-GPU performance require playtesting.
+Milestones 5–10 are implemented: pooled blue/red gemstones, queued levels, shared reward/shop/build cards, animated treasure reel, live inventory/stats and bounded celebrations. All fifteen suites pass: 625 assertions plus seeded-world/traversal reports. See docs/REWARD_UI.md. Windows v7 publication, downloaded SHA256/CRCs/clean source and compiled world/UI smoke are verified in releases/BUILD_INFO.md; native Windows execution and gaming-GPU performance require playtesting.
