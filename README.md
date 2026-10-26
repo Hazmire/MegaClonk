@@ -2,13 +2,15 @@
 
 A native Godot4.7.2 survival roguelike with ten-minute forest stages, player-triggered
 boss encounters, continued runs, configurable loadouts and permanent silver progression.
-This update removes measured CPU death stalls, adds cliff dropping, simplifies player animation,
-and improves weapon effects, ground, grass, dark blue sky, distance fog and high rocky boundaries.
+The latest increment adds a shared five-tier rarity foundation and weighted reward selection.
+The larger terrain, XP and interface overhaul is pending; see [milestone status](TODO_RARITY_WORLD.md)
+and [rarity tests and architecture](docs/rewards/RARITY_FOUNDATION.md). Previous combat polish
+includes cliff dropping, simple player animation, weapon effects and forest atmosphere.
 [Scope and limitations](docs/POLISH_UPDATE.md) · [Before/after measurements](docs/PERFORMANCE_POLISH.md).
 
 ## Download and play
 
-- [Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/combat-polish-v4/BONK_INFINITY_Windows_x64.zip)
+- [Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/rarity-foundation-v5/BONK_INFINITY_Windows_x64.zip)
 - [GitHub Actions builds](https://github.com/Hazmire/MegaClonk/actions/workflows/windows-build.yml)
 - [PR #3 — merge into Full-Release](https://github.com/Hazmire/MegaClonk/pull/3)
 

@@ -6,7 +6,7 @@ The user's new specification requires Gate 1 before terrain or UI work. Existing
 - [x] Implement five-tier registry, shared catalog adapter and weighted selection.
 - [x] Test seeded distribution, eligibility, upgrades, prices and run saves.
 - [x] Full existing regression suite passes; final rarity suite passes 143 checks.
-- [ ] Verify Windows artifact publication for this foundation increment.
+- [x] Windows release/artifact verified from clean source 321f177. Downloaded ZIP size/SHA256/CRCs match; embedded game data passes 180-frame headless smoke. Native Windows execution remains untested.
 - [ ] Gate 2: substantially more vertical, irregular connected terrain, configurable bands/coverage/ramps; 200-seed metrics and 12 rendered seed previews.
 - [ ] Gate 3: layered fantasy sky/clouds and constrained, reachable randomized objects; 200-seed placement records.
 - [ ] Gate 4: blue gemstone XP, rare red exact-level gems, stacked level-up UI and chest roulette.

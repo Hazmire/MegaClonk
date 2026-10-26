@@ -1,0 +1,20 @@
+{
+  "scope": "Milestone 1 only; world and UI overhaul pending",
+  "source": "321f1773540fe307adefb6af0f51d6c071c76ef9",
+  "workflow": 40330979929,
+  "rarity_checks": 143,
+  "existing_assertions": 444,
+  "distribution_seed": 123456,
+  "rolls": 100000,
+  "tier_counts": {
+    "common": 50038,
+    "uncommon": 27760,
+    "rare": 14124,
+    "epic": 6046,
+    "legendary": 2032
+  },
+  "zip_sha256": "e4ca38cb80975bce525ff0f75ad4e48a5ccdab97ac7f110d9e47c030a61d8d85",
+  "zip_crc_pass": true,
+  "embedded_pck_headless_frames": 180,
+  "native_windows_tested": false
+}
