@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="StageUpdateSettings" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/stages/stage_update_settings.gd" id="1"]
+[resource]
+script=ExtResource("1")
+contact_interval=0.75
+crowd_max_height=2.8
+crowd_climb_speed=2.2
+crowd_fall_speed=5.0
+crowd_neighbour_budget=24
+shrine_radius=5.0
+shrine_seconds=8.0
+shrine_decay=0.0
+ordinary_chests=15
+shops=3
+elite_statues=2
+boss_statues=1
+free_chest_chance=0.08
+free_chest_min=1
+free_chest_max=5
+drop_pickup_radius=1.8
+global_golem_cap=24

@@ -1,0 +1,39 @@
+# Latest combat and atmosphere polish
+
+See [current update](POLISH_UPDATE.md), [performance evidence](PERFORMANCE_POLISH.md) and [weapon audit](WEAPON_VFX_AUDIT.md). Older notes below are historical. The Mesa shutdown diagnostic and Windows/GPU verification limits are disclosed in those guides.
+
+# Latest Dynamic Forest update
+
+See [current gameplay/asset guide](DYNAMIC_FOREST.md). New KayKit Minion and Warrior models are integrated. The active ordinary roster is now Basic/Special/Large, with per-spawn choices; the main bosses are Big Chunkus and Rock Golem. Earlier release notes below are historical.
+
+# Current Forest update
+
+The supplied assets-v1 packages are now downloaded and integrated. See [Forest overhaul](FOREST_OVERHAUL.md) and [verified inventory](ASSETS_V1_INVENTORY.md) for current terrain, models, controls and limitations. Earlier release notes below are historical.
+
+# Uploaded assets — current integration status
+
+Original uploads on `04a6722` and particle uploads on `b57fff0` were preserved.
+
+| Pack | Runtime use |
+| --- | --- |
+| Jacob | Textured player, menu preview and shop NPCs; authored idle plus original procedural movement poses. |
+| Kurland | UI typography; included OFL. |
+| GandalfHardcore demo | Trait/ultimate icons and original animated gold frames; five demo images reused as needed. |
+| Undead Skill icons | Weapon/spell icons, mapped to suitable effects. |
+| Undead Loot icons | Items and scroll artwork for tomes. User supplied the linked CraftPix terms, clearing the previous blocked-link issue. |
+| RPG Sounds | Sourced UI, weapon, hit, death, pickup, level, ultimate and ambient audio. |
+| LowPoly Environment | Imported/batched forest trees, grass, bushes and rocks; simple colliders for substantial geometry. |
+| Ancient Reliques | Imported textured head-totem landmark. |
+| Electric FX Free | CC0 shader, adapted for bounded runtime GPU lightning particles. |
+| PSX FX Free | CC BY4.0 flipbook impacts, explosions, blood, sparks, smoke, fire and muzzle flash. |
+
+The Quaternius Bestiary was not among the uploads. Its publisher page is now
+reachable and the free Standard download was attempted. Download storage host
+`itchio-mirror.cb031a832f44726753d6267436f3b414.r2.cloudflarestorage.com`
+is denied by the environment proxy. The pack is not claimed as integrated;
+original distinct low-poly enemies and procedural bosses remain.
+
+The separately linked 48 Scroll pack is not uploaded and currently requires payment.
+No purchase was made; scrolls from the supplied free loot pack fill that role.
+
+See [credits](../ASSET_CREDITS.md) and [publisher evidence](licenses/PUBLISHER_VERIFICATION.md).

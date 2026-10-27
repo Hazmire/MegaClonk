@@ -1,0 +1,63 @@
+name: MEGACLONK Windows build
+on:
+  push:
+    branches: ['**']
+    paths-ignore: ['releases/**', '**/*.md', 'docs/images/**']
+  pull_request:
+    paths-ignore: ['releases/**', '**/*.md', 'docs/images/**']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: windows-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  windows-build:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Configure writable tool directories
+        run: |
+          echo "BONK_TOOLS_ROOT=$RUNNER_TEMP/bonk-tools" >> "$GITHUB_ENV"
+          python3 -c 'import shutil; print("::notice title=Validation tools::grep=" + str(shutil.which("grep")) + ", ripgrep=" + str(shutil.which("rg")))'
+          echo "BONK_RUNTIME_ROOT=$RUNNER_TEMP/bonk-runtime" >> "$GITHUB_ENV"
+      - name: Check out source and generated models
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - name: Install checksum-verified Godot 4.7.2 and export templates
+        run: python3 tools/install_engine.py
+      - name: Import project and run all twenty-two regression and seeded-world suites
+        run: tools/validate.sh
+      - name: Export Windows x64 with embedded game resources
+        run: |
+          if ! tools/export.sh > /tmp/export.log 2>&1; then
+            cat /tmp/export.log
+            python3 - <<'PYLOG'
+          import pathlib
+          lines = pathlib.Path('/tmp/export.log').read_text().splitlines()
+          errors = [line for line in lines if 'ERROR' in line or 'Error' in line or 'error' in line or 'SMOKE' in line]
+          message = '\n'.join(errors[-20:] + lines[-20:])[-6000:]
+          message = message.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+          print('::error title=Windows export diagnostic::' + message)
+          PYLOG
+            exit 1
+          fi
+          cat /tmp/export.log
+      - name: Upload playable Windows ZIP artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: BONK_INFINITY-Windows-x64
+          path: builds/windows/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Publish durable Windows playtest download
+        if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/megaclonk-menu-loadouts')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view stage-swarms-v8 >/dev/null 2>&1; then
+            gh release upload stage-swarms-v8 builds/BONK_INFINITY_Windows_x64.zip --clobber
+          else
+            gh release create stage-swarms-v8 builds/BONK_INFINITY_Windows_x64.zip --target "$GITHUB_SHA" --prerelease --title "MEGACLONK — Stage Themes and Physical Swarms 8" --notes-file docs/STAGE_SWARMS_RELEASE.md
+          fi

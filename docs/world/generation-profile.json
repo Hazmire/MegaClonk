@@ -1,0 +1,925 @@
+{
+  "context": "Sequential headless, warm shared assets; cold layout cache per seed. Assembly includes synchronous setup; deferred old-world cleanup occurs between samples. Not a frame-rate benchmark.",
+  "records": [
+    {
+      "assembly_ms": 252.091,
+      "generation": {
+        "connectivity_ms": 44.727,
+        "draft_ms": 0.835,
+        "placement_ms": 0.001,
+        "planes_ms": 16.218,
+        "total_ms": 61.781
+      },
+      "ramps": 17,
+      "regions": 15,
+      "repaired": false,
+      "seed": 0,
+      "version": 3,
+      "world": {
+        "grass_setup_ms": 2.862,
+        "layout_ms": 62.611,
+        "mesh_collision_ms": 103.809,
+        "navigation_ms": 70.233,
+        "props_ms": 7.79,
+        "total_ms": 247.305
+      }
+    },
+    {
+      "assembly_ms": 239.117,
+      "generation": {
+        "connectivity_ms": 45.719,
+        "draft_ms": 0.433,
+        "placement_ms": 0.001,
+        "planes_ms": 5.999,
+        "total_ms": 52.152
+      },
+      "ramps": 4,
+      "regions": 4,
+      "repaired": false,
+      "seed": 1,
+      "version": 3,
+      "world": {
+        "grass_setup_ms": 3.118,
+        "layout_ms": 52.953,
+        "mesh_collision_ms": 98.573,
+        "navigation_ms": 69.108,
+        "props_ms": 10.685,
+        "total_ms": 234.437
+      }
+    },
+    {
+      "assembly_ms": 248.043,
+      "generation": {
+        "connectivity_ms": 46.113,
+        "draft_ms": 0.669,
+        "placement_ms": 0.001,
+        "planes_ms": 12.893,
+        "total_ms": 59.676
+      },
+      "ramps": 13,
+      "regions": 11,
+      "repaired": false,
+      "seed": 2,
+      "version": 3,
+      "world": {
+        "grass_setup_ms": 2.691,
+        "layout_ms": 60.608,
+        "mesh_collision_ms": 101.482,
+        "navigation_ms": 71.206,
+        "props_ms": 7.037,
+        "total_ms": 243.025
+      }
+    },
+    {
+      "assembly_ms": 243.784,
+      "generation": {
+        "connectivity_ms": 46.473,
+        "draft_ms": 0.572,
+        "placement_ms": 0.0,
+        "planes_ms": 9.544,
+        "total_ms": 56.589
+      },
+      "ramps": 9,
+      "regions": 7,
+      "repaired": false,
+      "seed": 3,
+      "version": 3,
+      "world": {
+        "grass_setup_ms": 2.937,
+        "layout_ms": 57.51,
+        "mesh_collision_ms": 99.709,
+        "navigation_ms": 70.708,
+        "props_ms": 8.269,
+        "total_ms": 239.133
+      }
+    },
+    {
+      "assembly_ms": 247.825,
+      "generation": {
+        "connectivity_ms": 45.969,
+        "draft_ms": 0.426,
+        "placement_ms": 0.0,
+        "planes_ms": 9.27,
+        "total_ms": 55.665
+      },
+      "ramps": 8,
+      "regions": 6,
+      "repaired": false,
+      "seed": 4,
+      "version": 3,
+      "world": {
+        "grass_setup_ms": 3.158,
+        "layout_ms": 56.547,
+        "mesh_collision_ms": 100.263,
+        "navigation_ms": 73.27,
+        "props_ms": 9.672,
+        "total_ms": 242.91
+      }
+    },
+    {
+      "assembly_ms": 253.94,
+      "generation": {
+        "connectivity_ms": 45.497,
+        "draft_ms": 0.635,
+        "placement_ms": 0.0,
+        "planes_ms": 12.593,
+        "total_ms": 58.725
+      },
+      "ramps": 12,
+      "regions": 10,
+      "repaired": false,
+      "seed": 5,
+      "version": 3,
+      "world": {
+        "grass_setup_ms": 3.136,
+        "layout_ms": 59.658,
+        "mesh_collision_ms": 103.849,
+        "navigation_ms": 73.685,
+        "props_ms": 8.844,
+        "total_ms": 249.172
+      }
+    },
+    {
+      "assembly_ms": 253.601,
+      "generation": {
+        "connectivity_ms": 49.331,
+        "draft_ms": 0.595,
+        "placement_ms": 0.001,
+        "planes_ms": 11.777,
+        "total_ms": 61.704
+      },
+      "ramps": 11,
+      "regions": 9,
+      "repaired": false,
+      "seed": 6,
+      "version": 3,
+      "world": {
+        "grass_setup_ms": 2.744,
+        "layout_ms": 62.653,
+        "mesh_collision_ms": 102.961,
+        "navigation_ms": 71.911,
+        "props_ms": 8.378,
+        "total_ms": 248.647
+      }
+    },
+    {
+      "assembly_ms": 258.244,
+      "generation": {
+        "connectivity_ms": 46.902,
+        "draft_ms": 0.856,
+        "placement_ms": 0.0,
+        "planes_ms": 12.572,
+        "total_ms": 60.33
+      },
+      "ramps": 12,
+      "regions": 10,
+      "repaired": false,
+      "seed": 7,
+      "version": 3,
+      "world": {
+        "grass_setup_ms": 2.868,
+        "layout_ms": 61.199,
+        "mesh_collision_ms": 105.655,
+        "navigation_ms": 75.867,
+        "props_ms": 7.386,
+        "total_ms": 252.975
+      }
+    },
+    {
+      "assembly_ms": 263.392,
+      "generation": {
+        "connectivity_ms": 49.798,
+        "draft_ms": 0.797,
+        "placement_ms": 0.001,
+        "planes_ms": 14.074,
+        "total_ms": 64.67
+      },
+      "ramps": 13,
+      "regions": 11,
+      "repaired": false,
+      "seed": 8,
+      "version": 3,
+      "world": {
+        "grass_setup_ms": 3.058,
+        "layout_ms": 66.107,
+        "mesh_collision_ms": 106.881,
+        "navigation_ms": 73.452,
+        "props_ms": 8.124,
+        "total_ms": 257.622
+      }
+    },
+    {
+      "assembly_ms": 275.367,
+      "generation": {
+        "connectivity_ms": 67.733,
+        "draft_ms": 0.81,
+        "placement_ms": 0.002,
+        "planes_ms": 13.23,
+        "total_ms": 81.775
+      },
+      "ramps": 10,
+      "regions": 8,
+      "repaired": false,
+      "seed": 9,
+      "version": 3,
+      "world": {
+        "grass_setup_ms": 3.702,
+        "layout_ms": 83.108,
+        "mesh_collision_ms": 100.563,
+        "navigation_ms": 73.755,
+        "props_ms": 9.263,
+        "total_ms": 270.391
+      }
+    },
+    {
+      "assembly_ms": 251.562,
+      "generation": {
+        "connectivity_ms": 47.814,
+        "draft_ms": 0.696,
+        "placement_ms": 0.001,
+        "planes_ms": 8.212,
+        "total_ms": 56.723
+      },
+      "ramps": 7,
+      "regions": 6,
+      "repaired": false,
+      "seed": 10,
+      "version": 3,
+      "world": {
+        "grass_setup_ms": 3.054,
+        "layout_ms": 57.713,
+        "mesh_collision_ms": 102.831,
+        "navigation_ms": 73.632,
+        "props_ms": 9.423,
+        "total_ms": 246.654
+      }
+    },
+    {
+      "assembly_ms": 252.936,
+      "generation": {
+        "connectivity_ms": 47.46,
+        "draft_ms": 0.559,
+        "placement_ms": 0.001,
+        "planes_ms": 11.368,
+        "total_ms": 59.388
+      },
+      "ramps": 11,
+      "regions": 9,
+      "repaired": false,
+      "seed": 11,
+      "version": 3,
+      "world": {
+        "grass_setup_ms": 2.876,
+        "layout_ms": 60.47,
+        "mesh_collision_ms": 104.584,
+        "navigation_ms": 71.755,
+        "props_ms": 8.369,
+        "total_ms": 248.054
+      }
+    },
+    {
+      "assembly_ms": 260.777,
+      "generation": {
+        "connectivity_ms": 45.115,
+        "draft_ms": 0.877,
+        "placement_ms": 0.001,
+        "planes_ms": 16.352,
+        "total_ms": 62.345
+      },
+      "ramps": 17,
+      "regions": 15,
+      "repaired": false,
+      "seed": 12,
+      "version": 3,
+      "world": {
+        "grass_setup_ms": 2.982,
+        "layout_ms": 63.325,
+        "mesh_collision_ms": 103.604,
+        "navigation_ms": 77.431,
+        "props_ms": 8.277,
+        "total_ms": 255.619
+      }
+    },
+    {
+      "assembly_ms": 244.964,
+      "generation": {
+        "connectivity_ms": 44.823,
+        "draft_ms": 0.482,
+        "placement_ms": 0.0,
+        "planes_ms": 9.087,
+        "total_ms": 54.393
+      },
+      "ramps": 8,
+      "regions": 6,
+      "repaired": false,
+      "seed": 13,
+      "version": 3,
+      "world": {
+        "grass_setup_ms": 3.076,
+        "layout_ms": 55.471,
+        "mesh_collision_ms": 101.745,
+        "navigation_ms": 71.721,
+        "props_ms": 7.821,
+        "total_ms": 239.834
+      }
+    },
+    {
+      "assembly_ms": 253.857,
+      "generation": {
+        "connectivity_ms": 45.887,
+        "draft_ms": 0.754,
+        "placement_ms": 0.001,
+        "planes_ms": 13.682,
+        "total_ms": 60.324
+      },
+      "ramps": 14,
+      "regions": 12,
+      "repaired": false,
+      "seed": 14,
+      "version": 3,
+      "world": {
+        "grass_setup_ms": 2.833,
+        "layout_ms": 61.436,
+        "mesh_collision_ms": 103.548,
+        "navigation_ms": 73.174,
+        "props_ms": 7.925,
+        "total_ms": 248.916
+      }
+    },
+    {
+      "assembly_ms": 279.478,
+      "generation": {
+        "connectivity_ms": 48.968,
+        "draft_ms": 0.621,
+        "placement_ms": 0.002,
+        "planes_ms": 8.218,
+        "total_ms": 57.809
+      },
+      "ramps": 7,
+      "regions": 6,
+      "repaired": false,
+      "seed": 15,
+      "version": 3,
+      "world": {
+        "grass_setup_ms": 2.909,
+        "layout_ms": 59.552,
+        "mesh_collision_ms": 125.354,
+        "navigation_ms": 77.89,
+        "props_ms": 8.768,
+        "total_ms": 274.473
+      }
+    },
+    {
+      "assembly_ms": 287.323,
+      "generation": {
+        "connectivity_ms": 48.226,
+        "draft_ms": 0.696,
+        "placement_ms": 0.002,
+        "planes_ms": 11.902,
+        "total_ms": 60.826
+      },
+      "ramps": 11,
+      "regions": 9,
+      "repaired": false,
+      "seed": 16,
+      "version": 3,
+      "world": {
+        "grass_setup_ms": 3.636,
+        "layout_ms": 62.622,
+        "mesh_collision_ms": 116.73,
+        "navigation_ms": 87.532,
+        "props_ms": 10.836,
+        "total_ms": 281.357
+      }
+    },
+    {
+      "assembly_ms": 278.373,
+      "generation": {
+        "connectivity_ms": 56.148,
+        "draft_ms": 0.925,
+        "placement_ms": 0.002,
+        "planes_ms": 11.99,
+        "total_ms": 69.065
+      },
+      "ramps": 10,
+      "regions": 8,
+      "repaired": false,
+      "seed": 17,
+      "version": 3,
+      "world": {
+        "grass_setup_ms": 2.959,
+        "layout_ms": 71.672,
+        "mesh_collision_ms": 112.334,
+        "navigation_ms": 77.778,
+        "props_ms": 8.114,
+        "total_ms": 272.857
+      }
+    },
+    {
+      "assembly_ms": 259.015,
+      "generation": {
+        "connectivity_ms": 52.783,
+        "draft_ms": 0.702,
+        "placement_ms": 0.001,
+        "planes_ms": 9.838,
+        "total_ms": 63.325
+      },
+      "ramps": 9,
+      "regions": 7,
+      "repaired": false,
+      "seed": 18,
+      "version": 3,
+      "world": {
+        "grass_setup_ms": 2.963,
+        "layout_ms": 64.573,
+        "mesh_collision_ms": 103.351,
+        "navigation_ms": 74.8,
+        "props_ms": 8.319,
+        "total_ms": 254.006
+      }
+    },
+    {
+      "assembly_ms": 255.397,
+      "generation": {
+        "connectivity_ms": 50.088,
+        "draft_ms": 0.647,
+        "placement_ms": 0.002,
+        "planes_ms": 9.799,
+        "total_ms": 60.536
+      },
+      "ramps": 9,
+      "regions": 7,
+      "repaired": false,
+      "seed": 19,
+      "version": 3,
+      "world": {
+        "grass_setup_ms": 2.942,
+        "layout_ms": 62.194,
+        "mesh_collision_ms": 102.598,
+        "navigation_ms": 74.157,
+        "props_ms": 8.512,
+        "total_ms": 250.403
+      }
+    },
+    {
+      "assembly_ms": 274.772,
+      "generation": {
+        "connectivity_ms": 47.818,
+        "draft_ms": 1.028,
+        "placement_ms": 1.498,
+        "planes_ms": 26.774,
+        "total_ms": 77.118
+      },
+      "ramps": 11,
+      "regions": 10,
+      "repaired": false,
+      "seed": 0,
+      "version": 4,
+      "world": {
+        "grass_setup_ms": 2.636,
+        "layout_ms": 78.424,
+        "mesh_collision_ms": 107.359,
+        "navigation_ms": 73.92,
+        "props_ms": 7.412,
+        "total_ms": 269.751
+      }
+    },
+    {
+      "assembly_ms": 275.031,
+      "generation": {
+        "connectivity_ms": 46.505,
+        "draft_ms": 1.005,
+        "placement_ms": 1.456,
+        "planes_ms": 26.636,
+        "total_ms": 75.602
+      },
+      "ramps": 11,
+      "regions": 10,
+      "repaired": false,
+      "seed": 1,
+      "version": 4,
+      "world": {
+        "grass_setup_ms": 2.87,
+        "layout_ms": 76.729,
+        "mesh_collision_ms": 104.239,
+        "navigation_ms": 78.142,
+        "props_ms": 7.712,
+        "total_ms": 269.693
+      }
+    },
+    {
+      "assembly_ms": 292.214,
+      "generation": {
+        "connectivity_ms": 51.875,
+        "draft_ms": 1.144,
+        "placement_ms": 1.583,
+        "planes_ms": 26.403,
+        "total_ms": 81.006
+      },
+      "ramps": 11,
+      "regions": 10,
+      "repaired": false,
+      "seed": 2,
+      "version": 4,
+      "world": {
+        "grass_setup_ms": 2.848,
+        "layout_ms": 84.456,
+        "mesh_collision_ms": 114.267,
+        "navigation_ms": 76.877,
+        "props_ms": 8.272,
+        "total_ms": 286.72
+      }
+    },
+    {
+      "assembly_ms": 266.795,
+      "generation": {
+        "connectivity_ms": 47.814,
+        "draft_ms": 0.626,
+        "placement_ms": 1.581,
+        "planes_ms": 20.738,
+        "total_ms": 70.759
+      },
+      "ramps": 8,
+      "regions": 7,
+      "repaired": false,
+      "seed": 3,
+      "version": 4,
+      "world": {
+        "grass_setup_ms": 3.647,
+        "layout_ms": 72.795,
+        "mesh_collision_ms": 105.722,
+        "navigation_ms": 72.298,
+        "props_ms": 7.328,
+        "total_ms": 261.79
+      }
+    },
+    {
+      "assembly_ms": 271.854,
+      "generation": {
+        "connectivity_ms": 46.738,
+        "draft_ms": 0.897,
+        "placement_ms": 1.53,
+        "planes_ms": 27.347,
+        "total_ms": 76.512
+      },
+      "ramps": 11,
+      "regions": 10,
+      "repaired": false,
+      "seed": 4,
+      "version": 4,
+      "world": {
+        "grass_setup_ms": 2.762,
+        "layout_ms": 77.655,
+        "mesh_collision_ms": 106.725,
+        "navigation_ms": 72.898,
+        "props_ms": 6.705,
+        "total_ms": 266.745
+      }
+    },
+    {
+      "assembly_ms": 276.492,
+      "generation": {
+        "connectivity_ms": 46.684,
+        "draft_ms": 1.307,
+        "placement_ms": 1.387,
+        "planes_ms": 30.312,
+        "total_ms": 79.69
+      },
+      "ramps": 13,
+      "regions": 12,
+      "repaired": false,
+      "seed": 5,
+      "version": 4,
+      "world": {
+        "grass_setup_ms": 2.688,
+        "layout_ms": 80.842,
+        "mesh_collision_ms": 105.162,
+        "navigation_ms": 75.409,
+        "props_ms": 7.426,
+        "total_ms": 271.527
+      }
+    },
+    {
+      "assembly_ms": 282.254,
+      "generation": {
+        "connectivity_ms": 49.064,
+        "draft_ms": 1.311,
+        "placement_ms": 1.387,
+        "planes_ms": 28.352,
+        "total_ms": 80.114
+      },
+      "ramps": 12,
+      "regions": 11,
+      "repaired": false,
+      "seed": 6,
+      "version": 4,
+      "world": {
+        "grass_setup_ms": 2.767,
+        "layout_ms": 81.659,
+        "mesh_collision_ms": 113.044,
+        "navigation_ms": 72.653,
+        "props_ms": 7.216,
+        "total_ms": 277.339
+      }
+    },
+    {
+      "assembly_ms": 272.75,
+      "generation": {
+        "connectivity_ms": 45.778,
+        "draft_ms": 1.465,
+        "placement_ms": 1.339,
+        "planes_ms": 27.791,
+        "total_ms": 76.373
+      },
+      "ramps": 12,
+      "regions": 11,
+      "repaired": false,
+      "seed": 7,
+      "version": 4,
+      "world": {
+        "grass_setup_ms": 2.553,
+        "layout_ms": 77.588,
+        "mesh_collision_ms": 104.973,
+        "navigation_ms": 74.989,
+        "props_ms": 7.637,
+        "total_ms": 267.74
+      }
+    },
+    {
+      "assembly_ms": 265.786,
+      "generation": {
+        "connectivity_ms": 44.941,
+        "draft_ms": 0.86,
+        "placement_ms": 1.263,
+        "planes_ms": 24.34,
+        "total_ms": 71.404
+      },
+      "ramps": 10,
+      "regions": 9,
+      "repaired": false,
+      "seed": 8,
+      "version": 4,
+      "world": {
+        "grass_setup_ms": 2.566,
+        "layout_ms": 72.488,
+        "mesh_collision_ms": 104.42,
+        "navigation_ms": 73.782,
+        "props_ms": 7.463,
+        "total_ms": 260.719
+      }
+    },
+    {
+      "assembly_ms": 264.003,
+      "generation": {
+        "connectivity_ms": 46.504,
+        "draft_ms": 0.587,
+        "placement_ms": 1.437,
+        "planes_ms": 20.794,
+        "total_ms": 69.322
+      },
+      "ramps": 8,
+      "regions": 7,
+      "repaired": false,
+      "seed": 9,
+      "version": 4,
+      "world": {
+        "grass_setup_ms": 2.711,
+        "layout_ms": 70.347,
+        "mesh_collision_ms": 102.908,
+        "navigation_ms": 75.635,
+        "props_ms": 7.408,
+        "total_ms": 259.009
+      }
+    },
+    {
+      "assembly_ms": 268.577,
+      "generation": {
+        "connectivity_ms": 45.642,
+        "draft_ms": 0.924,
+        "placement_ms": 1.492,
+        "planes_ms": 23.999,
+        "total_ms": 72.057
+      },
+      "ramps": 10,
+      "regions": 9,
+      "repaired": false,
+      "seed": 10,
+      "version": 4,
+      "world": {
+        "grass_setup_ms": 2.672,
+        "layout_ms": 73.208,
+        "mesh_collision_ms": 104.24,
+        "navigation_ms": 75.855,
+        "props_ms": 7.452,
+        "total_ms": 263.428
+      }
+    },
+    {
+      "assembly_ms": 268.622,
+      "generation": {
+        "connectivity_ms": 46.513,
+        "draft_ms": 0.717,
+        "placement_ms": 1.593,
+        "planes_ms": 22.539,
+        "total_ms": 71.362
+      },
+      "ramps": 9,
+      "regions": 8,
+      "repaired": false,
+      "seed": 11,
+      "version": 4,
+      "world": {
+        "grass_setup_ms": 2.856,
+        "layout_ms": 72.892,
+        "mesh_collision_ms": 106.94,
+        "navigation_ms": 73.329,
+        "props_ms": 7.218,
+        "total_ms": 263.235
+      }
+    },
+    {
+      "assembly_ms": 272.639,
+      "generation": {
+        "connectivity_ms": 46.954,
+        "draft_ms": 1.649,
+        "placement_ms": 1.393,
+        "planes_ms": 27.774,
+        "total_ms": 77.77
+      },
+      "ramps": 11,
+      "regions": 11,
+      "repaired": false,
+      "seed": 12,
+      "version": 4,
+      "world": {
+        "grass_setup_ms": 2.502,
+        "layout_ms": 79.332,
+        "mesh_collision_ms": 104.75,
+        "navigation_ms": 73.645,
+        "props_ms": 7.426,
+        "total_ms": 267.656
+      }
+    },
+    {
+      "assembly_ms": 273.13,
+      "generation": {
+        "connectivity_ms": 47.144,
+        "draft_ms": 0.821,
+        "placement_ms": 1.504,
+        "planes_ms": 26.065,
+        "total_ms": 75.534
+      },
+      "ramps": 10,
+      "regions": 9,
+      "repaired": false,
+      "seed": 13,
+      "version": 4,
+      "world": {
+        "grass_setup_ms": 2.67,
+        "layout_ms": 76.689,
+        "mesh_collision_ms": 105.758,
+        "navigation_ms": 74.643,
+        "props_ms": 8.194,
+        "total_ms": 267.955
+      }
+    },
+    {
+      "assembly_ms": 269.056,
+      "generation": {
+        "connectivity_ms": 46.812,
+        "draft_ms": 0.804,
+        "placement_ms": 1.469,
+        "planes_ms": 24.075,
+        "total_ms": 73.16
+      },
+      "ramps": 10,
+      "regions": 9,
+      "repaired": false,
+      "seed": 14,
+      "version": 4,
+      "world": {
+        "grass_setup_ms": 2.421,
+        "layout_ms": 74.588,
+        "mesh_collision_ms": 103.538,
+        "navigation_ms": 75.506,
+        "props_ms": 7.898,
+        "total_ms": 263.951
+      }
+    },
+    {
+      "assembly_ms": 264.725,
+      "generation": {
+        "connectivity_ms": 48.182,
+        "draft_ms": 0.863,
+        "placement_ms": 1.534,
+        "planes_ms": 20.289,
+        "total_ms": 70.868
+      },
+      "ramps": 8,
+      "regions": 7,
+      "repaired": false,
+      "seed": 15,
+      "version": 4,
+      "world": {
+        "grass_setup_ms": 2.66,
+        "layout_ms": 72.302,
+        "mesh_collision_ms": 103.811,
+        "navigation_ms": 73.241,
+        "props_ms": 7.719,
+        "total_ms": 259.733
+      }
+    },
+    {
+      "assembly_ms": 269.344,
+      "generation": {
+        "connectivity_ms": 46.051,
+        "draft_ms": 1.136,
+        "placement_ms": 1.429,
+        "planes_ms": 28.286,
+        "total_ms": 76.902
+      },
+      "ramps": 12,
+      "regions": 11,
+      "repaired": false,
+      "seed": 16,
+      "version": 4,
+      "world": {
+        "grass_setup_ms": 2.729,
+        "layout_ms": 78.122,
+        "mesh_collision_ms": 104.369,
+        "navigation_ms": 71.811,
+        "props_ms": 7.388,
+        "total_ms": 264.419
+      }
+    },
+    {
+      "assembly_ms": 277.171,
+      "generation": {
+        "connectivity_ms": 48.846,
+        "draft_ms": 0.794,
+        "placement_ms": 1.575,
+        "planes_ms": 23.781,
+        "total_ms": 74.996
+      },
+      "ramps": 9,
+      "regions": 8,
+      "repaired": false,
+      "seed": 17,
+      "version": 4,
+      "world": {
+        "grass_setup_ms": 2.995,
+        "layout_ms": 77.192,
+        "mesh_collision_ms": 107.578,
+        "navigation_ms": 75.148,
+        "props_ms": 8.064,
+        "total_ms": 270.977
+      }
+    },
+    {
+      "assembly_ms": 271.387,
+      "generation": {
+        "connectivity_ms": 50.425,
+        "draft_ms": 0.656,
+        "placement_ms": 1.563,
+        "planes_ms": 20.311,
+        "total_ms": 72.955
+      },
+      "ramps": 8,
+      "regions": 7,
+      "repaired": false,
+      "seed": 18,
+      "version": 4,
+      "world": {
+        "grass_setup_ms": 2.849,
+        "layout_ms": 74.416,
+        "mesh_collision_ms": 103.165,
+        "navigation_ms": 78.484,
+        "props_ms": 7.178,
+        "total_ms": 266.093
+      }
+    },
+    {
+      "assembly_ms": 263.607,
+      "generation": {
+        "connectivity_ms": 50.143,
+        "draft_ms": 0.59,
+        "placement_ms": 1.579,
+        "planes_ms": 20.003,
+        "total_ms": 72.316
+      },
+      "ramps": 8,
+      "regions": 7,
+      "repaired": false,
+      "seed": 19,
+      "version": 4,
+      "world": {
+        "grass_setup_ms": 2.801,
+        "layout_ms": 73.643,
+        "mesh_collision_ms": 101.111,
+        "navigation_ms": 72.445,
+        "props_ms": 8.682,
+        "total_ms": 258.682
+      }
+    }
+  ]
+}

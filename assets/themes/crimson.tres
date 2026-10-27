@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="StageTheme" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/stages/stage_theme.gd" id="1"]
+[resource]
+script = ExtResource("1")
+title = "CRIMSON FOREST"
+accent = Color(1, 0.48, 0.38, 1)
+moss_low = Color(0.16, 0.035, 0.055, 1)
+moss_high = Color(0.32, 0.07, 0.10, 1)
+soil = Color(0.24, 0.12, 0.07, 1)
+stone_low = Color(0.10, 0.12, 0.16, 1)
+stone_high = Color(0.22, 0.24, 0.28, 1)
+foliage = Color(0.70, 0.18, 0.28, 1)
+foliage_strength = 1.0
+grass_low = Color(0.4, 0.065, 0.08, 1)
+grass_high = Color(0.75, 0.22, 0.28, 1)
+zenith = Color(0.1, 0.035, 0.12, 1)
+horizon = Color(0.44, 0.25, 0.26, 1)
+cloud = Color(0.62, 0.44, 0.43, 1)
+fog = Color(0.31, 0.27, 0.34, 1)
+ambient = Color(0.72, 0.74, 0.83, 1)
+sunlight = Color(0.98, 0.86, 0.79, 1)
+rock_tint = Color(0.72, 0.72, 0.79, 1)

@@ -10,6 +10,8 @@ func verify(condition: bool, description: String) -> void:
  else: print("PASS: " + description)
 func _initialize() -> void:
  call_deferred("run")
+# Combat fixtures retain the original seed-9 flat patch; new terrain has
+# dedicated 200-seed collision/navigation and traversal coverage.
 func run() -> void:
  var stats = Catalog.base_stats()
  verify(Catalog.damage(10,stats,false)==10,"Base damage")
@@ -37,7 +39,9 @@ func run() -> void:
  game.progress=Progress.new()
  game.progress.storage_path="user://test-game-profile.json"
  game.sandbox=true
- game.begin_run()
+ # Deterministic flat combat fixture; map variety has separate 100-seed coverage.
+ game.map_seed_override=9
+ game.begin_run();game.terrain_version=3;game.build_stage();game.resume()
  game.settings.invincible=true
  game.spawn_clock=999
  game.weapons.clear()
@@ -140,7 +144,9 @@ func run() -> void:
  game.resume()
  await physics_frame
  await physics_frame
- verify(game.boss_spawned,"Director spawns stage boss")
+ verify(not game.boss_spawned,"Stage timer does not summon the boss automatically")
+ game.activate_portal()
+ verify(game.boss_spawned,"Portal summons stage boss")
  var boss: Dictionary={}
  for enemy in game.enemies:
   if enemy.kind==8: boss=enemy
@@ -164,6 +170,11 @@ func run() -> void:
  game.health=100
  for i in 400: game.spawn_enemy(i%8)
  game.rebuild_grid()
+ # Load each shared animation frame before measuring steady-state simulation.
+ for model in ["Imp","Puglin"]:
+  for frame in 8:BestiaryFrames.mesh(model,"enemy_move",frame)
+  for frame in 2:BestiaryFrames.mesh(model,"enemy_idle",frame)
+ for i in 10:game.update_enemies(1.0/60);game.rebuild_grid()
  var began=Time.get_ticks_usec()
  for i in 120:
   game.update_enemies(1.0/60)

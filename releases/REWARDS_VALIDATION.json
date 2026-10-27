@@ -1,0 +1,40 @@
+{
+  "asset_id": 679058946,
+  "bytes": 111605506,
+  "sha256": "41bebcaf7e5bad54473c66c3c12ff6ed68e351d76ad513b2d15bb7726aba5f2c",
+  "source": "9b762af6659b0b0d12be99e35e62543afe6ee983",
+  "archive_CRCs": "pass",
+  "clean_source": true,
+  "download_url": "https://github.com/Hazmire/MegaClonk/releases/download/rewards-ui-v7/BONK_INFINITY_Windows_x64.zip",
+  "release": "rewards-ui-v7",
+  "workflow": 40376476581,
+  "assertions": 625,
+  "suites": 15,
+  "layout_seeds": 200,
+  "decorated_worlds": 200,
+  "collision_rays": 101114,
+  "enemy_traversal_checks": 400,
+  "live_interactions": 1000,
+  "detailed_drop_cases": 70,
+  "red_gem_rolls": 100000,
+  "red_gem_drops": 240,
+  "ci_embedded_pack_smoke_frames": 120,
+  "downloaded_embedded_pack_smoke_frames": 180,
+  "downloaded_reward_ui_smoke": true,
+  "rendered_resolutions": [
+    "1280x720",
+    "1920x1080",
+    "2560x1440"
+  ],
+  "local_export_rendered_on_linux": true,
+  "native_windows_tested": false,
+  "physical_controller_tested": false,
+  "gaming_gpu_60fps_verified": false,
+  "artifact": {
+    "id": 12675635685,
+    "name": "BONK_INFINITY-Windows-x64",
+    "size_in_bytes": 112508821,
+    "digest": "sha256:4c8d069f72db5f8bbb4603ff5b09c7ef88924aa1b07632baf88b2c73f5ce4c45",
+    "expired": false
+  }
+}

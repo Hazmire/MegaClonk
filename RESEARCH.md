@@ -30,3 +30,9 @@ Character passive descriptions in `Catalog.CHARACTERS` follow the supplied examp
 ## Research still needed
 
 Verify passives and progression requirements; establish the version-specific weapon/tome/item roster; investigate documented enemy/map/boss behaviours and stage timings. Replace approximations only when reliable evidence is available, preserving an explicit provenance for every exact numeric claim. Do not import commercial assets or code.
+
+## Enemy overhaul research attempt (2026-10-23)
+
+`https://megabonk.wiki/wiki/Enemies` returned HTTP 503. Quaternius, Kenney and poly.pizza were denied by the environment proxy (403). Public enemy-page content could not be verified. The user's mentions of fast zombies, moving/stationary cacti, cactus shots and exploding spiders are treated as research leads, not independently verified facts.
+
+The two-variants-per-archetype rule, all 16 variant names, numeric speeds/health/damage, cactus fan shots, wind-up times, knockback resistance and explosion rules are original Bonk Infinity design decisions. Selection uses an independent seeded PRNG, eight 50/50 binary choices at run creation, preserved across stages and JSON run snapshots. No claim is made that Megabonk uses the same pairing or selection system. Death-triggered blasts have a 0.4s warning; proximity blasts use their configured wind-up.

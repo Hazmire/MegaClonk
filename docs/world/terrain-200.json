@@ -1,0 +1,4212 @@
+{
+  "failed": [],
+  "final_passed": 200,
+  "first_attempt_failures": [],
+  "first_attempt_passed": 200,
+  "ms": 39430,
+  "records": [
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 79.8719618055556,
+      "elevation_range": 36.0,
+      "flat_percent": 89.84375,
+      "height_area": {
+        "0.0": 8320.0,
+        "12.0": 10196.0,
+        "24.0": 11900.0,
+        "36.0": 6448.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 0,
+      "spawn": [
+        -79.0,
+        12.0,
+        1.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 86.81640625,
+      "elevation_range": 36.0,
+      "flat_percent": 89.84375,
+      "height_area": {
+        "0.0": 5304.0,
+        "12.0": 4816.0,
+        "24.0": 8448.0,
+        "36.0": 18296.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 1,
+      "spawn": [
+        -71.0,
+        36.0,
+        -15.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 86.9032118055556,
+      "elevation_range": 36.0,
+      "flat_percent": 86.9791666666667,
+      "height_area": {
+        "0.0": 5740.0,
+        "12.0": 11628.0,
+        "24.0": 7972.0,
+        "36.0": 11524.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 2,
+      "spawn": [
+        -63.0,
+        24.0,
+        -31.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 60.8832465277778,
+      "elevation_range": 36.0,
+      "flat_percent": 88.8020833333333,
+      "height_area": {
+        "0.0": 15816.0,
+        "12.0": 4704.0,
+        "24.0": 6480.0,
+        "36.0": 9864.0
+      },
+      "plateaus": 7,
+      "ramps": 8,
+      "seed": 3,
+      "spawn": [
+        73.0,
+        0.0,
+        -39.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 62.1527777777778,
+      "elevation_range": 36.0,
+      "flat_percent": 92.578125,
+      "height_area": {
+        "0.0": 14640.0,
+        "12.0": 12052.0,
+        "24.0": 3456.0,
+        "36.0": 6716.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 4,
+      "spawn": [
+        -63.0,
+        0.0,
+        33.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 80.7074652777778,
+      "elevation_range": 36.0,
+      "flat_percent": 84.765625,
+      "height_area": {
+        "0.0": 8716.0,
+        "12.0": 9164.0,
+        "24.0": 12552.0,
+        "36.0": 6432.0
+      },
+      "plateaus": 12,
+      "ramps": 13,
+      "seed": 5,
+      "spawn": [
+        -79.0,
+        0.0,
+        -71.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 77.7886284722222,
+      "elevation_range": 36.0,
+      "flat_percent": 85.0260416666667,
+      "height_area": {
+        "0.0": 9824.0,
+        "12.0": 7040.0,
+        "24.0": 8744.0,
+        "36.0": 11256.0
+      },
+      "plateaus": 11,
+      "ramps": 12,
+      "seed": 6,
+      "spawn": [
+        81.0,
+        24.0,
+        -15.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 75.68359375,
+      "elevation_range": 36.0,
+      "flat_percent": 83.203125,
+      "height_area": {
+        "0.0": 11116.0,
+        "12.0": 4928.0,
+        "24.0": 7308.0,
+        "36.0": 13512.0
+      },
+      "plateaus": 11,
+      "ramps": 12,
+      "seed": 7,
+      "spawn": [
+        57.0,
+        36.0,
+        -87.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 80.0238715277778,
+      "elevation_range": 36.0,
+      "flat_percent": 85.546875,
+      "height_area": {
+        "0.0": 9196.0,
+        "12.0": 4508.0,
+        "24.0": 2852.0,
+        "36.0": 20308.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 8,
+      "spawn": [
+        -87.0,
+        36.0,
+        -87.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 84.5486111111111,
+      "elevation_range": 36.0,
+      "flat_percent": 91.9270833333333,
+      "height_area": {
+        "0.0": 6392.0,
+        "12.0": 8320.0,
+        "24.0": 7368.0,
+        "36.0": 14784.0
+      },
+      "plateaus": 7,
+      "ramps": 8,
+      "seed": 9,
+      "spawn": [
+        49.0,
+        12.0,
+        81.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 80.37109375,
+      "elevation_range": 36.0,
+      "flat_percent": 89.1927083333333,
+      "height_area": {
+        "0.0": 8016.0,
+        "12.0": 17520.0,
+        "24.0": 4704.0,
+        "36.0": 6624.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 10,
+      "spawn": [
+        73.0,
+        0.0,
+        -31.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 76.3237847222222,
+      "elevation_range": 36.0,
+      "flat_percent": 91.6666666666667,
+      "height_area": {
+        "0.0": 9780.0,
+        "12.0": 6384.0,
+        "24.0": 16108.0,
+        "36.0": 4592.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 11,
+      "spawn": [
+        73.0,
+        12.0,
+        73.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 73.2964409722222,
+      "elevation_range": 36.0,
+      "flat_percent": 86.8489583333333,
+      "height_area": {
+        "0.0": 11312.0,
+        "12.0": 3640.0,
+        "24.0": 7696.0,
+        "36.0": 14216.0
+      },
+      "plateaus": 11,
+      "ramps": 11,
+      "seed": 12,
+      "spawn": [
+        -87.0,
+        36.0,
+        -79.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 81.7599826388889,
+      "elevation_range": 36.0,
+      "flat_percent": 90.1041666666667,
+      "height_area": {
+        "0.0": 7696.0,
+        "12.0": 3848.0,
+        "24.0": 14832.0,
+        "36.0": 10488.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 13,
+      "spawn": [
+        -15.0,
+        24.0,
+        73.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 87.3155381944444,
+      "elevation_range": 36.0,
+      "flat_percent": 87.2395833333333,
+      "height_area": {
+        "0.0": 5760.0,
+        "12.0": 12624.0,
+        "24.0": 4080.0,
+        "36.0": 14400.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 14,
+      "spawn": [
+        -47.0,
+        24.0,
+        65.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 73.2096354166667,
+      "elevation_range": 36.0,
+      "flat_percent": 91.6666666666667,
+      "height_area": {
+        "0.0": 10684.0,
+        "12.0": 8448.0,
+        "24.0": 15524.0,
+        "36.0": 2208.0
+      },
+      "plateaus": 7,
+      "ramps": 8,
+      "seed": 15,
+      "spawn": [
+        -71.0,
+        24.0,
+        -47.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 81.0112847222222,
+      "elevation_range": 36.0,
+      "flat_percent": 86.328125,
+      "height_area": {
+        "0.0": 8096.0,
+        "12.0": 11024.0,
+        "24.0": 9376.0,
+        "36.0": 8368.0
+      },
+      "plateaus": 11,
+      "ramps": 12,
+      "seed": 16,
+      "spawn": [
+        9.0,
+        36.0,
+        -63.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 76.7361111111111,
+      "elevation_range": 36.0,
+      "flat_percent": 90.1041666666667,
+      "height_area": {
+        "0.0": 9660.0,
+        "12.0": 5376.0,
+        "24.0": 9148.0,
+        "36.0": 12680.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 17,
+      "spawn": [
+        -55.0,
+        12.0,
+        -63.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 84.7005208333333,
+      "elevation_range": 36.0,
+      "flat_percent": 91.6666666666667,
+      "height_area": {
+        "0.0": 5856.0,
+        "12.0": 5928.0,
+        "24.0": 12496.0,
+        "36.0": 12584.0
+      },
+      "plateaus": 7,
+      "ramps": 8,
+      "seed": 18,
+      "spawn": [
+        -63.0,
+        24.0,
+        -7.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 79.7634548611111,
+      "elevation_range": 36.0,
+      "flat_percent": 94.140625,
+      "height_area": {
+        "0.0": 7752.0,
+        "12.0": 9964.0,
+        "24.0": 10700.0,
+        "36.0": 8448.0
+      },
+      "plateaus": 7,
+      "ramps": 8,
+      "seed": 19,
+      "spawn": [
+        41.0,
+        24.0,
+        -87.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 72.7864583333333,
+      "elevation_range": 36.0,
+      "flat_percent": 89.0625,
+      "height_area": {
+        "0.0": 11416.0,
+        "12.0": 3848.0,
+        "24.0": 4736.0,
+        "36.0": 16864.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 20,
+      "spawn": [
+        73.0,
+        0.0,
+        -63.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 75.0108506944444,
+      "elevation_range": 36.0,
+      "flat_percent": 91.6666666666667,
+      "height_area": {
+        "0.0": 9728.0,
+        "12.0": 12960.0,
+        "24.0": 10240.0,
+        "36.0": 3936.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 21,
+      "spawn": [
+        -63.0,
+        12.0,
+        1.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 56.15234375,
+      "elevation_range": 36.0,
+      "flat_percent": 91.9270833333333,
+      "height_area": {
+        "0.0": 17112.0,
+        "12.0": 10616.0,
+        "24.0": 5032.0,
+        "36.0": 4104.0
+      },
+      "plateaus": 7,
+      "ramps": 8,
+      "seed": 22,
+      "spawn": [
+        -7.0,
+        12.0,
+        -71.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 87.1310763888889,
+      "elevation_range": 36.0,
+      "flat_percent": 86.5885416666667,
+      "height_area": {
+        "0.0": 6424.0,
+        "12.0": 11764.0,
+        "24.0": 9868.0,
+        "36.0": 8808.0
+      },
+      "plateaus": 12,
+      "ramps": 13,
+      "seed": 23,
+      "spawn": [
+        81.0,
+        24.0,
+        25.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 89.1493055555556,
+      "elevation_range": 36.0,
+      "flat_percent": 90.3645833333333,
+      "height_area": {
+        "0.0": 4536.0,
+        "12.0": 7840.0,
+        "24.0": 3864.0,
+        "36.0": 20624.0
+      },
+      "plateaus": 7,
+      "ramps": 8,
+      "seed": 24,
+      "spawn": [
+        49.0,
+        36.0,
+        65.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 68.2942708333333,
+      "elevation_range": 36.0,
+      "flat_percent": 90.7552083333333,
+      "height_area": {
+        "0.0": 12264.0,
+        "12.0": 9760.0,
+        "24.0": 8532.0,
+        "36.0": 6308.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 25,
+      "spawn": [
+        65.0,
+        0.0,
+        -23.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 79.1775173611111,
+      "elevation_range": 36.0,
+      "flat_percent": 89.453125,
+      "height_area": {
+        "0.0": 8964.0,
+        "12.0": 3700.0,
+        "24.0": 14672.0,
+        "36.0": 9528.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 26,
+      "spawn": [
+        73.0,
+        36.0,
+        81.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 78.0707465277778,
+      "elevation_range": 36.0,
+      "flat_percent": 90.3645833333333,
+      "height_area": {
+        "0.0": 8932.0,
+        "12.0": 9604.0,
+        "24.0": 3956.0,
+        "36.0": 14372.0
+      },
+      "plateaus": 7,
+      "ramps": 8,
+      "seed": 27,
+      "spawn": [
+        65.0,
+        36.0,
+        1.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 2,
+      "elevated_percent": 87.7170138888889,
+      "elevation_range": 36.0,
+      "flat_percent": 90.7552083333333,
+      "height_area": {
+        "0.0": 5396.0,
+        "12.0": 2376.0,
+        "24.0": 18064.0,
+        "36.0": 11028.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 28,
+      "spawn": [
+        41.0,
+        24.0,
+        73.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 82.9535590277778,
+      "elevation_range": 36.0,
+      "flat_percent": 88.5416666666667,
+      "height_area": {
+        "0.0": 7292.0,
+        "12.0": 5976.0,
+        "24.0": 17616.0,
+        "36.0": 5980.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 29,
+      "spawn": [
+        -71.0,
+        24.0,
+        1.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 77.4739583333333,
+      "elevation_range": 36.0,
+      "flat_percent": 89.1927083333333,
+      "height_area": {
+        "0.0": 9360.0,
+        "12.0": 2024.0,
+        "24.0": 14568.0,
+        "36.0": 10912.0
+      },
+      "plateaus": 12,
+      "ramps": 13,
+      "seed": 30,
+      "spawn": [
+        81.0,
+        36.0,
+        73.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 57.8667534722222,
+      "elevation_range": 36.0,
+      "flat_percent": 90.1041666666667,
+      "height_area": {
+        "0.0": 16880.0,
+        "12.0": 8592.0,
+        "24.0": 3128.0,
+        "36.0": 8264.0
+      },
+      "plateaus": 11,
+      "ramps": 12,
+      "seed": 31,
+      "spawn": [
+        33.0,
+        12.0,
+        -63.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 72.3958333333333,
+      "elevation_range": 36.0,
+      "flat_percent": 90.3645833333333,
+      "height_area": {
+        "0.0": 10992.0,
+        "12.0": 11912.0,
+        "24.0": 5320.0,
+        "36.0": 8640.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 32,
+      "spawn": [
+        65.0,
+        24.0,
+        25.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 87.3155381944444,
+      "elevation_range": 36.0,
+      "flat_percent": 93.2291666666667,
+      "height_area": {
+        "0.0": 4864.0,
+        "12.0": 9728.0,
+        "24.0": 16472.0,
+        "36.0": 5800.0
+      },
+      "plateaus": 7,
+      "ramps": 8,
+      "seed": 33,
+      "spawn": [
+        -87.0,
+        0.0,
+        57.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 66.3519965277778,
+      "elevation_range": 36.0,
+      "flat_percent": 93.4895833333333,
+      "height_area": {
+        "0.0": 13404.0,
+        "12.0": 9808.0,
+        "24.0": 11444.0,
+        "36.0": 2208.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 34,
+      "spawn": [
+        33.0,
+        0.0,
+        -71.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 66.8511284722222,
+      "elevation_range": 36.0,
+      "flat_percent": 91.015625,
+      "height_area": {
+        "0.0": 13612.0,
+        "12.0": 2900.0,
+        "24.0": 13696.0,
+        "36.0": 6656.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 35,
+      "spawn": [
+        -79.0,
+        24.0,
+        -79.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 86.3064236111111,
+      "elevation_range": 36.0,
+      "flat_percent": 90.625,
+      "height_area": {
+        "0.0": 5856.0,
+        "12.0": 19216.0,
+        "24.0": 3360.0,
+        "36.0": 8432.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 36,
+      "spawn": [
+        65.0,
+        12.0,
+        -87.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 85.4166666666667,
+      "elevation_range": 36.0,
+      "flat_percent": 90.3645833333333,
+      "height_area": {
+        "0.0": 6072.0,
+        "12.0": 13584.0,
+        "24.0": 9592.0,
+        "36.0": 7616.0
+      },
+      "plateaus": 7,
+      "ramps": 8,
+      "seed": 37,
+      "spawn": [
+        65.0,
+        0.0,
+        -23.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 59.3858506944444,
+      "elevation_range": 36.0,
+      "flat_percent": 91.2760416666667,
+      "height_area": {
+        "0.0": 15904.0,
+        "12.0": 2304.0,
+        "24.0": 11744.0,
+        "36.0": 6912.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 38,
+      "spawn": [
+        -71.0,
+        0.0,
+        -71.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 80.6098090277778,
+      "elevation_range": 36.0,
+      "flat_percent": 85.4166666666667,
+      "height_area": {
+        "0.0": 8568.0,
+        "12.0": 9352.0,
+        "24.0": 7528.0,
+        "36.0": 11416.0
+      },
+      "plateaus": 11,
+      "ramps": 12,
+      "seed": 39,
+      "spawn": [
+        -87.0,
+        0.0,
+        49.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 86.9032118055556,
+      "elevation_range": 36.0,
+      "flat_percent": 91.9270833333333,
+      "height_area": {
+        "0.0": 5472.0,
+        "12.0": 8172.0,
+        "24.0": 5904.0,
+        "36.0": 17316.0
+      },
+      "plateaus": 7,
+      "ramps": 8,
+      "seed": 40,
+      "spawn": [
+        -63.0,
+        36.0,
+        65.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 87.3155381944444,
+      "elevation_range": 36.0,
+      "flat_percent": 88.1510416666667,
+      "height_area": {
+        "0.0": 5488.0,
+        "12.0": 18048.0,
+        "24.0": 4816.0,
+        "36.0": 8512.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 41,
+      "spawn": [
+        65.0,
+        12.0,
+        -7.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 68.8585069444444,
+      "elevation_range": 36.0,
+      "flat_percent": 84.765625,
+      "height_area": {
+        "0.0": 13600.0,
+        "12.0": 5880.0,
+        "24.0": 6336.0,
+        "36.0": 11048.0
+      },
+      "plateaus": 11,
+      "ramps": 12,
+      "seed": 42,
+      "spawn": [
+        65.0,
+        24.0,
+        17.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 73.3506944444444,
+      "elevation_range": 36.0,
+      "flat_percent": 89.7135416666667,
+      "height_area": {
+        "0.0": 11136.0,
+        "12.0": 5088.0,
+        "24.0": 6336.0,
+        "36.0": 14304.0
+      },
+      "plateaus": 7,
+      "ramps": 8,
+      "seed": 43,
+      "spawn": [
+        41.0,
+        36.0,
+        -71.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 76.9856770833333,
+      "elevation_range": 36.0,
+      "flat_percent": 83.7239583333333,
+      "height_area": {
+        "0.0": 10496.0,
+        "12.0": 3256.0,
+        "24.0": 5896.0,
+        "36.0": 17216.0
+      },
+      "plateaus": 11,
+      "ramps": 12,
+      "seed": 44,
+      "spawn": [
+        -71.0,
+        24.0,
+        17.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 81.5863715277778,
+      "elevation_range": 36.0,
+      "flat_percent": 91.015625,
+      "height_area": {
+        "0.0": 7392.0,
+        "12.0": 9020.0,
+        "24.0": 14992.0,
+        "36.0": 5460.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 45,
+      "spawn": [
+        -15.0,
+        24.0,
+        65.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 74.0451388888889,
+      "elevation_range": 36.0,
+      "flat_percent": 87.6302083333333,
+      "height_area": {
+        "0.0": 10868.0,
+        "12.0": 2024.0,
+        "24.0": 13140.0,
+        "36.0": 10832.0
+      },
+      "plateaus": 11,
+      "ramps": 12,
+      "seed": 46,
+      "spawn": [
+        -39.0,
+        36.0,
+        81.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 82.3025173611111,
+      "elevation_range": 36.0,
+      "flat_percent": 88.5416666666667,
+      "height_area": {
+        "0.0": 7624.0,
+        "12.0": 6320.0,
+        "24.0": 13852.0,
+        "36.0": 9068.0
+      },
+      "plateaus": 12,
+      "ramps": 13,
+      "seed": 47,
+      "spawn": [
+        -63.0,
+        0.0,
+        -79.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 80.0564236111111,
+      "elevation_range": 36.0,
+      "flat_percent": 90.7552083333333,
+      "height_area": {
+        "0.0": 7944.0,
+        "12.0": 3168.0,
+        "24.0": 12608.0,
+        "36.0": 13144.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 48,
+      "spawn": [
+        -71.0,
+        0.0,
+        65.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 76.6493055555556,
+      "elevation_range": 36.0,
+      "flat_percent": 89.0625,
+      "height_area": {
+        "0.0": 10516.0,
+        "12.0": 8832.0,
+        "24.0": 13676.0,
+        "36.0": 3840.0
+      },
+      "plateaus": 7,
+      "ramps": 8,
+      "seed": 49,
+      "spawn": [
+        25.0,
+        24.0,
+        81.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 88.9105902777778,
+      "elevation_range": 36.0,
+      "flat_percent": 88.8020833333333,
+      "height_area": {
+        "0.0": 4680.0,
+        "12.0": 9048.0,
+        "24.0": 12576.0,
+        "36.0": 10560.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 50,
+      "spawn": [
+        65.0,
+        24.0,
+        -71.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 92.0572916666667,
+      "elevation_range": 36.0,
+      "flat_percent": 89.453125,
+      "height_area": {
+        "0.0": 3496.0,
+        "12.0": 7480.0,
+        "24.0": 5524.0,
+        "36.0": 20364.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 51,
+      "spawn": [
+        -7.0,
+        24.0,
+        -71.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 73.8823784722222,
+      "elevation_range": 36.0,
+      "flat_percent": 85.9375,
+      "height_area": {
+        "0.0": 11980.0,
+        "12.0": 4704.0,
+        "24.0": 16820.0,
+        "36.0": 3360.0
+      },
+      "plateaus": 12,
+      "ramps": 13,
+      "seed": 52,
+      "spawn": [
+        -87.0,
+        24.0,
+        -79.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 70.5186631944444,
+      "elevation_range": 36.0,
+      "flat_percent": 92.7083333333333,
+      "height_area": {
+        "0.0": 11432.0,
+        "12.0": 16096.0,
+        "24.0": 7036.0,
+        "36.0": 2300.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 53,
+      "spawn": [
+        -63.0,
+        12.0,
+        -7.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 85.0477430555556,
+      "elevation_range": 36.0,
+      "flat_percent": 90.7552083333333,
+      "height_area": {
+        "0.0": 6180.0,
+        "12.0": 6256.0,
+        "24.0": 12828.0,
+        "36.0": 11600.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 54,
+      "spawn": [
+        -79.0,
+        0.0,
+        57.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 76.5733506944444,
+      "elevation_range": 36.0,
+      "flat_percent": 87.890625,
+      "height_area": {
+        "0.0": 10368.0,
+        "12.0": 9032.0,
+        "24.0": 6432.0,
+        "36.0": 11032.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 55,
+      "spawn": [
+        33.0,
+        12.0,
+        65.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 73.33984375,
+      "elevation_range": 36.0,
+      "flat_percent": 90.3645833333333,
+      "height_area": {
+        "0.0": 11052.0,
+        "12.0": 3360.0,
+        "24.0": 11200.0,
+        "36.0": 11252.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 56,
+      "spawn": [
+        -31.0,
+        36.0,
+        81.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 83.3224826388889,
+      "elevation_range": 36.0,
+      "flat_percent": 91.015625,
+      "height_area": {
+        "0.0": 7104.0,
+        "12.0": 7440.0,
+        "24.0": 12144.0,
+        "36.0": 10176.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 57,
+      "spawn": [
+        81.0,
+        12.0,
+        17.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 71.5603298611111,
+      "elevation_range": 36.0,
+      "flat_percent": 91.2760416666667,
+      "height_area": {
+        "0.0": 11884.0,
+        "12.0": 11352.0,
+        "24.0": 8112.0,
+        "36.0": 5516.0
+      },
+      "plateaus": 7,
+      "ramps": 8,
+      "seed": 58,
+      "spawn": [
+        57.0,
+        12.0,
+        -79.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 94.1731770833333,
+      "elevation_range": 36.0,
+      "flat_percent": 91.2760416666667,
+      "height_area": {
+        "0.0": 3132.0,
+        "12.0": 11880.0,
+        "24.0": 7440.0,
+        "36.0": 14412.0
+      },
+      "plateaus": 7,
+      "ramps": 8,
+      "seed": 59,
+      "spawn": [
+        17.0,
+        24.0,
+        65.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 86.7513020833333,
+      "elevation_range": 36.0,
+      "flat_percent": 88.5416666666667,
+      "height_area": {
+        "0.0": 5160.0,
+        "12.0": 13928.0,
+        "24.0": 9744.0,
+        "36.0": 8032.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 60,
+      "spawn": [
+        -79.0,
+        24.0,
+        25.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 88.18359375,
+      "elevation_range": 36.0,
+      "flat_percent": 92.0572916666667,
+      "height_area": {
+        "0.0": 4692.0,
+        "12.0": 15868.0,
+        "24.0": 7152.0,
+        "36.0": 9152.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 61,
+      "spawn": [
+        81.0,
+        0.0,
+        49.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 52.5933159722222,
+      "elevation_range": 36.0,
+      "flat_percent": 88.8020833333333,
+      "height_area": {
+        "0.0": 18648.0,
+        "12.0": 6528.0,
+        "24.0": 8836.0,
+        "36.0": 2852.0
+      },
+      "plateaus": 11,
+      "ramps": 12,
+      "seed": 62,
+      "spawn": [
+        25.0,
+        24.0,
+        -71.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 83.7565104166667,
+      "elevation_range": 36.0,
+      "flat_percent": 88.1510416666667,
+      "height_area": {
+        "0.0": 7548.0,
+        "12.0": 7812.0,
+        "24.0": 11868.0,
+        "36.0": 9636.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 63,
+      "spawn": [
+        -87.0,
+        36.0,
+        -79.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 95.2907986111111,
+      "elevation_range": 36.0,
+      "flat_percent": 87.6302083333333,
+      "height_area": {
+        "0.0": 2304.0,
+        "12.0": 9504.0,
+        "24.0": 11332.0,
+        "36.0": 13724.0
+      },
+      "plateaus": 12,
+      "ramps": 13,
+      "seed": 64,
+      "spawn": [
+        -87.0,
+        36.0,
+        -87.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 82.2157118055556,
+      "elevation_range": 36.0,
+      "flat_percent": 91.6666666666667,
+      "height_area": {
+        "0.0": 7236.0,
+        "12.0": 6652.0,
+        "24.0": 11840.0,
+        "36.0": 11136.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 65,
+      "spawn": [
+        -87.0,
+        12.0,
+        9.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 84.5052083333333,
+      "elevation_range": 36.0,
+      "flat_percent": 87.890625,
+      "height_area": {
+        "0.0": 6600.0,
+        "12.0": 3772.0,
+        "24.0": 16376.0,
+        "36.0": 10116.0
+      },
+      "plateaus": 10,
+      "ramps": 10,
+      "seed": 66,
+      "spawn": [
+        81.0,
+        0.0,
+        9.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 68.9561631944444,
+      "elevation_range": 36.0,
+      "flat_percent": 89.0625,
+      "height_area": {
+        "0.0": 13056.0,
+        "12.0": 11680.0,
+        "24.0": 3168.0,
+        "36.0": 8960.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 67,
+      "spawn": [
+        41.0,
+        12.0,
+        65.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 86.328125,
+      "elevation_range": 36.0,
+      "flat_percent": 88.1510416666667,
+      "height_area": {
+        "0.0": 6512.0,
+        "12.0": 14648.0,
+        "24.0": 6020.0,
+        "36.0": 9684.0
+      },
+      "plateaus": 7,
+      "ramps": 8,
+      "seed": 68,
+      "spawn": [
+        -79.0,
+        36.0,
+        1.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 82.6063368055556,
+      "elevation_range": 36.0,
+      "flat_percent": 90.1041666666667,
+      "height_area": {
+        "0.0": 7008.0,
+        "12.0": 8936.0,
+        "24.0": 16520.0,
+        "36.0": 4400.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 69,
+      "spawn": [
+        -63.0,
+        24.0,
+        -55.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 74.4249131944444,
+      "elevation_range": 36.0,
+      "flat_percent": 92.578125,
+      "height_area": {
+        "0.0": 10184.0,
+        "12.0": 14152.0,
+        "24.0": 4408.0,
+        "36.0": 8120.0
+      },
+      "plateaus": 7,
+      "ramps": 8,
+      "seed": 70,
+      "spawn": [
+        81.0,
+        24.0,
+        -55.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 88.0208333333333,
+      "elevation_range": 36.0,
+      "flat_percent": 84.765625,
+      "height_area": {
+        "0.0": 5708.0,
+        "12.0": 12456.0,
+        "24.0": 8540.0,
+        "36.0": 10160.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 71,
+      "spawn": [
+        73.0,
+        12.0,
+        57.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 87.1310763888889,
+      "elevation_range": 36.0,
+      "flat_percent": 90.7552083333333,
+      "height_area": {
+        "0.0": 5488.0,
+        "12.0": 5488.0,
+        "24.0": 10032.0,
+        "36.0": 15856.0
+      },
+      "plateaus": 11,
+      "ramps": 12,
+      "seed": 72,
+      "spawn": [
+        -87.0,
+        36.0,
+        9.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 92.5347222222222,
+      "elevation_range": 36.0,
+      "flat_percent": 92.96875,
+      "height_area": {
+        "0.0": 3220.0,
+        "12.0": 13984.0,
+        "24.0": 13496.0,
+        "36.0": 6164.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 73,
+      "spawn": [
+        -79.0,
+        36.0,
+        -47.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 77.4848090277778,
+      "elevation_range": 36.0,
+      "flat_percent": 86.328125,
+      "height_area": {
+        "0.0": 9744.0,
+        "12.0": 7680.0,
+        "24.0": 7656.0,
+        "36.0": 11784.0
+      },
+      "plateaus": 12,
+      "ramps": 13,
+      "seed": 74,
+      "spawn": [
+        81.0,
+        0.0,
+        -55.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 60.1128472222222,
+      "elevation_range": 36.0,
+      "flat_percent": 85.9375,
+      "height_area": {
+        "0.0": 16908.0,
+        "12.0": 5168.0,
+        "24.0": 6588.0,
+        "36.0": 8200.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 75,
+      "spawn": [
+        65.0,
+        0.0,
+        57.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 73.33984375,
+      "elevation_range": 36.0,
+      "flat_percent": 87.5,
+      "height_area": {
+        "0.0": 11088.0,
+        "12.0": 5168.0,
+        "24.0": 7440.0,
+        "36.0": 13168.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 76,
+      "spawn": [
+        -79.0,
+        24.0,
+        41.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 83.4526909722222,
+      "elevation_range": 36.0,
+      "flat_percent": 85.9375,
+      "height_area": {
+        "0.0": 7300.0,
+        "12.0": 7508.0,
+        "24.0": 5880.0,
+        "36.0": 16176.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 77,
+      "spawn": [
+        65.0,
+        36.0,
+        -63.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 91.6015625,
+      "elevation_range": 36.0,
+      "flat_percent": 91.9270833333333,
+      "height_area": {
+        "0.0": 3720.0,
+        "12.0": 3344.0,
+        "24.0": 11072.0,
+        "36.0": 18728.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 78,
+      "spawn": [
+        -79.0,
+        24.0,
+        -31.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 54.5464409722222,
+      "elevation_range": 36.0,
+      "flat_percent": 91.6666666666667,
+      "height_area": {
+        "0.0": 17776.0,
+        "12.0": 8188.0,
+        "24.0": 8500.0,
+        "36.0": 2400.0
+      },
+      "plateaus": 11,
+      "ramps": 12,
+      "seed": 79,
+      "spawn": [
+        81.0,
+        0.0,
+        33.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 68.7717013888889,
+      "elevation_range": 36.0,
+      "flat_percent": 91.015625,
+      "height_area": {
+        "0.0": 12384.0,
+        "12.0": 14444.0,
+        "24.0": 6636.0,
+        "36.0": 3400.0
+      },
+      "plateaus": 11,
+      "ramps": 12,
+      "seed": 80,
+      "spawn": [
+        -39.0,
+        0.0,
+        -63.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 77.1592881944444,
+      "elevation_range": 36.0,
+      "flat_percent": 91.6666666666667,
+      "height_area": {
+        "0.0": 9124.0,
+        "12.0": 3456.0,
+        "24.0": 11932.0,
+        "36.0": 12352.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 81,
+      "spawn": [
+        65.0,
+        0.0,
+        57.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 73.3615451388889,
+      "elevation_range": 36.0,
+      "flat_percent": 91.015625,
+      "height_area": {
+        "0.0": 11104.0,
+        "12.0": 12660.0,
+        "24.0": 4524.0,
+        "36.0": 8576.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 82,
+      "spawn": [
+        -63.0,
+        12.0,
+        -15.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 84.1688368055556,
+      "elevation_range": 36.0,
+      "flat_percent": 92.3177083333333,
+      "height_area": {
+        "0.0": 6072.0,
+        "12.0": 2376.0,
+        "24.0": 16908.0,
+        "36.0": 11508.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 83,
+      "spawn": [
+        -87.0,
+        24.0,
+        49.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 67.9361979166667,
+      "elevation_range": 36.0,
+      "flat_percent": 86.9791666666667,
+      "height_area": {
+        "0.0": 13368.0,
+        "12.0": 8864.0,
+        "24.0": 3264.0,
+        "36.0": 11368.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 84,
+      "spawn": [
+        -7.0,
+        12.0,
+        -71.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 88.6393229166667,
+      "elevation_range": 36.0,
+      "flat_percent": 92.3177083333333,
+      "height_area": {
+        "0.0": 4644.0,
+        "12.0": 3240.0,
+        "24.0": 17860.0,
+        "36.0": 11120.0
+      },
+      "plateaus": 7,
+      "ramps": 8,
+      "seed": 85,
+      "spawn": [
+        65.0,
+        36.0,
+        -87.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 85.546875,
+      "elevation_range": 36.0,
+      "flat_percent": 87.890625,
+      "height_area": {
+        "0.0": 6344.0,
+        "12.0": 8624.0,
+        "24.0": 4200.0,
+        "36.0": 17696.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 86,
+      "spawn": [
+        73.0,
+        12.0,
+        81.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 92.7191840277778,
+      "elevation_range": 36.0,
+      "flat_percent": 90.1041666666667,
+      "height_area": {
+        "0.0": 2944.0,
+        "12.0": 10656.0,
+        "24.0": 15224.0,
+        "36.0": 8040.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 87,
+      "spawn": [
+        -15.0,
+        24.0,
+        65.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 83.3550347222222,
+      "elevation_range": 36.0,
+      "flat_percent": 86.5885416666667,
+      "height_area": {
+        "0.0": 7536.0,
+        "12.0": 8648.0,
+        "24.0": 9016.0,
+        "36.0": 11664.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 88,
+      "spawn": [
+        -79.0,
+        0.0,
+        57.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 84.1254340277778,
+      "elevation_range": 36.0,
+      "flat_percent": 90.1041666666667,
+      "height_area": {
+        "0.0": 6988.0,
+        "12.0": 11828.0,
+        "24.0": 12000.0,
+        "36.0": 6048.0
+      },
+      "plateaus": 11,
+      "ramps": 12,
+      "seed": 89,
+      "spawn": [
+        -23.0,
+        12.0,
+        -63.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 83.0403645833333,
+      "elevation_range": 36.0,
+      "flat_percent": 90.4947916666667,
+      "height_area": {
+        "0.0": 6696.0,
+        "12.0": 10224.0,
+        "24.0": 6708.0,
+        "36.0": 13236.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 90,
+      "spawn": [
+        -63.0,
+        36.0,
+        -55.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 69.1514756944444,
+      "elevation_range": 36.0,
+      "flat_percent": 89.7135416666667,
+      "height_area": {
+        "0.0": 13080.0,
+        "12.0": 8448.0,
+        "24.0": 8448.0,
+        "36.0": 6888.0
+      },
+      "plateaus": 7,
+      "ramps": 8,
+      "seed": 91,
+      "spawn": [
+        -71.0,
+        0.0,
+        -71.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 48.2964409722222,
+      "elevation_range": 36.0,
+      "flat_percent": 84.375,
+      "height_area": {
+        "0.0": 21724.0,
+        "12.0": 4404.0,
+        "24.0": 3328.0,
+        "36.0": 7408.0
+      },
+      "plateaus": 11,
+      "ramps": 12,
+      "seed": 92,
+      "spawn": [
+        65.0,
+        0.0,
+        -47.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 88.5308159722222,
+      "elevation_range": 36.0,
+      "flat_percent": 87.890625,
+      "height_area": {
+        "0.0": 5368.0,
+        "12.0": 16752.0,
+        "24.0": 6944.0,
+        "36.0": 7800.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 93,
+      "spawn": [
+        -7.0,
+        12.0,
+        -71.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 69.6831597222222,
+      "elevation_range": 36.0,
+      "flat_percent": 93.2291666666667,
+      "height_area": {
+        "0.0": 12276.0,
+        "12.0": 17272.0,
+        "24.0": 4464.0,
+        "36.0": 2852.0
+      },
+      "plateaus": 7,
+      "ramps": 8,
+      "seed": 94,
+      "spawn": [
+        -7.0,
+        0.0,
+        73.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 77.7452256944444,
+      "elevation_range": 36.0,
+      "flat_percent": 88.5416666666667,
+      "height_area": {
+        "0.0": 9316.0,
+        "12.0": 9768.0,
+        "24.0": 5808.0,
+        "36.0": 11972.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 95,
+      "spawn": [
+        -79.0,
+        0.0,
+        49.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 61.5234375,
+      "elevation_range": 36.0,
+      "flat_percent": 86.328125,
+      "height_area": {
+        "0.0": 15552.0,
+        "12.0": 10800.0,
+        "24.0": 3312.0,
+        "36.0": 7200.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 96,
+      "spawn": [
+        81.0,
+        0.0,
+        73.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 79.4162326388889,
+      "elevation_range": 36.0,
+      "flat_percent": 92.578125,
+      "height_area": {
+        "0.0": 8360.0,
+        "12.0": 6312.0,
+        "24.0": 6668.0,
+        "36.0": 15524.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 97,
+      "spawn": [
+        -87.0,
+        0.0,
+        9.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 88.4006076388889,
+      "elevation_range": 36.0,
+      "flat_percent": 93.4895833333333,
+      "height_area": {
+        "0.0": 4756.0,
+        "12.0": 22156.0,
+        "24.0": 7376.0,
+        "36.0": 2576.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 98,
+      "spawn": [
+        73.0,
+        12.0,
+        41.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 91.6449652777778,
+      "elevation_range": 36.0,
+      "flat_percent": 89.84375,
+      "height_area": {
+        "0.0": 3864.0,
+        "12.0": 11216.0,
+        "24.0": 7944.0,
+        "36.0": 13840.0
+      },
+      "plateaus": 11,
+      "ramps": 12,
+      "seed": 99,
+      "spawn": [
+        -39.0,
+        12.0,
+        -71.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 95.4318576388889,
+      "elevation_range": 36.0,
+      "flat_percent": 88.8020833333333,
+      "height_area": {
+        "0.0": 2112.0,
+        "12.0": 16204.0,
+        "24.0": 5200.0,
+        "36.0": 13348.0
+      },
+      "plateaus": 11,
+      "ramps": 12,
+      "seed": 100,
+      "spawn": [
+        -63.0,
+        12.0,
+        9.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 83.2682291666667,
+      "elevation_range": 36.0,
+      "flat_percent": 94.7916666666667,
+      "height_area": {
+        "0.0": 6624.0,
+        "12.0": 9960.0,
+        "24.0": 15264.0,
+        "36.0": 5016.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 101,
+      "spawn": [
+        81.0,
+        12.0,
+        73.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 91.6232638888889,
+      "elevation_range": 36.0,
+      "flat_percent": 93.2291666666667,
+      "height_area": {
+        "0.0": 3808.0,
+        "12.0": 8448.0,
+        "24.0": 9248.0,
+        "36.0": 15360.0
+      },
+      "plateaus": 7,
+      "ramps": 8,
+      "seed": 102,
+      "spawn": [
+        9.0,
+        36.0,
+        73.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 84.3424479166667,
+      "elevation_range": 36.0,
+      "flat_percent": 87.5,
+      "height_area": {
+        "0.0": 7384.0,
+        "12.0": 3960.0,
+        "24.0": 10752.0,
+        "36.0": 14768.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 103,
+      "spawn": [
+        -71.0,
+        0.0,
+        1.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 76.171875,
+      "elevation_range": 36.0,
+      "flat_percent": 91.2760416666667,
+      "height_area": {
+        "0.0": 9544.0,
+        "12.0": 3944.0,
+        "24.0": 2992.0,
+        "36.0": 20384.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 104,
+      "spawn": [
+        65.0,
+        0.0,
+        17.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 64.3771701388889,
+      "elevation_range": 36.0,
+      "flat_percent": 87.890625,
+      "height_area": {
+        "0.0": 14736.0,
+        "12.0": 13344.0,
+        "24.0": 2304.0,
+        "36.0": 6480.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 105,
+      "spawn": [
+        33.0,
+        12.0,
+        65.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 68.2291666666667,
+      "elevation_range": 36.0,
+      "flat_percent": 86.9791666666667,
+      "height_area": {
+        "0.0": 13056.0,
+        "12.0": 9956.0,
+        "24.0": 7400.0,
+        "36.0": 6452.0
+      },
+      "plateaus": 11,
+      "ramps": 12,
+      "seed": 106,
+      "spawn": [
+        73.0,
+        12.0,
+        25.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 66.1024305555556,
+      "elevation_range": 36.0,
+      "flat_percent": 85.0260416666667,
+      "height_area": {
+        "0.0": 14532.0,
+        "12.0": 3168.0,
+        "24.0": 13224.0,
+        "36.0": 5940.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 107,
+      "spawn": [
+        49.0,
+        24.0,
+        -63.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 76.7578125,
+      "elevation_range": 36.0,
+      "flat_percent": 88.8020833333333,
+      "height_area": {
+        "0.0": 9992.0,
+        "12.0": 2464.0,
+        "24.0": 15784.0,
+        "36.0": 8624.0
+      },
+      "plateaus": 12,
+      "ramps": 13,
+      "seed": 108,
+      "spawn": [
+        1.0,
+        24.0,
+        73.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 70.7356770833333,
+      "elevation_range": 36.0,
+      "flat_percent": 83.4635416666667,
+      "height_area": {
+        "0.0": 13048.0,
+        "12.0": 8796.0,
+        "24.0": 6608.0,
+        "36.0": 8412.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 109,
+      "spawn": [
+        -47.0,
+        24.0,
+        81.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 95.0412326388889,
+      "elevation_range": 36.0,
+      "flat_percent": 88.5416666666667,
+      "height_area": {
+        "0.0": 2552.0,
+        "12.0": 3520.0,
+        "24.0": 10480.0,
+        "36.0": 20312.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 110,
+      "spawn": [
+        -7.0,
+        36.0,
+        -79.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 62.2721354166667,
+      "elevation_range": 36.0,
+      "flat_percent": 90.7552083333333,
+      "height_area": {
+        "0.0": 14964.0,
+        "12.0": 9996.0,
+        "24.0": 3968.0,
+        "36.0": 7936.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 111,
+      "spawn": [
+        -79.0,
+        0.0,
+        -39.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 68.8693576388889,
+      "elevation_range": 36.0,
+      "flat_percent": 91.2760416666667,
+      "height_area": {
+        "0.0": 12568.0,
+        "12.0": 11492.0,
+        "24.0": 8376.0,
+        "36.0": 4428.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 112,
+      "spawn": [
+        25.0,
+        0.0,
+        81.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 73.5026041666667,
+      "elevation_range": 36.0,
+      "flat_percent": 86.5885416666667,
+      "height_area": {
+        "0.0": 11492.0,
+        "12.0": 10712.0,
+        "24.0": 7120.0,
+        "36.0": 7540.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 113,
+      "spawn": [
+        -79.0,
+        24.0,
+        -31.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 86.6861979166667,
+      "elevation_range": 36.0,
+      "flat_percent": 91.6666666666667,
+      "height_area": {
+        "0.0": 5376.0,
+        "12.0": 2992.0,
+        "24.0": 11560.0,
+        "36.0": 16936.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 114,
+      "spawn": [
+        -55.0,
+        24.0,
+        -63.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 53.9388020833333,
+      "elevation_range": 36.0,
+      "flat_percent": 91.40625,
+      "height_area": {
+        "0.0": 18016.0,
+        "12.0": 8396.0,
+        "24.0": 6864.0,
+        "36.0": 3588.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 115,
+      "spawn": [
+        -47.0,
+        12.0,
+        -63.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 79.6766493055556,
+      "elevation_range": 36.0,
+      "flat_percent": 90.1041666666667,
+      "height_area": {
+        "0.0": 8576.0,
+        "12.0": 6112.0,
+        "24.0": 8800.0,
+        "36.0": 13376.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 116,
+      "spawn": [
+        81.0,
+        12.0,
+        -31.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 53.8953993055556,
+      "elevation_range": 36.0,
+      "flat_percent": 90.3645833333333,
+      "height_area": {
+        "0.0": 18616.0,
+        "12.0": 6512.0,
+        "24.0": 4624.0,
+        "36.0": 7112.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 117,
+      "spawn": [
+        73.0,
+        24.0,
+        -63.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 63.57421875,
+      "elevation_range": 36.0,
+      "flat_percent": 90.1041666666667,
+      "height_area": {
+        "0.0": 14964.0,
+        "12.0": 10764.0,
+        "24.0": 5220.0,
+        "36.0": 5916.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 118,
+      "spawn": [
+        -39.0,
+        12.0,
+        -63.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 78.2877604166667,
+      "elevation_range": 36.0,
+      "flat_percent": 90.1041666666667,
+      "height_area": {
+        "0.0": 9012.0,
+        "12.0": 5120.0,
+        "24.0": 14572.0,
+        "36.0": 8160.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 119,
+      "spawn": [
+        73.0,
+        12.0,
+        81.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 56.4670138888889,
+      "elevation_range": 36.0,
+      "flat_percent": 91.2760416666667,
+      "height_area": {
+        "0.0": 17488.0,
+        "12.0": 2592.0,
+        "24.0": 11592.0,
+        "36.0": 5192.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 120,
+      "spawn": [
+        -71.0,
+        12.0,
+        -39.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 94.7699652777778,
+      "elevation_range": 36.0,
+      "flat_percent": 89.453125,
+      "height_area": {
+        "0.0": 2376.0,
+        "12.0": 13116.0,
+        "24.0": 6600.0,
+        "36.0": 14772.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 121,
+      "spawn": [
+        -55.0,
+        12.0,
+        -87.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 85.9700520833333,
+      "elevation_range": 36.0,
+      "flat_percent": 90.1041666666667,
+      "height_area": {
+        "0.0": 6096.0,
+        "12.0": 5488.0,
+        "24.0": 14064.0,
+        "36.0": 11216.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 122,
+      "spawn": [
+        65.0,
+        12.0,
+        49.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 56.2934027777778,
+      "elevation_range": 36.0,
+      "flat_percent": 91.6666666666667,
+      "height_area": {
+        "0.0": 17352.0,
+        "12.0": 12788.0,
+        "24.0": 3024.0,
+        "36.0": 3700.0
+      },
+      "plateaus": 11,
+      "ramps": 12,
+      "seed": 123,
+      "spawn": [
+        65.0,
+        0.0,
+        -7.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 81.0655381944444,
+      "elevation_range": 36.0,
+      "flat_percent": 92.3177083333333,
+      "height_area": {
+        "0.0": 7592.0,
+        "12.0": 2392.0,
+        "24.0": 12768.0,
+        "36.0": 14112.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 124,
+      "spawn": [
+        -55.0,
+        36.0,
+        65.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 62.7821180555556,
+      "elevation_range": 36.0,
+      "flat_percent": 91.9270833333333,
+      "height_area": {
+        "0.0": 14760.0,
+        "12.0": 7668.0,
+        "24.0": 6500.0,
+        "36.0": 7936.0
+      },
+      "plateaus": 7,
+      "ramps": 8,
+      "seed": 125,
+      "spawn": [
+        65.0,
+        36.0,
+        57.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 86.2955729166667,
+      "elevation_range": 36.0,
+      "flat_percent": 89.1927083333333,
+      "height_area": {
+        "0.0": 5440.0,
+        "12.0": 13136.0,
+        "24.0": 8128.0,
+        "36.0": 10160.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 126,
+      "spawn": [
+        -63.0,
+        36.0,
+        73.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 79.9045138888889,
+      "elevation_range": 36.0,
+      "flat_percent": 92.96875,
+      "height_area": {
+        "0.0": 7888.0,
+        "12.0": 15820.0,
+        "24.0": 7828.0,
+        "36.0": 5328.0
+      },
+      "plateaus": 7,
+      "ramps": 8,
+      "seed": 127,
+      "spawn": [
+        -87.0,
+        0.0,
+        1.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 92.1983506944444,
+      "elevation_range": 36.0,
+      "flat_percent": 92.578125,
+      "height_area": {
+        "0.0": 3744.0,
+        "12.0": 3224.0,
+        "24.0": 12520.0,
+        "36.0": 17376.0
+      },
+      "plateaus": 7,
+      "ramps": 8,
+      "seed": 128,
+      "spawn": [
+        25.0,
+        24.0,
+        -71.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 74.90234375,
+      "elevation_range": 36.0,
+      "flat_percent": 84.1145833333333,
+      "height_area": {
+        "0.0": 11328.0,
+        "12.0": 3888.0,
+        "24.0": 11392.0,
+        "36.0": 10256.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 129,
+      "spawn": [
+        73.0,
+        0.0,
+        -63.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 73.1119791666667,
+      "elevation_range": 36.0,
+      "flat_percent": 87.890625,
+      "height_area": {
+        "0.0": 10708.0,
+        "12.0": 5984.0,
+        "24.0": 2496.0,
+        "36.0": 17676.0
+      },
+      "plateaus": 12,
+      "ramps": 13,
+      "seed": 130,
+      "spawn": [
+        -87.0,
+        36.0,
+        -87.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 67.7734375,
+      "elevation_range": 36.0,
+      "flat_percent": 91.015625,
+      "height_area": {
+        "0.0": 13176.0,
+        "12.0": 4320.0,
+        "24.0": 12856.0,
+        "36.0": 6512.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 131,
+      "spawn": [
+        73.0,
+        24.0,
+        -87.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 82.0095486111111,
+      "elevation_range": 36.0,
+      "flat_percent": 92.578125,
+      "height_area": {
+        "0.0": 7292.0,
+        "12.0": 14016.0,
+        "24.0": 9940.0,
+        "36.0": 5616.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 132,
+      "spawn": [
+        -63.0,
+        36.0,
+        -87.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 93.9887152777778,
+      "elevation_range": 36.0,
+      "flat_percent": 88.5416666666667,
+      "height_area": {
+        "0.0": 3024.0,
+        "12.0": 12288.0,
+        "24.0": 9804.0,
+        "36.0": 11748.0
+      },
+      "plateaus": 11,
+      "ramps": 12,
+      "seed": 133,
+      "spawn": [
+        73.0,
+        36.0,
+        65.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 73.5677083333333,
+      "elevation_range": 36.0,
+      "flat_percent": 91.2760416666667,
+      "height_area": {
+        "0.0": 10944.0,
+        "12.0": 3596.0,
+        "24.0": 4736.0,
+        "36.0": 17588.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 134,
+      "spawn": [
+        65.0,
+        36.0,
+        33.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 64.7243923611111,
+      "elevation_range": 36.0,
+      "flat_percent": 89.453125,
+      "height_area": {
+        "0.0": 14288.0,
+        "12.0": 6296.0,
+        "24.0": 10448.0,
+        "36.0": 5832.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 135,
+      "spawn": [
+        -71.0,
+        24.0,
+        1.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 93.0338541666667,
+      "elevation_range": 36.0,
+      "flat_percent": 88.5416666666667,
+      "height_area": {
+        "0.0": 2992.0,
+        "12.0": 9036.0,
+        "24.0": 11732.0,
+        "36.0": 13104.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 136,
+      "spawn": [
+        73.0,
+        24.0,
+        -87.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 75.1953125,
+      "elevation_range": 36.0,
+      "flat_percent": 90.1041666666667,
+      "height_area": {
+        "0.0": 10708.0,
+        "12.0": 19516.0,
+        "24.0": 4176.0,
+        "36.0": 2464.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 137,
+      "spawn": [
+        17.0,
+        12.0,
+        -87.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 76.6276041666667,
+      "elevation_range": 36.0,
+      "flat_percent": 86.328125,
+      "height_area": {
+        "0.0": 10216.0,
+        "12.0": 8464.0,
+        "24.0": 10488.0,
+        "36.0": 7696.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 138,
+      "spawn": [
+        -79.0,
+        36.0,
+        65.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 86.2738715277778,
+      "elevation_range": 36.0,
+      "flat_percent": 91.40625,
+      "height_area": {
+        "0.0": 5824.0,
+        "12.0": 14460.0,
+        "24.0": 10896.0,
+        "36.0": 5684.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 139,
+      "spawn": [
+        -87.0,
+        24.0,
+        -55.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 79.3619791666667,
+      "elevation_range": 36.0,
+      "flat_percent": 91.40625,
+      "height_area": {
+        "0.0": 8612.0,
+        "12.0": 15428.0,
+        "24.0": 10536.0,
+        "36.0": 2288.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 140,
+      "spawn": [
+        -7.0,
+        12.0,
+        -87.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 82.7473958333333,
+      "elevation_range": 36.0,
+      "flat_percent": 90.3645833333333,
+      "height_area": {
+        "0.0": 7184.0,
+        "12.0": 11592.0,
+        "24.0": 6760.0,
+        "36.0": 11328.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 141,
+      "spawn": [
+        73.0,
+        36.0,
+        -39.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 83.9192708333333,
+      "elevation_range": 36.0,
+      "flat_percent": 90.1041666666667,
+      "height_area": {
+        "0.0": 6440.0,
+        "12.0": 6948.0,
+        "24.0": 18436.0,
+        "36.0": 5040.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 142,
+      "spawn": [
+        81.0,
+        24.0,
+        -23.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 48.1553819444444,
+      "elevation_range": 36.0,
+      "flat_percent": 89.7135416666667,
+      "height_area": {
+        "0.0": 20732.0,
+        "12.0": 3080.0,
+        "24.0": 9412.0,
+        "36.0": 3640.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 143,
+      "spawn": [
+        41.0,
+        0.0,
+        -87.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 76.5842013888889,
+      "elevation_range": 36.0,
+      "flat_percent": 87.6302083333333,
+      "height_area": {
+        "0.0": 9308.0,
+        "12.0": 9904.0,
+        "24.0": 7500.0,
+        "36.0": 10152.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 144,
+      "spawn": [
+        -87.0,
+        0.0,
+        -7.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 81.3368055555556,
+      "elevation_range": 36.0,
+      "flat_percent": 88.1510416666667,
+      "height_area": {
+        "0.0": 8328.0,
+        "12.0": 14088.0,
+        "24.0": 2464.0,
+        "36.0": 11984.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 145,
+      "spawn": [
+        25.0,
+        12.0,
+        -79.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 87.3480902777778,
+      "elevation_range": 36.0,
+      "flat_percent": 91.6666666666667,
+      "height_area": {
+        "0.0": 5096.0,
+        "12.0": 8344.0,
+        "24.0": 6240.0,
+        "36.0": 17184.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 146,
+      "spawn": [
+        65.0,
+        36.0,
+        33.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 85.3407118055556,
+      "elevation_range": 36.0,
+      "flat_percent": 90.625,
+      "height_area": {
+        "0.0": 6400.0,
+        "12.0": 4048.0,
+        "24.0": 15984.0,
+        "36.0": 10432.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 147,
+      "spawn": [
+        -15.0,
+        36.0,
+        65.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 88.2595486111111,
+      "elevation_range": 36.0,
+      "flat_percent": 86.71875,
+      "height_area": {
+        "0.0": 5400.0,
+        "12.0": 7208.0,
+        "24.0": 9568.0,
+        "36.0": 14688.0
+      },
+      "plateaus": 12,
+      "ramps": 13,
+      "seed": 148,
+      "spawn": [
+        -15.0,
+        0.0,
+        -71.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 74.3055555555556,
+      "elevation_range": 36.0,
+      "flat_percent": 88.28125,
+      "height_area": {
+        "0.0": 10888.0,
+        "12.0": 8784.0,
+        "24.0": 9456.0,
+        "36.0": 7736.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 149,
+      "spawn": [
+        -87.0,
+        24.0,
+        -55.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 71.5603298611111,
+      "elevation_range": 36.0,
+      "flat_percent": 90.1041666666667,
+      "height_area": {
+        "0.0": 11888.0,
+        "12.0": 4368.0,
+        "24.0": 16352.0,
+        "36.0": 4256.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 150,
+      "spawn": [
+        -7.0,
+        24.0,
+        65.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 82.32421875,
+      "elevation_range": 36.0,
+      "flat_percent": 90.7552083333333,
+      "height_area": {
+        "0.0": 7056.0,
+        "12.0": 3168.0,
+        "24.0": 18456.0,
+        "36.0": 8184.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 151,
+      "spawn": [
+        81.0,
+        24.0,
+        41.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 71.77734375,
+      "elevation_range": 36.0,
+      "flat_percent": 88.28125,
+      "height_area": {
+        "0.0": 11872.0,
+        "12.0": 13076.0,
+        "24.0": 3840.0,
+        "36.0": 8076.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 152,
+      "spawn": [
+        -87.0,
+        12.0,
+        73.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 76.6276041666667,
+      "elevation_range": 36.0,
+      "flat_percent": 87.890625,
+      "height_area": {
+        "0.0": 10208.0,
+        "12.0": 6384.0,
+        "24.0": 8944.0,
+        "36.0": 11328.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 153,
+      "spawn": [
+        65.0,
+        12.0,
+        -7.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 74.7721354166667,
+      "elevation_range": 36.0,
+      "flat_percent": 89.0625,
+      "height_area": {
+        "0.0": 10904.0,
+        "12.0": 3552.0,
+        "24.0": 11564.0,
+        "36.0": 10844.0
+      },
+      "plateaus": 7,
+      "ramps": 8,
+      "seed": 154,
+      "spawn": [
+        1.0,
+        0.0,
+        -87.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 67.2417534722222,
+      "elevation_range": 36.0,
+      "flat_percent": 89.7135416666667,
+      "height_area": {
+        "0.0": 13656.0,
+        "12.0": 9620.0,
+        "24.0": 9180.0,
+        "36.0": 4408.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 155,
+      "spawn": [
+        65.0,
+        0.0,
+        -15.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 83.1271701388889,
+      "elevation_range": 36.0,
+      "flat_percent": 88.1510416666667,
+      "height_area": {
+        "0.0": 7344.0,
+        "12.0": 12240.0,
+        "24.0": 8832.0,
+        "36.0": 8448.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 156,
+      "spawn": [
+        33.0,
+        24.0,
+        -87.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 87.7387152777778,
+      "elevation_range": 36.0,
+      "flat_percent": 91.6666666666667,
+      "height_area": {
+        "0.0": 5264.0,
+        "12.0": 6396.0,
+        "24.0": 4264.0,
+        "36.0": 20940.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 157,
+      "spawn": [
+        -87.0,
+        36.0,
+        73.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 83.0620659722222,
+      "elevation_range": 36.0,
+      "flat_percent": 90.3645833333333,
+      "height_area": {
+        "0.0": 6952.0,
+        "12.0": 10360.0,
+        "24.0": 8184.0,
+        "36.0": 11368.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 158,
+      "spawn": [
+        -79.0,
+        24.0,
+        -7.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 85.3515625,
+      "elevation_range": 36.0,
+      "flat_percent": 91.9270833333333,
+      "height_area": {
+        "0.0": 5984.0,
+        "12.0": 2916.0,
+        "24.0": 12528.0,
+        "36.0": 15436.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 159,
+      "spawn": [
+        -79.0,
+        24.0,
+        -39.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 78.3203125,
+      "elevation_range": 36.0,
+      "flat_percent": 89.1927083333333,
+      "height_area": {
+        "0.0": 9256.0,
+        "12.0": 16184.0,
+        "24.0": 3696.0,
+        "36.0": 7728.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 160,
+      "spawn": [
+        -15.0,
+        12.0,
+        -63.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 73.7087673611111,
+      "elevation_range": 36.0,
+      "flat_percent": 87.2395833333333,
+      "height_area": {
+        "0.0": 10528.0,
+        "12.0": 5600.0,
+        "24.0": 7616.0,
+        "36.0": 13120.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 161,
+      "spawn": [
+        73.0,
+        0.0,
+        33.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 61.2521701388889,
+      "elevation_range": 36.0,
+      "flat_percent": 90.3645833333333,
+      "height_area": {
+        "0.0": 15664.0,
+        "12.0": 3936.0,
+        "24.0": 9400.0,
+        "36.0": 7864.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 162,
+      "spawn": [
+        57.0,
+        0.0,
+        65.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 68.5329861111111,
+      "elevation_range": 36.0,
+      "flat_percent": 84.765625,
+      "height_area": {
+        "0.0": 13664.0,
+        "12.0": 2300.0,
+        "24.0": 16300.0,
+        "36.0": 4600.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 163,
+      "spawn": [
+        1.0,
+        0.0,
+        73.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 84.7222222222222,
+      "elevation_range": 36.0,
+      "flat_percent": 89.84375,
+      "height_area": {
+        "0.0": 6392.0,
+        "12.0": 13184.0,
+        "24.0": 13928.0,
+        "36.0": 3360.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 164,
+      "spawn": [
+        33.0,
+        24.0,
+        -63.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 54.6766493055556,
+      "elevation_range": 36.0,
+      "flat_percent": 95.0520833333333,
+      "height_area": {
+        "0.0": 17200.0,
+        "12.0": 3100.0,
+        "24.0": 13748.0,
+        "36.0": 2816.0
+      },
+      "plateaus": 11,
+      "ramps": 12,
+      "seed": 165,
+      "spawn": [
+        -87.0,
+        0.0,
+        73.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 70.2907986111111,
+      "elevation_range": 36.0,
+      "flat_percent": 89.1927083333333,
+      "height_area": {
+        "0.0": 12332.0,
+        "12.0": 12656.0,
+        "24.0": 7508.0,
+        "36.0": 4368.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 166,
+      "spawn": [
+        -71.0,
+        0.0,
+        -39.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 75.7161458333333,
+      "elevation_range": 36.0,
+      "flat_percent": 90.1041666666667,
+      "height_area": {
+        "0.0": 9948.0,
+        "12.0": 11620.0,
+        "24.0": 5648.0,
+        "36.0": 9648.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 167,
+      "spawn": [
+        -63.0,
+        12.0,
+        17.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 93.0555555555556,
+      "elevation_range": 36.0,
+      "flat_percent": 85.4166666666667,
+      "height_area": {
+        "0.0": 3432.0,
+        "12.0": 11528.0,
+        "24.0": 7500.0,
+        "36.0": 14404.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 168,
+      "spawn": [
+        -39.0,
+        36.0,
+        65.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 83.5286458333333,
+      "elevation_range": 36.0,
+      "flat_percent": 89.453125,
+      "height_area": {
+        "0.0": 6984.0,
+        "12.0": 12144.0,
+        "24.0": 11544.0,
+        "36.0": 6192.0
+      },
+      "plateaus": 10,
+      "ramps": 10,
+      "seed": 169,
+      "spawn": [
+        -87.0,
+        24.0,
+        33.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 74.3489583333333,
+      "elevation_range": 36.0,
+      "flat_percent": 88.1510416666667,
+      "height_area": {
+        "0.0": 10828.0,
+        "12.0": 8024.0,
+        "24.0": 8832.0,
+        "36.0": 9180.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 170,
+      "spawn": [
+        -7.0,
+        24.0,
+        81.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 82.51953125,
+      "elevation_range": 36.0,
+      "flat_percent": 88.8020833333333,
+      "height_area": {
+        "0.0": 7648.0,
+        "12.0": 11840.0,
+        "24.0": 6656.0,
+        "36.0": 10720.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 171,
+      "spawn": [
+        49.0,
+        36.0,
+        81.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 78.1467013888889,
+      "elevation_range": 36.0,
+      "flat_percent": 91.9270833333333,
+      "height_area": {
+        "0.0": 8968.0,
+        "12.0": 6720.0,
+        "24.0": 9668.0,
+        "36.0": 11508.0
+      },
+      "plateaus": 11,
+      "ramps": 12,
+      "seed": 172,
+      "spawn": [
+        -55.0,
+        12.0,
+        -87.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 70.7790798611111,
+      "elevation_range": 36.0,
+      "flat_percent": 88.4114583333333,
+      "height_area": {
+        "0.0": 12396.0,
+        "12.0": 4800.0,
+        "24.0": 6072.0,
+        "36.0": 13596.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 173,
+      "spawn": [
+        65.0,
+        24.0,
+        -23.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 82.51953125,
+      "elevation_range": 36.0,
+      "flat_percent": 87.7604166666667,
+      "height_area": {
+        "0.0": 8080.0,
+        "12.0": 2808.0,
+        "24.0": 2376.0,
+        "36.0": 23600.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 174,
+      "spawn": [
+        -31.0,
+        36.0,
+        -87.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 87.5108506944444,
+      "elevation_range": 36.0,
+      "flat_percent": 91.2760416666667,
+      "height_area": {
+        "0.0": 5460.0,
+        "12.0": 6972.0,
+        "24.0": 5616.0,
+        "36.0": 18816.0
+      },
+      "plateaus": 7,
+      "ramps": 8,
+      "seed": 175,
+      "spawn": [
+        -63.0,
+        36.0,
+        -7.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 74.8806423611111,
+      "elevation_range": 36.0,
+      "flat_percent": 91.2760416666667,
+      "height_area": {
+        "0.0": 10220.0,
+        "12.0": 9240.0,
+        "24.0": 8776.0,
+        "36.0": 8628.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 176,
+      "spawn": [
+        -79.0,
+        36.0,
+        81.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 91.3953993055556,
+      "elevation_range": 36.0,
+      "flat_percent": 89.7135416666667,
+      "height_area": {
+        "0.0": 3960.0,
+        "12.0": 9552.0,
+        "24.0": 15000.0,
+        "36.0": 8352.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 177,
+      "spawn": [
+        -87.0,
+        12.0,
+        -71.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 81.0221354166667,
+      "elevation_range": 36.0,
+      "flat_percent": 92.3177083333333,
+      "height_area": {
+        "0.0": 7200.0,
+        "12.0": 6240.0,
+        "24.0": 7280.0,
+        "36.0": 16144.0
+      },
+      "plateaus": 7,
+      "ramps": 8,
+      "seed": 178,
+      "spawn": [
+        25.0,
+        36.0,
+        -63.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 87.1527777777778,
+      "elevation_range": 36.0,
+      "flat_percent": 87.5,
+      "height_area": {
+        "0.0": 6256.0,
+        "12.0": 5304.0,
+        "24.0": 8912.0,
+        "36.0": 16392.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 179,
+      "spawn": [
+        -39.0,
+        36.0,
+        -87.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 83.3875868055556,
+      "elevation_range": 36.0,
+      "flat_percent": 92.578125,
+      "height_area": {
+        "0.0": 6872.0,
+        "12.0": 9532.0,
+        "24.0": 10092.0,
+        "36.0": 10368.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 180,
+      "spawn": [
+        -63.0,
+        36.0,
+        57.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 81.5212673611111,
+      "elevation_range": 36.0,
+      "flat_percent": 87.890625,
+      "height_area": {
+        "0.0": 8360.0,
+        "12.0": 15648.0,
+        "24.0": 6696.0,
+        "36.0": 6160.0
+      },
+      "plateaus": 12,
+      "ramps": 13,
+      "seed": 181,
+      "spawn": [
+        81.0,
+        12.0,
+        -7.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 94.0863715277778,
+      "elevation_range": 36.0,
+      "flat_percent": 91.2760416666667,
+      "height_area": {
+        "0.0": 2592.0,
+        "12.0": 18108.0,
+        "24.0": 2484.0,
+        "36.0": 13680.0
+      },
+      "plateaus": 8,
+      "ramps": 9,
+      "seed": 182,
+      "spawn": [
+        -87.0,
+        12.0,
+        1.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 76.8446180555556,
+      "elevation_range": 36.0,
+      "flat_percent": 87.2395833333333,
+      "height_area": {
+        "0.0": 10144.0,
+        "12.0": 4840.0,
+        "24.0": 9172.0,
+        "36.0": 12708.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 183,
+      "spawn": [
+        -15.0,
+        36.0,
+        -71.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 78.5698784722222,
+      "elevation_range": 36.0,
+      "flat_percent": 93.4895833333333,
+      "height_area": {
+        "0.0": 8468.0,
+        "12.0": 3828.0,
+        "24.0": 4680.0,
+        "36.0": 19888.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 184,
+      "spawn": [
+        -31.0,
+        0.0,
+        81.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 78.6241319444444,
+      "elevation_range": 36.0,
+      "flat_percent": 89.453125,
+      "height_area": {
+        "0.0": 9272.0,
+        "12.0": 7904.0,
+        "24.0": 13568.0,
+        "36.0": 6120.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 185,
+      "spawn": [
+        -31.0,
+        0.0,
+        -79.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 83.5286458333333,
+      "elevation_range": 36.0,
+      "flat_percent": 84.5052083333333,
+      "height_area": {
+        "0.0": 7844.0,
+        "12.0": 6528.0,
+        "24.0": 10520.0,
+        "36.0": 11972.0
+      },
+      "plateaus": 11,
+      "ramps": 12,
+      "seed": 186,
+      "spawn": [
+        -63.0,
+        24.0,
+        -79.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 70.1714409722222,
+      "elevation_range": 36.0,
+      "flat_percent": 90.1041666666667,
+      "height_area": {
+        "0.0": 12276.0,
+        "12.0": 3564.0,
+        "24.0": 15312.0,
+        "36.0": 5712.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 187,
+      "spawn": [
+        -87.0,
+        36.0,
+        -63.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 80.0998263888889,
+      "elevation_range": 36.0,
+      "flat_percent": 90.1041666666667,
+      "height_area": {
+        "0.0": 8088.0,
+        "12.0": 9080.0,
+        "24.0": 8680.0,
+        "36.0": 11016.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 188,
+      "spawn": [
+        1.0,
+        36.0,
+        81.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 78.5481770833333,
+      "elevation_range": 36.0,
+      "flat_percent": 90.1041666666667,
+      "height_area": {
+        "0.0": 8728.0,
+        "12.0": 6444.0,
+        "24.0": 6700.0,
+        "36.0": 14992.0
+      },
+      "plateaus": 11,
+      "ramps": 12,
+      "seed": 189,
+      "spawn": [
+        25.0,
+        36.0,
+        -63.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 84.7547743055556,
+      "elevation_range": 36.0,
+      "flat_percent": 91.6666666666667,
+      "height_area": {
+        "0.0": 6336.0,
+        "12.0": 13824.0,
+        "24.0": 9880.0,
+        "36.0": 6824.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 190,
+      "spawn": [
+        25.0,
+        12.0,
+        73.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 72.3958333333333,
+      "elevation_range": 36.0,
+      "flat_percent": 88.9322916666667,
+      "height_area": {
+        "0.0": 10928.0,
+        "12.0": 12952.0,
+        "24.0": 2784.0,
+        "36.0": 10200.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 191,
+      "spawn": [
+        65.0,
+        12.0,
+        -71.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 92.6106770833333,
+      "elevation_range": 36.0,
+      "flat_percent": 90.7552083333333,
+      "height_area": {
+        "0.0": 3608.0,
+        "12.0": 2392.0,
+        "24.0": 25600.0,
+        "36.0": 5264.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 192,
+      "spawn": [
+        73.0,
+        24.0,
+        -31.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 91.8728298611111,
+      "elevation_range": 36.0,
+      "flat_percent": 91.9270833333333,
+      "height_area": {
+        "0.0": 3700.0,
+        "12.0": 7936.0,
+        "24.0": 13708.0,
+        "36.0": 11520.0
+      },
+      "plateaus": 7,
+      "ramps": 8,
+      "seed": 193,
+      "spawn": [
+        25.0,
+        24.0,
+        73.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 93.2942708333333,
+      "elevation_range": 36.0,
+      "flat_percent": 88.5416666666667,
+      "height_area": {
+        "0.0": 2992.0,
+        "12.0": 12456.0,
+        "24.0": 7912.0,
+        "36.0": 13504.0
+      },
+      "plateaus": 10,
+      "ramps": 11,
+      "seed": 194,
+      "spawn": [
+        73.0,
+        12.0,
+        -47.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 92.9904513888889,
+      "elevation_range": 36.0,
+      "flat_percent": 88.0208333333333,
+      "height_area": {
+        "0.0": 3024.0,
+        "12.0": 16368.0,
+        "24.0": 9796.0,
+        "36.0": 7676.0
+      },
+      "plateaus": 11,
+      "ramps": 12,
+      "seed": 195,
+      "spawn": [
+        -87.0,
+        24.0,
+        -55.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 68.1749131944444,
+      "elevation_range": 36.0,
+      "flat_percent": 88.1510416666667,
+      "height_area": {
+        "0.0": 13488.0,
+        "12.0": 2976.0,
+        "24.0": 9284.0,
+        "36.0": 11116.0
+      },
+      "plateaus": 7,
+      "ramps": 8,
+      "seed": 196,
+      "spawn": [
+        -15.0,
+        12.0,
+        -71.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 71.1263020833333,
+      "elevation_range": 36.0,
+      "flat_percent": 92.3177083333333,
+      "height_area": {
+        "0.0": 11496.0,
+        "12.0": 13064.0,
+        "24.0": 7604.0,
+        "36.0": 4700.0
+      },
+      "plateaus": 7,
+      "ramps": 8,
+      "seed": 197,
+      "spawn": [
+        -87.0,
+        24.0,
+        -7.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 82.0638020833333,
+      "elevation_range": 36.0,
+      "flat_percent": 90.3645833333333,
+      "height_area": {
+        "0.0": 7920.0,
+        "12.0": 7440.0,
+        "24.0": 16344.0,
+        "36.0": 5160.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 198,
+      "spawn": [
+        1.0,
+        12.0,
+        65.0
+      ]
+    },
+    {
+      "bands": 4,
+      "drafts": 1,
+      "elevated_percent": 57.3567708333333,
+      "elevation_range": 36.0,
+      "flat_percent": 90.3645833333333,
+      "height_area": {
+        "0.0": 17304.0,
+        "12.0": 3080.0,
+        "24.0": 12892.0,
+        "36.0": 3588.0
+      },
+      "plateaus": 9,
+      "ramps": 10,
+      "seed": 199,
+      "spawn": [
+        65.0,
+        0.0,
+        57.0
+      ]
+    }
+  ],
+  "repaired_count": 0,
+  "seeds": 200,
+  "unique_layouts": 200
+}

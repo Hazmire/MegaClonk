@@ -1,38 +1,54 @@
-BONK INFINITY — playable development build
+# Vertical Forest playtest
 
-Windows 10/11 x64. Extract the entire ZIP and open BONK_INFINITY.exe.
-If Vulkan is unavailable or the window is blank, open Launch_Compatibility.bat.
-No account, network connection, engine installation or setup is needed to play.
-The executable is unsigned; a Windows reputation prompt is possible.
+Start a **new run** to see the new 0/12/24/36m terrain, cloud sky and randomized world objects. Existing terrain-version-3 checkpoints deliberately retain their original maps. Extract the entire ZIP and launch BONK_INFINITY.exe; Launch_Compatibility.bat selects OpenGL. See VERTICAL_FOREST.md and VERTICAL_PERFORMANCE.md included beside the executable. XP gemstones and reward-screen redesigns are still pending. Native Windows execution remains untested. Previous playtest notes follow.
 
-Controls
-WASD: camera-relative movement. Mouse: camera. Space: jump. Shift: sprint.
-E: interact. Escape: pause. Tab: inspect build. Wheel: zoom. F11: fullscreen.
-Keys can be rebound in Settings. Escape and F11 remain dedicated controls.
+# Latest combat and atmosphere polish
 
-Play
-Choose Fox or Sir Oofie, a biome and a tier, then Enter the Wild.
-Attacks are automatic. Collect glowing XP, select upgrades and find chests.
-Chests/shops cost 15 gold. Blue charge shrines require staying close.
-A Warden arrives after three minutes. Kill it, approach its portal and press E.
-Finish three stages to win. Death or abandonment displays results.
-Lifetime kill milestones unlock additional characters.
+See [current update](POLISH_UPDATE.md), [performance evidence](PERFORMANCE_POLISH.md) and [weapon audit](WEAPON_VFX_AUDIT.md). Older notes below are historical. The Mesa shutdown diagnostic and Windows/GPU verification limits are disclosed in those guides.
 
-Sandbox
-Toggle Sandbox on the main menu to temporarily select any character.
-During a sandbox run press Escape > Sandbox tools for weapons, levels,
-enemies, boss spawns, XP/gold, items, time scale and invincibility.
-Sandbox runs do not award persistent currency, wins or character unlocks.
+# Latest Dynamic Forest update
 
-Saves
-Stored in Godot's user-data directory:
+See [current gameplay/asset guide](DYNAMIC_FOREST.md). New KayKit Minion and Warrior models are integrated. The active ordinary roster is now Basic/Special/Large, with per-spawn choices; the main bosses are Big Chunkus and Rock Golem. Earlier release notes below are historical.
+
+# Current Forest update
+
+The supplied assets-v1 packages are now downloaded and integrated. See [Forest overhaul](FOREST_OVERHAUL.md) and [verified inventory](ASSETS_V1_INVENTORY.md) for current terrain, models, controls and limitations. Earlier release notes below are historical.
+
+# Playtest guide — core overhaul
+
+Extract the Windows ZIP, launch BONK_INFINITY.exe. Use Launch_Compatibility.bat if Vulkan
+is unavailable. No Godot installation is needed. Native Windows execution is not verified
+in the cloud; the export's packed resources are validated with Linux Godot.
+
+Play / Unlocks / Quests / Settings. Choose one owned starting weapon, any of the five traits,
+and any of the three ultimates. There is one forest biome and one player character, Jacob.
+
+WASD movement; mouse camera; Space jump / hold to glide with Glider; Left Ctrl crouch/slide;
+E interact; Q ultimate; Tab build/stat tooltips; Escape pause/save; wheel zoom; F11 fullscreen.
+Gameplay controls are rebindable. Air Step grants extra jumps; Wall Climber can wall jump.
+
+10:00 countdown. Rushes08:00/04:00. Minibosses07:00/03:00. Endless at00:00. Find the purple
+portal and E to summon the seeded main boss at any time. Defeat it, explore further or E at
+the mint portal to advance. Build and gold persist across generated forest stages. The
+Colossus slam can be jumped; dodge its charge and thorns. The Sovereign marks explosions,
+dashes along its telegraph and fires three projectile waves. Main/miniboss bars coexist.
+
+Gold is automatically collected from kills and spent in the run. A shop offers tier-appropriate
+stock; one successful purchase consumes the seller. Browsing/insufficient gold leaves it intact.
+Chests start at15gold and increase by5 each. Legendary effects include a revival, periodic
+lightning and faster ultimate recovery. Red flashes indicate actual damage; particle intensity
+and reduced effects are configurable.
+
+Quests persist progress when a non-practice run ends; claim silver once per quest. Silver
+unlocks weapons and buys capacity:250 for slot3,750 for slot4, separately for weapons/tomes.
+All traits/ultimates are always available. Disabled owned weapons remain valid starters.
+Weapon upgrade cards select an eligible attribute and show the exact proposed change.
+Tab tooltips distinguish recent measured DPS (no overkill) from a labelled base estimate.
+
+Escape > Save run, then Play > Resume saved run. Profiles retain the old data location:
 %APPDATA%\Godot\app_userdata\BONK INFINITY\progress.json
-The Progress menu can export/import bonk-profile-export.json in that folder.
-Updates keep the existing profile. Avoid overwriting this folder manually.
+V3 migrates old credits + quest gold to silver once. Existing owned entries/settings/statistics
+remain. Run checkpoints preserve stage/event/portal/encounter state, weapon attributes, shops,
+fog and abilities; transient projectiles, damage windows and visual effects restart on loading.
 
-Status
-This is a playable foundation, not the complete polished game described in
-the specification. Reference mechanics and numerical balance are approximate.
-The source includes a detailed status report in docs/STATUS.md.
-Windows export was built in Linux; native Windows execution and human game-feel
-validation remain to be performed. This build is provided for personal testing.
+[Full rules](CORE_OVERHAUL.md). Missing exact-art substitutions are documented in ASSET_STATUS.md.

@@ -1,0 +1,10 @@
+{
+  "failed": [],
+  "final_passed": 100,
+  "first_attempt_failures": [],
+  "first_attempt_passed": 100,
+  "ms": 16046,
+  "repaired_count": 0,
+  "seeds": 100,
+  "unique_layouts": 100
+}

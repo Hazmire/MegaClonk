@@ -1,0 +1,5 @@
+[gd_resource type="Resource" script_class="ForestSettings" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/stages/forest_settings.gd" id="1"]
+[resource]
+script=ExtResource("1")
+elevation_band_weights = PackedFloat32Array()

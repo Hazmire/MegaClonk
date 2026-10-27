@@ -1,0 +1,63 @@
+{
+  "status": "source_ci_export_and_downloaded_pack_passed",
+  "engine": "4.7.2",
+  "suites": 22,
+  "named_checks": 761,
+  "layout_seeds": 200,
+  "decorated_worlds": 200,
+  "collision_rays": 104353,
+  "enemy_traversal_checks": 400,
+  "interaction_checks": 1000,
+  "cliff_drop_cases": 73,
+  "object_layout_seeds": 200,
+  "free_chest_seeds": 13,
+  "native_windows_executed": false,
+  "gaming_gpu_60fps_verified": false,
+  "publication_blocker": null,
+  "source_commit": "15310003ce3bbce808a43bb44899399316c1c516",
+  "local_export_source": "29ab593c0a2b3ebeffc2c817af1ceb038c02495f",
+  "local_export_clean": true,
+  "local_export_compiled_world": true,
+  "local_export_compiled_reward_ui": true,
+  "local_export_compiled_stage_swarms": true,
+  "compiled_rendered_inspection": [
+    "green",
+    "violet",
+    "crimson",
+    "supported_swarm",
+    "shrine_charging",
+    "shrine_complete",
+    "multiple_bosses"
+  ],
+  "publication_status": "verified",
+  "github_regression_suites": 22,
+  "github_regression_passed": true,
+  "workflow_url": "https://github.com/Hazmire/MegaClonk/actions/runs/40500299914",
+  "release": {
+    "release_url": "https://github.com/Hazmire/MegaClonk/releases/tag/stage-swarms-v8",
+    "target_commitish": "15310003ce3bbce808a43bb44899399316c1c516",
+    "asset_id": 681489125,
+    "asset_bytes": 111652560,
+    "zip_sha256": "c5240a8a34c0f19e298c59e5514e7318d2e7eaef7354d80d80f251325b3d3bd0",
+    "download_url": "https://github.com/Hazmire/MegaClonk/releases/download/stage-swarms-v8/BONK_INFINITY_Windows_x64.zip",
+    "zip_crc_passed": true,
+    "build_info": "MEGACLONK stage themes, physical swarms, shrines and multiplied bosses\nGodot 4.7.2\nSource commit: 15310003ce3bbce808a43bb44899399316c1c516\nUncommitted source at build time: False\nWindows execution requires native playtesting.\n",
+    "native_windows_executed": false
+  },
+  "actions_artifact": {
+    "id": 12733221334,
+    "name": "BONK_INFINITY-Windows-x64",
+    "size_in_bytes": 112555500,
+    "digest": "sha256:b57713b182ed1afbbb63bb01cc7094566f0751b27e3a9edcf14fa171c07e3427",
+    "expired": false,
+    "expires_at": "2026-11-26T12:09:08Z"
+  },
+  "published_pack_world_frames": 180,
+  "published_pack_compiled_reward_ui": true,
+  "published_pack_compiled_stage_swarms": true,
+  "published_pack_script_resource_errors": 0,
+  "remaining_acceptance": [
+    "Dense 500-enemy performance exceeds 60FPS CPU budget on cloud host",
+    "Native Windows execution and gaming-PC performance unverified"
+  ]
+}
