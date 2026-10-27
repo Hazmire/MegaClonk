@@ -47,7 +47,7 @@ fi
 cat "$log_path"
 if grep -Eq 'SCRIPT ERROR|^ERROR:' "$log_path"; then exit 1; fi
 if ! grep -q 'EXPORTED ART RESET V10 SMOKE COMPLETE' "$log_path"; then exit 1; fi
-cp docs/ART_RESET.md docs/ART_RESET_ASSET_AUDIT.md builds/windows/
+cp docs/ART_RESET.md docs/ART_RESET_ASSET_AUDIT.md docs/ART_RESET_PERFORMANCE.md builds/windows/
 cp assets/art_reset/status/StatusFX/license.txt builds/windows/STATUSFX_CC0_LICENSE.txt
 cp docs/REWARDS_AI_V9.md builds/windows/
 cp docs/STAGE_SWARMS.md builds/windows/
