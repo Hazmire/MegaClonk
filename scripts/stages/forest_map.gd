@@ -195,7 +195,7 @@ static func reachable(seed_value: int,target: Vector2) -> bool:
 static func top(data: Dictionary,i: int) -> PackedVector3Array:
  var x=-96+(i%SIDE)*2;var z=-96+int(i/SIDE)*2;var p: Vector3=data.planes[i]
  return PackedVector3Array([Vector3(x,plane_height(p,x,z),z),Vector3(x+2,plane_height(p,x+2,z),z),Vector3(x+2,plane_height(p,x+2,z+2),z+2),Vector3(x,plane_height(p,x,z+2),z+2)])
-static func geometry(data: Dictionary) -> ArrayMesh:
+static func geometry(data: Dictionary,visible_boundary: bool=true) -> ArrayMesh:
  var tool=SurfaceTool.new();tool.begin(Mesh.PRIMITIVE_TRIANGLES);tool.set_smooth_group(-1)
  for i in SIDE*SIDE:
   var corners=top(data,i);var sloped=absf(data.planes[i].x)+absf(data.planes[i].z)>0.001
@@ -209,6 +209,7 @@ static func geometry(data: Dictionary) -> ArrayMesh:
    var boundary=(side==0 and z==0) or (side==1 and x==SIDE-1) or (side==2 and z==SIDE-1) or (side==3 and x==0)
    var lo_a=a;var lo_b=b
    if boundary:
+    if not visible_boundary:continue
     # Faceted, irregular high rock faces; lower vertices lean inward so no
     # gap opens between the walkable floor and the physical perimeter.
     for level in 4:

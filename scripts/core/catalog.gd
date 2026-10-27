@@ -3,6 +3,7 @@ extends RefCounted
 
 # Independent balance values. Reference names supplied by the design brief;
 # none of these numbers are claimed to reproduce Megabonk formulas.
+const ACTIVE_WEAPONS=[0,1,2,4,5,6,7,9,10,16]
 const WEAPONS = [
  ["Sword", "sweep", 22.0, 0.85, 5.0, "#ffe2a1"],
  ["Firestaff", "fireball", 18.0, 1.0, 24.0, "#ff793b"],

@@ -13,11 +13,13 @@ The GitHub reference images now also inform the [pause, expanded map and UI refi
 
 The latest source adds [stage themes, physical swarms, automatic shrines and multiplied bosses](docs/STAGE_SWARMS.md). The Windows playtest is published and its downloaded game pack has passed the world, reward/UI and stage/swarms checks. Dense-swarm performance remains a known limitation.
 
+The latest source increment adds [shrine rarity choices, persistent reward effects, continuous pursuit and HUD/bug fixes](docs/REWARDS_AI_V9.md). The v9 Windows release is published and its downloaded game pack passed all four compiled smoke gates.
+
 ## Download and play
 
-- [Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/stage-swarms-v8/BONK_INFINITY_Windows_x64.zip)
+- [Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/shrine-rewards-v9/BONK_INFINITY_Windows_x64.zip)
 - [GitHub Actions builds](https://github.com/Hazmire/MegaClonk/actions/workflows/windows-build.yml)
-- [PR #3 — merge into Full-Release](https://github.com/Hazmire/MegaClonk/pull/3)
+- [PR #4 — merge into Full-Release](https://github.com/Hazmire/MegaClonk/pull/4)
 
 Start a **new run** to see the new terrain; older checkpoints retain their original maps.
 Extract and launch **BONK_INFINITY.exe**, or **Launch_Compatibility.bat** if Vulkan

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="WindSettings" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/stages/wind_settings.gd" id="1"]
+[resource]
+script=ExtResource("1")
+ambient_count=64
+guidance_count=64
+vortex_count=96
+local_radius=10.0
+proximity_distance=80.0
+speed_far=1.8
+speed_near=3.8
+lifetime=5.0
+refresh_seconds=0.4
+simulation_step=0.0333333

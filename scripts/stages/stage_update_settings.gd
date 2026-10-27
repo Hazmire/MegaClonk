@@ -7,7 +7,8 @@ extends Resource
 @export var crowd_neighbour_budget=24
 @export var shrine_radius=5.0
 @export var shrine_seconds=8.0
-@export var shrine_decay=0.0
+@export var shrine_decay=0.15
+@export var golden_shrine_chance=0.02
 @export var ordinary_chests=15
 @export var shops=3
 @export var elite_statues=2
@@ -17,3 +18,8 @@ extends Resource
 @export var free_chest_max=5
 @export var drop_pickup_radius=1.8
 @export var global_golem_cap=24
+
+@export var explosion_horizontal=18.0
+@export var explosion_upward=13.0
+@export var explosion_speed_cap=24.0
+@export var explosion_vertical_cap=18.0

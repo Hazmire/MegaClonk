@@ -17,7 +17,8 @@ func run():
   if ShrineCharging.is_shrine(object):shrine=object
   if object.kind=="Boss Statue":statue=object
  game.player.position=shrine.node.position;ShrineCharging.tick(game,shrine,0,8)
- if not require(shrine.used and not shrine.get("shrine_reward",{}).is_empty(),"Compiled proximity shrine did not grant a stat"):return
+ if not require(shrine.used and game.active_shrine_reward.get("choices",[]).size()==3,"Compiled shrine did not offer three fixed stats"):return
+ ShrineRewards.select(game,0)
  game.activate_boss_statue(statue);game.activate_portal();BossEncounters.tick(game,0.1)
  var bosses=[]
  for e in game.enemies:

@@ -167,8 +167,8 @@ func run() -> void:
  game.variants.selections[0]=0
  var melee=game.spawn_enemy(0,game.player.position+Vector3(0.5,0,0))
  melee.cooldown=0; game.invulnerability=0; game.health=100
- EnemySimulation.step(game,melee,0.01); EnemySimulation.step(game,melee,0.5)
- verify(game.health<100 and melee.state=="recover","Melee windup and recovery apply damage")
+ EnemyContact.step(game,melee,0.01);EnemySimulation.step(game,melee,0.01); EnemySimulation.step(game,melee,0.5)
+ verify(game.health<100 and melee.state=="move","Ordinary contact applies damage without melee windup or recovery")
  game.weapons.clear(); game.equip(1)
  verify(game.save_run("user://overhaul-run-test.json"),"Active run snapshot write")
  var saved_variants=game.variants.selections.duplicate()

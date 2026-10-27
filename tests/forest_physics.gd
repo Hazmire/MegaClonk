@@ -78,6 +78,9 @@ func run():
    game.player.position=shrine.node.position
    game.update_interactions(4);game.update_interactions(4)
    if not shrine.used:reasons.append("Charge shrine cannot complete")
+   game.mode="loading";ShrineRewards.present_next(game)
+   if game.active_shrine_reward.get("choices",[]).size()!=3:reasons.append("Shrine omitted its three choices")
+   else:ShrineRewards.select(game,0)
    interactions+=1;game.mode="pause";game.player.active=false;await process_frame
    game.player.position=statue.node.position
    if not game.activate_elite_statue(statue):reasons.append("Elite statue cannot activate")

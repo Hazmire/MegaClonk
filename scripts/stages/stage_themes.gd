@@ -14,9 +14,8 @@ static func gradient(stage: int) -> GradientTexture1D:
  return gradients[key]
 static func apply(game: Node) -> void:
  var t=config(game.stage);var env=game.world.get_child(0).environment
- ForestAtmosphere.apply(env)
- var material=env.sky.sky_material
- material.set_shader_parameter("zenith",t.zenith);material.set_shader_parameter("horizon",t.horizon);material.set_shader_parameter("cloud_tint",t.cloud)
+ ForestAtmosphere.apply(env,false)
+ ArtResetWorld.apply_sky(game,env)
  env.fog_light_color=t.fog;env.ambient_light_color=t.ambient
  for light in game.world.get_children():
   if light is DirectionalLight3D:light.light_color=t.sunlight;light.sky_mode=DirectionalLight3D.SKY_MODE_LIGHT_ONLY
@@ -24,7 +23,7 @@ static func apply(game: Node) -> void:
  for key in ["moss_low","moss_high","soil","stone_low","stone_high"]:floor.set_shader_parameter(key,t.get(key))
  ForestAtmosphere.grass_material().set_shader_parameter("color_gradient",gradient(game.stage))
 static func decor(base: Mesh,stage: int,rock: bool=false) -> Mesh:
- if index(stage)==0:return base
+ if index(stage)==0 and not rock:return base
  var key=str(base.get_instance_id())+":"+str(index(stage))+":"+str(rock)
  if mesh_cache.has(key):return mesh_cache[key]
  var mesh=base.duplicate() as ArrayMesh;var t=config(stage)
@@ -40,4 +39,4 @@ static func decor(base: Mesh,stage: int,rock: bool=false) -> Mesh:
   mesh.surface_set_material(i,material_cache[material_key])
  mesh_cache[key]=mesh;return mesh
 static func reset() -> void:
- mesh_cache.clear();material_cache.clear();gradients.clear()
+ mesh_cache.clear();material_cache.clear();gradients.clear();ArtResetWorld.reset()

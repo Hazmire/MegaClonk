@@ -68,7 +68,7 @@ static func equipment(ui: FrontEnd,parent: Node) -> void:
   var owned=game.weapons if category=="weapons" else game.tomes
   for id in owned:
    var rank=int(owned[id].level) if category=="weapons" else int(owned[id])
-   var meta=RewardCatalog.entry(category,id,rank)
+   var meta=game.equipment_meta(category,id,rank)
    var tile=icon(ui,grid,category,str(id),"Lv %d"%rank,Rarity.definition(meta.rarity).color,46);tile.tooltip_text=game.weapon_tooltip(int(id)) if category=="weapons" else meta.description
   var limit=game.weapon_limit() if category=="weapons" else game.tome_limit()
   for index in range(owned.size(),maxi(4,limit)):
@@ -85,10 +85,11 @@ static func equipment(ui: FrontEnd,parent: Node) -> void:
  var abilities=HBoxContainer.new();abilities.add_theme_constant_override("separation",10);parent.add_child(abilities)
  for category in ["traits","ultimates"]:
   var id=game.loadout_runtime.trait_id if category=="traits" else game.loadout_runtime.ultimate_id
-  var tile=icon(ui,abilities,category,id,"Trait" if category=="traits" else "Ready" if game.loadout_runtime.cooldown<=0 else "%.0fs"%game.loadout_runtime.cooldown,Color("ffbf45"),46)
+  var tile=icon(ui,abilities,category,id,"Trait" if category=="traits" else "Ready" if game.loadout_runtime.cooldown<=0 else "%.0fs"%game.loadout_runtime.cooldown,Color("7d9ca0") if category=="traits" else Color("ffbf45"),46)
   var entry=LoadoutCatalog.entry(category,id);tile.tooltip_text=entry.get("name",id)+"\n"+entry.get("description","")
-  var border=ColorRect.new();border.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);border.mouse_filter=Control.MOUSE_FILTER_IGNORE
-  var material=ShaderMaterial.new();material.shader=preload("res://shaders/gold_frame.gdshader");border.material=material;tile.add_child(border)
+  if category=="ultimates":
+   var border=ColorRect.new();border.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);border.mouse_filter=Control.MOUSE_FILTER_IGNORE
+   var material=ShaderMaterial.new();material.shader=preload("res://shaders/gold_frame.gdshader");border.material=material;tile.add_child(border)
 static func statistics(ui: FrontEnd,parent: Node) -> void:
  var game=ui.game;parent.add_theme_constant_override("separation",3)
  for group in [["Survival",["max_health","regen","armor","evasion","lifesteal","thorns"]],["Combat",["damage","crit","crit_damage","haste","count","size","projectile_speed","duration","knockback"]],["Movement",["speed","air_jumps","jump","slide_speed","slide_friction"]],["Rewards",["pickup","xp","gold_gain","luck","difficulty"]]]:
@@ -115,8 +116,8 @@ static func layout(ui: FrontEnd,title: String) -> VBoxContainer:
  var middle=frame(ui,Vector2(322,78),Vector2(600,602),title)
  statistics(ui,frame(ui,Vector2(938,78),Vector2(326,602),"Stats"))
  return middle
-static func offer(ui: FrontEnd,parent: Node,category: String,id: Variant,rank: int,description: String,callback: Callable,button_text: String="") -> Button:
- var meta=RewardCatalog.entry(category,id,rank);var tier=Rarity.definition(meta.rarity)
+static func offer(ui: FrontEnd,parent: Node,category: String,id: Variant,rank: int,description: String,callback: Callable,button_text: String="",metadata: Dictionary={}) -> Button:
+ var meta=RewardCatalog.entry(category,id,rank) if metadata.is_empty() else metadata;var tier=Rarity.definition(meta.rarity)
  var button=Button.new();button.custom_minimum_size=Vector2(552,122);button.add_theme_stylebox_override("normal",style(tier.color,tier.color.darkened(0.91)));button.add_theme_stylebox_override("hover",style(tier.color.lightened(0.3),tier.color.darkened(0.8)));button.add_theme_stylebox_override("focus",style(Color("fff0bf"),tier.color.darkened(0.82)));parent.add_child(button)
  var margin=MarginContainer.new();margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);margin.add_theme_constant_override("margin_left",14);margin.add_theme_constant_override("margin_right",14);margin.add_theme_constant_override("margin_top",9);margin.add_theme_constant_override("margin_bottom",9);button.add_child(margin)
  var row=HBoxContainer.new();row.add_theme_constant_override("separation",14);margin.add_child(row)
@@ -143,7 +144,7 @@ static func descendants(node: Node) -> Array:
  return result
 static func upgrades(ui: FrontEnd) -> void:
  var game=ui.game;game.mode="upgrade";var center=layout(ui,"LEVEL UP · Upgrade offers")
- var celebration=RewardCelebration.new();celebration.rainbow=true;ui.menu.add_child(celebration)
+ var celebration=celebration(ui,Color("ffdf75"),0.6)
  if game.settings.reduced or game.settings.visual_intensity<0.1:celebration.hide();celebration.set_process(false)
  game.choices=game.upgrade_choices();ui.reward_focus={}
  var first: Button
@@ -158,7 +159,7 @@ static func upgrades(ui: FrontEnd) -> void:
   if choice.type=="weapon" and rank>0:description=WeaponUpgrades.description(int(choice.id),game.weapons[choice.id],choice.attribute)
   elif choice.type=="tome":
    var stat=Catalog.TOMES[choice.id][0];description=stat.replace("_"," ").capitalize()+": "+BuildStats.value(stat,game.stats[stat])+" → "+BuildStats.value(stat,game.stats[stat]+Catalog.TOMES[choice.id][1])
-  var button=offer(ui,center,category,choice.id,rank,description,func():game.apply_upgrade(choice);game.resume())
+  var button=offer(ui,center,category,choice.id,rank,description,func():game.apply_upgrade(choice);game.resume(),"",choice.metadata)
   button.focus_entered.connect(func():ui.reward_focus=choice)
   button.mouse_entered.connect(func():ui.reward_focus=choice)
   if first==null:first=button;ui.reward_focus=choice
@@ -194,31 +195,60 @@ static func shop(ui: FrontEnd,object: Dictionary) -> void:
 static func reward(ui: FrontEnd,item: Array) -> void:
  var game=ui.game;game.mode="reward";var center=layout(ui,"Treasure discovered")
  var id=Catalog.ITEMS.find(item);var tier=Rarity.definition(item[1])
- var rarity=ui.heading("OPENING…",center,28);rarity.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;rarity.add_theme_color_override("font_color",tier.color)
- var name=ui.heading("Treasure roulette",center,30);name.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+ var effect=celebration(ui,tier.color,float(tier.celebration))
+ var rarity=ui.heading("OPENING…",center,25);rarity.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;rarity.add_theme_color_override("font_color",tier.color)
+ var name=ui.heading("Unsealing treasure",center,28);name.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+ var slot=CenterContainer.new();slot.custom_minimum_size.y=235;center.add_child(slot)
+ var tile=icon(ui,slot,"items",str(id),"",tier.color,160);tile.name="ChestReveal";tile.set_meta("final_id",id)
+ var image: TextureRect
+ for child in descendants(tile):
+  if child is TextureRect:image=child;break
+ image.name="CyclingIcon"
  var description=ui.paragraph(Catalog.item_description(id),center,520);description.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;description.hide()
- var reel=Control.new();reel.custom_minimum_size=Vector2(552,210);reel.clip_contents=true;center.add_child(reel)
- var strip=HBoxContainer.new();strip.add_theme_constant_override("separation",16);strip.position=Vector2(246,45);reel.add_child(strip)
- for index in 27:
-  var preview=id if index==26 else posmod(index*7+3,Catalog.ITEMS.size())
-  icon(ui,strip,"items",str(preview),"",Rarity.definition(Catalog.ITEMS[preview][1]).color,72)
- var marker=ColorRect.new();marker.color=Color("ffdf89");marker.position=Vector2(286,8);marker.size=Vector2(3,180);marker.mouse_filter=Control.MOUSE_FILTER_IGNORE;reel.add_child(marker)
- var slot=CenterContainer.new();slot.custom_minimum_size.y=230;center.add_child(slot);var tile=icon(ui,slot,"items",str(id),"",tier.color,144);slot.hide()
- ui.text("Added to your build · reward fixed before reveal",center,14)
+ ui.text("Reward added to your build",center,14)
  var controls=HBoxContainer.new();center.add_child(controls)
  var proceed=button(ui,controls,"CONTINUE",game.resume,Color("276292"));proceed.disabled=true
  var generation=ui.reward_generation
  var reveal=func():
   if ui.reward_generation!=generation or not is_instance_valid(tile) or tile.get_meta("revealed",false):return
-  tile.set_meta("revealed",true);reel.hide();slot.show();rarity.text=tier.name.to_upper();name.text=item[0];description.show();proceed.disabled=false;proceed.grab_focus();game.play_sound("level")
-  if not game.settings.reduced and game.settings.visual_intensity>=0.1:
-   var celebration=RewardCelebration.new();celebration.rays=true;celebration.center=Vector2(622,350);celebration.tint=tier.color;celebration.strength=float(tier.celebration);ui.menu.add_child(celebration)
+  tile.set_meta("revealed",true);image.texture=UIAssets.icon("items",str(id));rarity.text=tier.name.to_upper();name.text=item[0];description.show();proceed.disabled=false;proceed.grab_focus();ui.chest_skip=Callable()
+  if tier.id=="legendary" and effect.has_meta("global_celebration"):effect.get_meta("global_celebration").burst(tier.color,2.0*game.settings.visual_intensity)
+  effect.burst(tier.color,float(tier.celebration)*game.settings.visual_intensity);game.play_sound("applause",0.25+0.75*float(tier.celebration));game.play_sound("purchase",0.4+0.6*float(tier.celebration));game.play_sound("legendary" if tier.id=="legendary" else "level",0.4+0.6*float(tier.celebration))
+ var eligible=game.available_items()
+ if eligible.is_empty():eligible=[id]
  var tween=tile.create_tween();ui.reward_tweens.append(tween);tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
- tween.tween_method(func(value):
-  if ui.reward_generation!=generation or not is_instance_valid(strip):return
-  strip.position.x=value
-  var tick=int((246-value)/100)
-  if tick%3==0 and tile.get_meta("tick",-1)!=tick:tile.set_meta("tick",tick);game.play_sound("menu"),246.0,246.0-26*100,1.6).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+ tween.tween_method(func(progress):
+  if ui.reward_generation!=generation or not is_instance_valid(image):return
+  var tick=int(70*(1-pow(1-progress,2.6)))
+  if tile.get_meta("tick",-1)!=tick:
+   tile.set_meta("tick",tick);image.texture=UIAssets.icon("items",str(eligible[posmod(tick+3,eligible.size())]));game.play_sound("menu",0.3)
+  ,0.0,1.0,3.5)
  tween.tween_callback(reveal)
- var skip=button(ui,controls,"SKIP REVEAL",func():tween.kill();reveal.call());skip.grab_focus()
- if game.settings.reduced:tween.kill();reveal.call()
+ ui.chest_skip=func():
+  if tween.is_valid():tween.kill()
+  reveal.call()
+ var skip=button(ui,controls,"SKIP REVEAL",ui.chest_skip);skip.grab_focus()
+ if game.settings.reduced:ui.chest_skip.call()
+
+static func shrine(ui: FrontEnd,reward: Dictionary) -> void:
+ var game=ui.game;game.mode="shrine";var center=layout(ui,"GOLDEN SHRINE · Choose one" if reward.golden else "SHRINE · Choose one stat")
+ ui.text("Choose exactly one permanent upgrade for this run.",center,15)
+ celebration(ui,Color("ffbf45") if reward.golden else Color("70dcd7"),1.0 if reward.golden else 0.4)
+ for i in reward.choices.size():
+  var choice=reward.choices[i];var tier=Rarity.definition(choice.rarity)
+  var card=button(ui,center,"%s   ·   %s\n%s  %s\n%s"%[tier.name.to_upper(),"STAT UPGRADE",ShrineRewards.stat_name(str(choice.stat)),ShrineRewards.bonus_text(choice),choice.description],func():ShrineRewards.select(game,i),tier.color.darkened(0.85))
+  card.name="ShrineChoice%d"%i;card.custom_minimum_size=Vector2(552,125);card.add_theme_stylebox_override("normal",style(tier.color,tier.color.darkened(0.90)));card.add_theme_stylebox_override("focus",style(tier.color.lightened(0.2),tier.color.darkened(0.82)));card.add_theme_font_size_override("font_size",19)
+  if i==0:card.grab_focus()
+ if reward.choices.is_empty():
+  ui.paragraph("All eligible stats are capped. No invalid upgrade has been generated.",center,520)
+  button(ui,center,"CONTINUE",func():game.active_shrine_reward={};game.resume())
+static func celebration(ui: FrontEnd,color: Color,strength: float) -> RewardCelebration:
+ var effect=RewardCelebration.new();effect.rainbow=true;effect.tint=color;effect.strength=strength*ui.game.settings.visual_intensity;ui.menu.add_child(effect);ui.menu.move_child(effect,1)
+ var local=RewardCelebration.new();local.set_meta("global_celebration",effect);local.confetti=false;local.rays=true;local.tint=color;local.strength=effect.strength;local.center=Vector2(288,262)
+ for frame in ui.menu.get_children():
+  if frame is RewardFrame and frame.position.x==322:
+   frame.clip_contents=true;frame.add_child(local);frame.move_child(local,0);break
+ if local.get_parent()==null:effect.add_child(local)
+ if ui.game.settings.reduced or ui.game.settings.visual_intensity<0.1:
+  effect.hide();effect.set_process(false);local.hide();local.set_process(false)
+ return local

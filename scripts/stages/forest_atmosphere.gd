@@ -16,7 +16,11 @@ static func grass_material() -> ShaderMaterial:
   grass.set_shader_parameter("noise_texture",noise_texture());grass.set_shader_parameter("wind_texture",noise_texture());grass.set_shader_parameter("color_gradient",load("res://assets/BinbunGrass/src/palette/palette_01.tres"))
   grass.set_shader_parameter("wind_velocity",Vector2(0.7,0.35));grass.set_shader_parameter("billboard",false);grass.set_shader_parameter("alpha_mode",2)
  return grass
-static func apply(environment: Environment) -> void:
+static func apply(environment: Environment,create_sky: bool=true) -> void:
+ if create_sky:apply_legacy_sky(environment)
+ environment.ambient_light_source=Environment.AMBIENT_SOURCE_COLOR;environment.ambient_light_color=Color("a5bfd3");environment.ambient_light_energy=0.75
+ environment.fog_enabled=true;environment.fog_light_color=Color("516078");environment.fog_density=0.0045;environment.fog_sun_scatter=0.15;environment.fog_sky_affect=0.25
+static func apply_legacy_sky(environment: Environment) -> void:
  var sky=Sky.new();var material=ShaderMaterial.new();material.shader=preload("res://shaders/forest_sky.gdshader")
  sky.sky_material=material;sky.process_mode=Sky.PROCESS_MODE_QUALITY;sky.radiance_size=Sky.RADIANCE_SIZE_128
  environment.background_mode=Environment.BG_SKY;environment.sky=sky

@@ -21,7 +21,7 @@ static func entry(category: String,id: Variant,level: int=0) -> Dictionary:
  return {"uid":category+":"+str(id),"id":id,"name":name,"description":description,"icon":UIAssets.icon(category,str(id)),"category":category,"rarity":rarity,"level":level,"max_level":maximum,"effects":effects,"unlock":unlock,"shop_cost":cost}
 static func all_entries() -> Array:
  var result=[]
- for id in Catalog.WEAPONS.size():result.append(entry("weapons",id))
+ for id in Catalog.ACTIVE_WEAPONS:result.append(entry("weapons",id))
  for id in Catalog.TOMES:result.append(entry("tomes",id))
  for id in Catalog.ITEMS.size():result.append(entry("items",id))
  return result

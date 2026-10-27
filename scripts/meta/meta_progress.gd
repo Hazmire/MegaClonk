@@ -64,3 +64,15 @@ static func record(data: Dictionary, record: Dictionary, sandbox: bool) -> void:
   if bool(a.victory)!=bool(b.victory): return bool(a.victory)
   return float(a.kills)>float(b.kills) if a.kills!=b.kills else float(a.time)>float(b.time))
  if data.leaderboard.size()>20: data.leaderboard.resize(20)
+
+static func quest_state(data: Dictionary,q: Dictionary,value: float=-1) -> String:
+ if q.id in data.claimed:return "claimed"
+ return "completed" if (quest_value(data,q.metric) if value<0 else value)>=q.target else "active"
+static func live_quest_value(game: Node,q: Dictionary) -> float:
+ var base=quest_value(game.progress.data,q.metric)
+ if not game.frontend.in_run:return base
+ if q.metric=="kills":return base+game.kills
+ if q.metric=="survival":return maxf(base,game.elapsed)
+ if q.metric=="stage":return maxf(base,game.stage)
+ if q.metric=="ultimates":return base+game.loadout_runtime.uses
+ return base+float(game.run_metrics.get(q.metric,0))

@@ -34,10 +34,14 @@ var reward_focus: Dictionary={}
 var reward_tweens: Array=[]
 var map_return_to_pause=false
 var stage_banner: Control
+var quest_definitions: Array=[]
+var quest_tracker: Label
+var chest_skip: Callable
 
 func setup(owner_game: Node) -> void:
  process_mode=Node.PROCESS_MODE_ALWAYS
  game=owner_game
+ quest_definitions=LoadoutCatalog.quests()
  layer=2
  root=Control.new();root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);root.mouse_filter=Control.MOUSE_FILTER_IGNORE
  add_child(root)
@@ -70,6 +74,7 @@ func setup(owner_game: Node) -> void:
  event_label=text("",hud_root,16);event_label.position=Vector2(380,62);event_label.custom_minimum_size.x=520;event_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
  boss_panel=VBoxContainer.new();boss_panel.position=Vector2(415,95);boss_panel.custom_minimum_size.x=450;hud_root.add_child(boss_panel)
  status_label=text("",hud_root,16);status_label.position=Vector2(28,198)
+ quest_tracker=text("",hud_root,13);quest_tracker.position=Vector2(28,320);quest_tracker.custom_minimum_size=Vector2(270,0);quest_tracker.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
  minimap=RunMinimap.new();minimap.game=game;minimap.position=Vector2(1040,450);minimap.size=Vector2(210,210);hud_root.add_child(minimap)
  var legend=text("YOU • PORTAL • TREASURE",hud_root,12);legend.position=Vector2(1040,670)
  game.notice=text("",root,18);game.notice.position=Vector2(350,646);game.notice.custom_minimum_size.x=590;game.notice.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
@@ -99,6 +104,7 @@ func _exit_tree() -> void:
  stop_reward_animations()
 func clear() -> void:
  if is_instance_valid(stage_banner):stage_banner.hide()
+ fade_celebrations();chest_skip=Callable()
  stop_reward_animations()
  reward_generation+=1;reward_consumed=false
  if is_instance_valid(game.notice):game.notice.text=""
@@ -120,7 +126,7 @@ func icon_row(parent: Node, category: String, id: String, label: String, golden:
  var slot=Control.new();slot.custom_minimum_size=Vector2(48,48);row.add_child(slot)
  var image=TextureRect.new();image.texture=UIAssets.icon(category,id);image.texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST;image.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;image.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);slot.add_child(image)
  if grey:image.modulate=Color(0.3,0.3,0.3,0.8)
- if golden:
+ if golden and category!="traits":
   var border=ColorRect.new();border.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);border.mouse_filter=Control.MOUSE_FILTER_IGNORE
   var material=ShaderMaterial.new();material.shader=preload("res://shaders/gold_frame.gdshader");border.material=material;slot.add_child(border)
  paragraph(label,row,260)
@@ -143,8 +149,8 @@ func home() -> void:
  action("PLAY",buttons,play_screen).grab_focus();action("UNLOCKS",buttons,unlocks);action("QUESTS",buttons,quests);action("SETTINGS",buttons,func(): settings(home))
  var closest=card(menu,Vector2(24,28),Vector2(310,410));heading("Within reach",closest,19)
  var pending=[]
- for q in LoadoutCatalog.quests():
-  if not q.id in game.progress.data.claimed:pending.append({"quest":q,"ratio":minf(1,MetaProgress.quest_value(game.progress.data,q.metric)/q.target)})
+ for q in quest_definitions:
+  if MetaProgress.quest_state(game.progress.data,q)=="active":pending.append({"quest":q,"ratio":minf(1,MetaProgress.quest_value(game.progress.data,q.metric)/q.target)})
  pending.sort_custom(func(a,b):return a.ratio>b.ratio)
  for i in mini(4,pending.size()):
   var q=pending[i].quest;paragraph(q.name,closest,260)
@@ -240,15 +246,28 @@ func quests() -> void:
  for category in ["Hunting","Arsenal","Survival","Exploration"]:
   var scroll=ScrollContainer.new();scroll.name=category;tabs.add_child(scroll)
   var list=VBoxContainer.new();list.size_flags_horizontal=Control.SIZE_EXPAND_FILL;scroll.add_child(list)
-  for q in LoadoutCatalog.quests():
+  for q in quest_definitions:
    if q.category!=category:continue
    heading(q.name,list,20);paragraph(quest_description(q)+" • Reward: %d silver"%LoadoutCatalog.quest_reward(q),list,900)
    var bar=ProgressBar.new();bar.max_value=q.target;bar.value=MetaProgress.quest_value(game.progress.data,q.metric);list.add_child(bar)
    var claimed=q.id in game.progress.data.claimed
-   var claim=action("Claimed" if claimed else "Claim reward",list,func():
-    if MetaProgress.claim(game.progress.data,q.id):game.progress.save();quests())
+   var claim=action("Claimed" if claimed else "Claim reward" if MetaProgress.quest_state(game.progress.data,q)=="completed" else "In progress",list,func():
+    if MetaProgress.claim(game.progress.data,q.id):
+     game.progress.save();claim_quest_button(list,q.id);wallet_refresh(col))
+   claim.set_meta("quest_id",q.id)
    claim.disabled=claimed or MetaProgress.quest_value(game.progress.data,q.metric)<q.target
+func claim_quest_button(list: Node,id: String) -> void:
+ for child in list.get_children():
+  if child is Button and child.get_meta("quest_id","")==id:child.text="Claimed";child.disabled=true
+func wallet_refresh(column: Node) -> void:
+ for child in column.get_children():
+  if child is Label and child.text.begins_with("SILVER"):child.text=wallet()
+func fade_celebrations() -> void:
+ for child in RewardScreens.descendants(menu):
+  if child is RewardCelebration:
+   var position=child.global_position;child.reparent(root);child.global_position=position;child.fade_out()
 func enter_run() -> void:
+ fade_celebrations();chest_skip=Callable()
  stop_reward_animations()
  in_run=true;icon_fingerprint=""
  menu.hide();hud_root.show();game.player.camera.current=true
@@ -259,17 +278,16 @@ func update_hud() -> void:
  for id in game.tomes:tome_names.append("%s %d"%[id,game.tomes[id]])
  loadout_label.text="ARSENAL %d/%d • TOMES %d/%d"%[game.weapons.size(),game.weapon_limit(),game.tomes.size(),game.tome_limit()]
  var equipment=[]
- for id in game.weapons:equipment.append(str(id)+":"+str(game.weapons[id].level))
- var fingerprint=str(equipment)+str(game.tomes)+str(game.weapon_limit())+str(game.tome_limit())+game.loadout_runtime.trait_id+game.loadout_runtime.ultimate_id
+ for id in game.weapons:equipment.append(str(id)+":"+str(game.weapons[id].level)+":"+str(game.weapons[id].get("rarity","common")))
+ var fingerprint=str(equipment)+str(game.tomes)+str(game.tome_rarities)+str(game.weapon_limit())+str(game.tome_limit())+game.loadout_runtime.trait_id+game.loadout_runtime.ultimate_id
  if fingerprint!=icon_fingerprint:
   icon_fingerprint=fingerprint
   for child in loadout_icons.get_children():loadout_icons.remove_child(child);child.queue_free()
-  var weapon_row=HBoxContainer.new();loadout_icons.add_child(weapon_row)
-  for id in game.weapons:icon_tile(weapon_row,"weapons",str(id),Catalog.WEAPONS[id][0],false,int(game.weapons[id].level))
-  for i in maxi(0,game.weapon_limit()-game.weapons.size()):empty_slot(weapon_row,"Empty weapon slot")
-  var tome_row=HBoxContainer.new();loadout_icons.add_child(tome_row)
-  for id in game.tomes:icon_tile(tome_row,"tomes",str(id),str(id),false,int(game.tomes[id]))
-  for i in maxi(0,game.tome_limit()-game.tomes.size()):empty_slot(tome_row,"Empty tome slot")
+  var weapon_row=HBoxContainer.new();weapon_row.name="EquippedItems";weapon_row.add_theme_constant_override("separation",4);loadout_icons.add_child(weapon_row)
+  for id in game.weapons:
+   var meta=game.equipment_meta("weapons",id,int(game.weapons[id].level));var tile=RewardScreens.icon(self,weapon_row,"weapons",str(id),"Lv. %d"%int(game.weapons[id].level),Rarity.definition(meta.rarity).color,40);tile.tooltip_text=meta.name;tile.set_meta("equipment_uid",meta.uid)
+  for id in game.tomes:
+   var meta=game.equipment_meta("tomes",id,int(game.tomes[id]));var tile=RewardScreens.icon(self,weapon_row,"tomes",str(id),"Lv. %d"%int(game.tomes[id]),Rarity.definition(meta.rarity).color,40);tile.tooltip_text=meta.name;tile.set_meta("equipment_uid",meta.uid)
   var ability_row=HBoxContainer.new();loadout_icons.add_child(ability_row)
   icon_tile(ability_row,"traits",game.loadout_runtime.trait_id,LoadoutCatalog.entry("traits",game.loadout_runtime.trait_id).get("name","Trait"),true)
   icon_tile(ability_row,"ultimates",game.loadout_runtime.ultimate_id,LoadoutCatalog.entry("ultimates",game.loadout_runtime.ultimate_id).get("name","Ultimate"),true)
@@ -284,6 +302,11 @@ func update_hud() -> void:
  status_label.text="HP %d/%d  •  LV %d  •  KILLS %d\nTab • Build & stats"%[maxf(0,game.health),game.stats.max_health,game.level,game.kills]
  status_label.text+="\n[%s] %s • %s"%[OS.get_keycode_string(game.bindings.ultimate),LoadoutCatalog.entry("ultimates",game.loadout_runtime.ultimate_id).get("name","Ultimate"),"READY" if game.loadout_runtime.cooldown<=0 else "%ds"%ceili(game.loadout_runtime.cooldown)]
  if game.loadout_runtime.remaining>0:status_label.text+="\nULTIMATE ACTIVE • %.1fs"%game.loadout_runtime.remaining
+ var tracked=[]
+ for q in quest_definitions:
+  var value=MetaProgress.live_quest_value(game,q)
+  if MetaProgress.quest_state(game.progress.data,q,value)=="active" and tracked.size()<3:tracked.append("%s  %d/%d"%[q.name,value,q.target])
+ quest_tracker.text="QUESTS IN PROGRESS\n"+"\n".join(tracked) if not tracked.is_empty() else ""
  update_boss_bars()
  if game.settings.fps:status_label.text+="\n%d FPS"%Engine.get_frames_per_second()
 func pause() -> void:
@@ -353,7 +376,7 @@ func icon_tile(parent: Node, category: String, id: String, hint: String, golden:
  var image=TextureRect.new();image.texture=UIAssets.icon(category,id);image.texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST;image.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;image.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);slot.add_child(image)
  if rank>0:
   var number=text(str(rank),slot,12);number.position=Vector2(24,20)
- if golden:
+ if golden and category!="traits":
   var border=ColorRect.new();border.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);border.mouse_filter=Control.MOUSE_FILTER_IGNORE
   var material=ShaderMaterial.new();material.shader=preload("res://shaders/gold_frame.gdshader");border.material=material;slot.add_child(border)
  if category=="ultimates":

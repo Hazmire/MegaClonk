@@ -1,3 +1,11 @@
+# Art reset 10 playtest
+
+Extract the entire Windows ZIP and launch BONK_INFINITY.exe, or Launch_Compatibility.bat. Start a new run for the focused ten-weapon roster. Old equipped archived weapons still work; new offers exclude them. Newly acquired weapons and tomes are Common; existing upgrades retain supported rarity tiers. Traits use neutral borders.
+
+Explore the supplied scenery and rocky boundaries in three forest stages. Follow the moving red wisps toward ramps and the actual boss portal without consulting the minimap; report any misleading route. The stone portal draws in a red vortex and surges when activated. Ambient wind continues after portal completion. Exploding bugs self-destruct and launch affected players; movement should recover naturally on landing.
+
+Read ART_RESET.md, ART_RESET_ASSET_AUDIT.md and ART_RESET_PERFORMANCE.md beside the executable. Dense hordes remain CPU-heavy; native Windows/GPU/audio and human navigation require local playtesting. Two supplied HDR panoramas produce three documented stage treatments. Older release notes below are historical.
+
 # Vertical Forest playtest
 
 Start a **new run** to see the new 0/12/24/36m terrain, cloud sky and randomized world objects. Existing terrain-version-3 checkpoints deliberately retain their original maps. Extract the entire ZIP and launch BONK_INFINITY.exe; Launch_Compatibility.bat selects OpenGL. See VERTICAL_FOREST.md and VERTICAL_PERFORMANCE.md included beside the executable. XP gemstones and reward-screen redesigns are still pending. Native Windows execution remains untested. Previous playtest notes follow.
