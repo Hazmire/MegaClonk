@@ -1,4 +1,4 @@
-# Dark combat feedback and health HUD12
+# Dark combat feedback and health HUD12.1
 
 Enemy hit/death audio is disabled. Killing enemies, self-destruction and death-triggered blasts add no enemy sound. Enemy audio IDs and legacy death calls are rejected, while genuine weapon firing/impacts remain audible. Player damage, movement, rewards, ambience, music and existing boss attack warnings retain their own roles. Unused enemy-death recordings and old explosion paths are excluded from exports.
 
@@ -6,4 +6,6 @@ The supplied Pixel Combat set was re-curated for heavier flame bursts, electrica
 
 Equipped tomes occupy their own horizontal row immediately under weapons. Traits/ultimates follow, with spacing reserved for the health display. The left health bar includes current/maximum HP centered inside it. Both health bars use dark red#801421 with a dark maroon background. The64×7px character bar follows the projected position beneath the player's feet; it hides outside gameplay and when the player is behind the camera. It is visual only and does not alter movement, collision or health rules.
 
-Focused tests cover silent hit/death/blast feedback, preserved weapon mappings, separate inventory rows, matching HP values/colors, character-bar tracking and visibility. The audio and previous v9 UI suites also pass. Screenshot: [HUD](images/dark-feedback/hud.png). All27 local suites passed1,086 named checks; clean GitHub CI passed the same27 suites. The downloaded v12 ZIP passed size/digest/CRC/source checks,180 world frames and five compiled smoke gates. Verification is recorded in releases/DARK_FEEDBACK_VALIDATION.json. Native Windows/audio-device listening and existing dense-horde performance remain playtest limits.
+Focused tests cover silent hit/death/blast feedback, preserved weapon mappings, separate inventory rows, matching HP values/colors, character-bar tracking and visibility. The audio and previous v9 UI suites also pass. Screenshot: [HUD](images/dark-feedback/hud.png). The pre-hotfix full local suite passed1,086 checks; the final bar-height fix passes14 focused checks, and clean GitHub CI passed all27 suites. The downloaded v12.1 ZIP passed size/digest/CRC/source checks,180 world frames and five compiled smoke gates. Verification is recorded in releases/DARK_FEEDBACK_VALIDATION.json. Native Windows/audio-device listening and existing dense-horde performance remain playtest limits.
+
+12.1 fixes inherited theme minimum sizing by applying the character bar size after layout. A rendered-pixel check confirms a7px fill height, in addition to the exported control-size assertion.

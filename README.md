@@ -23,7 +23,7 @@ The latest [dark-feedback update](docs/DARK_FEEDBACK.md) removes enemy hit/death
 
 ## Download and play
 
-- [Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/dark-feedback-v12/BONK_INFINITY_Windows_x64.zip)
+- [Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/dark-feedback-v12.1/BONK_INFINITY_Windows_x64.zip)
 - [GitHub Actions builds](https://github.com/Hazmire/MegaClonk/actions/workflows/windows-build.yml)
 - [PR #5 — merge into Full-Release](https://github.com/Hazmire/MegaClonk/pull/5)
 

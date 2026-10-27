@@ -1,4 +1,20 @@
-# Verified Dark Feedback v12 publication
+# Verified Dark Feedback v12.1 publication
+
+[Download Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/dark-feedback-v12.1/BONK_INFINITY_Windows_x64.zip). Extract everything and launch BONK_INFINITY.exe, or Launch_Compatibility.bat.
+
+- Clean source: `c427760d249708809bcd288ee74aac89e024508f`.
+- Successful27-suite publishing workflow: https://github.com/Hazmire/MegaClonk/actions/runs/40595447540
+- Release asset ID `683094848`; 123,874,900bytes.
+- ZIP SHA256: `0f5c0bc4175df620313f9a8a63ce4329e99f4ef37882782fd4cbc0254a542952`.
+- Actions artifact ID `12777370563`; not expired at verification.
+
+Downloaded size/digest, every archive CRC and clean expected source pass. Linux Godot ran180 world frames and all five compiled smoke gates, including bar height after theme layout. The pre-hotfix full local run passed1,086 named checks; the final size correction passes14 focused checks, and clean CI passes all27 suites. Source and exported renders confirm a7px character bar. Native Windows execution and sound auditioning remain unverified.
+
+[Guide/screenshot](../docs/DARK_FEEDBACK.md) · [Raw proof](DARK_FEEDBACK_VALIDATION.json) · [PR #5](https://github.com/Hazmire/MegaClonk/pull/5). Enemy hit/death/self-destruct sounds are silent, weapon feedback remains, effects are darker, tomes have a separate row, and matching dark-red health bars include numbered HP on the left. Existing dense-horde performance limits remain. Use this release ZIP; binaries tracked elsewhere in Git are older.
+
+# Historical Dark Feedback v12 publication
+
+Superseded by12.1: Godot retained a27px character-bar height despite the requested7px size;12.1 applies the thin size after theme layout and verifies rendered pixels.
 
 [Download Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/dark-feedback-v12/BONK_INFINITY_Windows_x64.zip). Extract the entire ZIP and launch BONK_INFINITY.exe, or Launch_Compatibility.bat.
 

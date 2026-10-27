@@ -10,3 +10,5 @@
 No listening/native Windows or full GPU frame-rate certification is claimed.
 
 Verified publication: dark-feedback-v12, clean sourcef203a35, downloaded ZIP digest/CRC/source checks plus180 world frames and five smoke gates. All27 source suites pass (1,086 local named checks). See releases/DARK_FEEDBACK_VALIDATION.json.
+
+12.1: corrected Godot’s inherited minimum height; sourcec427760 passes14 focused checks,27 CI suites and all five smoke gates from the downloaded ZIP. Rendered bar height is7px. Updated publication proof is in releases/DARK_FEEDBACK_VALIDATION.json.

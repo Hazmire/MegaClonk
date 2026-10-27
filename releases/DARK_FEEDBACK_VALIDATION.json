@@ -1,14 +1,14 @@
 {
-  "source_commit": "f203a3503f45958b5a4c5eea912c7534fc83f254",
-  "workflow_run": 40593680375,
-  "release_url": "https://github.com/Hazmire/MegaClonk/releases/tag/dark-feedback-v12",
-  "asset_id": 683067158,
-  "bytes": 123869365,
-  "sha256": "502a905476776fb6c316353b09a49c944eb54833d1df936c24970199b8ba6800",
-  "github_digest": "sha256:502a905476776fb6c316353b09a49c944eb54833d1df936c24970199b8ba6800",
-  "download_url": "https://github.com/Hazmire/MegaClonk/releases/download/dark-feedback-v12/BONK_INFINITY_Windows_x64.zip",
+  "source_commit": "c427760d249708809bcd288ee74aac89e024508f",
+  "workflow_run": 40595447540,
+  "release_url": "https://github.com/Hazmire/MegaClonk/releases/tag/dark-feedback-v12.1",
+  "asset_id": 683094848,
+  "bytes": 123874900,
+  "sha256": "0f5c0bc4175df620313f9a8a63ce4329e99f4ef37882782fd4cbc0254a542952",
+  "github_digest": "sha256:0f5c0bc4175df620313f9a8a63ce4329e99f4ef37882782fd4cbc0254a542952",
+  "download_url": "https://github.com/Hazmire/MegaClonk/releases/download/dark-feedback-v12.1/BONK_INFINITY_Windows_x64.zip",
   "zip_crc_passed": true,
-  "build_info": "MEGACLONK v12 dark combat sounds, silent enemies and health HUD\nGodot 4.7.2\nSource commit: f203a3503f45958b5a4c5eea912c7534fc83f254\nUncommitted source at build time: False\nWindows execution requires native playtesting.\n",
+  "build_info": "MEGACLONK v12.1 dark combat sounds, silent enemies and health HUD\nGodot 4.7.2\nSource commit: c427760d249708809bcd288ee74aac89e024508f\nUncommitted source at build time: False\nWindows execution requires native playtesting.\n",
   "curated_pixel_clips": 106,
   "curated_pixel_bytes": 3207224,
   "source_library_in_export": false,
@@ -84,28 +84,28 @@
     "retro_audio"
   ],
   "source_suites": 27,
-  "local_named_checks": 1086,
-  "dark_feedback_checks": 13,
+  "baseline_local_full_checks": 1086,
+  "postfix_focused_checks": 14,
   "ci_success": true,
   "ci_jobs": {
     "total_count": 1,
     "jobs": [
       {
-        "id": 122504046829,
-        "run_id": 40593680375,
+        "id": 122510069721,
+        "run_id": 40595447540,
         "workflow_name": "MEGACLONK Windows build",
         "head_branch": "retro-audio-v11",
-        "run_url": "https://api.github.com/repos/Hazmire/MegaClonk/actions/runs/40593680375",
+        "run_url": "https://api.github.com/repos/Hazmire/MegaClonk/actions/runs/40595447540",
         "run_attempt": 1,
-        "node_id": "CR_kwDOVU0CDs8AAAAchc9o7Q",
-        "head_sha": "f203a3503f45958b5a4c5eea912c7534fc83f254",
-        "url": "https://api.github.com/repos/Hazmire/MegaClonk/actions/jobs/122504046829",
-        "html_url": "https://github.com/Hazmire/MegaClonk/actions/runs/40593680375/job/122504046829",
+        "node_id": "CR_kwDOVU0CDs8AAAAchitP2Q",
+        "head_sha": "c427760d249708809bcd288ee74aac89e024508f",
+        "url": "https://api.github.com/repos/Hazmire/MegaClonk/actions/jobs/122510069721",
+        "html_url": "https://github.com/Hazmire/MegaClonk/actions/runs/40595447540/job/122510069721",
         "status": "completed",
         "conclusion": "success",
-        "created_at": "2026-10-27T22:17:37Z",
-        "started_at": "2026-10-27T22:17:39Z",
-        "completed_at": "2026-10-27T22:26:22Z",
+        "created_at": "2026-10-27T22:31:18Z",
+        "started_at": "2026-10-27T22:31:20Z",
+        "completed_at": "2026-10-27T22:39:09Z",
         "name": "windows-build",
         "steps": [
           {
@@ -113,88 +113,88 @@
             "status": "completed",
             "conclusion": "success",
             "number": 1,
-            "started_at": "2026-10-27T22:17:40Z",
-            "completed_at": "2026-10-27T22:17:40Z"
+            "started_at": "2026-10-27T22:31:21Z",
+            "completed_at": "2026-10-27T22:31:21Z"
           },
           {
             "name": "Configure writable tool directories",
             "status": "completed",
             "conclusion": "success",
             "number": 2,
-            "started_at": "2026-10-27T22:17:40Z",
-            "completed_at": "2026-10-27T22:17:40Z"
+            "started_at": "2026-10-27T22:31:21Z",
+            "completed_at": "2026-10-27T22:31:21Z"
           },
           {
             "name": "Check out source and generated models",
             "status": "completed",
             "conclusion": "success",
             "number": 3,
-            "started_at": "2026-10-27T22:17:40Z",
-            "completed_at": "2026-10-27T22:17:49Z"
+            "started_at": "2026-10-27T22:31:21Z",
+            "completed_at": "2026-10-27T22:31:30Z"
           },
           {
             "name": "Install checksum-verified Godot 4.7.2 and export templates",
             "status": "completed",
             "conclusion": "success",
             "number": 4,
-            "started_at": "2026-10-27T22:17:49Z",
-            "completed_at": "2026-10-27T22:17:57Z"
+            "started_at": "2026-10-27T22:31:30Z",
+            "completed_at": "2026-10-27T22:31:41Z"
           },
           {
             "name": "Import project and run all twenty-seven regression and seeded-world suites",
             "status": "completed",
             "conclusion": "success",
             "number": 5,
-            "started_at": "2026-10-27T22:17:57Z",
-            "completed_at": "2026-10-27T22:25:20Z"
+            "started_at": "2026-10-27T22:31:41Z",
+            "completed_at": "2026-10-27T22:38:10Z"
           },
           {
             "name": "Export Windows x64 with embedded game resources",
             "status": "completed",
             "conclusion": "success",
             "number": 6,
-            "started_at": "2026-10-27T22:25:20Z",
-            "completed_at": "2026-10-27T22:26:09Z"
+            "started_at": "2026-10-27T22:38:10Z",
+            "completed_at": "2026-10-27T22:38:55Z"
           },
           {
             "name": "Upload playable Windows ZIP artifact",
             "status": "completed",
             "conclusion": "success",
             "number": 7,
-            "started_at": "2026-10-27T22:26:09Z",
-            "completed_at": "2026-10-27T22:26:15Z"
+            "started_at": "2026-10-27T22:38:55Z",
+            "completed_at": "2026-10-27T22:39:00Z"
           },
           {
             "name": "Publish durable Windows playtest download",
             "status": "completed",
             "conclusion": "success",
             "number": 8,
-            "started_at": "2026-10-27T22:26:15Z",
-            "completed_at": "2026-10-27T22:26:21Z"
+            "started_at": "2026-10-27T22:39:00Z",
+            "completed_at": "2026-10-27T22:39:07Z"
           },
           {
             "name": "Post Check out source and generated models",
             "status": "completed",
             "conclusion": "success",
             "number": 16,
-            "started_at": "2026-10-27T22:26:21Z",
-            "completed_at": "2026-10-27T22:26:22Z"
+            "started_at": "2026-10-27T22:39:07Z",
+            "completed_at": "2026-10-27T22:39:08Z"
           },
           {
             "name": "Complete job",
             "status": "completed",
             "conclusion": "success",
             "number": 17,
-            "started_at": "2026-10-27T22:26:22Z",
-            "completed_at": "2026-10-27T22:26:22Z"
+            "started_at": "2026-10-27T22:39:08Z",
+            "completed_at": "2026-10-27T22:39:08Z"
           }
         ],
-        "check_run_url": "https://api.github.com/repos/Hazmire/MegaClonk/check-runs/122504046829",
+        "check_run_url": "https://api.github.com/repos/Hazmire/MegaClonk/check-runs/122510069721",
         "labels": [
           "ubuntu-latest"
         ],
-        "runner_id": 1000000102,
-        "runner_name": "GitHub Actions 1000000102",
+        "runner_id": 1000000105,
+        "runner_name": "GitHub Actions 1000000105",
         "runner_group_id": 0,
         "runner_group_name": "GitHub Actions"
       }
@@ -202,32 +202,32 @@
   },
   "actions_artifacts": [
     {
-      "id": 12775711951,
-      "node_id": "MDg6QXJ0aWZhY3QxMjc3NTcxMTk1MQ==",
+      "id": 12777370563,
+      "node_id": "MDg6QXJ0aWZhY3QxMjc3NzM3MDU2Mw==",
       "name": "BONK_INFINITY-Windows-x64",
-      "size_in_bytes": 124864984,
-      "url": "https://api.github.com/repos/Hazmire/MegaClonk/actions/artifacts/12775711951",
-      "archive_download_url": "https://api.github.com/repos/Hazmire/MegaClonk/actions/artifacts/12775711951/zip",
+      "size_in_bytes": 124868065,
+      "url": "https://api.github.com/repos/Hazmire/MegaClonk/actions/artifacts/12777370563",
+      "archive_download_url": "https://api.github.com/repos/Hazmire/MegaClonk/actions/artifacts/12777370563/zip",
       "expired": false,
-      "digest": "sha256:6279bd19e508ab4d7839d32cb361a272b3e34dca02e923dc69dd5818dd0a69e8",
-      "created_at": "2026-10-27T22:26:15Z",
-      "updated_at": "2026-10-27T22:26:15Z",
-      "expires_at": "2026-11-26T22:26:09Z",
+      "digest": "sha256:552013ec3e05d43f924e39ea6afb2a368081d8f251642fc8b7685736006a6545",
+      "created_at": "2026-10-27T22:39:00Z",
+      "updated_at": "2026-10-27T22:39:00Z",
+      "expires_at": "2026-11-26T22:38:55Z",
       "workflow_run": {
-        "id": 40593680375,
+        "id": 40595447540,
         "repository_id": 1431110158,
         "head_repository_id": 1431110158,
         "head_branch": "retro-audio-v11",
-        "head_sha": "f203a3503f45958b5a4c5eea912c7534fc83f254"
+        "head_sha": "c427760d249708809bcd288ee74aac89e024508f"
       }
     }
   ],
-  "pr_run": 40593690314,
-  "pr_success": true,
   "health_color": "#801421",
   "character_bar_logical_size": [
     64,
     7
   ],
+  "rendered_character_bar_fill_height": 7,
+  "note": "12.1 fixes Godot inherited-theme minimum height after initial v12 publication.",
   "published_visuals_viewed": true
 }
