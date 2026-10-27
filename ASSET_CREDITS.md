@@ -81,3 +81,6 @@ The five root-level `Megabonk_*` / `firefox_WjCOcSAmyE.png` screenshots uploaded
 
 ## Stage themes and physical swarms (2026-10-27)
 Original stage palette resources, atlas-preserving vegetation tint shader, shrine orb shader, shared procedural chest geometry and horned boss-statue assembly are project work. Existing supplied vegetation, enemies, icon art and fonts retain their previously recorded licences. No new third-party downloads were introduced. Actual rendered previews are in docs/images/stage-swarms/.
+
+## Shrine and reward presentation v9 (2026-10-27)
+Original procedural applause/claps and the four-note Legendary flourish are `assets/audio/reward_applause.wav` and `reward_legendary.wav`. No external recordings or asset downloads were used. Shrine gold materials/lighting, batched orb tinting, fixed-pool UI confetti/gems/sparkles and icon-cycle presentation are original project work. Existing icons, Kurland font, Clutch coin/level audio and imported models retain their previously recorded licences.

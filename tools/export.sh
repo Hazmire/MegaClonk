@@ -33,6 +33,14 @@ fi
 cat "$log_path"
 if grep -Eq 'SCRIPT ERROR|^ERROR:' "$log_path"; then exit 1; fi
 if ! grep -q 'EXPORTED STAGE SWARMS SMOKE COMPLETE' "$log_path"; then exit 1; fi
+if ! tools/godot.sh --headless --path /tmp --main-pack "$PWD/builds/windows/BONK_INFINITY.exe" --script "$PWD/tools/export_v9_smoke.gd" > "$log_path" 2>&1; then
+ cat "$log_path"
+ exit 1
+fi
+cat "$log_path"
+if grep -Eq 'SCRIPT ERROR|^ERROR:' "$log_path"; then exit 1; fi
+if ! grep -q 'EXPORTED REWARDS AI V9 SMOKE COMPLETE' "$log_path"; then exit 1; fi
+cp docs/REWARDS_AI_V9.md builds/windows/
 cp docs/STAGE_SWARMS.md builds/windows/
 cp docs/REWARD_UI.md docs/REFERENCE_UI.md builds/windows/
 cp docs/PLAYTEST.md builds/windows/READ_ME_FIRST.txt
@@ -69,7 +77,7 @@ from zipfile import ZipFile, ZIP_DEFLATED
 import subprocess
 commit = subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
 dirty = bool(subprocess.check_output(['git','status','--porcelain'],text=True).strip())
-Path('builds/windows/BUILD_INFO.txt').write_text('MEGACLONK stage themes, physical swarms, shrines and multiplied bosses\nGodot 4.7.2\nSource commit: '+commit+'\nUncommitted source at build time: '+str(dirty)+'\nWindows execution requires native playtesting.\n')
+Path('builds/windows/BUILD_INFO.txt').write_text('MEGACLONK v9 shrine rarities, reward effects, relentless pursuit and HUD fixes\nGodot 4.7.2\nSource commit: '+commit+'\nUncommitted source at build time: '+str(dirty)+'\nWindows execution requires native playtesting.\n')
 with ZipFile('builds/BONK_INFINITY_Windows_x64.zip','w',ZIP_DEFLATED) as z:
  for p in sorted(Path('builds/windows').iterdir()):
   if p.is_file(): z.write(p,p.name)

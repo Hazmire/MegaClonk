@@ -7,7 +7,8 @@ extends Resource
 @export var crowd_neighbour_budget=24
 @export var shrine_radius=5.0
 @export var shrine_seconds=8.0
-@export var shrine_decay=0.0
+@export var shrine_decay=0.15
+@export var golden_shrine_chance=0.02
 @export var ordinary_chests=15
 @export var shops=3
 @export var elite_statues=2

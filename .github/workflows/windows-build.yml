@@ -27,7 +27,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Install checksum-verified Godot 4.7.2 and export templates
         run: python3 tools/install_engine.py
-      - name: Import project and run all twenty-two regression and seeded-world suites
+      - name: Import project and run all twenty-three regression and seeded-world suites
         run: tools/validate.sh
       - name: Export Windows x64 with embedded game resources
         run: |
@@ -56,8 +56,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if gh release view stage-swarms-v8 >/dev/null 2>&1; then
-            gh release upload stage-swarms-v8 builds/BONK_INFINITY_Windows_x64.zip --clobber
+          if gh release view shrine-rewards-v9 >/dev/null 2>&1; then
+            gh release upload shrine-rewards-v9 builds/BONK_INFINITY_Windows_x64.zip --clobber
           else
-            gh release create stage-swarms-v8 builds/BONK_INFINITY_Windows_x64.zip --target "$GITHUB_SHA" --prerelease --title "MEGACLONK — Stage Themes and Physical Swarms 8" --notes-file docs/STAGE_SWARMS_RELEASE.md
+            gh release create shrine-rewards-v9 builds/BONK_INFINITY_Windows_x64.zip --target "$GITHUB_SHA" --prerelease --title "MEGACLONK — Shrine Rewards and Relentless Hordes 9" --notes-file docs/REWARDS_AI_V9_RELEASE.md
           fi

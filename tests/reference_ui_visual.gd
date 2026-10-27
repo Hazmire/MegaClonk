@@ -25,7 +25,7 @@ func run():
   game.frontend.world_map(true);await capture("map_"+str(size.x))
  root.size=Vector2i(1280,720);DisplayServer.window_set_size(Vector2i(1280,720))
  game.frontend.shop({"tier":"Rare","offers":[0,6,8],"sold":[],"used":false});await capture("shop")
- game.frontend.reward(Catalog.ITEMS[10]);await create_timer(0.4).timeout;await capture("roulette");await create_timer(1.5).timeout;await capture("legendary_reveal")
+ game.frontend.reward(Catalog.ITEMS[10]);await create_timer(0.4).timeout;await capture("icon_cycling");await create_timer(3.3).timeout;await capture("legendary_reveal")
  game.add_xp_drop(game.player.position+Vector3(2,0.7,1),5);game.add_red_gem(game.player.position+Vector3(-2,0.7,1))
  game.pending_upgrades=0;game.resume();game.set_physics_process(false);game.player.active=false;await capture("gems")
  game.queue_free();await process_frame;await process_frame;await process_frame;quit()

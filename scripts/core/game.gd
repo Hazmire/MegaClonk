@@ -81,6 +81,8 @@ var announced_stages: Array=[]
 var drop_chests: Array=[]
 var reward_queue: Array=[]
 var active_reward=-1
+var shrine_reward_queue: Array=[]
+var active_shrine_reward: Dictionary={}
 var shrine_orbs: MultiMeshInstance3D
 var map_debug=false
 var map_debug_node: MeshInstance3D
@@ -261,7 +263,7 @@ func begin_run() -> void:
  run_seed=next_run_seed if next_run_seed>=0 else rng.randi()
  variants.initialize(run_seed)
  world_content_version=1;additional_boss_count=0
- gem_rng.seed=run_seed+719477;pending_upgrades=0;announced_stages.clear();reward_queue.clear();active_reward=-1;crowd.next_id=1
+ gem_rng.seed=run_seed+719477;pending_upgrades=0;announced_stages.clear();reward_queue.clear();active_reward=-1;shrine_reward_queue.clear();active_shrine_reward={};crowd.next_id=1
  rng.seed=run_seed
  stats = Catalog.base_stats()
  match character:
@@ -411,7 +413,9 @@ func build_stage() -> void:
  if map_debug:map_debug=false;toggle_map_debug()
  toast("Stage %d • Explore the forest. Activate the portal to challenge the stage guardian."%stage)
 func resume() -> void:
+ if mode=="shrine" and not active_shrine_reward.is_empty():return
  if mode=="reward" and active_reward>=0:active_reward=-1
+ if ShrineRewards.present_next(self):return
  if RewardDrops.present_next(self):return
  if pending_upgrades>0:
   pending_upgrades-=1;show_upgrades();return
@@ -440,6 +444,7 @@ func _unhandled_input(event: InputEvent) -> void:
   DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED if DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN else DisplayServer.WINDOW_MODE_FULLSCREEN)
  if event.is_action_pressed("ui_cancel"):
   if mode == "run": pause_menu()
+  elif mode=="reward" and frontend.chest_skip.is_valid():frontend.chest_skip.call()
   elif mode in ["pause","build","sandbox","shop","reward"]: resume()
   elif mode=="map":
    if frontend.map_return_to_pause:pause_menu()
@@ -1091,7 +1096,9 @@ func update_pickups(delta: float) -> void:
   p.node.rotation.y+=delta*0.85
   p.node.position.y+=(sin(p.age*2)-sin((p.age-delta)*2))*0.06
   var distance = p.node.position.distance_to(player.position+Vector3.UP)
-  if distance<5*stats.pickup or p.age>25:
+  if not p.get("attracted",false) and distance<5*stats.pickup:
+   p["attracted"]=true;p["attraction_reason"]="pickup_range";p["attraction_distance"]=distance;p["attraction_radius"]=5*stats.pickup
+  if p.get("attracted",false):
    p.node.position=p.node.position.move_toward(player.position+Vector3.UP,delta*maxf(10,18-distance))
   if distance<1.2:
    if p.get("red",false):grant_red_level()
@@ -1186,7 +1193,9 @@ func update_interactions(delta: float) -> void:
     obj.used=true;obj.node.hide();run_metrics["free_chests"]=int(run_metrics.get("free_chests",0))+1;run_metrics["chests"]=int(run_metrics.get("chests",0))+1;play_sound("level")
    continue
   if ShrineCharging.is_shrine(obj):
-   ShrineCharging.tick(self,obj,d,delta);continue
+   ShrineCharging.tick(self,obj,d,delta)
+   if mode=="shrine":return
+   continue
   if d<distance: distance=d; closest=obj
  if mode=="run" and RewardDrops.present_next(self):return
  if is_instance_valid(portal) and portal.position.distance_to(player.position)<4:
@@ -1299,6 +1308,8 @@ func apply_settings() -> void:
  music.volume_db=linear_to_db(maxf(0.001,settings.music))
  if is_instance_valid(player): player.sensitivity=settings.sensitivity; player.inverted=settings.invert
 func setup_audio() -> void:
+ sound_bank["applause"]=preload("res://assets/audio/reward_applause.wav")
+ sound_bank["legendary"]=preload("res://assets/audio/reward_legendary.wav")
  sound_bank["stone"]=preload("res://assets/vendor/audio/Running_stone___Boot__1_1766767186839.mp3")
  var manifest=load("res://assets/vendor/audio/manifest.json") as JSON
  var tokens={"hit":"Sword_hit_flesh","death":"Enemy_death","purchase":"Coin_pickup","level":"Level_up","menu":"Inventory_open","explosion":"Fire_spell_impact","ready":"Buff_spell","cast":"Fire_spell_cast","shot":"Bow_and_arrow_shot","swing":"Sword_swing","ambient":"Forest_ambience"}
@@ -1330,12 +1341,12 @@ func setup_audio() -> void:
   music.stream=sound_bank.ambient;music.stream.loop=true
  if AudioServer.get_driver_name()!="Dummy": music.play()
  apply_settings()
-func play_sound(event: String) -> void:
+func play_sound(event: String,gain: float=1.0) -> void:
  if AudioServer.get_driver_name()=="Dummy" or not sound_bank.has(event):return
  var now=Time.get_ticks_msec()
  if event in ["hit","death","explosion","shot","swing","cast","stone"] and now-int(sound_last.get(event,-1000))<80:return
  sound_last[event]=now
- var audio=sfx[sfx_cursor%sfx.size()];sfx_cursor+=1;audio.stream=sound_bank[event];audio.volume_db=linear_to_db(maxf(0.001,float(settings.effects)));audio.play()
+ var audio=sfx[sfx_cursor%sfx.size()];sfx_cursor+=1;audio.stream=sound_bank[event];audio.volume_db=linear_to_db(maxf(0.001,float(settings.effects)*gain));audio.play()
 func tone(frequency: float, duration: float, loudness: float = 0.3) -> void:
  if AudioServer.get_driver_name()=="Dummy": return
  var stream=AudioStreamWAV.new()
@@ -1479,10 +1490,10 @@ func save_run(path: String = "user://active-run.json") -> bool:
    if record.has(key): record[key]=[record[key].x,record[key].y,record[key].z]
   saved_enemies.append(record)
  var saved_pickups=[]
- for pickup in pickups: saved_pickups.append({"position":[pickup.node.position.x,pickup.node.position.y,pickup.node.position.z],"value":pickup.value,"age":pickup.age,"red":pickup.get("red",false)})
+ for pickup in pickups: saved_pickups.append({"position":[pickup.node.position.x,pickup.node.position.y,pickup.node.position.z],"value":pickup.value,"age":pickup.age,"red":pickup.get("red",false),"attracted":pickup.get("attracted",false),"attraction_reason":pickup.get("attraction_reason","")})
  var used=[]
- for object in interactables: used.append({"kind":object.kind,"used":object.used,"charge":object.charge,"tier":object.get("tier","Common"),"offers":object.get("offers",null),"sold":object.get("sold",[]),"shrine_reward":object.get("shrine_reward",{})})
- var data={"version":2,"next_enemy_id":crowd.next_id,"drop_chests":RewardDrops.serialize(self),"reward_queue":reward_queue,"active_reward":active_reward,"announced_stages":announced_stages,"gem_rng_state":str(gem_rng.state),"pending_upgrades":pending_upgrades+(1 if mode=="upgrade" else 0),"terrain_version":terrain_version,"world_content_version":world_content_version,"additional_boss_count":additional_boss_count,"boss_encounters":boss_encounters,"map_seed_override":map_seed_override,"stage_clock":stage_clock.serialize(),"boss_variant":boss_variant,"ghost_budget":ghost_budget,"portal_state":portal_state,"loadout":loadout_runtime.serialize(),"selected_weapon":selected_weapon,"run_metrics":run_metrics,"chests_opened":chests_opened,"legacy_weapon_slots":legacy_weapon_slots,"legacy_tome_slots":legacy_tome_slots,"minimap":serialize_minimap(),"variants":variants.serialize(),"spawn_rng_state":str(spawn_rng.state),"elite_active":elite_active,"elite_rewarded":elite_rewarded,"rng_state":str(rng.state),"character":character,"biome":biome,"selected_biome":selected_biome,"tier":tier,"stage":stage,"elapsed":elapsed,"stage_time":stage_time,"stats":stats,"health":health,"xp":xp,"level":level,"kills":kills,"gold":gold,"weapons":saved_weapons,"tomes":tomes,"items":items,"sandbox":sandbox,"position":[player.position.x,player.position.y,player.position.z],"enemies":saved_enemies,"boss_spawned":boss_spawned,"boss_dead":boss_dead,"interactables":used,"damage_total":damage_total,"rerolls":rerolls,"banished":banished,"pickups":saved_pickups,"damage_by_weapon":damage_by_weapon,"gold_fraction":gold_fraction,"camera":[player.yaw,player.pitch,player.zoom]}
+ for object in interactables: used.append({"kind":object.kind,"used":object.used,"charge":object.charge,"tier":object.get("tier","Common"),"offers":object.get("offers",null),"sold":object.get("sold",[]),"shrine_reward":object.get("shrine_reward",{}),"golden":object.get("golden",false),"shrine_choices":object.get("shrine_choices",[])})
+ var data={"version":2,"next_enemy_id":crowd.next_id,"drop_chests":RewardDrops.serialize(self),"reward_queue":reward_queue,"active_reward":active_reward,"shrine_reward_queue":shrine_reward_queue,"active_shrine_reward":active_shrine_reward,"announced_stages":announced_stages,"gem_rng_state":str(gem_rng.state),"pending_upgrades":pending_upgrades+(1 if mode=="upgrade" else 0),"terrain_version":terrain_version,"world_content_version":world_content_version,"additional_boss_count":additional_boss_count,"boss_encounters":boss_encounters,"map_seed_override":map_seed_override,"stage_clock":stage_clock.serialize(),"boss_variant":boss_variant,"ghost_budget":ghost_budget,"portal_state":portal_state,"loadout":loadout_runtime.serialize(),"selected_weapon":selected_weapon,"run_metrics":run_metrics,"chests_opened":chests_opened,"legacy_weapon_slots":legacy_weapon_slots,"legacy_tome_slots":legacy_tome_slots,"minimap":serialize_minimap(),"variants":variants.serialize(),"spawn_rng_state":str(spawn_rng.state),"elite_active":elite_active,"elite_rewarded":elite_rewarded,"rng_state":str(rng.state),"character":character,"biome":biome,"selected_biome":selected_biome,"tier":tier,"stage":stage,"elapsed":elapsed,"stage_time":stage_time,"stats":stats,"health":health,"xp":xp,"level":level,"kills":kills,"gold":gold,"weapons":saved_weapons,"tomes":tomes,"items":items,"sandbox":sandbox,"position":[player.position.x,player.position.y,player.position.z],"enemies":saved_enemies,"boss_spawned":boss_spawned,"boss_dead":boss_dead,"interactables":used,"damage_total":damage_total,"rerolls":rerolls,"banished":banished,"pickups":saved_pickups,"damage_by_weapon":damage_by_weapon,"gold_fraction":gold_fraction,"camera":[player.yaw,player.pitch,player.zoom]}
  var file=FileAccess.open(path+".tmp",FileAccess.WRITE)
  if not file: return false
  file.store_string(JSON.stringify(data)); file.close()
@@ -1539,7 +1550,7 @@ func load_run(path: String = "user://active-run.json") -> bool:
  for record in data.get("pickups",[]):
   var pos=Vector3(record.position[0],record.position[1],record.position[2])
   var model=XPGems.acquire(self,pos,bool(record.get("red",false)))
-  pickups.append({"node":model,"value":record.value,"age":record.age,"red":bool(record.get("red",false))})
+  pickups.append({"node":model,"value":record.value,"age":record.age,"red":bool(record.get("red",false)),"attracted":bool(record.get("attracted",false)),"attraction_reason":str(record.get("attraction_reason","saved_attraction"))})
  player.position=Vector3(data.position[0],data.position[1],data.position[2])
  if int(data.get("terrain_version",1))<3:player.position=map_layout.spawn+Vector3.UP
  for record in data.enemies:
@@ -1568,6 +1579,8 @@ func load_run(path: String = "user://active-run.json") -> bool:
   if data.interactables[saved_index].get("offers") is Array:interactables[i]["offers"]=data.interactables[saved_index].offers
   interactables[i]["sold"]=data.interactables[saved_index].get("sold",[])
   interactables[i]["shrine_reward"]=data.interactables[saved_index].get("shrine_reward",{})
+  interactables[i]["golden"]=data.interactables[saved_index].get("golden",interactables[i].get("golden",false))
+  interactables[i]["shrine_choices"]=data.interactables[saved_index].get("shrine_choices",[])
   if ShrineCharging.is_shrine(interactables[i]):ShrineCharging.visual(self,interactables[i],false)
   if interactables[i].used:
    if interactables[i].kind=="Shop":interactables[i].node.hide()
@@ -1585,6 +1598,7 @@ func load_run(path: String = "user://active-run.json") -> bool:
  if active_reward>=Catalog.ITEMS.size():active_reward=-1
  crowd.next_id=maxi(crowd.next_id,int(data.get("next_enemy_id",1)))
  rebuild_grid();crowd.rebuild(enemies)
+ shrine_reward_queue=data.get("shrine_reward_queue",[]);active_shrine_reward=data.get("active_shrine_reward",{});mode="loading"
  if active_reward>=0:frontend.reward(Catalog.ITEMS[active_reward])
  else:resume()
  return true
@@ -1819,7 +1833,7 @@ func add_xp_drop(pos: Vector3,value: float) -> void:
  if debug_combat:combat_counters.xp_drops+=1
  # Merge spatially close rewards. All XP is retained, including boss multi-drops.
  for pickup in pickups:
-  if not pickup.get("red",false) and pickup.node.position.distance_squared_to(pos)<9:
+  if not pickup.get("red",false) and not pickup.get("attracted",false) and pickup.node.position.distance_squared_to(pos)<9:
    pickup.value+=value
    pickup.node.scale=Vector3.ONE*clampf(1+sqrt(pickup.value)*0.04,1,2)
    if debug_combat:combat_counters.xp_merged+=1

@@ -1,3 +1,7 @@
+# Shrine rewards and pursuit update
+
+The v9 implementation and 23 source suites are passing (859 named checks). [Rules, fixes and balancing](REWARDS_AI_V9.md). Render/export/publication evidence remains pending. Dense-swarm performance and native Windows playtesting remain open. Earlier releases follow.
+
 # Stage themes and physical swarms
 
 The stage/swarms gameplay increment and all 22 source suites are implemented and passing. See [guide](STAGE_SWARMS.md) and [checklist](../TODO_STAGE_SWARMS.md). Windows stage-swarms-v8 publication and downloaded compiled world/UI/stage checks are verified; see releases/BUILD_INFO.md. Dense 500-enemy CPU cost remains above the 60FPS frame budget; native Windows execution is untested. Earlier release history follows.

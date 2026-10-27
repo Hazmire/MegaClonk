@@ -23,17 +23,20 @@ func run():
   ShrineCharging.tick(game,object,0,3)
   check(object.charge==3 and not object.used,"Proximity begins charging without an interaction key")
   ShrineCharging.tick(game,object,6,2)
-  check(object.charge==3 and not object.used,"Leaving the 5m orb preserves charge")
+  check(is_equal_approx(object.charge,0.6) and not object.used,"Leaving the 5m orb decays fifteen percentage points per second")
   ShrineCharging.tick(game,object,0,4)
-  check(object.charge==7 and not object.used,"Returning continues prior progress")
-  ShrineCharging.tick(game,object,0,1)
+  check(is_equal_approx(object.charge,4.6) and not object.used,"Returning continues prior progress")
+  ShrineCharging.tick(game,object,0,3.4)
+  game.mode="loading";ShrineRewards.present_next(game)
+  check(game.stats==before and game.active_shrine_reward.choices.size()==3,"Completion fixes three choices and grants nothing before selection")
+  ShrineRewards.select(game,0);game.mode="pause"
   var modified=[]
   for key in game.stats:
    if game.stats[key]!=before[key]:modified.append(key)
-  check(object.used and object.charge==8 and modified.size()==1 and modified[0] in game.stats,"Eight seconds grants exactly one actual stat upgrade")
+  check(object.used and object.charge==8 and modified.size()==1 and modified[0] in game.stats,"Eight accumulated seconds and a selection grant exactly one actual stat upgrade")
   var earned=game.stats.duplicate();ShrineCharging.tick(game,object,0,20)
   check(game.stats==earned,"Completed shrine cannot be farmed")
-  check(object.node.get_node("ChargeProgress").text=="COMPLETE","Completed shrine switches its progress display to complete")
+  check(object.node.get_node("ChargeProgress").text.ends_with("COMPLETE"),"Completed shrine switches its progress display to complete")
  var pending=shrines[-1];pending.charge=3.5
  check(game.save_run("user://shrines-test.json") and game.load_run("user://shrines-test.json"),"Partial and completed shrines save/load")
  var completed=0;var retained=false

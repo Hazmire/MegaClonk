@@ -4,6 +4,7 @@ var game: Node
 var explored: Dictionary={}
 var terrain_colors: Dictionary={}
 var reveal_all=false
+var last_camera_facing=Vector2.UP
 func reset(revealed: bool) -> void:
  explored.clear();terrain_colors.clear();reveal_all=revealed
 func cell(pos: Vector3) -> Vector2i:return Vector2i(floori((pos.x+96)/12),floori((pos.z+96)/12))
@@ -47,6 +48,15 @@ func _draw() -> void:
   if e.hp>0 and visible_at(e.pos):draw_circle(point(e.pos),(4 if e.kind>=8 else 3 if e.get("elite",false) else 1.5)*mark,Color("ffd365") if e.get("elite",false) else Color("f387a0"))
  if is_instance_valid(game.portal) and visible_at(game.portal.position):draw_arc(point(game.portal.position),6*mark,0,TAU,20,Color("6bd3ff"),2*mark)
  draw_circle(point(game.player.position),4*mark,Color("fff6dc"))
- var angle=game.player.avatar.rotation.y;var facing=Vector2(sin(angle),cos(angle))
+ var facing=camera_facing()
  draw_line(point(game.player.position),point(game.player.position)+facing*10*mark,Color("fff6dc"),2*mark)
  draw_rect(Rect2(offset,span),Color("b7b4a5"),false,2)
+
+func camera_facing() -> Vector2:
+ if not is_instance_valid(game) or not is_instance_valid(game.player):return Vector2.UP
+ var camera=game.get_viewport().get_camera_3d()
+ if not is_instance_valid(camera):camera=game.player.camera
+ var forward=-camera.global_basis.z
+ var horizontal=Vector2(forward.x,forward.z)
+ if horizontal.length_squared()>0.00000001:last_camera_facing=horizontal.normalized()
+ return last_camera_facing

@@ -13,6 +13,8 @@ The GitHub reference images now also inform the [pause, expanded map and UI refi
 
 The latest source adds [stage themes, physical swarms, automatic shrines and multiplied bosses](docs/STAGE_SWARMS.md). The Windows playtest is published and its downloaded game pack has passed the world, reward/UI and stage/swarms checks. Dense-swarm performance remains a known limitation.
 
+The next source increment adds [shrine rarity choices, persistent reward effects, continuous pursuit and HUD/bug fixes](docs/REWARDS_AI_V9.md). Its v9 publication is pending verification; the link below remains the verified v8 build.
+
 ## Download and play
 
 - [Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/stage-swarms-v8/BONK_INFINITY_Windows_x64.zip)

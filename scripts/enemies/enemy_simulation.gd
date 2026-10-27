@@ -24,11 +24,14 @@ static func step(game: Node, e: Dictionary, delta: float) -> void:
  if e.frozen>0 and e.get("drop",{}).is_empty():return
  if not e.get("climb",{}).is_empty() or not e.get("drop",{}).is_empty():
   e.pos=EnemyTraversal.move(game,e,e.speed,delta);return
+ # Standard melee is contact-only; old saved melee poses must not stall pursuit.
+ if int(e.kind)<8 and e.get("action","")=="melee" and e.state in ["windup","recover"]:e.state="move";e.action=""
  var config=e.variant
  var modules=config.modules
+ var contact_only=int(e.kind)<8 and modules.size()==1 and modules[0]=="melee"
  var difference=game.player.position-e.pos
  difference.y=0
- var distance=difference.length()
+ var distance=0.0 if contact_only else difference.length()
  var direction=game.navigation_direction(e.pos,game.player.position)
  var speed=e.speed*(0.2 if e.slow>0 else 1)
  e.hit_time=maxf(0,e.hit_time-delta)
@@ -36,7 +39,9 @@ static func step(game: Node, e: Dictionary, delta: float) -> void:
   e.state="frozen"
   return
  if e.state=="frozen": e.state="move"
- if e.state=="windup":
+ if contact_only:
+  e.state="move";e.action=""
+ elif e.state=="windup":
   e.windup-=delta
   speed=0
   if e.windup<=0:
@@ -84,7 +89,7 @@ static func step(game: Node, e: Dictionary, delta: float) -> void:
    elif "ranged" in modules and distance<config.range: begin_attack(game,e,"shoot")
    elif "charge" in modules and distance<16 and game.enemy_line_clear(e.pos,game.player.position): begin_attack(game,e,"charge")
    elif "slam" in modules and distance<config.range and absf(e.pos.y-game.player.position.y)<2.5: begin_attack(game,e,"slam")
-   elif "melee" in modules and distance<config.range and absf(game.player.position.y-e.pos.y)<2.5: begin_attack(game,e,"melee")
+   elif int(e.kind)>=8 and "melee" in modules and distance<config.range and absf(game.player.position.y-e.pos.y)<2.5: begin_attack(game,e,"melee")
  e["move_direction"]=direction
  if e.get("ordinary",false):e.pos=EnemyTraversal.move(game,e,speed,delta)
  else:e.pos=game.constrain_enemy_motion(e.pos,e.pos+(direction*speed+e.knock)*delta)
