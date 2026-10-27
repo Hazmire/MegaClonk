@@ -1,0 +1,2802 @@
+[
+  {
+    "file": "DSGNImpt_EXPLOSION-Exploding Movement_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234220
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Fire Hit_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14233974
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Flare Extinguish_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234044
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Flare Ignite_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234024
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Flare Nova_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234134
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Forced Interruption_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234226
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Forced Shutdown_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234174
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Grainy Burst_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234052
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Laser Impact_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234006
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Magically_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234040
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Magisplosion_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234082
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Mana Bomb_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234092
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Mecha Core Damage_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234140
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Mecha Damage_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234176
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Mecha Detonator_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234118
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Mecha Engine Blast_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234266
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Mecha Engine Burst_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234210
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Mecha Engine Impact_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234166
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Mecha Intense Hit_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234116
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Mecha Limb Explosion_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234130
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Mecha Manablast_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234170
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Mecha Multiple Bangs_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234140
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Mecha Piercing Punch_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234320
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Mecha Propulsor Ignition_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234208
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Nova Whiplash_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234176
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Phoenix Spark_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234228
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Pyro Burst_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234004
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Sand Impact_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14233942
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Scorched_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234028
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Shimmer Electric_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234254
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Small Flare_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14233988
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Smaller Flare_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234036
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Thud_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14233912
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Voltaic Blast_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234102
+  },
+  {
+    "file": "DSGNImpt_MELEE-Hollow Punch_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14233950
+  },
+  {
+    "file": "DSGNImpt_MELEE-Homerunner_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14233952
+  },
+  {
+    "file": "DSGNImpt_MELEE-Magic Kick_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14233918
+  },
+  {
+    "file": "DSGNMisc_CAST-Bubblewrap_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234422
+  },
+  {
+    "file": "DSGNMisc_CAST-Mecha Vibration_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234286
+  },
+  {
+    "file": "DSGNMisc_CAST-Slime Ball_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234272
+  },
+  {
+    "file": "DSGNMisc_HIT-Bit Kick_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14233976
+  },
+  {
+    "file": "DSGNMisc_HIT-Bitcrusher_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234020
+  },
+  {
+    "file": "DSGNMisc_HIT-Fleeting Hit_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234182
+  },
+  {
+    "file": "DSGNMisc_HIT-Gore Pierce_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234102
+  },
+  {
+    "file": "DSGNMisc_HIT-Hit Noise_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234030
+  },
+  {
+    "file": "DSGNMisc_HIT-Hit Rattle_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234044
+  },
+  {
+    "file": "DSGNMisc_HIT-Laser Electric Zap_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234260
+  },
+  {
+    "file": "DSGNMisc_HIT-Laser Hit_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234142
+  },
+  {
+    "file": "DSGNMisc_HIT-Laser Pebble_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234220
+  },
+  {
+    "file": "DSGNMisc_HIT-Laser Synth_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234094
+  },
+  {
+    "file": "DSGNMisc_HIT-Mecha Armor Piercer_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234178
+  },
+  {
+    "file": "DSGNMisc_HIT-Mecha Downer_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234266
+  },
+  {
+    "file": "DSGNMisc_HIT-Mecha Geared Punch_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234334
+  },
+  {
+    "file": "DSGNMisc_HIT-Mecha Gore Cruncher_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234160
+  },
+  {
+    "file": "DSGNMisc_HIT-Mecha Laser Pistol_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234152
+  },
+  {
+    "file": "DSGNMisc_HIT-Mecha Shimmer Damage_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234304
+  },
+  {
+    "file": "DSGNMisc_HIT-Noisy Hit_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234136
+  },
+  {
+    "file": "DSGNMisc_HIT-Plastic Zap_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234162
+  },
+  {
+    "file": "DSGNMisc_HIT-Speedcore_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234136
+  },
+  {
+    "file": "DSGNMisc_HIT-Spell Hit_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234012
+  },
+  {
+    "file": "DSGNMisc_HIT-Sweep Hit_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234052
+  },
+  {
+    "file": "DSGNMisc_HIT-Swish Clap_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234234
+  },
+  {
+    "file": "DSGNMisc_HIT-Synth Hit_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234226
+  },
+  {
+    "file": "DSGNMisc_HIT-Yoi Yai_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234032
+  },
+  {
+    "file": "DSGNMisc_HIT-Yoi Zap Hit_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234116
+  },
+  {
+    "file": "DSGNMisc_HIT-YoiYei_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14233940
+  },
+  {
+    "file": "DSGNMisc_HIT-Zap Clap_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234068
+  },
+  {
+    "file": "DSGNMisc_HIT-Zap Laser_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234024
+  },
+  {
+    "file": "DSGNMisc_HIT-Zap Metal_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234086
+  },
+  {
+    "file": "DSGNMisc_HIT-Zappy Pitch_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234006
+  },
+  {
+    "file": "DSGNMisc_INTERFACE-Phasey Swipe_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234094
+  },
+  {
+    "file": "DSGNMisc_INTERFACE-Zap Select_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234132
+  },
+  {
+    "file": "DSGNMisc_MELEE-Bit Sword_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234134
+  },
+  {
+    "file": "DSGNMisc_MELEE-Sword Deflect_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234198
+  },
+  {
+    "file": "DSGNMisc_MELEE-Sword Parry_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234240
+  },
+  {
+    "file": "DSGNMisc_MELEE-Sword Reflect_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234236
+  },
+  {
+    "file": "DSGNMisc_MELEE-Sword Slash_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234158
+  },
+  {
+    "file": "DSGNMisc_MOVEMENT-Bats Flying_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234198
+  },
+  {
+    "file": "DSGNMisc_MOVEMENT-Bit Sweep_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234134
+  },
+  {
+    "file": "DSGNMisc_MOVEMENT-Bubbly Laser Swish_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234256
+  },
+  {
+    "file": "DSGNMisc_MOVEMENT-Coin Whoosh_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234244
+  },
+  {
+    "file": "DSGNMisc_MOVEMENT-Jump Sparkle_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234240
+  },
+  {
+    "file": "DSGNMisc_MOVEMENT-Laser Zapswish_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234148
+  },
+  {
+    "file": "DSGNMisc_MOVEMENT-Mecha Large Takeoff_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234292
+  },
+  {
+    "file": "DSGNMisc_MOVEMENT-Mecha Laser Zapper_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234318
+  },
+  {
+    "file": "DSGNMisc_MOVEMENT-Mecha Medium Jump_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234220
+  },
+  {
+    "file": "DSGNMisc_MOVEMENT-Noise Decay_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234138
+  },
+  {
+    "file": "DSGNMisc_MOVEMENT-Noise Sweeper_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234190
+  },
+  {
+    "file": "DSGNMisc_MOVEMENT-Phase Swish_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234332
+  },
+  {
+    "file": "DSGNMisc_MOVEMENT-Pierce Jump_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234182
+  },
+  {
+    "file": "DSGNMisc_MOVEMENT-Retro Jump_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234126
+  },
+  {
+    "file": "DSGNMisc_MOVEMENT-Rhythm Laser_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234352
+  },
+  {
+    "file": "DSGNMisc_MOVEMENT-Slow Motion Jump_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234304
+  },
+  {
+    "file": "DSGNMisc_MOVEMENT-Small Slow Motion Jump_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234248
+  },
+  {
+    "file": "DSGNMisc_MOVEMENT-Sparkly Water_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234236
+  },
+  {
+    "file": "DSGNMisc_MOVEMENT-Tire Screech_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234178
+  },
+  {
+    "file": "DSGNMisc_MOVEMENT-Toon Fall_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234162
+  },
+  {
+    "file": "DSGNMisc_MOVEMENT-Watery Laser_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234412
+  },
+  {
+    "file": "DSGNMisc_MOVEMENT-Whimsy Chimes_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234280
+  },
+  {
+    "file": "DSGNMisc_MOVEMENT-Whoosh Sweep_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234230
+  },
+  {
+    "file": "DSGNMisc_MOVEMENT-Zap Noise Sweep_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234240
+  },
+  {
+    "file": "DSGNMisc_MOVEMENT-Zapbubble_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234168
+  },
+  {
+    "file": "DSGNMisc_MOVEMENT-Zappy Shimmer_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234236
+  },
+  {
+    "file": "DSGNMisc_PROJECTILE-Bubbly Wubbly_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234408
+  },
+  {
+    "file": "DSGNMisc_PROJECTILE-Clicky Bubbly_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234314
+  },
+  {
+    "file": "DSGNMisc_PROJECTILE-Comical Echo_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234268
+  },
+  {
+    "file": "DSGNMisc_PROJECTILE-Comical Shot_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234398
+  },
+  {
+    "file": "DSGNMisc_PROJECTILE-High Whoosh_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234282
+  },
+  {
+    "file": "DSGNMisc_PROJECTILE-Hollow Point_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234390
+  },
+  {
+    "file": "DSGNMisc_PROJECTILE-Hollow Tornado_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234216
+  },
+  {
+    "file": "DSGNMisc_PROJECTILE-Laser Bursts_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234190
+  },
+  {
+    "file": "DSGNMisc_PROJECTILE-Laser Scintillating_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234374
+  },
+  {
+    "file": "DSGNMisc_PROJECTILE-Laser Shot_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234192
+  },
+  {
+    "file": "DSGNMisc_PROJECTILE-Mecha Magic Shrapnel_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234410
+  },
+  {
+    "file": "DSGNMisc_PROJECTILE-Toon Sparkle_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234312
+  },
+  {
+    "file": "DSGNMisc_PROJECTILE-Vibrato Whimsy_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234356
+  },
+  {
+    "file": "DSGNMisc_PROJECTILE-Water Bolt_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234208
+  },
+  {
+    "file": "DSGNMisc_PROJECTILE-Windy Sparkle_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234392
+  },
+  {
+    "file": "DSGNMisc_SKILL IMPACT-Bubbly Zaps_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234124
+  },
+  {
+    "file": "DSGNMisc_SKILL IMPACT-Critical Strike_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234380
+  },
+  {
+    "file": "DSGNMisc_SKILL IMPACT-Crunchy Burst_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234166
+  },
+  {
+    "file": "DSGNMisc_SKILL IMPACT-Crunchy Energy_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234398
+  },
+  {
+    "file": "DSGNMisc_SKILL IMPACT-Dramatic Finish_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234566
+  },
+  {
+    "file": "DSGNMisc_SKILL IMPACT-Energy Dissipate_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234390
+  },
+  {
+    "file": "DSGNMisc_SKILL IMPACT-Flare Hit_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234316
+  },
+  {
+    "file": "DSGNMisc_SKILL IMPACT-Glassy Sprites_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234332
+  },
+  {
+    "file": "DSGNMisc_SKILL IMPACT-Highest Laser_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234412
+  },
+  {
+    "file": "DSGNMisc_SKILL IMPACT-Jacobs Ladder_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234390
+  },
+  {
+    "file": "DSGNMisc_SKILL IMPACT-Mecha Black Laser_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234560
+  },
+  {
+    "file": "DSGNMisc_SKILL IMPACT-Mecha Green Laser_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234408
+  },
+  {
+    "file": "DSGNMisc_SKILL IMPACT-Mecha Pink Laser_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234396
+  },
+  {
+    "file": "DSGNMisc_SKILL IMPACT-Mecha Purple Laser_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234310
+  },
+  {
+    "file": "DSGNMisc_SKILL IMPACT-Mecha White Laser_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234420
+  },
+  {
+    "file": "DSGNMisc_SKILL IMPACT-Pebbles_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234222
+  },
+  {
+    "file": "DSGNMisc_SKILL IMPACT-Whimsimpact_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234264
+  },
+  {
+    "file": "DSGNMisc_SKILL RELEASE-Chirping Critter_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234396
+  },
+  {
+    "file": "DSGNMisc_SKILL RELEASE-Fire Sphere_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234296
+  },
+  {
+    "file": "DSGNMisc_SKILL RELEASE-Flame Ball_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234314
+  },
+  {
+    "file": "DSGNMisc_SKILL RELEASE-Flare Gun_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234326
+  },
+  {
+    "file": "DSGNMisc_SKILL RELEASE-Flying Blades_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234350
+  },
+  {
+    "file": "DSGNMisc_SKILL RELEASE-Mecha Laser Release_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234382
+  },
+  {
+    "file": "DSGNMisc_SKILL RELEASE-Skipping Impact_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234432
+  },
+  {
+    "file": "DSGNMisc_SKILL RELEASE-Thousand Needles_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234368
+  },
+  {
+    "file": "DSGNMisc_SKILL RELEASE-Thousand Tiny Lasers_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234448
+  },
+  {
+    "file": "DSGNMisc_SKILL RELEASE-Wet Splash_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234238
+  },
+  {
+    "file": "DSGNMisc_STEP-Bit Step_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234090
+  },
+  {
+    "file": "DSGNMisc_STEP-Bubble Step_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234062
+  },
+  {
+    "file": "DSGNMisc_STEP-Bubblier Step_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234088
+  },
+  {
+    "file": "DSGNMisc_STEP-Critter Step_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234042
+  },
+  {
+    "file": "DSGNMisc_STEP-Whimsical Step_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234114
+  },
+  {
+    "file": "DSGNMisc_USABLE-Mecha Weapon Equip_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234428
+  },
+  {
+    "file": "DSGNMisc_USABLE-Weird Item_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234156
+  },
+  {
+    "file": "DSGNSynth_BUFF-Bird Buff_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234372
+  },
+  {
+    "file": "DSGNSynth_BUFF-Bonus Crit Chance_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234410
+  },
+  {
+    "file": "DSGNSynth_BUFF-Bonus Max Shield_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234384
+  },
+  {
+    "file": "DSGNSynth_BUFF-Bubbly Buff_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234254
+  },
+  {
+    "file": "DSGNSynth_BUFF-Enemy Debuff_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234374
+  },
+  {
+    "file": "DSGNSynth_BUFF-Execute On Hit_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234470
+  },
+  {
+    "file": "DSGNSynth_BUFF-Failed Buff_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234164
+  },
+  {
+    "file": "DSGNSynth_BUFF-Generic Buff_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234206
+  },
+  {
+    "file": "DSGNSynth_BUFF-Higher Hit Chance_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234442
+  },
+  {
+    "file": "DSGNSynth_BUFF-Invigoration_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234216
+  },
+  {
+    "file": "DSGNSynth_BUFF-Mecha Accelerate_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234244
+  },
+  {
+    "file": "DSGNSynth_BUFF-Mecha Barrier Fail_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234568
+  },
+  {
+    "file": "DSGNSynth_BUFF-Mecha Failing_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234344
+  },
+  {
+    "file": "DSGNSynth_BUFF-Mecha Generic Short_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234484
+  },
+  {
+    "file": "DSGNSynth_BUFF-Mecha Guarantee Hit_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234278
+  },
+  {
+    "file": "DSGNSynth_BUFF-Mecha Level Up_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234438
+  },
+  {
+    "file": "DSGNSynth_BUFF-Mecha Lock In_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234218
+  },
+  {
+    "file": "DSGNSynth_BUFF-Mecha Selection_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234328
+  },
+  {
+    "file": "DSGNSynth_BUFF-Mecha Speed Buff_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234234
+  },
+  {
+    "file": "DSGNSynth_BUFF-Mecha Stats_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234224
+  },
+  {
+    "file": "DSGNSynth_BUFF-Metallic Dodge Chance_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234338
+  },
+  {
+    "file": "DSGNSynth_BUFF-Plus Damage_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234258
+  },
+  {
+    "file": "DSGNSynth_BUFF-Stats Up_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234242
+  },
+  {
+    "file": "DSGNSynth_BUFF-Turn Locked_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234230
+  },
+  {
+    "file": "DSGNSynth_BUFF-Water Buff_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234246
+  },
+  {
+    "file": "DSGNSynth_CAST-Mecha Energy Gathering_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234350
+  },
+  {
+    "file": "DSGNSynth_CAST-Mecha Energy Movement_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234248
+  },
+  {
+    "file": "DSGNSynth_CAST-Mecha Laser Prepare_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234194
+  },
+  {
+    "file": "DSGNSynth_CAST-Mecha Morale_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234248
+  },
+  {
+    "file": "DSGNSynth_CAST-Mecha Speeding_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234162
+  },
+  {
+    "file": "DSGNSynth_CAST-Mecha Sword Cast_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234262
+  },
+  {
+    "file": "DSGNTonl_INTERFACE-Tonal Click_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234104
+  },
+  {
+    "file": "DSGNTonl_MELEE-Sword Critical_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234244
+  },
+  {
+    "file": "DSGNTonl_MOVEMENT-Arcane Slap_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234174
+  },
+  {
+    "file": "DSGNTonl_MOVEMENT-Bubble Babbler_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234084
+  },
+  {
+    "file": "DSGNTonl_MOVEMENT-Retro Jump_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234144
+  },
+  {
+    "file": "DSGNTonl_MOVEMENT-Sparkling By_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234282
+  },
+  {
+    "file": "DSGNTonl_SKILL IMPACT-Coin Impact_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234322
+  },
+  {
+    "file": "DSGNTonl_SKILL IMPACT-Coin Laser_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234394
+  },
+  {
+    "file": "DSGNTonl_SKILL IMPACT-Deflected Hit_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234376
+  },
+  {
+    "file": "DSGNTonl_SKILL IMPACT-Deflected Impact_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234378
+  },
+  {
+    "file": "DSGNTonl_SKILL IMPACT-Energetic Impact_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234490
+  },
+  {
+    "file": "DSGNTonl_SKILL IMPACT-Energy Crystal_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234436
+  },
+  {
+    "file": "DSGNTonl_SKILL IMPACT-Flick_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234222
+  },
+  {
+    "file": "DSGNTonl_SKILL IMPACT-Glistening Shimmers_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234466
+  },
+  {
+    "file": "DSGNTonl_SKILL IMPACT-Magic Sparkles_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234340
+  },
+  {
+    "file": "DSGNTonl_SKILL IMPACT-Metallic Bubble_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234336
+  },
+  {
+    "file": "DSGNTonl_SKILL IMPACT-Retro Laser 1_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234320
+  },
+  {
+    "file": "DSGNTonl_SKILL IMPACT-Retro Laser 2_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234320
+  },
+  {
+    "file": "DSGNTonl_SKILL IMPACT-Retro Laser 3_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234332
+  },
+  {
+    "file": "DSGNTonl_SKILL IMPACT-Retro Laser_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234166
+  },
+  {
+    "file": "DSGNTonl_SKILL IMPACT-Sparkly Star_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234438
+  },
+  {
+    "file": "DSGNTonl_SKILL IMPACT-Star Sparkle_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234438
+  },
+  {
+    "file": "DSGNTonl_SKILL IMPACT-Swoosh Grain_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234510
+  },
+  {
+    "file": "DSGNTonl_SKILL IMPACT-Wubwub Impact_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234404
+  },
+  {
+    "file": "DSGNTonl_SKILL RELEASE-Dark Energy Sphere_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234476
+  },
+  {
+    "file": "DSGNTonl_SKILL RELEASE-Electric Sphere_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234244
+  },
+  {
+    "file": "DSGNTonl_SKILL RELEASE-High Tech Spell_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234346
+  },
+  {
+    "file": "DSGNTonl_SKILL RELEASE-Laser Whoosh 1_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234386
+  },
+  {
+    "file": "DSGNTonl_SKILL RELEASE-Laser Whoosh 2_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234386
+  },
+  {
+    "file": "DSGNTonl_SKILL RELEASE-Magisparkle_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234400
+  },
+  {
+    "file": "DSGNTonl_SKILL RELEASE-Mana Sparkles_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234450
+  },
+  {
+    "file": "DSGNTonl_SKILL RELEASE-Mecha Laser Machine Gun_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234572
+  },
+  {
+    "file": "DSGNTonl_SKILL RELEASE-Mind Eraser_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234346
+  },
+  {
+    "file": "DSGNTonl_SKILL RELEASE-Ricochet 1_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234216
+  },
+  {
+    "file": "DSGNTonl_SKILL RELEASE-Ricochet 2_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234216
+  },
+  {
+    "file": "DSGNTonl_SKILL RELEASE-Rising Lasers_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234310
+  },
+  {
+    "file": "DSGNTonl_SKILL RELEASE-Shimmery Bubbles_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234326
+  },
+  {
+    "file": "DSGNTonl_SKILL RELEASE-Small Bark_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234344
+  },
+  {
+    "file": "DSGNTonl_SKILL RELEASE-Tiny Energy Sphere_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234310
+  },
+  {
+    "file": "DSGNTonl_SKILL RELEASE-Transformizer_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234426
+  },
+  {
+    "file": "DSGNTonl_SKILL RELEASE-Whimsy Kick_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234438
+  },
+  {
+    "file": "DSGNTonl_STEP-Magic Step_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234064
+  },
+  {
+    "file": "DSGNTonl_STEP-Toony Step_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234064
+  },
+  {
+    "file": "DSGNTonl_USABLE-Chirps_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234046
+  },
+  {
+    "file": "DSGNTonl_USABLE-Coin Spend_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234200
+  },
+  {
+    "file": "DSGNTonl_USABLE-Coin Toss_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234182
+  },
+  {
+    "file": "DSGNTonl_USABLE-Coin Zap_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234166
+  },
+  {
+    "file": "DSGNTonl_USABLE-Failed Item_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234142
+  },
+  {
+    "file": "DSGNTonl_USABLE-Fleeting Consume_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234298
+  },
+  {
+    "file": "DSGNTonl_USABLE-Generic Consume_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234194
+  },
+  {
+    "file": "DSGNTonl_USABLE-Generic Item_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234240
+  },
+  {
+    "file": "DSGNTonl_USABLE-Magic Coin_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234236
+  },
+  {
+    "file": "DSGNTonl_USABLE-Magic Item_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234192
+  },
+  {
+    "file": "DSGNTonl_USABLE-Magic Swipe_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234220
+  },
+  {
+    "file": "DSGNTonl_USABLE-Mecha Consume_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234274
+  },
+  {
+    "file": "DSGNTonl_USABLE-Mecha Upgrade Equip_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234250
+  },
+  {
+    "file": "DSGNTonl_USABLE-Metallic Item_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234220
+  },
+  {
+    "file": "DSGNTonl_USABLE-Retro Zap_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234228
+  },
+  {
+    "file": "DSGNTonl_USABLE-Scifi Select_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234206
+  },
+  {
+    "file": "DSGNTonl_USABLE-Tonal Item_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234180
+  },
+  {
+    "file": "DSGNTonl_USABLE-Toony Zap_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234050
+  },
+  {
+    "file": "DSGNTonl_USABLE-Whimsy Coin_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234192
+  },
+  {
+    "file": "DSGNTonl_USABLE-Zappy Coin_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234130
+  },
+  {
+    "file": "FEETMisc_STEP-Boots on Concrete Dungeon_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234370
+  },
+  {
+    "file": "FEETMisc_STEP-Boots on Concrete_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234178
+  },
+  {
+    "file": "FEETMisc_STEP-Boots on Generic Ground 1_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234224
+  },
+  {
+    "file": "FEETMisc_STEP-Boots on Generic Ground 2_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234360
+  },
+  {
+    "file": "FEETMisc_STEP-Boots on Grass_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234106
+  },
+  {
+    "file": "FEETMisc_STEP-Boots on Metal_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234084
+  },
+  {
+    "file": "FEETMisc_STEP-Boots on Sand_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234036
+  },
+  {
+    "file": "FEETMisc_STEP-Hard Step_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234118
+  },
+  {
+    "file": "FEETMisc_STEP-Sandals on Ground_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234256
+  },
+  {
+    "file": "FGHTImpt_HIT-Smack_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234002
+  },
+  {
+    "file": "FGHTImpt_HIT-Strong Punch_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234232
+  },
+  {
+    "file": "FGHTImpt_HIT-Strong Smack_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14233968
+  },
+  {
+    "file": "FGHTImpt_MELEE-Clap Slapper_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234108
+  },
+  {
+    "file": "FGHTImpt_MELEE-Crunch Kick_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234210
+  },
+  {
+    "file": "FGHTImpt_MELEE-Gut Kick_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234060
+  },
+  {
+    "file": "FGHTImpt_MELEE-Gut Punch_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234068
+  },
+  {
+    "file": "FGHTImpt_MELEE-Kick Block_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234138
+  },
+  {
+    "file": "FGHTImpt_MELEE-Kick Critical_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234158
+  },
+  {
+    "file": "FGHTImpt_MELEE-Swish Hit_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234050
+  },
+  {
+    "file": "MAGAngl_BUFF-Bonus Regen Rate_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234420
+  },
+  {
+    "file": "MAGAngl_BUFF-Buff Drop_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234178
+  },
+  {
+    "file": "MAGAngl_BUFF-Buff Pickup_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234242
+  },
+  {
+    "file": "MAGAngl_BUFF-Deflect Chance_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234362
+  },
+  {
+    "file": "MAGAngl_BUFF-Effect Success_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234366
+  },
+  {
+    "file": "MAGAngl_BUFF-Healing Gusts_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234242
+  },
+  {
+    "file": "MAGAngl_BUFF-Mecha Regen_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234344
+  },
+  {
+    "file": "MAGAngl_BUFF-Metallic Plus Damage_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234408
+  },
+  {
+    "file": "MAGAngl_BUFF-Shimmer Tone_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234112
+  },
+  {
+    "file": "MAGAngl_BUFF-Shimmering Winds_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234230
+  },
+  {
+    "file": "MAGAngl_BUFF-Simple Heal_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234252
+  },
+  {
+    "file": "MAGAngl_BUFF-Speed Debuff_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234162
+  },
+  {
+    "file": "MAGSpel_CAST-Appear Firewall_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234242
+  },
+  {
+    "file": "MAGSpel_CAST-Aura Rise_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234140
+  },
+  {
+    "file": "MAGSpel_CAST-Aura Up_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14233998
+  },
+  {
+    "file": "MAGSpel_CAST-Birdsong_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14233926
+  },
+  {
+    "file": "MAGSpel_CAST-Bubble Deflect_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234126
+  },
+  {
+    "file": "MAGSpel_CAST-Bubbly Gather_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234130
+  },
+  {
+    "file": "MAGSpel_CAST-Casting Buff_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234128
+  },
+  {
+    "file": "MAGSpel_CAST-Complex Rise_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234264
+  },
+  {
+    "file": "MAGSpel_CAST-Critter Transformation_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234136
+  },
+  {
+    "file": "MAGSpel_CAST-Energy Noise_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234202
+  },
+  {
+    "file": "MAGSpel_CAST-Energy Riser_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234096
+  },
+  {
+    "file": "MAGSpel_CAST-Growing Strength_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234042
+  },
+  {
+    "file": "MAGSpel_CAST-High Powering Up_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234114
+  },
+  {
+    "file": "MAGSpel_CAST-Hollow Spell_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234268
+  },
+  {
+    "file": "MAGSpel_CAST-Noise Summon_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234268
+  },
+  {
+    "file": "MAGSpel_CAST-Panic Energy_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234208
+  },
+  {
+    "file": "MAGSpel_CAST-Panicked_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14233984
+  },
+  {
+    "file": "MAGSpel_CAST-Pew Laser_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234056
+  },
+  {
+    "file": "MAGSpel_CAST-Pierce_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234102
+  },
+  {
+    "file": "MAGSpel_CAST-Sharp Summon_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234146
+  },
+  {
+    "file": "MAGSpel_CAST-Sharper Summon_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234210
+  },
+  {
+    "file": "MAGSpel_CAST-Sharpest Summon_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234274
+  },
+  {
+    "file": "MAGSpel_CAST-Sharpy Summon_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234248
+  },
+  {
+    "file": "MAGSpel_CAST-Skill Ready_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234226
+  },
+  {
+    "file": "MAGSpel_CAST-Sphere Quick_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234130
+  },
+  {
+    "file": "MAGSpel_CAST-Sphere Up_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234122
+  },
+  {
+    "file": "MAGSpel_CAST-Strong Energy_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234046
+  },
+  {
+    "file": "MAGSpel_CAST-Teleport Downer_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234112
+  },
+  {
+    "file": "MAGSpel_CAST-Tube Riser_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234064
+  },
+  {
+    "file": "MAGSpel_CAST-Tweety Cast_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234200
+  },
+  {
+    "file": "MAGSpel_CAST-Underwater_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234042
+  },
+  {
+    "file": "MAGSpel_CAST-Weirdness_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234102
+  },
+  {
+    "file": "MAGSpel_CAST-Wet Electricity_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234128
+  },
+  {
+    "file": "MAGSpel_CAST-Zap Up_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14233896
+  },
+  {
+    "file": "MAGSpel_CAST-Zappy Tone_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234144
+  },
+  {
+    "file": "MAGSpel_CAST-Zippy Particle_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234294
+  },
+  {
+    "file": "SWSH_MOVEMENT-Bamboo Whip_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234042
+  },
+  {
+    "file": "SWSH_MOVEMENT-Bubbly Passby_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234220
+  },
+  {
+    "file": "SWSH_MOVEMENT-Bubbly Resonance_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234214
+  },
+  {
+    "file": "SWSH_MOVEMENT-Reso Swish_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234020
+  },
+  {
+    "file": "SWSH_MOVEMENT-Sparkle Passby_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234134
+  },
+  {
+    "file": "SWSH_MOVEMENT-Sparkle Zap_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234110
+  },
+  {
+    "file": "SWSH_MOVEMENT-Tiny Chime_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234188
+  },
+  {
+    "file": "UIClick_INTERFACE-Metallic Click_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234236
+  },
+  {
+    "file": "UIClick_INTERFACE-Positive Click_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234208
+  },
+  {
+    "file": "UIClick_INTERFACE-Rattling Click_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234180
+  },
+  {
+    "file": "UIClick_INTERFACE-Strong Click 1_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234306
+  },
+  {
+    "file": "UIClick_INTERFACE-Strong Click 2_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234306
+  },
+  {
+    "file": "UIGlitch_USABLE-Generic Use_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234154
+  },
+  {
+    "file": "UIGlitch_USABLE-Glassy Click_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234196
+  },
+  {
+    "file": "UIGlitch_USABLE-Mecha Repair_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234326
+  },
+  {
+    "file": "UIMisc_INTERFACE-Denied_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234092
+  },
+  {
+    "file": "UIMisc_INTERFACE-Lock_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234048
+  },
+  {
+    "file": "UIMisc_INTERFACE-Zap Select_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234172
+  },
+  {
+    "file": "WHSH_MOVEMENT-Bubble Laser Swish_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234270
+  },
+  {
+    "file": "WHSH_MOVEMENT-Mecha Cruiser Passby_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234314
+  },
+  {
+    "file": "WHSH_MOVEMENT-Mecha Energy Passby_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234378
+  },
+  {
+    "file": "WHSH_MOVEMENT-Mecha Ship Passby_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234274
+  },
+  {
+    "file": "WHSH_MOVEMENT-Noise Zap_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234136
+  },
+  {
+    "file": "WHSH_MOVEMENT-Phase Sweeps_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234126
+  },
+  {
+    "file": "WHSH_MOVEMENT-Sand Swipe_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234128
+  },
+  {
+    "file": "WHSH_MOVEMENT-Simple Whoosh_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234086
+  },
+  {
+    "file": "WHSH_MOVEMENT-Wind Shaker_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234178
+  },
+  {
+    "file": "WHSH_MOVEMENT-Wind Sweep Swish_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234216
+  },
+  {
+    "file": "WHSH_MOVEMENT-Windy Passby_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234238
+  },
+  {
+    "file": "WHSH_MOVEMENT-Windy Swipy_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234066
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Bass Hit_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234028
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Bit Bomb_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14233872
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Cruncher_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14233928
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Crunching_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14233934
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Crunchy Burst_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234070
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Electric Hit_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234118
+  },
+  {
+    "file": "DSGNImpt_EXPLOSION-Eruption_HY_PC.wav",
+    "channels": 2,
+    "rate": 96000,
+    "width": 3,
+    "duration": 24.0,
+    "size": 14234052
+  }
+]

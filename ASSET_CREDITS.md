@@ -100,3 +100,9 @@ User-supplied archives were inspected from Full-Release df625e2. Inventory, exac
 | Mine model, panorama/portal shader adaptations / project originals | Original implementation using credited source textures where indicated | scripts/combat/weapon_art.gd and shaders/portal_asset.gdshader, supplied_panorama.gdshader. |
 
 The user supplied these archives for integration; missing publisher metadata is recorded transparently. No claim of a new blanket CC0 licence is made for archives without one. Original uploaded archives remain committed for provenance.
+
+## Retro audio 11
+
+- **Pixel Combat — Helton Yan**, https://heltonyan.itch.io/pixelcombat. **CC BY4.0**, https://creativecommons.org/licenses/by/4.0/. Licence identification supplied by the project owner from that page; cloud access returned403 and the source archive had no terms file. Supplied through audio-assets-v1 release, asset682885354. Runtime paths assets/audio/sfx; attribution shipped in ATTRIBUTION.txt. Modified by variation extraction, stereo-to-mono conversion,96→32kHz/24→16bit conversion, conservative peak adjustment and short fades. Exact original filenames, source offsets and changes: docs/audio/CURATION.json. No endorsement implied. The full source archive is outside the project and excluded from exports.
+- **Arcade Groove, Arcade Groove1, Arcade Rush, Pixelad Akcio** — original music supplied by the project owner through the same release. Paths assets/audio/music; original MP3 bytes retained. Menu/three-stage routing and crossfades added; no generated replacement soundtrack.
+- Six existing **Clutch Assets** death/forest ambience samples copied from assets/vendor/audio to assets/audio/sfx/legacy so unused vendor audio can be excluded from Windows exports. Existing source credits and terms remain applicable. The original project reward_applause.wav is retained as the reveal clap bed.

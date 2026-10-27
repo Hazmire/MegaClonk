@@ -1,0 +1,24 @@
+{
+  "tracks": [
+    {
+      "title": "Arcade Groove",
+      "path": "res://assets/audio/music/Arcade.Groove.mp3",
+      "gain_db": -8
+    },
+    {
+      "title": "Arcade Groove 1",
+      "path": "res://assets/audio/music/Arcade.Groove.1.mp3",
+      "gain_db": -8
+    },
+    {
+      "title": "Arcade Rush",
+      "path": "res://assets/audio/music/Arcade.Rush.mp3",
+      "gain_db": -8
+    }
+  ],
+  "menu": {
+    "title": "Pixelad Akcio",
+    "path": "res://assets/audio/music/Pixelad.Akcio.mp3",
+    "gain_db": -9
+  }
+}

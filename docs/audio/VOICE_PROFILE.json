@@ -1,0 +1,50 @@
+{
+  "cases": [
+    {
+      "accepted": 90,
+      "cooldown_suppressed": 14220,
+      "enemies": 50,
+      "max_voices": 15,
+      "mean_ms": 0.0861416666666668,
+      "p95_ms": 0.138,
+      "requested": 50,
+      "voice_suppressed": 98,
+      "worst_ms": 0.272
+    },
+    {
+      "accepted": 86,
+      "cooldown_suppressed": 26220,
+      "enemies": 100,
+      "max_voices": 13,
+      "mean_ms": 0.146970833333333,
+      "p95_ms": 0.205,
+      "requested": 100,
+      "voice_suppressed": 102,
+      "worst_ms": 0.32
+    },
+    {
+      "accepted": 83,
+      "cooldown_suppressed": 62220,
+      "enemies": 250,
+      "max_voices": 13,
+      "mean_ms": 0.3061,
+      "p95_ms": 0.394,
+      "requested": 250,
+      "voice_suppressed": 105,
+      "worst_ms": 0.554
+    },
+    {
+      "accepted": 88,
+      "cooldown_suppressed": 122220,
+      "enemies": 500,
+      "max_voices": 13,
+      "mean_ms": 0.509283333333333,
+      "p95_ms": 0.694,
+      "requested": 500,
+      "voice_suppressed": 100,
+      "worst_ms": 1.583
+    }
+  ],
+  "driver": "Dummy",
+  "note": "CPU dispatch/aggregation only under Dummy; no physical mixer or target-GPU timing claim."
+}

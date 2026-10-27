@@ -85,7 +85,8 @@ func heading(value: String, parent: Node, size_value: int = 28) -> Label:
  var label=text(value,parent,size_value);label.add_theme_font_override("font",headline_font);return label
 func action(value: String, parent: Node, callback: Callable) -> Button:
  var button=Button.new();button.text=value;button.custom_minimum_size.y=42;parent.add_child(button)
- button.pressed.connect(func(): game.play_sound("menu");callback.call())
+ button.mouse_entered.connect(func():game.play_sound("ui.hover"))
+ button.pressed.connect(func(): game.play_sound("ui.confirm");callback.call())
  return button
 func card(parent: Node, pos: Vector2, dimensions: Vector2) -> VBoxContainer:
  var panel=PanelContainer.new();panel.position=pos;panel.size=dimensions;panel.custom_minimum_size=dimensions
@@ -97,12 +98,14 @@ func card(parent: Node, pos: Vector2, dimensions: Vector2) -> VBoxContainer:
  game.panel=panel
  return column
 func stop_reward_animations() -> void:
+ if is_instance_valid(game.audio):game.audio.stop_event("reward.chest.tick")
  for tween in reward_tweens:
   if tween!=null and tween.is_valid():tween.kill()
  reward_tweens.clear()
 func _exit_tree() -> void:
  stop_reward_animations()
 func clear() -> void:
+ if is_instance_valid(game.audio):game.audio.emit("ui.open")
  if is_instance_valid(stage_banner):stage_banner.hide()
  fade_celebrations();chest_skip=Callable()
  stop_reward_animations()
@@ -144,6 +147,7 @@ func prepare_backdrop() -> void:
  game.player.avatar.show()
 func home() -> void:
  in_run=false;game.mode="menu";preview_mode="home";prepare_backdrop();clear()
+ if is_instance_valid(game.audio):game.audio.music_menu()
  var title=text("MEGACLONK",menu,54);title.add_theme_font_override("font",headline_font);title.position=Vector2(390,135);title.custom_minimum_size.x=500;title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
  var buttons=card(menu,Vector2(490,270),Vector2(300,295))
  action("PLAY",buttons,play_screen).grab_focus();action("UNLOCKS",buttons,unlocks);action("QUESTS",buttons,quests);action("SETTINGS",buttons,func(): settings(home))
@@ -253,7 +257,7 @@ func quests() -> void:
    var claimed=q.id in game.progress.data.claimed
    var claim=action("Claimed" if claimed else "Claim reward" if MetaProgress.quest_state(game.progress.data,q)=="completed" else "In progress",list,func():
     if MetaProgress.claim(game.progress.data,q.id):
-     game.progress.save();claim_quest_button(list,q.id);wallet_refresh(col))
+     game.play_sound("ui.purchase");game.progress.save();claim_quest_button(list,q.id);wallet_refresh(col))
    claim.set_meta("quest_id",q.id)
    claim.disabled=claimed or MetaProgress.quest_value(game.progress.data,q.metric)<q.target
 func claim_quest_button(list: Node,id: String) -> void:
@@ -336,16 +340,20 @@ func settings(back: Callable) -> void:
    list.add_child(resolution);resolution.item_selected.connect(func(i):DisplayServer.window_set_size([Vector2i(1280,720),Vector2i(1600,900),Vector2i(1920,1080)][i]))
   var keys=[]
   if group=="Graphics":keys=["render_scale","visual_intensity","reduced","numbers","shake","fps"]
-  if group=="Audio":keys=["master","music","effects"]
+  if group=="Audio":keys=["master","music","effects","ui_volume","ambience"]
   if group=="Gameplay":keys=["sensitivity","invert","focus_pause"]
   for key in keys:
    if game.settings[key] is bool:
     var check=CheckButton.new();check.text=key.replace("_"," ").capitalize();check.button_pressed=game.settings[key];list.add_child(check)
     check.toggled.connect(func(value):game.settings[key]=value;game.apply_settings())
    else:
-    text(key.replace("_"," ").capitalize(),list,16)
+    var caption=text(({"master":"Master volume","music":"Music volume","effects":"Sound effects volume","ui_volume":"UI volume","ambience":"Ambient volume"}).get(key,key.replace("_"," ").capitalize()),list,16)
+    if group=="Audio":caption.text+=" · %d%%"%roundi(float(game.settings[key])*100)
     var slider=HSlider.new();slider.min_value=0.0005 if key=="sensitivity" else (0.5 if key=="render_scale" else 0.0);slider.max_value=0.008 if key=="sensitivity" else 1.0;slider.step=0.0001 if key=="sensitivity" else 0.05;slider.value=game.settings[key];slider.custom_minimum_size.x=700;list.add_child(slider)
-    slider.value_changed.connect(func(value):game.settings[key]=value;game.apply_settings())
+    slider.value_changed.connect(func(value):
+     game.settings[key]=value;game.apply_settings()
+     if group=="Audio":
+      caption.text=({"master":"Master volume","music":"Music volume","effects":"Sound effects volume","ui_volume":"UI volume","ambience":"Ambient volume"})[key]+" · %d%%"%roundi(value*100);game.progress.data.settings=game.settings.duplicate(true);game.progress.save())
   if group=="Graphics":
    var quality=OptionButton.new()
    for label in ["Low","Medium","High"]:quality.add_item(label)

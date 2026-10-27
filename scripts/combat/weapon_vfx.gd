@@ -9,10 +9,11 @@ static func attack(game: Node,id: int,pos: Vector3,target: Vector3) -> void:
  elif type in ["poison","spore"]:game.combat_fx.burst("smoke_puff",pos,0.35,0.16)
  elif type in ["mine","hammer","gravity","vortex"]:game.combat_fx.burst("smoke_puff",target,0.5,0.2)
 static func contact(game: Node,id: int,pos: Vector3) -> void:
+ if id==8:game.audio.emit("weapon.aegis.impact",pos)
  if id in [4,16]:game.combat_fx.supplied_burst("debris",pos,0.7)
  if id==4:
   game.combat_fx.burst("smoke_puff",pos,0.5,0.22);game.impact(pos,Color("9c927f"),3)
-  game.play_sound("stone")
+  game.audio.emit("weapon.chunkers.impact",pos)
  elif Catalog.WEAPONS[id][1] in ["fireball","cone","trail"]:game.combat_fx.burst("fire_torch",pos,0.5,0.2)
  elif Catalog.WEAPONS[id][1] in ["bullet","scatter","pierce","lob"]:game.combat_fx.burst("impact_concrete",pos,0.5,0.16)
  else:game.flash(pos,Color(Catalog.WEAPONS[id][5]),0.25)
@@ -27,7 +28,5 @@ static func trail(game: Node,p: Dictionary,previous: Vector3) -> void:
  else:game.trail(p.node.position,Color(Catalog.WEAPONS[p.weapon][5]))
 
 static func sound(id: int) -> String:
- var sounds={0:"swing",1:"cast",2:"lightning",4:"stone",5:"swing",6:"shot",7:"revolver",9:"swing",10:"ready",16:"place"}
- if sounds.has(id):return sounds[id]
- var kind=Catalog.WEAPONS[id][1]
- return "shot" if kind in WeaponUpgrades.PROJECTILES else "swing" if kind in ["sweep","reap","dash_slash","corrupt"] else "cast"
+ var sounds={0:"weapon.sword.swing",1:"weapon.firestaff.cast",2:"weapon.lightning.zap",4:"",5:"weapon.bone.throw",6:"weapon.bow.fire",7:"weapon.revolver.fire",8:"",9:"weapon.bananarang.throw",10:"weapon.aura.pulse",16:"weapon.mines.place"}
+ return sounds.get(id,"weapon.sword.swing")

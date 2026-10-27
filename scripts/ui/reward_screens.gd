@@ -211,9 +211,9 @@ static func reward(ui: FrontEnd,item: Array) -> void:
  var generation=ui.reward_generation
  var reveal=func():
   if ui.reward_generation!=generation or not is_instance_valid(tile) or tile.get_meta("revealed",false):return
-  tile.set_meta("revealed",true);image.texture=UIAssets.icon("items",str(id));rarity.text=tier.name.to_upper();name.text=item[0];description.show();proceed.disabled=false;proceed.grab_focus();ui.chest_skip=Callable()
+  game.audio.stop_event("reward.chest.tick");tile.set_meta("revealed",true);image.texture=UIAssets.icon("items",str(id));rarity.text=tier.name.to_upper();name.text=item[0];description.show();proceed.disabled=false;proceed.grab_focus();ui.chest_skip=Callable()
   if tier.id=="legendary" and effect.has_meta("global_celebration"):effect.get_meta("global_celebration").burst(tier.color,2.0*game.settings.visual_intensity)
-  effect.burst(tier.color,float(tier.celebration)*game.settings.visual_intensity);game.play_sound("applause",0.25+0.75*float(tier.celebration));game.play_sound("purchase",0.4+0.6*float(tier.celebration));game.play_sound("legendary" if tier.id=="legendary" else "level",0.4+0.6*float(tier.celebration))
+  effect.burst(tier.color,float(tier.celebration)*game.settings.visual_intensity);game.play_sound("applause",0.25+0.75*float(tier.celebration));game.play_sound("reward.chest.legendary" if tier.id=="legendary" else "reward.chest.reveal",0.4+0.6*float(tier.celebration))
  var eligible=game.available_items()
  if eligible.is_empty():eligible=[id]
  var tween=tile.create_tween();ui.reward_tweens.append(tween);tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
@@ -221,7 +221,7 @@ static func reward(ui: FrontEnd,item: Array) -> void:
   if ui.reward_generation!=generation or not is_instance_valid(image):return
   var tick=int(70*(1-pow(1-progress,2.6)))
   if tile.get_meta("tick",-1)!=tick:
-   tile.set_meta("tick",tick);image.texture=UIAssets.icon("items",str(eligible[posmod(tick+3,eligible.size())]));game.play_sound("menu",0.3)
+   tile.set_meta("tick",tick);image.texture=UIAssets.icon("items",str(eligible[posmod(tick+3,eligible.size())]));game.play_sound("reward.chest.tick",0.35)
   ,0.0,1.0,3.5)
  tween.tween_callback(reveal)
  ui.chest_skip=func():

@@ -1,0 +1,79 @@
+#!/usr/bin/env python3
+"""Curate supplied long variation reels OUTSIDE project first; optional --install.
+No synthesis or bulk library import. Requires ffmpeg/numpy for offline analysis.
+"""
+from pathlib import Path
+import argparse, json, subprocess, wave, hashlib
+import numpy as np
+p=argparse.ArgumentParser();p.add_argument('library',type=Path);p.add_argument('output',type=Path);a=p.parse_args();a.output.mkdir(parents=True,exist_ok=True)
+RATE=32000
+# Semantic shortlist; waveform scoring rejects silence/weak snippets. Listening is not claimed.
+groups={
+ 'weapon.revolver.fire':(['DSGNMisc_HIT-Mecha Laser Pistol','DSGNMisc_PROJECTILE-Hollow Point'],6,.55),
+ 'weapon.sword.swing':(['DSGNMisc_MELEE-Bit Sword','DSGNMisc_MELEE-Sword Slash'],4,.5),
+ 'weapon.firestaff.cast':(['DSGNMisc_SKILL RELEASE-Flame Ball'],4,.65),
+ 'weapon.lightning.zap':(['MAGSpel_CAST-Wet Electricity','DSGNMisc_HIT-Laser Electric Zap'],5,.55),
+ 'weapon.chunkers.impact':(['DSGNImpt_EXPLOSION-Crunching','DSGNImpt_EXPLOSION-Cruncher'],5,.6),
+ 'weapon.bone.throw':(['SWSH_MOVEMENT-Bamboo Whip'],3,.45),
+ 'weapon.bow.fire':(['WHSH_MOVEMENT-Simple Whoosh'],3,.38),
+ 'weapon.bananarang.throw':(['WHSH_MOVEMENT-Wind Sweep Swish'],3,.5),
+ 'weapon.aura.pulse':(['MAGSpel_CAST-Sphere Quick'],3,.65),
+ 'weapon.mines.place':(['UIClick_INTERFACE-Metallic Click'],3,.25),
+ 'weapon.aegis.impact':(['DSGNMisc_HIT-Zap Metal','FGHTImpt_MELEE-Gut Punch'],4,.65),
+ 'enemy.explosion':(['DSGNImpt_EXPLOSION-Bit Bomb','DSGNImpt_EXPLOSION-Pyro Burst'],5,.9),
+ 'player.damage':(['DSGNMisc_MELEE-Sword Slash'],4,.4),
+ 'player.footstep.grass':(['FEETMisc_STEP-Boots on Grass'],8,.25),
+ 'player.footstep.rock':(['FEETMisc_STEP-Boots on Concrete'],8,.25),
+ 'player.slide':(['WHSH_MOVEMENT-Sand Swipe','DSGNMisc_MOVEMENT-Noise Sweeper'],4,.85),
+ 'player.land':(['FEETMisc_STEP-Hard Step'],3,.35),
+ 'pickup.xp':(['DSGNTonl_SKILL IMPACT-Energy Crystal','DSGNTonl_USABLE-Magic Coin'],5,.35),
+ 'ui.hover':(['UIClick_INTERFACE-Positive Click'],3,.13),
+ 'ui.confirm':(['UIClick_INTERFACE-Strong Click 1'],3,.2),
+ 'ui.open':(['DSGNTonl_USABLE-Scifi Select'],3,.35),
+ 'ui.close':(['UIMisc_INTERFACE-Lock'],3,.25),
+ 'ui.purchase':(['DSGNTonl_USABLE-Coin Spend'],3,.45),
+ 'reward.level_up':(['DSGNSynth_BUFF-Mecha Level Up'],3,1.5),
+ 'reward.chest.tick':(['UIClick_INTERFACE-Rattling Click'],3,.1),
+ 'reward.chest.reveal':(['MAGAngl_BUFF-Effect Success'],3,1.4),
+ 'reward.chest.legendary':(['DSGNSynth_BUFF-Mecha Guarantee Hit'],3,1.8),
+ 'boss.warning':(['MAGSpel_CAST-High Powering Up'],3,.85),
+}
+cache={};report=[];events={}
+for event,(sources,count,limit) in groups.items():
+ candidates=[]
+ for source in sources:
+  path=a.library/(source+'_HY_PC.wav')
+  if not path.exists():raise FileNotFoundError(path)
+  if source not in cache:
+   raw=subprocess.check_output(['ffmpeg','-v','error','-i',str(path),'-f','f32le','-ar',str(RATE),'-ac','1','-']);data=np.frombuffer(raw,dtype='<f4').copy()
+   block=320;trim=data[:len(data)//block*block].reshape(-1,block);energy=np.sqrt(np.mean(trim**2,axis=1));threshold=max(float(energy.max())*.018,.0005)
+   active=np.flatnonzero(energy>threshold);spans=[]
+   if len(active):
+    start=last=int(active[0])
+    for index in active[1:]:
+     if index-last>22:spans.append((max(0,start*block-160),min(len(data),(last+1)*block+1600)));start=int(index)
+     last=int(index)
+    spans.append((max(0,start*block-160),min(len(data),(last+1)*block+1600)))
+   cache[source]=(data,spans)
+  data,spans=cache[source]
+  for start,end in spans:
+   end=min(end,start+int(limit*RATE));clip=data[start:end].copy()
+   if len(clip)<RATE*.035:continue
+   peak=float(abs(clip).max());rms=float(np.sqrt(np.mean(clip**2)))
+   if peak<.005 or rms<.0001:continue
+   spectrum=abs(np.fft.rfft(clip));freq=np.fft.rfftfreq(len(clip),1/RATE);centroid=float(np.sum(spectrum*freq)/max(np.sum(spectrum),1e-9));crest=peak/rms
+   candidates.append((min(crest,12)+min(rms*10,2),source,start,end,clip,centroid,crest))
+ candidates.sort(key=lambda x:x[0],reverse=True);selected=candidates[:count]
+ files=[]
+ for i,(_,source,start,end,clip,centroid,crest) in enumerate(selected):
+  peak=float(abs(clip).max());clip*=min(3,.5/max(peak,1e-8));fade=min(160,len(clip)//4);tail=min(960,len(clip)//4);clip[:fade]*=np.linspace(0,1,fade);clip[-tail:]*=np.linspace(1,0,tail)
+  relative=event.replace('.','/')+'_%02d.wav'%i;dest=a.output/relative;dest.parent.mkdir(parents=True,exist_ok=True)
+  pcm=(np.clip(clip,-1,1)*32767).astype('<i2')
+  with wave.open(str(dest),'wb') as w:w.setnchannels(1);w.setsampwidth(2);w.setframerate(RATE);w.writeframes(pcm.tobytes())
+  files.append('res://assets/audio/sfx/'+relative)
+  report.append({'event':event,'file':relative,'source':source+'_HY_PC.wav','source_start':start/RATE,'source_end':end/RATE,'duration':len(clip)/RATE,'centroid_hz':round(centroid,1),'crest':round(crest,2),'peak_dbfs':round(float(20*np.log10(max(abs(clip).max(),1e-8))),2),'bytes':dest.stat().st_size,'sha256':hashlib.sha256(dest.read_bytes()).hexdigest()})
+ priority=5 if event in ['player.damage','boss.warning'] else 4 if event.startswith('reward.') else 2 if event.startswith('weapon.') else 1
+ cooldown=.09 if event.startswith('weapon.') else .055 if event in ['pickup.xp','reward.chest.tick'] else .12 if event.startswith('ui.') else .15
+ events[event]={'files':files,'bus':'UI' if event.startswith(('ui.','reward.')) else 'SFX','cooldown':cooldown,'priority':priority,'max_voices':2 if event in ['pickup.xp','player.slide'] else 3,'gain_db':-18 if event.startswith(('ui.','player.footstep')) else -11 if priority>=4 else -14,'pitch':.035 if event.startswith('reward.') else .055}
+ assert files,event
+(a.output/'events.json').write_text(json.dumps({'events':events},indent=2)+'\n');(a.output/'curation.json').write_text(json.dumps({'auditioned':False,'selection':'semantic shortlist plus transient/silence/crest/spectrum screening; manual listening remains required','files':report,'bytes':sum(r['bytes'] for r in report)},indent=2)+'\n');print('Curated',len(report),'clips,',sum(r['bytes'] for r in report),'bytes;', {k:len(v['files']) for k,v in events.items()})

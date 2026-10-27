@@ -35,7 +35,7 @@ static func step(game: Node, e: Dictionary, delta: float) -> void:
  var distance=direction.length();direction=game.navigation_direction(e.pos,game.player.position);e["move_direction"]=direction
  if e.encounter=="ghost":
   e.pos=game.constrain_enemy_motion(e.pos,e.pos+direction*e.speed*delta);e.pos.x=clampf(e.pos.x,-95,95);e.pos.z=clampf(e.pos.z,-95,95);e.pos.y=game.terrain_height(e.pos.x,e.pos.z)+0.9+sin(e.age*3)*0.2
-  if distance<1.8 and e.cooldown<=0:game.hurt(e.damage);e.cooldown=1.2
+  if distance<1.8 and e.cooldown<=0:game.hurt_contact(e.damage,e.pos);e.cooldown=1.2
   return
  e.windup=maxf(0,e.windup-delta);e.recovery=maxf(0,e.recovery-delta)
  if e.state=="windup":
@@ -109,7 +109,7 @@ static func modern_step(game: Node,e: Dictionary,delta: float) -> void:
  if e.frozen>0:return
  e.state="move"
  var distance=e.pos.distance_to(game.player.position+Vector3.UP*0.65)
- if distance<e.radius+0.9 and e.cooldown<=0:game.hurt(e.damage);e.cooldown=1.2
+ if distance<e.radius+0.9 and e.cooldown<=0:game.hurt_contact(e.damage,e.pos);e.cooldown=1.2
  if e.encounter=="chunkus":
   if e.aoe_remaining>0:
    e.aoe_remaining=maxf(0,e.aoe_remaining-delta)
@@ -120,7 +120,7 @@ static func modern_step(game: Node,e: Dictionary,delta: float) -> void:
   e.ability_clock-=delta
   if e.ability_clock<=0:
    e.ability_clock+=10;e.target=game.player.position;e.target.y=game.terrain_height(e.target.x,e.target.z)+0.1;e.aoe_remaining=1.5
-   game.telegraph(e.target,5,1.5,Color("ff7948"));game.combat_fx.burst("smoke_puff",e.target,1)
+   game.audio.emit("boss.warning",e.pos);game.telegraph(e.target,5,1.5,Color("ff7948"));game.combat_fx.burst("smoke_puff",e.target,1)
  elif e.encounter=="rock_golem":
   e.ability_clock-=delta
   if e.ability_clock<=0:

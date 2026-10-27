@@ -109,12 +109,14 @@ var run_metrics: Dictionary={}
 var chests_opened=0
 var legacy_weapon_slots=0
 var legacy_tome_slots=0
-var settings = {"visual_intensity":0.7,"render_scale":1.0,"quality":1,"master":0.7,"effects":0.7,"music":0.3,"sensitivity":0.0025,"invert":false,"reduced":false,"fps":false,"focus_pause":true,"shake":true,"numbers":true,"invincible":false}
+var settings = {"visual_intensity":0.7,"render_scale":1.0,"quality":1,"master":0.7,"effects":0.7,"ui_volume":0.65,"ambience":0.35,"music":0.3,"sensitivity":0.0025,"invert":false,"reduced":false,"fps":false,"focus_pause":true,"shake":true,"numbers":true,"invincible":false}
 var pending_binding = ""
 var bindings = {"forward":KEY_W,"back":KEY_S,"left":KEY_A,"right":KEY_D,"jump":KEY_SPACE,"crouch":KEY_CTRL,"interact":KEY_E,"inspect":KEY_TAB,"ultimate":KEY_Q,"map":KEY_M}
 var music: AudioStreamPlayer
 var sfx: Array[AudioStreamPlayer] = []
 var sound_bank: Dictionary={}
+var audio: RetroAudio
+var movement_audio=MovementAudio.new()
 var sound_last: Dictionary={}
 var sfx_cursor = 0
 var combat_fx: CombatFX
@@ -208,7 +210,8 @@ func button(text: String, parent: Node, callback: Callable) -> Button:
  node.text = text
  node.custom_minimum_size.y = 40
  parent.add_child(node)
- node.pressed.connect(func(): tone(660, 0.06); callback.call())
+ node.mouse_entered.connect(func():play_sound("ui.hover"))
+ node.pressed.connect(func(): play_sound("ui.confirm"); callback.call())
  return node
 func clear_panel(heading: String) -> VBoxContainer:
  return frontend.page(heading)
@@ -416,9 +419,11 @@ func build_stage() -> void:
  rng.state=previous_state
  make_portal()
  portal_wind=PortalWind.new();world.add_child(portal_wind);portal_wind.setup(self)
+ if is_instance_valid(audio):audio.music_stage(stage)
  if map_debug:map_debug=false;toggle_map_debug()
  toast("Stage %d • Explore the forest. Activate the portal to challenge the stage guardian."%stage)
 func resume() -> void:
+ if is_instance_valid(audio):audio.emit("ui.close")
  if mode=="shrine" and not active_shrine_reward.is_empty():return
  if mode=="reward" and active_reward>=0:active_reward=-1
  if ShrineRewards.present_next(self):return
@@ -472,7 +477,10 @@ func _notification(what: int) -> void:
 func _physics_process(delta: float) -> void:
  if is_instance_valid(combat_fx):
   combat_fx.intensity=settings.visual_intensity;combat_fx.reduced=settings.reduced;combat_fx.tick(delta,mode=="run")
- if mode != "run": return
+ if mode != "run":
+  if is_instance_valid(audio):audio.stop_event("player.slide")
+  movement_audio.reset();return
+ movement_audio.tick(self,delta)
  if health<=0 and stats.get("revives",0)>0:
   stats.revives-=1;health=stats.max_health;invulnerability=3;combat_fx.burst("explosion_small",player.position,3);toast("PHOENIX REBIRTH")
  if health <= 0:
@@ -689,7 +697,7 @@ func update_enemies(delta: float) -> void:
   var facing = atan2(direction.x,direction.z)
   var transform = Transform3D(Basis(Vector3.UP,facing).scaled(Vector3.ONE*e.scale),e.pos-Vector3.UP*0.65*e.scale)
   mm.set_instance_transform(boss_count,transform)
-  mm.set_instance_color(boss_count,Color("ff0804") if e.get("hit_time",0)>0 else Color("91ddff") if e.slow>0 else (Color("b0ed72") if e.poison>0 else colors[e.kind]))
+  mm.set_instance_color(boss_count,Color.WHITE if e.get("hit_time",0)>0 else Color("91ddff") if e.slow>0 else (Color("b0ed72") if e.poison>0 else colors[e.kind]))
   boss_count+=1
  mm.visible_instance_count=boss_count
  enemy_view.end_frame()
@@ -736,8 +744,9 @@ func hit(e: Dictionary, base: float, weapon: int) -> void:
  if character == 10 and e.hp/e.max_hp>0.9: amount*=1.5
  if character == 16 and e.hp/e.max_hp<0.1: amount = e.hp+1
  if e.kind<8 and "shield" in e.variant.modules and e.hp/e.max_hp>0.5: amount*=0.5
- e["hit_time"]=0.15
+ e["hit_time"]=0.10
  if is_instance_valid(combat_fx):
+  combat_fx.burst("impact_concrete",e.pos,0.35,0.12)
   if weapon>=0:WeaponVFX.contact(self,weapon,e.pos)
   else:combat_fx.burst("impact_concrete",e.pos,0.5)
  var actual=minf(amount,maxf(0,e.hp))
@@ -973,7 +982,7 @@ func update_weapons(delta: float) -> void:
      var spread = (i-(count-1)*0.5)*0.13
      if w[1]=="scatter": spread = rng.randf_range(-0.4,0.4)
      launch(origin,direction.rotated(Vector3.UP,spread),power,id,color,w[1],rank)
-  if not target.is_empty() or id==16:play_sound(WeaponVFX.sound(id),0.45 if id==16 else 1.0)
+  if not target.is_empty() or id==16:audio.emit(WeaponVFX.sound(id),origin,0.45 if id==16 else 1.0)
 func launch(pos: Vector3, direction: Vector3, damage: float, id: int, color: Color, kind: String, rank: int) -> void:
  if projectiles.size()>=220: return
  var node = pool.acquire("shot%d"%id,projectile_mesh(kind),color,pos)
@@ -1105,6 +1114,7 @@ func update_pickups(delta: float) -> void:
   if distance<1.2:
    if p.get("red",false):grant_red_level()
    else:xp+=p.value*stats.xp
+   audio.emit("pickup.xp",p.node.position,0.6)
    pool.release(p.node)
    pickups.remove_at(i)
  while xp>=Catalog.threshold(level):
@@ -1293,6 +1303,7 @@ func sandbox_menu() -> void:
   if not is_instance_valid(combat_debug_label):
    combat_debug_label=Label.new();combat_debug_label.position=Vector2(20,180);combat_debug_label.add_theme_font_size_override("font_size",16);ui.add_child(combat_debug_label)
   combat_debug_label.visible=debug_combat;resume())
+ button("Audio diagnostics",col,func():toast(JSON.stringify(audio.diagnostics())))
  button("Spawn 100 enemies",col,func(): for i in 100: spawn_enemy())
  button("Spawn Warden",col,func(): spawn_enemy(8))
  button("Add XP +100 / gold +100",col,func(): xp+=100; gold+=100)
@@ -1304,72 +1315,23 @@ func settings_menu(back: Callable) -> void:
  frontend.settings(back)
 
 func apply_settings() -> void:
- AudioServer.set_bus_volume_db(0,linear_to_db(maxf(0.001,settings.master)))
+ if is_instance_valid(audio):audio.volumes(settings)
  get_viewport().scaling_3d_scale=float(settings.render_scale)
  get_viewport().msaa_3d=Viewport.MSAA_4X if int(settings.quality)==2 else Viewport.MSAA_DISABLED
  if is_instance_valid(world):
   for child in world.get_children():
    if child is DirectionalLight3D: child.shadow_enabled=int(settings.quality)>0
- music.volume_db=linear_to_db(maxf(0.001,settings.music))
  if is_instance_valid(player): player.sensitivity=settings.sensitivity; player.inverted=settings.invert
 func setup_audio() -> void:
- sound_bank["applause"]=preload("res://assets/audio/reward_applause.wav")
- sound_bank["legendary"]=preload("res://assets/audio/reward_legendary.wav")
- sound_bank["revolver"]=preload("res://assets/audio/revolver.wav")
- sound_bank["stone"]=preload("res://assets/vendor/audio/Running_stone___Boot__1_1766767186839.mp3")
- var manifest=load("res://assets/vendor/audio/manifest.json") as JSON
- var tokens={"lightning":"Lightning_cast","place":"Lever_pull","hit":"Sword_hit_flesh","death":"Enemy_death","purchase":"Coin_pickup","level":"Level_up","menu":"Inventory_open","explosion":"Fire_spell_impact","ready":"Buff_spell","cast":"Fire_spell_cast","shot":"Bow_and_arrow_shot","swing":"Sword_swing","ambient":"Forest_ambience"}
- for event in tokens:
-  for entry in manifest.data:
-   if tokens[event] in entry.original:sound_bank[event]=load(entry.path);break
- for i in 10:
-  var audio=AudioStreamPlayer.new()
-  add_child(audio)
-  sfx.append(audio)
- music=AudioStreamPlayer.new()
- add_child(music)
- var stream=AudioStreamWAV.new()
- stream.mix_rate=22050
- stream.format=AudioStreamWAV.FORMAT_16_BITS
- stream.loop_mode=AudioStreamWAV.LOOP_FORWARD
- stream.loop_end=22050*8
- var bytes=PackedByteArray()
- bytes.resize(22050*8*2)
- var notes=[130.81,164.81,196.0,146.83]
- for i in 22050*8:
-  var t=float(i)/22050
-  var f=notes[int(t/2)%4]
-  var sample=(sin(t*f*TAU)*0.07+sin(t*f*1.5*TAU)*0.035)*minf(1,fmod(t,2)*5)
-  bytes.encode_s16(i*2,int(sample*32767))
- stream.data=bytes
- music.stream=stream
- if sound_bank.has("ambient"):
-  music.stream=sound_bank.ambient;music.stream.loop=true
- if AudioServer.get_driver_name()!="Dummy": music.play()
- apply_settings()
+ audio=RetroAudio.new();add_child(audio);audio.music_menu();apply_settings()
+ sound_bank["hit"]=audio.streams[audio.events["player.damage"].files[0]];sound_bank["level"]=audio.streams[audio.events["reward.level_up"].files[0]]
+ sound_bank["applause"]=audio.streams[audio.events["reward.applause"].files[0]];sound_bank["legendary"]=audio.streams[audio.events["reward.chest.legendary"].files[0]]
 func play_sound(event: String,gain: float=1.0) -> void:
- if AudioServer.get_driver_name()=="Dummy" or not sound_bank.has(event):return
- var now=Time.get_ticks_msec()
- if event in ["hit","death","explosion","shot","swing","cast","stone"] and now-int(sound_last.get(event,-1000))<80:return
- sound_last[event]=now
- var audio=sfx[sfx_cursor%sfx.size()];sfx_cursor+=1;audio.stream=sound_bank[event];audio.volume_db=linear_to_db(maxf(0.001,float(settings.effects)*gain));audio.play()
-func tone(frequency: float, duration: float, loudness: float = 0.3) -> void:
- if AudioServer.get_driver_name()=="Dummy": return
- var stream=AudioStreamWAV.new()
- stream.mix_rate=22050
- stream.format=AudioStreamWAV.FORMAT_16_BITS
- var bytes=PackedByteArray()
- var length=int(duration*22050)
- bytes.resize(length*2)
- for i in length:
-  var t=float(i)/22050
-  var value=sin(t*frequency*TAU)*(1-float(i)/length)*loudness*settings.effects
-  bytes.encode_s16(i*2,int(value*32767))
- stream.data=bytes
- var audio=sfx[sfx_cursor%sfx.size()]
- sfx_cursor+=1
- audio.stream=stream
- audio.play()
+ var aliases={"hit":"player.damage","death":"enemy.death","purchase":"ui.purchase","level":"reward.level_up","menu":"ui.confirm","explosion":"enemy.explosion","ready":"boss.warning","cast":"weapon.firestaff.cast","shot":"weapon.bow.fire","swing":"weapon.sword.swing","stone":"weapon.chunkers.impact","lightning":"weapon.lightning.zap","place":"weapon.mines.place","revolver":"weapon.revolver.fire","applause":"reward.applause","legendary":"reward.chest.legendary"}
+ if is_instance_valid(audio):audio.emit(aliases.get(event,event),Vector3.INF,gain)
+func tone(_frequency: float,_duration: float,_loudness: float=0.3) -> void:
+ # Legacy UI/boss callsites now use cached events, never allocate PCM at runtime.
+ play_sound("boss.warning" if _frequency<200 else "ui.confirm")
 
 func update_special_visuals(delta: float) -> void:
  for id in weapons:
@@ -1881,4 +1843,15 @@ func apply_player_blast(center: Vector3,radius: float,damage: float) -> bool:
  var direction=player.position-center;direction.y=0
  if direction.length_squared()<0.001:direction=Vector3.FORWARD
  player.launch(direction.normalized(),EnemyContact.SETTINGS.explosion_horizontal,EnemyContact.SETTINGS.explosion_upward,EnemyContact.SETTINGS.explosion_speed_cap,EnemyContact.SETTINGS.explosion_vertical_cap)
+ return true
+
+func hurt_contact(amount: float,attacker: Vector3) -> bool:
+ var before=health;hurt(amount)
+ if health>=before:return false
+ var direction=player.position-attacker;direction.y=0
+ if direction.length_squared()<0.001:direction=Vector3.FORWARD
+ var horizontal=Vector3(player.velocity.x,0,player.velocity.z)
+ var cap=maxf(horizontal.length(),12.0)
+ horizontal=(horizontal+direction.normalized()*3.2).limit_length(cap)
+ player.velocity.x=horizontal.x;player.velocity.z=horizontal.z
  return true

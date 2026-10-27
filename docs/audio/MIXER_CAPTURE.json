@@ -1,0 +1,9 @@
+{
+  "driver": "ALSA null (unclocked)",
+  "duration_recorded_seconds": 1424.021768707483,
+  "peak_dbfs": -15.84152735881467,
+  "rms_dbfs": -38.5626383727515,
+  "clipped_samples": 0,
+  "auditioned": false,
+  "limitation": "Null sink runs faster than real time; signal/decoder/mixer smoke only, not live pacing, crossfade timing or physical output proof."
+}

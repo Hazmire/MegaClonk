@@ -1,0 +1,26 @@
+[
+  {
+    "file": "Arcade.Rush.mp3",
+    "duration": 138.84,
+    "bytes": 3187614,
+    "rate": "48000"
+  },
+  {
+    "file": "Pixelad.Akcio.mp3",
+    "duration": 184.848,
+    "bytes": 4322813,
+    "rate": "48000"
+  },
+  {
+    "file": "Arcade.Groove.1.mp3",
+    "duration": 183.768,
+    "bytes": 4256621,
+    "rate": "48000"
+  },
+  {
+    "file": "Arcade.Groove.mp3",
+    "duration": 192.816,
+    "bytes": 4396199,
+    "rate": "48000"
+  }
+]

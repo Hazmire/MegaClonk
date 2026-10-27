@@ -42,7 +42,7 @@ func run():
   check(CombatFX.sprite_frames(id).get_frame_count("default")>1,"PSX flipbook imports: "+id)
  var e=game.spawn_enemy(0,game.player.position+Vector3(2,0,0));e.hp=5;game.rebuild_grid();game.hit(e,500,7)
  check(is_equal_approx(game.measured_dps(7),0.5),"Measured DPS excludes overkill")
- check(e.hit_time>0,"Enemy hit starts red flash timer")
+ check(e.hit_time>0,"Enemy hit starts brief white flash timer")
  game.stats.evasion=0;game.invulnerability=0;game.hurt(5)
  check(game.player.avatar.flashing and game.player.hurt_time>0,"Actual player damage starts red flash")
  var hp=game.health;game.hurt(5)
