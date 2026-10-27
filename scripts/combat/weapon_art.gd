@@ -15,6 +15,9 @@ static func mesh(kind: String) -> Mesh:
    parts=[ModelBuilder.part(ModelBuilder.cone(0.9,0.18,0.9),Vector3.ZERO,"526d86",Vector3(PI/2,0,0)),ModelBuilder.part(ModelBuilder.cube(Vector3(0.12,1.3,0.1)),Vector3(0,0,0.13),"e5c975"),ModelBuilder.part(ModelBuilder.cube(Vector3(0.9,0.12,0.1)),Vector3(0,0.15,0.14),"e5c975")]
   "blade","wave","dagger":
    parts=[ModelBuilder.part(ModelBuilder.cone(0.22,1.5,0),Vector3(0,0,-0.4),"c7fbf2",Vector3(-PI/2,0,0)),ModelBuilder.part(ModelBuilder.cube(Vector3(0.65,0.1,0.12)),Vector3(0,0,0.4),"568b9f"),ModelBuilder.part(ModelBuilder.cone(0.08,0.4,0.08),Vector3(0,0,0.65),"6b5344",Vector3(PI/2,0,0))]
+  "mine":
+   parts=[ModelBuilder.part(ModelBuilder.cone(0.6,0.18,0.48),Vector3(0,0.08,0),"45484c"),ModelBuilder.part(ModelBuilder.cone(0.25,0.09,0.25),Vector3(0,0.22,0),"c73e35")]
+   for i in 6:parts.append(ModelBuilder.part(ModelBuilder.cube(Vector3(0.12,0.08,0.14)),Vector3(cos(i*TAU/6)*0.44,0.18,sin(i*TAU/6)*0.44),"c0ae85"))
   "bullet","scatter":
    parts=[ModelBuilder.part(ModelBuilder.cone(0.055,0.42,0.025),Vector3.ZERO,"d8b35e",Vector3(PI/2,0,0))]
   "bounce":

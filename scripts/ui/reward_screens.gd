@@ -68,7 +68,7 @@ static func equipment(ui: FrontEnd,parent: Node) -> void:
   var owned=game.weapons if category=="weapons" else game.tomes
   for id in owned:
    var rank=int(owned[id].level) if category=="weapons" else int(owned[id])
-   var meta=RewardCatalog.entry(category,id,rank)
+   var meta=game.equipment_meta(category,id,rank)
    var tile=icon(ui,grid,category,str(id),"Lv %d"%rank,Rarity.definition(meta.rarity).color,46);tile.tooltip_text=game.weapon_tooltip(int(id)) if category=="weapons" else meta.description
   var limit=game.weapon_limit() if category=="weapons" else game.tome_limit()
   for index in range(owned.size(),maxi(4,limit)):
@@ -85,10 +85,11 @@ static func equipment(ui: FrontEnd,parent: Node) -> void:
  var abilities=HBoxContainer.new();abilities.add_theme_constant_override("separation",10);parent.add_child(abilities)
  for category in ["traits","ultimates"]:
   var id=game.loadout_runtime.trait_id if category=="traits" else game.loadout_runtime.ultimate_id
-  var tile=icon(ui,abilities,category,id,"Trait" if category=="traits" else "Ready" if game.loadout_runtime.cooldown<=0 else "%.0fs"%game.loadout_runtime.cooldown,Color("ffbf45"),46)
+  var tile=icon(ui,abilities,category,id,"Trait" if category=="traits" else "Ready" if game.loadout_runtime.cooldown<=0 else "%.0fs"%game.loadout_runtime.cooldown,Color("7d9ca0") if category=="traits" else Color("ffbf45"),46)
   var entry=LoadoutCatalog.entry(category,id);tile.tooltip_text=entry.get("name",id)+"\n"+entry.get("description","")
-  var border=ColorRect.new();border.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);border.mouse_filter=Control.MOUSE_FILTER_IGNORE
-  var material=ShaderMaterial.new();material.shader=preload("res://shaders/gold_frame.gdshader");border.material=material;tile.add_child(border)
+  if category=="ultimates":
+   var border=ColorRect.new();border.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);border.mouse_filter=Control.MOUSE_FILTER_IGNORE
+   var material=ShaderMaterial.new();material.shader=preload("res://shaders/gold_frame.gdshader");border.material=material;tile.add_child(border)
 static func statistics(ui: FrontEnd,parent: Node) -> void:
  var game=ui.game;parent.add_theme_constant_override("separation",3)
  for group in [["Survival",["max_health","regen","armor","evasion","lifesteal","thorns"]],["Combat",["damage","crit","crit_damage","haste","count","size","projectile_speed","duration","knockback"]],["Movement",["speed","air_jumps","jump","slide_speed","slide_friction"]],["Rewards",["pickup","xp","gold_gain","luck","difficulty"]]]:
@@ -115,8 +116,8 @@ static func layout(ui: FrontEnd,title: String) -> VBoxContainer:
  var middle=frame(ui,Vector2(322,78),Vector2(600,602),title)
  statistics(ui,frame(ui,Vector2(938,78),Vector2(326,602),"Stats"))
  return middle
-static func offer(ui: FrontEnd,parent: Node,category: String,id: Variant,rank: int,description: String,callback: Callable,button_text: String="") -> Button:
- var meta=RewardCatalog.entry(category,id,rank);var tier=Rarity.definition(meta.rarity)
+static func offer(ui: FrontEnd,parent: Node,category: String,id: Variant,rank: int,description: String,callback: Callable,button_text: String="",metadata: Dictionary={}) -> Button:
+ var meta=RewardCatalog.entry(category,id,rank) if metadata.is_empty() else metadata;var tier=Rarity.definition(meta.rarity)
  var button=Button.new();button.custom_minimum_size=Vector2(552,122);button.add_theme_stylebox_override("normal",style(tier.color,tier.color.darkened(0.91)));button.add_theme_stylebox_override("hover",style(tier.color.lightened(0.3),tier.color.darkened(0.8)));button.add_theme_stylebox_override("focus",style(Color("fff0bf"),tier.color.darkened(0.82)));parent.add_child(button)
  var margin=MarginContainer.new();margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);margin.add_theme_constant_override("margin_left",14);margin.add_theme_constant_override("margin_right",14);margin.add_theme_constant_override("margin_top",9);margin.add_theme_constant_override("margin_bottom",9);button.add_child(margin)
  var row=HBoxContainer.new();row.add_theme_constant_override("separation",14);margin.add_child(row)
@@ -158,7 +159,7 @@ static func upgrades(ui: FrontEnd) -> void:
   if choice.type=="weapon" and rank>0:description=WeaponUpgrades.description(int(choice.id),game.weapons[choice.id],choice.attribute)
   elif choice.type=="tome":
    var stat=Catalog.TOMES[choice.id][0];description=stat.replace("_"," ").capitalize()+": "+BuildStats.value(stat,game.stats[stat])+" → "+BuildStats.value(stat,game.stats[stat]+Catalog.TOMES[choice.id][1])
-  var button=offer(ui,center,category,choice.id,rank,description,func():game.apply_upgrade(choice);game.resume())
+  var button=offer(ui,center,category,choice.id,rank,description,func():game.apply_upgrade(choice);game.resume(),"",choice.metadata)
   button.focus_entered.connect(func():ui.reward_focus=choice)
   button.mouse_entered.connect(func():ui.reward_focus=choice)
   if first==null:first=button;ui.reward_focus=choice

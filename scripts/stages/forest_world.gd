@@ -18,10 +18,10 @@ static func build(game: Node) -> void:
  var data=ForestMap.layout(game.stage_map_seed())
  game.map_layout=data
  var layout_done=Time.get_ticks_usec()
- var terrain=game.mesh_node(ForestMap.geometry(data),Color.WHITE,game.world)
+ var terrain=game.mesh_node(ForestMap.geometry(data,false),Color.WHITE,game.world)
  terrain.name="TerraceTerrain"
  terrain.material_override=ForestAtmosphere.floor_material()
- terrain.create_trimesh_collision()
+ var body=StaticBody3D.new();body.name="TerrainCollision";terrain.add_child(body);var collider=CollisionShape3D.new();var shape=ConcavePolygonShape3D.new();shape.set_faces(ForestMap.geometry(data).get_faces());collider.shape=shape;body.add_child(collider)
  var collision_done=Time.get_ticks_usec()
  # Dedicated generator only. Decoration never consumes combat RNG.
  var rng=RandomNumberGenerator.new();rng.seed=data.seed+1337
@@ -38,7 +38,9 @@ static func build(game: Node) -> void:
   var type=i%3
   var tree=["CommonTree_1","CommonTree_3","CommonTree_5"][type]
   var mesh=ImportedArt.mesh(NATURE+tree+".gltf",7.5,7)
-  game.prop_instance("mega_"+tree,StageThemes.decor(mesh,game.stage),Color.WHITE,position,Vector3.ONE*scale_value,true,rng.randf()*TAU)
+  var visual_scale=scale_value
+  if i%3!=0:mesh=[ArtResetWorld.TREE1,ArtResetWorld.TREE2,ArtResetWorld.TREE3][i%3];visual_scale*=7.5
+  game.prop_instance("mega_"+tree,StageThemes.decor(mesh,game.stage),Color.WHITE,position,Vector3.ONE*visual_scale,true,rng.randf()*TAU)
   game.prop_collider(position,0.45*scale_value,4*scale_value)
   if game.prop_batches["mega_"+tree].multimesh.visible_instance_count>=140:break
  for i in 600:
@@ -54,6 +56,7 @@ static func build(game: Node) -> void:
   var position=Vector3(p.x,game.terrain_height(p.x,p.y),p.y)
   if not spaced(game,position,1.8):continue
   game.prop_instance("mega_rock",StageThemes.decor(mesh,game.stage,true),Color.WHITE,position,Vector3.ONE,true);game.prop_collider(position,1.8,mesh.get_aabb().size.y)
+ ArtResetWorld.boundary(game)
  var props_done=Time.get_ticks_usec()
  ForestAtmosphere.add_grass(game,data,rng)
  var grass_done=Time.get_ticks_usec()

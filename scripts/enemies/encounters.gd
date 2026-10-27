@@ -114,7 +114,7 @@ static func modern_step(game: Node,e: Dictionary,delta: float) -> void:
   if e.aoe_remaining>0:
    e.aoe_remaining=maxf(0,e.aoe_remaining-delta)
    if e.aoe_remaining==0:
-    game.flash(e.target,Color("ffad48"),5);game.combat_fx.burst("explosion_small",e.target,3);game.play_sound("explosion")
+    game.flash(e.target,Color("ffad48"),5);game.combat_fx.supplied_burst("shatter",e.target,2);game.combat_fx.supplied_burst("debris",e.target,2);game.combat_fx.burst("explosion_small",e.target,3);game.play_sound("explosion")
     var point=game.player.position
     if Vector2(point.x-e.target.x,point.z-e.target.z).length()<=5 and absf(point.y-e.target.y)<2.5:game.hurt(e.damage*1.6)
   e.ability_clock-=delta
@@ -135,4 +135,4 @@ static func modern_step(game: Node,e: Dictionary,delta: float) -> void:
     var point=e.pos+Vector3(cos(angle),0,sin(angle))*5
     var summoned=game.spawn_enemy(12,point)
     if not summoned.is_empty():summoned.summon_owner=e.owner_key
-   game.combat_fx.burst("smoke_puff",e.pos,2);game.flash(e.pos,Color("9cb9b0"),3)
+   game.combat_fx.supplied_burst("shatter",e.pos,2);game.combat_fx.burst("smoke_puff",e.pos,2);game.flash(e.pos,Color("9cb9b0"),3)

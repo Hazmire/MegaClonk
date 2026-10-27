@@ -126,7 +126,7 @@ func icon_row(parent: Node, category: String, id: String, label: String, golden:
  var slot=Control.new();slot.custom_minimum_size=Vector2(48,48);row.add_child(slot)
  var image=TextureRect.new();image.texture=UIAssets.icon(category,id);image.texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST;image.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;image.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);slot.add_child(image)
  if grey:image.modulate=Color(0.3,0.3,0.3,0.8)
- if golden:
+ if golden and category!="traits":
   var border=ColorRect.new();border.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);border.mouse_filter=Control.MOUSE_FILTER_IGNORE
   var material=ShaderMaterial.new();material.shader=preload("res://shaders/gold_frame.gdshader");border.material=material;slot.add_child(border)
  paragraph(label,row,260)
@@ -278,16 +278,16 @@ func update_hud() -> void:
  for id in game.tomes:tome_names.append("%s %d"%[id,game.tomes[id]])
  loadout_label.text="ARSENAL %d/%d • TOMES %d/%d"%[game.weapons.size(),game.weapon_limit(),game.tomes.size(),game.tome_limit()]
  var equipment=[]
- for id in game.weapons:equipment.append(str(id)+":"+str(game.weapons[id].level))
- var fingerprint=str(equipment)+str(game.tomes)+str(game.weapon_limit())+str(game.tome_limit())+game.loadout_runtime.trait_id+game.loadout_runtime.ultimate_id
+ for id in game.weapons:equipment.append(str(id)+":"+str(game.weapons[id].level)+":"+str(game.weapons[id].get("rarity","common")))
+ var fingerprint=str(equipment)+str(game.tomes)+str(game.tome_rarities)+str(game.weapon_limit())+str(game.tome_limit())+game.loadout_runtime.trait_id+game.loadout_runtime.ultimate_id
  if fingerprint!=icon_fingerprint:
   icon_fingerprint=fingerprint
   for child in loadout_icons.get_children():loadout_icons.remove_child(child);child.queue_free()
   var weapon_row=HBoxContainer.new();weapon_row.name="EquippedItems";weapon_row.add_theme_constant_override("separation",4);loadout_icons.add_child(weapon_row)
   for id in game.weapons:
-   var meta=RewardCatalog.entry("weapons",id,int(game.weapons[id].level));var tile=RewardScreens.icon(self,weapon_row,"weapons",str(id),"Lv. %d"%int(game.weapons[id].level),Rarity.definition(meta.rarity).color,40);tile.tooltip_text=meta.name;tile.set_meta("equipment_uid",meta.uid)
+   var meta=game.equipment_meta("weapons",id,int(game.weapons[id].level));var tile=RewardScreens.icon(self,weapon_row,"weapons",str(id),"Lv. %d"%int(game.weapons[id].level),Rarity.definition(meta.rarity).color,40);tile.tooltip_text=meta.name;tile.set_meta("equipment_uid",meta.uid)
   for id in game.tomes:
-   var meta=RewardCatalog.entry("tomes",id,int(game.tomes[id]));var tile=RewardScreens.icon(self,weapon_row,"tomes",str(id),"Lv. %d"%int(game.tomes[id]),Rarity.definition(meta.rarity).color,40);tile.tooltip_text=meta.name;tile.set_meta("equipment_uid",meta.uid)
+   var meta=game.equipment_meta("tomes",id,int(game.tomes[id]));var tile=RewardScreens.icon(self,weapon_row,"tomes",str(id),"Lv. %d"%int(game.tomes[id]),Rarity.definition(meta.rarity).color,40);tile.tooltip_text=meta.name;tile.set_meta("equipment_uid",meta.uid)
   var ability_row=HBoxContainer.new();loadout_icons.add_child(ability_row)
   icon_tile(ability_row,"traits",game.loadout_runtime.trait_id,LoadoutCatalog.entry("traits",game.loadout_runtime.trait_id).get("name","Trait"),true)
   icon_tile(ability_row,"ultimates",game.loadout_runtime.ultimate_id,LoadoutCatalog.entry("ultimates",game.loadout_runtime.ultimate_id).get("name","Ultimate"),true)
@@ -376,7 +376,7 @@ func icon_tile(parent: Node, category: String, id: String, hint: String, golden:
  var image=TextureRect.new();image.texture=UIAssets.icon(category,id);image.texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST;image.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;image.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);slot.add_child(image)
  if rank>0:
   var number=text(str(rank),slot,12);number.position=Vector2(24,20)
- if golden:
+ if golden and category!="traits":
   var border=ColorRect.new();border.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);border.mouse_filter=Control.MOUSE_FILTER_IGNORE
   var material=ShaderMaterial.new();material.shader=preload("res://shaders/gold_frame.gdshader");border.material=material;slot.add_child(border)
  if category=="ultimates":

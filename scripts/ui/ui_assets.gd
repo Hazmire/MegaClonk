@@ -7,6 +7,10 @@ const ITEM_ICONS=[12,46,5,20,34,28,9,13,19,26,42,25,43]
 # remain for weapon/item/tome packs whose usage terms are not yet verified.
 static func icon(category: String, id: String) -> Texture2D:
  var key=category+":"+id
+ if category=="weapons" and int(id) in Catalog.ACTIVE_WEAPONS and not int(id) in [0,1]:
+  if cache.has(key):return cache[key]
+  var atlas=load("res://assets/art_reset/icons/weapons.png") as Texture2D
+  var index=Catalog.ACTIVE_WEAPONS.find(int(id));var texture=AtlasTexture.new();texture.atlas=atlas;texture.region=Rect2(Vector2(index%5,int(index/5))*Vector2(atlas.get_width()/5.0,atlas.get_height()/2.0),Vector2(atlas.get_width()/5.0,atlas.get_height()/2.0));texture.filter_clip=true;cache[key]=texture;return texture
  if category=="tomes":
   var path="res://assets/vendor/items/Icon"+("35" if posmod(id.hash(),2)==0 else "43")+".png"
   return load(path)

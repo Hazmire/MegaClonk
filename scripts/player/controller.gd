@@ -94,6 +94,7 @@ func slide_velocity(horizontal: Vector3, normal: Vector3, direction: Vector3, de
  return horizontal.limit_length(max_slide_speed*stats.speed*stats.get("slide_speed",1.0))
 func _physics_process(delta: float) -> void:
  if not active: return
+ floor_snap_length=0.4 if velocity.y<=0 else 0.0
  arm.rotation = Vector3(pitch, yaw, 0)
  arm.spring_length = lerpf(arm.spring_length,zoom,10*delta)
  arm.position.y = lerpf(arm.position.y,1.55 if posture=="standing" else 1.0,delta*12)
@@ -159,3 +160,9 @@ func air_velocity(horizontal: Vector3, direction: Vector3, delta: float) -> Vect
  var along=horizontal.dot(direction)
  horizontal+=direction*minf(air_control*delta,maxf(0,8*stats.speed*movement_multiplier-along))
  return horizontal.limit_length(speed_limit)
+
+func launch(direction: Vector3,horizontal_impulse: float,upward_impulse: float,horizontal_cap: float=24,vertical_cap: float=18) -> void:
+ var horizontal=(Vector3(velocity.x,0,velocity.z)+direction*horizontal_impulse).limit_length(horizontal_cap)
+ velocity.x=horizontal.x;velocity.z=horizontal.z;velocity.y=minf(vertical_cap,maxf(velocity.y,upward_impulse))
+ # Carry launch momentum through normal airborne steering and slide/jump logic.
+ floor_snap_length=0

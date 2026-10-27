@@ -20,3 +20,8 @@ free_chest_min=1
 free_chest_max=5
 drop_pickup_radius=1.8
 global_golem_cap=24
+
+explosion_horizontal=18.0
+explosion_upward=13.0
+explosion_speed_cap=24.0
+explosion_vertical_cap=18.0

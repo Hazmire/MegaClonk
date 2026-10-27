@@ -15,11 +15,13 @@ static func detonate(game: Node, e: Dictionary) -> void:
  game.flash(e.pos,Color("ffb05d"),e.variant.blast_radius)
  game.impact(e.pos,Color("ffab55"),10)
  game.play_sound("explosion")
- if (game.player.position+Vector3.UP*0.65).distance_to(e.pos)<e.variant.blast_radius: game.hurt(e.damage)
+ game.apply_player_blast(e.pos,e.variant.blast_radius,e.damage)
+ game.combat_fx.supplied_burst("fire",e.pos,1.5)
+ game.combat_fx.burst("explosion_small",e.pos,clampf(e.variant.blast_radius/2,1,4))
  # Nearby enemies are affected, but death processing is deferred to the usual loop.
  for other in game.nearby(e.pos,e.variant.blast_radius):
   if other!=e: game.hit(other,e.damage*0.6,-1)
- e.hp=0
+ e.hp=0;e.state="dead"
 static func step(game: Node, e: Dictionary, delta: float) -> void:
  if e.frozen>0 and e.get("drop",{}).is_empty():return
  if not e.get("climb",{}).is_empty() or not e.get("drop",{}).is_empty():
@@ -90,6 +92,7 @@ static func step(game: Node, e: Dictionary, delta: float) -> void:
    elif "charge" in modules and distance<16 and game.enemy_line_clear(e.pos,game.player.position): begin_attack(game,e,"charge")
    elif "slam" in modules and distance<config.range and absf(e.pos.y-game.player.position.y)<2.5: begin_attack(game,e,"slam")
    elif int(e.kind)>=8 and "melee" in modules and distance<config.range and absf(game.player.position.y-e.pos.y)<2.5: begin_attack(game,e,"melee")
+ if e.hp<=0:return
  e["move_direction"]=direction
  if e.get("ordinary",false):e.pos=EnemyTraversal.move(game,e,speed,delta)
  else:e.pos=game.constrain_enemy_motion(e.pos,e.pos+(direction*speed+e.knock)*delta)

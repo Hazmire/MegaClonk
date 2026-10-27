@@ -10,7 +10,9 @@ var electric: Array[Dictionary]=[]
 var bursts_created=0
 var intensity=0.7
 var reduced=false
+var supplied: SuppliedCombatFX
 func _ready() -> void:
+ supplied=SuppliedCombatFX.new();add_child(supplied)
  for i in LIMIT:
   var sprite=AnimatedSprite3D.new();add_child(sprite);sprite.hide();idle.append(sprite)
 static func definition(id: String) -> Dictionary:
@@ -54,6 +56,7 @@ func lightning(pos: Vector3) -> bool:
  mesh.material=material;emitter.draw_pass_1=mesh;add_child(emitter);emitter.position=pos;emitter.emitting=true
  electric.append({"node":emitter,"age":0.0});return true
 func tick(delta: float, running: bool=true) -> void:
+ supplied.tick(delta,running)
  for e in electric:e.node.speed_scale=1 if running else 0
  if not running:return
  for i in range(active.size()-1,-1,-1):
@@ -69,3 +72,7 @@ func _exit_tree() -> void:
   if child is AnimatedSprite3D:
    child.stop();child.sprite_frames=null
  active.clear();idle.clear();electric.clear()
+
+func supplied_burst(kind: String,pos: Vector3,size_value: float=1) -> bool:
+ if reduced or intensity<0.1:return false
+ return supplied.burst(kind,pos,size_value)

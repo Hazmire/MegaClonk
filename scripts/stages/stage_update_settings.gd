@@ -18,3 +18,8 @@ extends Resource
 @export var free_chest_max=5
 @export var drop_pickup_radius=1.8
 @export var global_golem_cap=24
+
+@export var explosion_horizontal=18.0
+@export var explosion_upward=13.0
+@export var explosion_speed_cap=24.0
+@export var explosion_vertical_cap=18.0

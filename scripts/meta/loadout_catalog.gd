@@ -36,7 +36,7 @@ const EXTRA_QUESTS=[
 ]
 static func quests() -> Array:
  var result=QUESTS+EXTRA_QUESTS
- for id in Catalog.WEAPONS.size():
+ for id in Catalog.ACTIVE_WEAPONS:
   result.append({"id":"mastery_"+str(id),"name":Catalog.WEAPONS[id][0]+" mastery","category":"Arsenal","metric":"weapon:"+str(id),"target":100,"credits":0,"gold":0,"silver":150})
  return result
 static func quest_reward(q: Dictionary) -> int:return int(q.get("silver",int(q.credits)+int(q.gold)))
@@ -44,7 +44,7 @@ static func entries(category: String) -> Array:
  var result: Array=[]
  match category:
   "weapons":
-   for i in Catalog.WEAPONS.size():
+   for i in Catalog.ACTIVE_WEAPONS:
     var w=Catalog.WEAPONS[i]
     result.append({"id":str(i),"name":w[0],"description":"%s • %.0f damage • %.2fs cooldown"%[w[1],w[2],w[3]],"goal":0,"cost":0 if i in [0,1,6,7] else 15+i*3})
   "traits": result=TRAITS.duplicate(true)
