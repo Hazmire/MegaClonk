@@ -211,6 +211,7 @@ static func reward(ui: FrontEnd,item: Array) -> void:
  var reveal=func():
   if ui.reward_generation!=generation or not is_instance_valid(tile) or tile.get_meta("revealed",false):return
   tile.set_meta("revealed",true);image.texture=UIAssets.icon("items",str(id));rarity.text=tier.name.to_upper();name.text=item[0];description.show();proceed.disabled=false;proceed.grab_focus();ui.chest_skip=Callable()
+  if tier.id=="legendary" and effect.has_meta("global_celebration"):effect.get_meta("global_celebration").burst(tier.color,2.0*game.settings.visual_intensity)
   effect.burst(tier.color,float(tier.celebration)*game.settings.visual_intensity);game.play_sound("applause",0.25+0.75*float(tier.celebration));game.play_sound("purchase",0.4+0.6*float(tier.celebration));game.play_sound("legendary" if tier.id=="legendary" else "level",0.4+0.6*float(tier.celebration))
  var eligible=game.available_items()
  if eligible.is_empty():eligible=[id]
@@ -242,7 +243,7 @@ static func shrine(ui: FrontEnd,reward: Dictionary) -> void:
   button(ui,center,"CONTINUE",func():game.active_shrine_reward={};game.resume())
 static func celebration(ui: FrontEnd,color: Color,strength: float) -> RewardCelebration:
  var effect=RewardCelebration.new();effect.rainbow=true;effect.tint=color;effect.strength=strength*ui.game.settings.visual_intensity;ui.menu.add_child(effect);ui.menu.move_child(effect,1)
- var local=RewardCelebration.new();local.confetti=false;local.rays=true;local.tint=color;local.strength=effect.strength;local.center=Vector2(288,262)
+ var local=RewardCelebration.new();local.set_meta("global_celebration",effect);local.confetti=false;local.rays=true;local.tint=color;local.strength=effect.strength;local.center=Vector2(288,262)
  for frame in ui.menu.get_children():
   if frame is RewardFrame and frame.position.x==322:
    frame.clip_contents=true;frame.add_child(local);frame.move_child(local,0);break
