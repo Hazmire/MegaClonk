@@ -52,7 +52,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
       - name: Publish durable Windows playtest download
-        if: github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/megaclonk-menu-loadouts')
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

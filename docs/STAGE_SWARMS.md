@@ -37,4 +37,4 @@ The final headless sample also measured 25 simultaneous death/drop events at 0.0
 
 Run `tools/validate.sh`, then `tools/export.sh`. The export embeds the game resources in the Windows executable, packages a ZIP, and runs compiled world, reward/UI and stage/swarms smoke checks through Linux Godot. These checks validate compiled resources; they do not execute Windows machine code.
 
-The Windows workflow uploads a 30-day Actions artifact on source builds. Manual dispatch publishes the distinct `stage-swarms-v8` prerelease. Consult README and release provenance for verified publication; a configured workflow alone does not mean a build has been uploaded.
+The Windows workflow uploads a 30-day Actions artifact on source builds. Manual dispatch, or a source push on the active `megaclonk-menu-loadouts` development branch, publishes the distinct `stage-swarms-v8` prerelease after all validation/export gates pass. Consult README and release provenance for verified publication; a configured workflow alone does not mean a build has been uploaded.
