@@ -1,6 +1,6 @@
 # Active stage/swarms increment
 
-The stage/swarms gameplay increment and all 22 source suites are implemented and passing. See [checklist](TODO_STAGE_SWARMS.md) and [guide](docs/STAGE_SWARMS.md). Windows publication is pending. Dense 500-enemy CPU cost remains above the 60FPS frame budget; native Windows execution is untested. Earlier release history follows.
+The stage/swarms gameplay increment and all 22 source suites are implemented and passing. See [checklist](TODO_STAGE_SWARMS.md) and [guide](docs/STAGE_SWARMS.md). Windows stage-swarms-v8 publication and downloaded compiled world/UI/stage checks are verified. Dense 500-enemy CPU cost remains above the 60FPS frame budget; native Windows execution is untested. Earlier release history follows.
 
 # Active milestone status
 

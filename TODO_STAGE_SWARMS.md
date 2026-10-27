@@ -12,7 +12,9 @@ Baseline: Godot 4.7.2, branch megaclonk-menu-loadouts, starting source 042813f. 
 - [x] 5. Automatic 5m/8s proximity shrines; progress retention, readable orb and exactly one real stat reward.
 - [x] 6. At least fifteen ordinary chests, rare free chests, three shops, two elite statues and one boss statue; deterministic reachable placement across 200 seeds.
 - [x] 7. Run-persistent additional bosses, encounter snapshots, independently selected variants/valid positions, all-boss completion and safe summons.
-- [ ] 8. Integrated regression/performance/visual checks, committed source and verified Windows publication.
+- [x] 8a. Integrated regression/performance/visual checks, committed source and verified Windows publication.
+- [ ] 8b. Full performance acceptance: optimize/verify dense 500-enemy play on suitable hardware; cloud sample exceeds 60FPS CPU budget.
+- [ ] Native Windows execution and sustained human playtesting.
 
 Do not mark the full update complete until all acceptance criteria have evidence. Native Windows execution and gaming-GPU timings require appropriate hardware; Linux pack checks do not establish them.
 
@@ -20,4 +22,4 @@ Final source verification: all 22 suites pass, 761 named checks, 200 layouts, 20
 
 Performance limitation: comparable dense baseline 50/100/250/500 CPU means were 1.08/2.09/5.08/10.08ms; new full AI/contact/crowd/grid/FX/HUD means were 2.04/4.45/11.81/23.99ms, worst 53.89ms at 500. Bounded collision solving alone averaged 5.23ms at 500 in the final regression. This is a material regression, not verified 60FPS. See docs/STAGE_SWARMS.md and raw release reports. Gaming-PC validation and further stress optimization remain open.
 
-Delivery blocker: GitHub rejects the cloud GH_TOKEN with HTTP 401 Bad credentials. The user has been asked to reconnect GitHub. Git pushes work through the environment’s separate Git integration. Source 29ab593 is pushed and its clean local Windows export passed all three compiled smoke gates. The workflow now publishes gated development-branch pushes without requiring API dispatch. Hosted publication remains pending verification.
+Delivery verified: clean source 15310003ce3bbce808a43bb44899399316c1c516; successful push workflow 40500299914 and PR workflow 40500308293; durable stage-swarms-v8 release; non-expired Actions artifact 12733221334. Downloaded release ZIP matched GitHub size/digest and all CRCs. Its BUILD_INFO names the clean expected commit. The downloaded embedded pack passed a 180-frame world run and explicit reward/UI and stage/swarms smokes, without script/resource errors. See releases/STAGE_SWARMS_VALIDATION.json and releases/BUILD_INFO.md. The local API token is invalid, but Git pushes and gated automatic Actions publication succeeded without it; no user credential change is needed for this delivered release.

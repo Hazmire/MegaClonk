@@ -1,3 +1,7 @@
+# Latest verified Windows playtest
+
+[Stage themes and physical swarms v8](https://github.com/Hazmire/MegaClonk/releases/download/stage-swarms-v8/BONK_INFINITY_Windows_x64.zip). See [BUILD_INFO](BUILD_INFO.md), [checksum](STAGE_SWARMS_SHA256SUMS) and [verification](STAGE_SWARMS_VALIDATION.json). Dense-swarm performance remains open; native Windows execution is untested. Earlier history follows.
+
 # Current Windows playtest
 
 [Download Reference UI v7.1](https://github.com/Hazmire/MegaClonk/releases/download/reference-ui-v7.1/BONK_INFINITY_Windows_x64.zip).

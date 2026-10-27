@@ -23,9 +23,18 @@ This increment extends the existing Godot 4.7.2 project. Start a new run to gene
 
 All 22 regression suites pass: 761 named checks, plus 200 terrain layouts, 200 decorated worlds, 104,353 collision rays, 400 enemy traversal cases, 1,000 live interactions, 73 detailed cliff-drop cases and 200 expanded-object layouts. Both elite statues were activated and all six elite chest drops checked. The object audit found 13 of 200 seeds with free chests.
 
+Compiled Windows game resources also passed world, reward/UI and stage/swarms smoke checks through Linux Godot. The compiled pack was rendered and viewed for all three palettes, swarm support, shrine charging/completion and three individual boss health bars. No native Windows executable execution is implied.
+
 Actual rendered captures are in [the preview directory](images/stage-swarms). Theme palettes, a supported swarm, shrine charging/completion, boss statue, three separate boss health bars and a free reward chest were viewed. These are rendered fixtures; they do not establish prolonged human playtesting.
 
 Performance is a known limitation. A comparable dense baseline without crowd collisions averaged 1.08/2.09/5.08/10.08ms for 50/100/250/500 enemies. The updated AI/contact/crowd/grid/FX/HUD headless sample averaged 2.04/4.45/11.81/23.99ms, with a 53.89ms worst frame at 500. Collision solving alone averaged 5.23ms at 500 in the final regression run. These are cloud-host measurements, not gaming-PC FPS. The 500-enemy full CPU result exceeds a 16.67ms frame budget and is a material regression. This release does not satisfy an unqualified 60FPS acceptance claim.
+
+| Enemies | Baseline CPU mean | Updated CPU mean / worst | Software-rendered frame mean |
+| --- | ---: | ---: | ---: |
+| 50 | 1.08 ms | 2.04 / 3.66 ms | 214.19 ms |
+| 100 | 2.09 ms | 4.45 / 6.06 ms | 275.11 ms |
+| 250 | 5.07 ms | 11.81 / 21.13 ms | 444.82 ms |
+| 500 | 10.08 ms | 23.99 / 53.89 ms | 736.69 ms |
 
 The final headless sample also measured 25 simultaneous death/drop events at 0.04ms mean, but collecting all 25 and opening the first reel took 26.22ms. Software Mesa rendering is substantially slower than real desktop GPU rendering. The known Mesa sky-texture shutdown diagnostic remains. Native Windows execution, audible audio and gaming-GPU performance are unverified. See `releases/STAGE_SWARMS_*` reports for raw measurements and publication status.
 
