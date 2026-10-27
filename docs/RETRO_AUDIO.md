@@ -1,3 +1,5 @@
+Current follow-up: [Dark Feedback12](DARK_FEEDBACK.md) disables enemy hit/death sounds and adds the revised HUD. The v11 report below is historical; current selection hashes/offsets are in audio/CURATION.json.
+
 # Retro sound and visceral combat 11
 
 The existing Godot4.7.2 game now uses a central audio event registry, preloaded variation resources and fixed native playback pools. Existing gameplay, rarity rules, contact pursuit, portal guidance and reward outcomes are retained.

@@ -19,9 +19,11 @@ The art-reset update adds [ten active weapons, Common first acquisitions, suppli
 
 The retro-audio update adds [four original tracks, curated weapon/movement/reward audio, five saved volume sliders and white enemy feedback](docs/RETRO_AUDIO.md). The full Pixel Combat library stays outside the project.
 
+The latest [dark-feedback update](docs/DARK_FEEDBACK.md) removes enemy hit/death sounds, darkens the effects and adds a separate tome row plus matching dark-red health bars with numbers.
+
 ## Download and play
 
-- [Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/retro-audio-v11/BONK_INFINITY_Windows_x64.zip)
+- [Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/dark-feedback-v12/BONK_INFINITY_Windows_x64.zip)
 - [GitHub Actions builds](https://github.com/Hazmire/MegaClonk/actions/workflows/windows-build.yml)
 - [PR #5 — merge into Full-Release](https://github.com/Hazmire/MegaClonk/pull/5)
 

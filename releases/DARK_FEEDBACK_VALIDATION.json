@@ -1,0 +1,233 @@
+{
+  "source_commit": "f203a3503f45958b5a4c5eea912c7534fc83f254",
+  "workflow_run": 40593680375,
+  "release_url": "https://github.com/Hazmire/MegaClonk/releases/tag/dark-feedback-v12",
+  "asset_id": 683067158,
+  "bytes": 123869365,
+  "sha256": "502a905476776fb6c316353b09a49c944eb54833d1df936c24970199b8ba6800",
+  "github_digest": "sha256:502a905476776fb6c316353b09a49c944eb54833d1df936c24970199b8ba6800",
+  "download_url": "https://github.com/Hazmire/MegaClonk/releases/download/dark-feedback-v12/BONK_INFINITY_Windows_x64.zip",
+  "zip_crc_passed": true,
+  "build_info": "MEGACLONK v12 dark combat sounds, silent enemies and health HUD\nGodot 4.7.2\nSource commit: f203a3503f45958b5a4c5eea912c7534fc83f254\nUncommitted source at build time: False\nWindows execution requires native playtesting.\n",
+  "curated_pixel_clips": 106,
+  "curated_pixel_bytes": 3207224,
+  "source_library_in_export": false,
+  "native_windows_executed": false,
+  "auditioned": false,
+  "local_visuals_viewed": true,
+  "source_audio_tests": 162,
+  "signal_capture": {
+    "driver": "ALSA null (unclocked)",
+    "duration_recorded_seconds": 1424.021768707483,
+    "peak_dbfs": -15.84152735881467,
+    "rms_dbfs": -38.5626383727515,
+    "clipped_samples": 0,
+    "auditioned": false,
+    "limitation": "Null sink runs faster than real time; signal/decoder/mixer smoke only, not live pacing, crossfade timing or physical output proof."
+  },
+  "dispatch_profile": {
+    "cases": [
+      {
+        "accepted": 90,
+        "cooldown_suppressed": 14220,
+        "enemies": 50,
+        "max_voices": 15,
+        "mean_ms": 0.0861416666666668,
+        "p95_ms": 0.138,
+        "requested": 50,
+        "voice_suppressed": 98,
+        "worst_ms": 0.272
+      },
+      {
+        "accepted": 86,
+        "cooldown_suppressed": 26220,
+        "enemies": 100,
+        "max_voices": 13,
+        "mean_ms": 0.146970833333333,
+        "p95_ms": 0.205,
+        "requested": 100,
+        "voice_suppressed": 102,
+        "worst_ms": 0.32
+      },
+      {
+        "accepted": 83,
+        "cooldown_suppressed": 62220,
+        "enemies": 250,
+        "max_voices": 13,
+        "mean_ms": 0.3061,
+        "p95_ms": 0.394,
+        "requested": 250,
+        "voice_suppressed": 105,
+        "worst_ms": 0.554
+      },
+      {
+        "accepted": 88,
+        "cooldown_suppressed": 122220,
+        "enemies": 500,
+        "max_voices": 13,
+        "mean_ms": 0.509283333333333,
+        "p95_ms": 0.694,
+        "requested": 500,
+        "voice_suppressed": 100,
+        "worst_ms": 1.583
+      }
+    ],
+    "driver": "Dummy",
+    "note": "CPU dispatch/aggregation only under Dummy; no physical mixer or target-GPU timing claim."
+  },
+  "published_world_frames": 180,
+  "published_compiled_smokes": [
+    "ui",
+    "stage",
+    "v9",
+    "art_reset",
+    "retro_audio"
+  ],
+  "source_suites": 27,
+  "local_named_checks": 1086,
+  "dark_feedback_checks": 13,
+  "ci_success": true,
+  "ci_jobs": {
+    "total_count": 1,
+    "jobs": [
+      {
+        "id": 122504046829,
+        "run_id": 40593680375,
+        "workflow_name": "MEGACLONK Windows build",
+        "head_branch": "retro-audio-v11",
+        "run_url": "https://api.github.com/repos/Hazmire/MegaClonk/actions/runs/40593680375",
+        "run_attempt": 1,
+        "node_id": "CR_kwDOVU0CDs8AAAAchc9o7Q",
+        "head_sha": "f203a3503f45958b5a4c5eea912c7534fc83f254",
+        "url": "https://api.github.com/repos/Hazmire/MegaClonk/actions/jobs/122504046829",
+        "html_url": "https://github.com/Hazmire/MegaClonk/actions/runs/40593680375/job/122504046829",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-10-27T22:17:37Z",
+        "started_at": "2026-10-27T22:17:39Z",
+        "completed_at": "2026-10-27T22:26:22Z",
+        "name": "windows-build",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-10-27T22:17:40Z",
+            "completed_at": "2026-10-27T22:17:40Z"
+          },
+          {
+            "name": "Configure writable tool directories",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-10-27T22:17:40Z",
+            "completed_at": "2026-10-27T22:17:40Z"
+          },
+          {
+            "name": "Check out source and generated models",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-10-27T22:17:40Z",
+            "completed_at": "2026-10-27T22:17:49Z"
+          },
+          {
+            "name": "Install checksum-verified Godot 4.7.2 and export templates",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4,
+            "started_at": "2026-10-27T22:17:49Z",
+            "completed_at": "2026-10-27T22:17:57Z"
+          },
+          {
+            "name": "Import project and run all twenty-seven regression and seeded-world suites",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5,
+            "started_at": "2026-10-27T22:17:57Z",
+            "completed_at": "2026-10-27T22:25:20Z"
+          },
+          {
+            "name": "Export Windows x64 with embedded game resources",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6,
+            "started_at": "2026-10-27T22:25:20Z",
+            "completed_at": "2026-10-27T22:26:09Z"
+          },
+          {
+            "name": "Upload playable Windows ZIP artifact",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7,
+            "started_at": "2026-10-27T22:26:09Z",
+            "completed_at": "2026-10-27T22:26:15Z"
+          },
+          {
+            "name": "Publish durable Windows playtest download",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8,
+            "started_at": "2026-10-27T22:26:15Z",
+            "completed_at": "2026-10-27T22:26:21Z"
+          },
+          {
+            "name": "Post Check out source and generated models",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 16,
+            "started_at": "2026-10-27T22:26:21Z",
+            "completed_at": "2026-10-27T22:26:22Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 17,
+            "started_at": "2026-10-27T22:26:22Z",
+            "completed_at": "2026-10-27T22:26:22Z"
+          }
+        ],
+        "check_run_url": "https://api.github.com/repos/Hazmire/MegaClonk/check-runs/122504046829",
+        "labels": [
+          "ubuntu-latest"
+        ],
+        "runner_id": 1000000102,
+        "runner_name": "GitHub Actions 1000000102",
+        "runner_group_id": 0,
+        "runner_group_name": "GitHub Actions"
+      }
+    ]
+  },
+  "actions_artifacts": [
+    {
+      "id": 12775711951,
+      "node_id": "MDg6QXJ0aWZhY3QxMjc3NTcxMTk1MQ==",
+      "name": "BONK_INFINITY-Windows-x64",
+      "size_in_bytes": 124864984,
+      "url": "https://api.github.com/repos/Hazmire/MegaClonk/actions/artifacts/12775711951",
+      "archive_download_url": "https://api.github.com/repos/Hazmire/MegaClonk/actions/artifacts/12775711951/zip",
+      "expired": false,
+      "digest": "sha256:6279bd19e508ab4d7839d32cb361a272b3e34dca02e923dc69dd5818dd0a69e8",
+      "created_at": "2026-10-27T22:26:15Z",
+      "updated_at": "2026-10-27T22:26:15Z",
+      "expires_at": "2026-11-26T22:26:09Z",
+      "workflow_run": {
+        "id": 40593680375,
+        "repository_id": 1431110158,
+        "head_repository_id": 1431110158,
+        "head_branch": "retro-audio-v11",
+        "head_sha": "f203a3503f45958b5a4c5eea912c7534fc83f254"
+      }
+    }
+  ],
+  "pr_run": 40593690314,
+  "pr_success": true,
+  "health_color": "#801421",
+  "character_bar_logical_size": [
+    64,
+    7
+  ],
+  "published_visuals_viewed": true
+}

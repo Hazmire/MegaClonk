@@ -1,3 +1,20 @@
+# Verified Dark Feedback v12 publication
+
+[Download Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/dark-feedback-v12/BONK_INFINITY_Windows_x64.zip). Extract the entire ZIP and launch BONK_INFINITY.exe, or Launch_Compatibility.bat.
+
+- Clean source: `f203a3503f45958b5a4c5eea912c7534fc83f254`.
+- Successful publishing workflow: https://github.com/Hazmire/MegaClonk/actions/runs/40593680375
+- Successful PR validation: https://github.com/Hazmire/MegaClonk/actions/runs/40593690314
+- Release asset ID `683067158`; 123,869,365bytes.
+- ZIP SHA256: `502a905476776fb6c316353b09a49c944eb54833d1df936c24970199b8ba6800`.
+- Actions artifact ID `12775711951`; 124,864,984bytes; not expired at verification.
+
+Downloaded ZIP size/digest and every archive CRC match. BUILD_INFO confirms the expected clean source. Linux Godot ran the published embedded pack for180 frames and all five compiled smoke gates, including silent enemy event registry, tome row and HP checks. All27 suites passed locally (1,086 named checks) and in clean GitHub CI. Source and compiled HUD renders were viewed.
+
+Enemy hit/death/self-destruct feedback is silent, weapons retain their audio, effects use a darker source/filter/pitch pass, tomes have a separate row, and both health bars are dark red with current/max numbers inside the left bar. [Guide and screenshot](../docs/DARK_FEEDBACK.md) · [Raw verification](DARK_FEEDBACK_VALIDATION.json) · [PR #5](https://github.com/Hazmire/MegaClonk/pull/5). The tracked ZIP elsewhere in Git is older; use this release download. Merge PR #5 into Full-Release after review; this download works independently.
+
+Files were not auditioned; native Windows/audio-device testing and existing dense-horde/GPU limitations remain. Earlier publications follow.
+
 # Verified Retro Audio v11 publication
 
 [Download Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/retro-audio-v11/BONK_INFINITY_Windows_x64.zip). Extract the entire ZIP and launch BONK_INFINITY.exe, or Launch_Compatibility.bat. The ZIP tracked directly in this repository is an older build; use this release download.
