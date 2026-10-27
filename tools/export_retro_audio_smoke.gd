@@ -11,7 +11,7 @@ func run():
  game.health=25;game.stats.max_health=100;game.tomes={"Wind":2};game.update_hud();await process_frame
  var rows=game.frontend.loadout_icons.get_node("EquippedItems")
  if not require(rows.get_node("Tomes").get_child_count()==1 and rows.get_node("Tomes").position.y>=rows.get_node("Weapons").size.y,"Compiled tome row missing or misplaced"):return
- if not require(game.frontend.health_text.text=="25 / 100" and game.frontend.character_health.value==25,"Compiled health bars/numbers incorrect"):return
+ if not require(game.frontend.health_text.text=="25 / 100" and game.frontend.character_health.value==25 and game.frontend.character_health.size.y<=7.1,"Compiled health bars/numbers incorrect"):return
  if not require(audio.events.size()>=30 and audio.voices.size()==24,"Compiled audio registry/pool incomplete"):return
  for config in audio.events.values():
   for path in config.files:

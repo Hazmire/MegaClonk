@@ -25,6 +25,7 @@ func run():
  check(weapons.get_child_count()==2 and tomes.get_child_count()==2,"Weapons and tomes have independent complete rows")
  check(tomes.global_position.y>=weapons.global_position.y+weapons.size.y,"Tomes are positioned beneath weapons")
  check(game.frontend.health_text.text=="37 / 100" and game.frontend.health_text.get_parent()==game.health_bar,"Current and maximum HP are centered inside left health bar")
+ check(game.frontend.character_health.size.y<=7.1,"Character health bar remains thin after theme layout")
  check(game.health_bar.value==37 and game.frontend.character_health.value==37,"Both health bars follow actual player health")
  var left=game.health_bar.get_theme_stylebox("fill");var world=game.frontend.character_health.get_theme_stylebox("fill")
  check(left.bg_color==FrontEnd.HEALTH_COLOR and world.bg_color==FrontEnd.HEALTH_COLOR and left.bg_color.r<.6,"Both health bars use the same dark red fill")

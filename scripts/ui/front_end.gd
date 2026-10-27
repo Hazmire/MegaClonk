@@ -377,6 +377,7 @@ func settings(back: Callable) -> void:
  action("Quit game",col,func():get_tree().quit())
 func update_character_health() -> void:
  if not is_instance_valid(game) or game.mode!="run" or not is_instance_valid(game.player) or not is_instance_valid(game.player.camera):character_health.hide();return
+ character_health.size=Vector2(64,7) # Apply after inherited theme minimum-size recalculation.
  var point=game.player.global_position+Vector3.UP*0.05;var camera=game.player.camera
  if (point-camera.global_position).dot(-camera.global_basis.z)<=0.05:character_health.hide();return
  var screen=camera.unproject_position(point);character_health.position=screen+Vector2(-32,12)

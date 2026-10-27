@@ -1,4 +1,4 @@
-# MEGACLONK — Dark Feedback12
+# MEGACLONK — Dark Feedback12.1
 
 Extract BONK_INFINITY_Windows_x64.zip and run BONK_INFINITY.exe, or Launch_Compatibility.bat.
 
@@ -8,3 +8,5 @@ Extract BONK_INFINITY_Windows_x64.zip and run BONK_INFINITY.exe, or Launch_Compa
 - Dark-red left HP bar with current/max numbers, plus a small matching bar under the player.
 
 Original soundtrack, saved volume controls, progression and gameplay systems remain. See DARK_FEEDBACK.md and attribution/curation files in the ZIP. Sound quality and native Windows playback still need listening/playtesting; no auditioning is claimed.
+
+12.1 also fixes the character bar inheriting Godot’s default minimum height; its rendered height is7px.
