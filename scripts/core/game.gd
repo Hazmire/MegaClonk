@@ -794,7 +794,6 @@ func kill_enemy(index: int) -> void:
  if e.spore:
   area(e.pos,4*stats.size,12,33,"poison")
   flash(e.pos,Color("acff6a"),4)
- play_sound("death")
  kills += 1
  var source=int(e.get("last_weapon",-1))
  if source>=0:run_metrics["weapon:"+str(source)]=int(run_metrics.get("weapon:"+str(source),0))+1
@@ -1327,7 +1326,8 @@ func setup_audio() -> void:
  sound_bank["hit"]=audio.streams[audio.events["player.damage"].files[0]];sound_bank["level"]=audio.streams[audio.events["reward.level_up"].files[0]]
  sound_bank["applause"]=audio.streams[audio.events["reward.applause"].files[0]];sound_bank["legendary"]=audio.streams[audio.events["reward.chest.legendary"].files[0]]
 func play_sound(event: String,gain: float=1.0) -> void:
- var aliases={"hit":"player.damage","death":"enemy.death","purchase":"ui.purchase","level":"reward.level_up","menu":"ui.confirm","explosion":"enemy.explosion","ready":"boss.warning","cast":"weapon.firestaff.cast","shot":"weapon.bow.fire","swing":"weapon.sword.swing","stone":"weapon.chunkers.impact","lightning":"weapon.lightning.zap","place":"weapon.mines.place","revolver":"weapon.revolver.fire","applause":"reward.applause","legendary":"reward.chest.legendary"}
+ if event in ["death","enemy.death","enemy.hit"]:return
+ var aliases={"hit":"player.damage","purchase":"ui.purchase","level":"reward.level_up","menu":"ui.confirm","explosion":"combat.explosion","ready":"boss.warning","cast":"weapon.firestaff.cast","shot":"weapon.bow.fire","swing":"weapon.sword.swing","stone":"weapon.chunkers.impact","lightning":"weapon.lightning.zap","place":"weapon.mines.place","revolver":"weapon.revolver.fire","applause":"reward.applause","legendary":"reward.chest.legendary"}
  if is_instance_valid(audio):audio.emit(aliases.get(event,event),Vector3.INF,gain)
 func tone(_frequency: float,_duration: float,_loudness: float=0.3) -> void:
  # Legacy UI/boss callsites now use cached events, never allocate PCM at runtime.
@@ -1636,7 +1636,6 @@ func update_blasts(delta: float) -> void:
   combat_fx.burst("explosion_small",blast.pos,clampf(blast.radius/2,1,4))
   flash(blast.pos,Color("ffaf67"),blast.radius)
   impact(blast.pos,Color("ffd49b"),8)
-  play_sound("explosion")
   apply_player_blast(blast.pos,blast.radius,blast.damage)
   area(blast.pos,blast.radius,blast.damage*0.6,-1)
   pending_blasts.remove_at(i)

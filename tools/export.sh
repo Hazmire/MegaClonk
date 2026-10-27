@@ -54,7 +54,7 @@ fi
 cat "$log_path"
 if grep -Eq 'SCRIPT ERROR|^ERROR:' "$log_path"; then exit 1; fi
 if ! grep -q 'EXPORTED RETRO AUDIO V11 SMOKE COMPLETE' "$log_path"; then exit 1; fi
-cp docs/RETRO_AUDIO.md builds/windows/
+cp docs/RETRO_AUDIO.md docs/DARK_FEEDBACK.md builds/windows/
 cp docs/audio/CURATION.json builds/windows/CURATED_AUDIO_MANIFEST.json
 cp assets/audio/sfx/ATTRIBUTION.txt builds/windows/PIXEL_COMBAT_ATTRIBUTION.txt
 cp assets/audio/music/CREDITS.txt builds/windows/MUSIC_CREDITS.txt
@@ -97,7 +97,7 @@ from zipfile import ZipFile, ZIP_DEFLATED
 import subprocess
 commit = subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
 dirty = bool(subprocess.check_output(['git','status','--porcelain'],text=True).strip())
-Path('builds/windows/BUILD_INFO.txt').write_text('MEGACLONK v11 retro sound, original music and visceral combat feedback\nGodot 4.7.2\nSource commit: '+commit+'\nUncommitted source at build time: '+str(dirty)+'\nWindows execution requires native playtesting.\n')
+Path('builds/windows/BUILD_INFO.txt').write_text('MEGACLONK v12 dark combat sounds, silent enemies and health HUD\nGodot 4.7.2\nSource commit: '+commit+'\nUncommitted source at build time: '+str(dirty)+'\nWindows execution requires native playtesting.\n')
 with ZipFile('builds/BONK_INFINITY_Windows_x64.zip','w',ZIP_DEFLATED) as z:
  for p in sorted(Path('builds/windows').iterdir()):
   if p.is_file(): z.write(p,p.name)

@@ -11,9 +11,9 @@
       "duration": 0.55,
       "centroid_hz": 3927.5,
       "crest": 6.83,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 35244,
-      "sha256": "d1c3d0dc4055f35d1dcfa0dbb65fa58b73fa4f9f8b09f112026dec020274def4",
+      "sha256": "67ad09d7335af9f65c6a414670893ce8e50491a55131394fd6af9de764311560",
       "installed_file": "weapon/revolver/fire_00.wav"
     },
     {
@@ -25,9 +25,9 @@
       "duration": 0.55,
       "centroid_hz": 4590.7,
       "crest": 6.89,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 35244,
-      "sha256": "242e6152edad9481f3502931b39ec507007f267adcf7ddc8aa824e94385b36f3",
+      "sha256": "2b902de52e392c3cf4e4b616fe2be672b5f768af0b18a7fe42f0384fe204e0bf",
       "installed_file": "weapon/revolver/fire_01.wav"
     },
     {
@@ -39,9 +39,9 @@
       "duration": 0.55,
       "centroid_hz": 3888.5,
       "crest": 6.87,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090243,
       "bytes": 35244,
-      "sha256": "1773d5611efc5a20902a30a47357d240f54df97e2cd730743ab51b8440ae496b",
+      "sha256": "ce96e26daa4652e4b269b33c2895213ec076d5d0c7aeb07feebd9d4df7ad2cdf",
       "installed_file": "weapon/revolver/fire_02.wav"
     },
     {
@@ -53,9 +53,9 @@
       "duration": 0.55,
       "centroid_hz": 3820.3,
       "crest": 6.07,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -7.361656543318627,
       "bytes": 35244,
-      "sha256": "2963fcc45e43dc289c4c3cfd9691be4d65580d86711b3bfde99ef74cebf30cec",
+      "sha256": "14e07b6a650082d298a65bfcc41527d8b07971a3d1ca22883f091d0b31a829ae",
       "installed_file": "weapon/revolver/fire_03.wav"
     },
     {
@@ -67,9 +67,9 @@
       "duration": 0.55,
       "centroid_hz": 3995.6,
       "crest": 5.73,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.425152352232802,
       "bytes": 35244,
-      "sha256": "45e5940a3b16ff8abc579f982c803d4797ffc38958cf77e9db8119a8eb9c18d9",
+      "sha256": "2e9e202ffbb68bd32c336aff5711eb0e7c61ef6256da3abf800248fcbe8b3d55",
       "installed_file": "weapon/revolver/fire_04.wav"
     },
     {
@@ -81,9 +81,9 @@
       "duration": 0.55,
       "centroid_hz": 3878.0,
       "crest": 6.11,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090241,
       "bytes": 35244,
-      "sha256": "d59452ab54be3f17895774f9fcc52710d3086b0065a8aa9411a1556439b42959",
+      "sha256": "3738a0c08294b91f90cece75c15701a099f8f337d104e42b9644be3bca9b701e",
       "installed_file": "weapon/revolver/fire_05.wav"
     },
     {
@@ -95,9 +95,9 @@
       "duration": 0.5,
       "centroid_hz": 6985.7,
       "crest": 10.58,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -10.067784621765878,
       "bytes": 32044,
-      "sha256": "6193f794be20941cb2d6cdb22a68a21db27ad405b562e770741809244e6a0063",
+      "sha256": "56089f19c4423da9f51f8526672d8477ee5ccdec64a09c3058790fbcdabc66b0",
       "installed_file": "weapon/sword/swing_00.wav"
     },
     {
@@ -109,9 +109,9 @@
       "duration": 0.5,
       "centroid_hz": 6512.3,
       "crest": 8.13,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -7.124394426664827,
       "bytes": 32044,
-      "sha256": "8993762b71b5f93a283ea2653d73622a9e3de9e5a920c083615f2b6b53452943",
+      "sha256": "8e3d6b6c181fadd6004a24784b4db83575141e7285fec616e024f5423a293572",
       "installed_file": "weapon/sword/swing_01.wav"
     },
     {
@@ -123,9 +123,9 @@
       "duration": 0.5,
       "centroid_hz": 6315.5,
       "crest": 7.83,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -7.442206328979498,
       "bytes": 32044,
-      "sha256": "08e9cc392204bcf12aee10d071942492a66a1613c0102e51098f4f989dc8f289",
+      "sha256": "570426002a8a004264b9b6a2e8c78122975b1a53b1e852c2fcef6542ec633317",
       "installed_file": "weapon/sword/swing_02.wav"
     },
     {
@@ -137,135 +137,135 @@
       "duration": 0.5,
       "centroid_hz": 6860.6,
       "crest": 7.37,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.944236183046161,
       "bytes": 32044,
-      "sha256": "eea570f6682cac5ee2ea712e95bf85a042d9bfd1b0efb9f6ff93ac80349924bc",
+      "sha256": "427c0220731dc430441d5981ada9525bfd816351403c13ab0ead282086dd9a1d",
       "installed_file": "weapon/sword/swing_03.wav"
     },
     {
       "event": "weapon.firestaff.cast",
       "file": "weapon/firestaff/cast_00.wav",
-      "source": "DSGNMisc_SKILL RELEASE-Flame Ball_HY_PC.wav",
-      "source_start": 4.755,
-      "source_end": 5.405,
+      "source": "DSGNImpt_EXPLOSION-Scorched_HY_PC.wav",
+      "source_start": 0.495,
+      "source_end": 1.145,
       "duration": 0.65,
-      "centroid_hz": 1735.9,
-      "crest": 4.57,
-      "peak_dbfs": -6.02,
+      "centroid_hz": 3720.4,
+      "crest": 5.0,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 41644,
-      "sha256": "28a56390137b3ad0a5bbf130f8f1685c244633b71737baf0f2704380c475cb81",
+      "sha256": "1b2a5a1486c981c63b9064efce9a78bcfcbd8ac5127e792f230f42442fc4cf4c",
       "installed_file": "weapon/firestaff/cast_00.wav"
     },
     {
       "event": "weapon.firestaff.cast",
       "file": "weapon/firestaff/cast_01.wav",
-      "source": "DSGNMisc_SKILL RELEASE-Flame Ball_HY_PC.wav",
-      "source_start": 12.755,
-      "source_end": 13.405,
+      "source": "DSGNImpt_EXPLOSION-Scorched_HY_PC.wav",
+      "source_start": 12.495,
+      "source_end": 13.145,
       "duration": 0.65,
-      "centroid_hz": 1921.6,
-      "crest": 3.83,
-      "peak_dbfs": -6.02,
+      "centroid_hz": 3439.9,
+      "crest": 3.93,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 41644,
-      "sha256": "846cfc34024923eea4eb389ecdba8ea5b0f388a898c18fd7ed37a1c041e0793b",
+      "sha256": "8ddb56d33b5c3483e9501c6c0fcbc02217148d5599d4dfe05fe791c8ab459ea4",
       "installed_file": "weapon/firestaff/cast_01.wav"
     },
     {
       "event": "weapon.firestaff.cast",
       "file": "weapon/firestaff/cast_02.wav",
-      "source": "DSGNMisc_SKILL RELEASE-Flame Ball_HY_PC.wav",
-      "source_start": 20.765,
-      "source_end": 21.415,
+      "source": "DSGNImpt_EXPLOSION-Scorched_HY_PC.wav",
+      "source_start": 20.495,
+      "source_end": 21.145,
       "duration": 0.65,
-      "centroid_hz": 1331.1,
-      "crest": 3.65,
-      "peak_dbfs": -6.02,
+      "centroid_hz": 3644.3,
+      "crest": 4.09,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 41644,
-      "sha256": "79a54446f5bec8fe741b2036d010152e989c4c62a8727238f1a2fd0447322256",
+      "sha256": "0de378e7a788d95660844577d2c1c78651bb2d9e9eeae99d89834a7a718e286d",
       "installed_file": "weapon/firestaff/cast_02.wav"
     },
     {
       "event": "weapon.firestaff.cast",
       "file": "weapon/firestaff/cast_03.wav",
-      "source": "DSGNMisc_SKILL RELEASE-Flame Ball_HY_PC.wav",
-      "source_start": 16.775,
-      "source_end": 17.425,
+      "source": "DSGNImpt_EXPLOSION-Scorched_HY_PC.wav",
+      "source_start": 4.495,
+      "source_end": 5.145,
       "duration": 0.65,
-      "centroid_hz": 303.2,
-      "crest": 3.57,
-      "peak_dbfs": -6.02,
+      "centroid_hz": 3528.1,
+      "crest": 4.04,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 41644,
-      "sha256": "bc9d5212a6ecf4aa00cce8074124151c5c1c8bc06cd1ecdb93d57382a2a6e682",
+      "sha256": "7986fed0d7735a8c5e3f94304f34b9b45e69bf70f16797a3f8f62c9c2f4dcb17",
       "installed_file": "weapon/firestaff/cast_03.wav"
     },
     {
       "event": "weapon.lightning.zap",
       "file": "weapon/lightning/zap_00.wav",
-      "source": "DSGNMisc_HIT-Laser Electric Zap_HY_PC.wav",
-      "source_start": 20.605,
-      "source_end": 21.155,
+      "source": "DSGNImpt_EXPLOSION-Electric Hit_HY_PC.wav",
+      "source_start": 16.555,
+      "source_end": 17.105,
       "duration": 0.55,
-      "centroid_hz": 6946.7,
-      "crest": 9.42,
-      "peak_dbfs": -6.02,
+      "centroid_hz": 4667.6,
+      "crest": 5.6,
+      "peak_dbfs": -6.021130074090241,
       "bytes": 35244,
-      "sha256": "ff082fabff7e0ed7b0b78b0e929399eeccee8106ca581832b922204caa1703a0",
+      "sha256": "886d864247e972a062a51620cd64d847d0939b069395f9995319de2a7aa7bf5a",
       "installed_file": "weapon/lightning/zap_00.wav"
     },
     {
       "event": "weapon.lightning.zap",
       "file": "weapon/lightning/zap_01.wav",
-      "source": "DSGNMisc_HIT-Laser Electric Zap_HY_PC.wav",
-      "source_start": 4.605,
-      "source_end": 5.155,
+      "source": "DSGNImpt_EXPLOSION-Electric Hit_HY_PC.wav",
+      "source_start": 12.555,
+      "source_end": 13.105,
       "duration": 0.55,
-      "centroid_hz": 7656.9,
-      "crest": 8.77,
-      "peak_dbfs": -6.02,
+      "centroid_hz": 5249.4,
+      "crest": 5.55,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 35244,
-      "sha256": "372b13080091d47287ec3e8df78bd6c49fac755f5d0029727290bf17c5bd7ace",
+      "sha256": "f88a55ce3aa991f0399f013ed5c1184a7ebca8a1c65476bed58c20c19fc3c9a3",
       "installed_file": "weapon/lightning/zap_01.wav"
     },
     {
       "event": "weapon.lightning.zap",
       "file": "weapon/lightning/zap_02.wav",
-      "source": "DSGNMisc_HIT-Laser Electric Zap_HY_PC.wav",
-      "source_start": 0.495,
-      "source_end": 1.045,
+      "source": "DSGNImpt_EXPLOSION-Electric Hit_HY_PC.wav",
+      "source_start": 4.555,
+      "source_end": 5.105,
       "duration": 0.55,
-      "centroid_hz": 6721.9,
-      "crest": 7.22,
-      "peak_dbfs": -6.02,
+      "centroid_hz": 4968.9,
+      "crest": 5.33,
+      "peak_dbfs": -6.021130074090243,
       "bytes": 35244,
-      "sha256": "34730fcf5e6f26253683af1611a077bf2af533e0dfd257323156a81c03780265",
+      "sha256": "b104cb1d0e92ab9462caf29a11c79cef1a34a0efc57558c8afd207aa87308fd2",
       "installed_file": "weapon/lightning/zap_02.wav"
     },
     {
       "event": "weapon.lightning.zap",
       "file": "weapon/lightning/zap_03.wav",
-      "source": "DSGNMisc_HIT-Laser Electric Zap_HY_PC.wav",
-      "source_start": 12.595,
-      "source_end": 13.145,
+      "source": "DSGNImpt_EXPLOSION-Electric Hit_HY_PC.wav",
+      "source_start": 20.555,
+      "source_end": 21.105,
       "duration": 0.55,
-      "centroid_hz": 7531.2,
-      "crest": 7.26,
-      "peak_dbfs": -6.02,
+      "centroid_hz": 5134.2,
+      "crest": 5.08,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 35244,
-      "sha256": "b069233acb98331f8215bfbc6f66e86eb96e830e61fc3867bb86668846632c2f",
+      "sha256": "444fbffe224e02b927b249e9277f5499a96bbf933096e5ad36df3c366c24004d",
       "installed_file": "weapon/lightning/zap_03.wav"
     },
     {
       "event": "weapon.lightning.zap",
       "file": "weapon/lightning/zap_04.wav",
-      "source": "MAGSpel_CAST-Wet Electricity_HY_PC.wav",
-      "source_start": 0.495,
-      "source_end": 1.045,
+      "source": "DSGNImpt_EXPLOSION-Electric Hit_HY_PC.wav",
+      "source_start": 0.515,
+      "source_end": 1.065,
       "duration": 0.55,
-      "centroid_hz": 5690.1,
-      "crest": 6.72,
-      "peak_dbfs": -6.02,
+      "centroid_hz": 4089.1,
+      "crest": 5.01,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 35244,
-      "sha256": "ca73e0e0ecf2549fa1cc042dfbefede736596e735b2369594c75c59b44dee442",
+      "sha256": "3e129b5f4936feca7d4bd9ea7599d05c56a8fe64c5b8eeecf86c6fa7ad6735b6",
       "installed_file": "weapon/lightning/zap_04.wav"
     },
     {
@@ -277,9 +277,9 @@
       "duration": 0.6,
       "centroid_hz": 3495.3,
       "crest": 11.92,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -7.281846888662535,
       "bytes": 38444,
-      "sha256": "bac4f6dd992c0c2b1f282b408e017c88967db33367f1f0c7f269e9ed659ec622",
+      "sha256": "06e8331a1c06c9ce8aa7bbf10b984dce7a1bef4cbd3eac1826351ea4775cc5c6",
       "installed_file": "weapon/chunkers/impact_00.wav"
     },
     {
@@ -291,9 +291,9 @@
       "duration": 0.6,
       "centroid_hz": 4337.8,
       "crest": 9.52,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -7.744115982359366,
       "bytes": 38444,
-      "sha256": "24dabed8927d400d5d30bc374c00bebdf9aa20bf154050206becc55f15f1aeca",
+      "sha256": "f9f2ff5a1596c6dc222ff8199c8038bd5dcc46479e2c59c27b8ba3fb86edcd28",
       "installed_file": "weapon/chunkers/impact_01.wav"
     },
     {
@@ -305,9 +305,9 @@
       "duration": 0.6,
       "centroid_hz": 4149.9,
       "crest": 9.19,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -7.2027638873817414,
       "bytes": 38444,
-      "sha256": "9c1c44ab5453788c2456c12866b33a51c03d8c54cd4b4a26acb248bbf1dd166b",
+      "sha256": "248ed83468385d5cb22d82946ad11911c769c23c0d8fd72e5a84ed4d9ede2473",
       "installed_file": "weapon/chunkers/impact_02.wav"
     },
     {
@@ -319,9 +319,9 @@
       "duration": 0.6,
       "centroid_hz": 4369.5,
       "crest": 8.64,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090241,
       "bytes": 38444,
-      "sha256": "dc296fa086d353be564725d0453b8a11182344d777e30b033d70c15f2b52d6c1",
+      "sha256": "1aaec78efbcea8ddd8fdf391f8611332a60111e82f44d83b55b73fcb6a1ddb6a",
       "installed_file": "weapon/chunkers/impact_03.wav"
     },
     {
@@ -333,9 +333,9 @@
       "duration": 0.6,
       "centroid_hz": 4417.4,
       "crest": 8.56,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.141891718886513,
       "bytes": 38444,
-      "sha256": "c9fa8f71d72b25bd7d53621c76ed2bc34c9e5b1b963fac05f812e1bba894b52e",
+      "sha256": "05125c159e77e41bb13aea166e50ac5da7faf8df9014e79d91897549f7726d41",
       "installed_file": "weapon/chunkers/impact_04.wav"
     },
     {
@@ -347,9 +347,9 @@
       "duration": 0.195,
       "centroid_hz": 4179.8,
       "crest": 6.84,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 12524,
-      "sha256": "4638ff85b041ed5cf51b2c0dbdeff6809c97c2cf54fce17fb4fb9ffd50111973",
+      "sha256": "8cbd339c88f7114e0f4f36e9b3df2c7f52dcc7c20338edf3ce41137cf2528e4b",
       "installed_file": "weapon/bone/throw_00.wav"
     },
     {
@@ -361,9 +361,9 @@
       "duration": 0.195,
       "centroid_hz": 3837.1,
       "crest": 6.88,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 12524,
-      "sha256": "3971517141960865ee2072e9883094841d5719a8379b8e3b91e279b729fa87f0",
+      "sha256": "0301769b283ab657f6cb00a3abb04e33cbd3f2be6d7a6270df81a593e91256c1",
       "installed_file": "weapon/bone/throw_01.wav"
     },
     {
@@ -375,9 +375,9 @@
       "duration": 0.195,
       "centroid_hz": 4978.1,
       "crest": 6.68,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090241,
       "bytes": 12524,
-      "sha256": "46e3b4684ae684d8e07f78eced3c5c75e8d9195e7443e94972042cc4ecc76710",
+      "sha256": "cd7284953284e390546b85115a57ac4fdbdce3b6182c18c3e4be0761c64003cc",
       "installed_file": "weapon/bone/throw_02.wav"
     },
     {
@@ -389,9 +389,9 @@
       "duration": 0.235,
       "centroid_hz": 5665.0,
       "crest": 6.37,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.792734267078641,
       "bytes": 15084,
-      "sha256": "7b473e45db1735c04ab9fa87faa025fbf9c11be67ef65e34b39c015647aedddd",
+      "sha256": "7ac4075990ec3bc7754d444de0c6a072d6214f91063ac891d7a9163377f22044",
       "installed_file": "weapon/bow/fire_00.wav"
     },
     {
@@ -403,9 +403,9 @@
       "duration": 0.245,
       "centroid_hz": 5687.1,
       "crest": 5.87,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.04948776615161,
       "bytes": 15724,
-      "sha256": "3a494beb6ff009eb8adbc6d0b6978765f21c0699cb846f4d3a39a64ad2d3eb7c",
+      "sha256": "ad3e4692ed677a478dd111aa8fcdd25950f5db31608da04e421c007add0ad69f",
       "installed_file": "weapon/bow/fire_01.wav"
     },
     {
@@ -417,9 +417,9 @@
       "duration": 0.225,
       "centroid_hz": 5757.7,
       "crest": 5.68,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090241,
       "bytes": 14444,
-      "sha256": "26c2caca17f8c655d29a984acaa0d6dd97a4db2476ef22430cb19e3443a6c59a",
+      "sha256": "f5ecd6974c2a2c680f617663dacde10c78cf839625af73ddfe4d4b8f43b186fd",
       "installed_file": "weapon/bow/fire_02.wav"
     },
     {
@@ -431,9 +431,9 @@
       "duration": 0.5,
       "centroid_hz": 3328.2,
       "crest": 5.49,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090243,
       "bytes": 32044,
-      "sha256": "5f87b1406aa12176b871a6d22f01a56d5f363ffc472830949d903594001af248",
+      "sha256": "7268981f44e7e67164c7da25e67d9cce0b8aa883b2d651699d70d6688f7d4fc6",
       "installed_file": "weapon/bananarang/throw_00.wav"
     },
     {
@@ -445,9 +445,9 @@
       "duration": 0.5,
       "centroid_hz": 4043.2,
       "crest": 5.58,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 32044,
-      "sha256": "5a21e8d068506fde64b6cb627f786b7e1492e5e68bba4fbcd5924edbbdeb99d9",
+      "sha256": "0747e9b47e6964896269fca1885908e55340dfc7ad811f27897b15b0fa2f1c87",
       "installed_file": "weapon/bananarang/throw_01.wav"
     },
     {
@@ -459,51 +459,51 @@
       "duration": 0.5,
       "centroid_hz": 3686.1,
       "crest": 5.27,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 32044,
-      "sha256": "c914685a8e92628fbaf5955830cb244fe951871e341fcc73568171cdd3ff55e9",
+      "sha256": "a5baec3b4d72ee62173c54a344a58c3a1bccd1b4b9af136190197598e0f8fc72",
       "installed_file": "weapon/bananarang/throw_02.wav"
     },
     {
       "event": "weapon.aura.pulse",
       "file": "weapon/aura/pulse_00.wav",
-      "source": "MAGSpel_CAST-Sphere Quick_HY_PC.wav",
-      "source_start": 8.475,
-      "source_end": 9.04,
-      "duration": 0.565,
-      "centroid_hz": 6584.4,
-      "crest": 6.43,
-      "peak_dbfs": -6.02,
-      "bytes": 36204,
-      "sha256": "510b97c98ede15074e24ab540030636dbd40a7e36bec3e48f5afbe636446ab31",
+      "source": "MAGSpel_CAST-Hollow Spell_HY_PC.wav",
+      "source_start": 0.505,
+      "source_end": 1.155,
+      "duration": 0.65,
+      "centroid_hz": 4385.7,
+      "crest": 5.7,
+      "peak_dbfs": -6.021130074090242,
+      "bytes": 41644,
+      "sha256": "5aedcaa42a849ab78cdb18c2a611447f68511f91aaa1c7e2cb92396e8588ee87",
       "installed_file": "weapon/aura/pulse_00.wav"
     },
     {
       "event": "weapon.aura.pulse",
       "file": "weapon/aura/pulse_01.wav",
-      "source": "MAGSpel_CAST-Sphere Quick_HY_PC.wav",
-      "source_start": 12.475,
-      "source_end": 13.04,
-      "duration": 0.565,
-      "centroid_hz": 6439.1,
-      "crest": 5.45,
-      "peak_dbfs": -6.02,
-      "bytes": 36204,
-      "sha256": "4e75d1661582f450832e16af54deb963461304336c1bdfa9f002c56be6581add",
+      "source": "MAGSpel_CAST-Hollow Spell_HY_PC.wav",
+      "source_start": 12.505,
+      "source_end": 13.155,
+      "duration": 0.65,
+      "centroid_hz": 4742.2,
+      "crest": 4.71,
+      "peak_dbfs": -6.2823673894257634,
+      "bytes": 41644,
+      "sha256": "f56264bbd3d29183cc81f30248dcebd78e421ac37c523e2a00927a8cf82308c3",
       "installed_file": "weapon/aura/pulse_01.wav"
     },
     {
       "event": "weapon.aura.pulse",
       "file": "weapon/aura/pulse_02.wav",
-      "source": "MAGSpel_CAST-Sphere Quick_HY_PC.wav",
-      "source_start": 20.475,
-      "source_end": 21.04,
-      "duration": 0.565,
-      "centroid_hz": 6381.5,
-      "crest": 5.39,
-      "peak_dbfs": -6.02,
-      "bytes": 36204,
-      "sha256": "094544e111f6901bd9c95eabddb3049d5f202455852ad4cc26731ecb1c2d3e02",
+      "source": "MAGSpel_CAST-Hollow Spell_HY_PC.wav",
+      "source_start": 20.505,
+      "source_end": 21.155,
+      "duration": 0.65,
+      "centroid_hz": 4987.7,
+      "crest": 4.45,
+      "peak_dbfs": -6.189762238001682,
+      "bytes": 41644,
+      "sha256": "8af8a9e031f354c704541db4f29b518cdbcf3ad9cd5cabb2f41176119a4f53c1",
       "installed_file": "weapon/aura/pulse_02.wav"
     },
     {
@@ -515,9 +515,9 @@
       "duration": 0.165,
       "centroid_hz": 4954.5,
       "crest": 9.48,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.258796439714908,
       "bytes": 10604,
-      "sha256": "ae766888c2add4967425a812611edbbb0f4010b4181bdc5938ccb77d9aff71e6",
+      "sha256": "bb9c7351d8969cd38db371ac141d5edd063aab407ef01ff93222ff466ff8cbb3",
       "installed_file": "weapon/mines/place_00.wav"
     },
     {
@@ -529,9 +529,9 @@
       "duration": 0.175,
       "centroid_hz": 5559.5,
       "crest": 8.59,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.377296089914997,
       "bytes": 11244,
-      "sha256": "e258f932e38f284ed5cfe3343b489c2aee262f635ecfcb0884794884c747b64e",
+      "sha256": "a0dda49d1b577d95d036868a574be1bbee4307e1159da0991e13923d57afbe7c",
       "installed_file": "weapon/mines/place_01.wav"
     },
     {
@@ -543,9 +543,9 @@
       "duration": 0.185,
       "centroid_hz": 5044.6,
       "crest": 8.46,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 11884,
-      "sha256": "730037188f1bc37ba884d516efe0faab8441fa42dbafcfebf99fc3560ad65560",
+      "sha256": "fb9be7ee19c29675a721452be97e1d2021ece0b151d0a41d90ecc5c07000c82a",
       "installed_file": "weapon/mines/place_02.wav"
     },
     {
@@ -557,9 +557,9 @@
       "duration": 0.445,
       "centroid_hz": 6040.6,
       "crest": 13.45,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -7.334971761537337,
       "bytes": 28524,
-      "sha256": "1cb180c18ed42cb6ce5ab1db27622c1196937f4be43d4d67a2983acd9659a4e3",
+      "sha256": "1c5d4fb08a28eac9889f18f83716898d6c17830bf7ba2d4fdf4a0378504bb490",
       "installed_file": "weapon/aegis/impact_00.wav"
     },
     {
@@ -571,9 +571,9 @@
       "duration": 0.445,
       "centroid_hz": 5431.9,
       "crest": 15.06,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -7.60558211052804,
       "bytes": 28524,
-      "sha256": "918c257e62d83e6b111e2ac17a60db7d054091df8b2803c4a4ef392d1db8ac50",
+      "sha256": "63a421a73e787d2fcb5ba2fad6142c4422ea2b96d9969df3cae87583333d56d0",
       "installed_file": "weapon/aegis/impact_01.wav"
     },
     {
@@ -585,9 +585,9 @@
       "duration": 0.495,
       "centroid_hz": 4390.5,
       "crest": 11.02,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 31724,
-      "sha256": "6faf92b9da25a0da2bb828212b51b184ee21728e4d93370a9f6f071445b1ebbb",
+      "sha256": "cfb6e155beffe9fdd3060a9e6725b0555b3366d0bfd659e6c2f792b42976da7a",
       "installed_file": "weapon/aegis/impact_02.wav"
     },
     {
@@ -599,80 +599,80 @@
       "duration": 0.365,
       "centroid_hz": 3144.5,
       "crest": 10.04,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.095566864342895,
       "bytes": 23404,
-      "sha256": "da2a695bbac4a8dea31108a1085b3c7b57872131791a2f5551474f1dabbc9f32",
+      "sha256": "5d54f1d43e355d635e60ebeef060a515332ffff535068fe10326fd85473a8c57",
       "installed_file": "weapon/aegis/impact_03.wav"
     },
     {
-      "event": "enemy.explosion",
-      "file": "enemy/explosion_00.wav",
+      "event": "combat.explosion",
+      "file": "combat/explosion_00.wav",
       "source": "DSGNImpt_EXPLOSION-Bit Bomb_HY_PC.wav",
       "source_start": 8.495,
       "source_end": 9.395,
       "duration": 0.9,
       "centroid_hz": 4689.3,
       "crest": 8.43,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 57644,
-      "sha256": "bd8797343b44b646bba7765712214d0ee7257049a67579ebad5a8823d5ff51db",
-      "installed_file": "enemy/explosion_00.wav"
+      "sha256": "9a655dcd8c4955aec81415413366abc376a2bd623a0ed3597f03c78f19cb7a67",
+      "installed_file": "combat/explosion_00.wav"
     },
     {
-      "event": "enemy.explosion",
-      "file": "enemy/explosion_01.wav",
+      "event": "combat.explosion",
+      "file": "combat/explosion_01.wav",
       "source": "DSGNImpt_EXPLOSION-Bit Bomb_HY_PC.wav",
       "source_start": 20.495,
       "source_end": 21.395,
       "duration": 0.9,
       "centroid_hz": 4699.5,
       "crest": 7.88,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090243,
       "bytes": 57644,
-      "sha256": "f0c131e8dff2bcb1c1537b8ccc7ed4a1bae53d5c033a5363ea6ee0655f2ce5de",
-      "installed_file": "enemy/explosion_01.wav"
+      "sha256": "bb673f380bec35dfef1ae42fe1dc1e823b4b0074957f02464564e125159ff51c",
+      "installed_file": "combat/explosion_01.wav"
     },
     {
-      "event": "enemy.explosion",
-      "file": "enemy/explosion_02.wav",
+      "event": "combat.explosion",
+      "file": "combat/explosion_02.wav",
       "source": "DSGNImpt_EXPLOSION-Bit Bomb_HY_PC.wav",
       "source_start": 0.495,
       "source_end": 1.395,
       "duration": 0.9,
       "centroid_hz": 4612.4,
       "crest": 7.85,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 57644,
-      "sha256": "c05d812f6a5427ee38ace56afce485ef8934bb2f87efc87a69a8df0f7bafe745",
-      "installed_file": "enemy/explosion_02.wav"
+      "sha256": "9d8d7720b35afc1dcc729ad74b9d46b195530f26d431a6ddbc726f8d774607ad",
+      "installed_file": "combat/explosion_02.wav"
     },
     {
-      "event": "enemy.explosion",
-      "file": "enemy/explosion_03.wav",
+      "event": "combat.explosion",
+      "file": "combat/explosion_03.wav",
       "source": "DSGNImpt_EXPLOSION-Bit Bomb_HY_PC.wav",
       "source_start": 4.495,
       "source_end": 5.395,
       "duration": 0.9,
       "centroid_hz": 4621.1,
       "crest": 7.11,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090243,
       "bytes": 57644,
-      "sha256": "d8cd851611415fe11944e51bbbec2bc3a5d9cae8d572e57a5a3c597a59f137ff",
-      "installed_file": "enemy/explosion_03.wav"
+      "sha256": "546614c51db7798f111e9061d4360506474a10e089af4095292dbdfb4e1cda40",
+      "installed_file": "combat/explosion_03.wav"
     },
     {
-      "event": "enemy.explosion",
-      "file": "enemy/explosion_04.wav",
+      "event": "combat.explosion",
+      "file": "combat/explosion_04.wav",
       "source": "DSGNImpt_EXPLOSION-Bit Bomb_HY_PC.wav",
       "source_start": 16.495,
       "source_end": 17.395,
       "duration": 0.9,
       "centroid_hz": 4701.0,
       "crest": 7.05,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 57644,
-      "sha256": "7c1244e3e2bd63260ca9529ad289c933d29b486da28a3878f8760839fafa944f",
-      "installed_file": "enemy/explosion_04.wav"
+      "sha256": "87fac3fa410bd4459b4533366aab265a38e8785ec754916c9abf0e25e876cb22",
+      "installed_file": "combat/explosion_04.wav"
     },
     {
       "event": "player.damage",
@@ -683,9 +683,9 @@
       "duration": 0.4,
       "centroid_hz": 6863.3,
       "crest": 6.6,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.944236183046161,
       "bytes": 25644,
-      "sha256": "2bf47694b7b5881e5b6c8b454f865d2235eafae76c6cbc24b6ba511a48563e12",
+      "sha256": "015a9a6dcee86395d305ac52639b3e076599d10bb3cf979ec0e33f20956f65fe",
       "installed_file": "player/damage_00.wav"
     },
     {
@@ -697,9 +697,9 @@
       "duration": 0.4,
       "centroid_hz": 7076.6,
       "crest": 6.36,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -7.388423558763874,
       "bytes": 25644,
-      "sha256": "fb7f4289e83629be8af3ce5e495c60fd9a1739238a4befa39d2332c546db9596",
+      "sha256": "37bc5076264be5b7a164ba4e94742abf9013116e2f4b5984dc49c4f42caf4eea",
       "installed_file": "player/damage_01.wav"
     },
     {
@@ -711,9 +711,9 @@
       "duration": 0.4,
       "centroid_hz": 6906.3,
       "crest": 5.67,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.521663230018629,
       "bytes": 25644,
-      "sha256": "daa2791b0d3cbe9e7f0052a13b865c6b61b49f3f77c04c7a681c2655ba65bac9",
+      "sha256": "c2c58f962899839e058bce73e2531ec760ff1ffbb00c319e5398870b2e8dab5c",
       "installed_file": "player/damage_02.wav"
     },
     {
@@ -725,9 +725,9 @@
       "duration": 0.4,
       "centroid_hz": 6920.6,
       "crest": 5.56,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -7.415273316274059,
       "bytes": 25644,
-      "sha256": "d3cb13984e745ba86d7e6e9f1e455c514aa726799343e6b5ea92a7a050b6ebe8",
+      "sha256": "4424df1f636f552805fa9a0b17df52b82bafb293702298142b5aa10608801e63",
       "installed_file": "player/damage_03.wav"
     },
     {
@@ -739,9 +739,9 @@
       "duration": 0.25,
       "centroid_hz": 3418.0,
       "crest": 10.7,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 16044,
-      "sha256": "e6128371a0c51c52d17d1768ac6637a36465fb56f640a7880ad17debb25588e7",
+      "sha256": "3ac3216931729ce8f28601e86d709038f8d5a8eb46ce206b294f3ec8ff43c807",
       "installed_file": "player/footstep/grass_00.wav"
     },
     {
@@ -753,9 +753,9 @@
       "duration": 0.25,
       "centroid_hz": 3398.9,
       "crest": 9.33,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090241,
       "bytes": 16044,
-      "sha256": "feb72485ceb601878aa5dc506f5159f201f50c31fa6a1510b54e7976edcdb2cb",
+      "sha256": "286df9e77047a22bd492d786368079fecd816dbc1fa2233972ae5cd93a0ba556",
       "installed_file": "player/footstep/grass_01.wav"
     },
     {
@@ -767,9 +767,9 @@
       "duration": 0.25,
       "centroid_hz": 3566.7,
       "crest": 7.08,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 16044,
-      "sha256": "93c535701b9246c9a2d6ad24441460fbc8484e4dc627f4af4ce45368b4b754c5",
+      "sha256": "470680a46aee8c52e423439148618ffbbf82d32777b7d72287fc0af1a75ea7ca",
       "installed_file": "player/footstep/grass_02.wav"
     },
     {
@@ -781,9 +781,9 @@
       "duration": 0.25,
       "centroid_hz": 3199.5,
       "crest": 7.02,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 16044,
-      "sha256": "d914b94ba62739fd1373a4bb9bd09f38779b675cad173993239384e442591bd0",
+      "sha256": "1988c4a1b5288897bdf30269d8351bcb63899b82169a8e1b0951514c8c78552a",
       "installed_file": "player/footstep/grass_03.wav"
     },
     {
@@ -795,9 +795,9 @@
       "duration": 0.25,
       "centroid_hz": 3148.1,
       "crest": 6.83,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090241,
       "bytes": 16044,
-      "sha256": "bac741fd3168886ef69411093d506b16be27ed2fae335e0d773a0e6ed90b1daa",
+      "sha256": "a91a1775f7c47eca2df58f1a2b0a09c9e37a256cab1dc2b16cee2c77ce3eba93",
       "installed_file": "player/footstep/grass_04.wav"
     },
     {
@@ -809,9 +809,9 @@
       "duration": 0.245,
       "centroid_hz": 3105.2,
       "crest": 6.36,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 15724,
-      "sha256": "6d93f847f022929a8e7ef70db8379c6e430c10e3ca296c7bf28ecbb67c82e3b1",
+      "sha256": "a07d9216d621515668e19cc16d9c2979c2ff767d9c777eab4448d7cf0dee0d90",
       "installed_file": "player/footstep/grass_05.wav"
     },
     {
@@ -823,9 +823,9 @@
       "duration": 0.185,
       "centroid_hz": 894.9,
       "crest": 6.63,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 11884,
-      "sha256": "0f3109aad068c548236ca58d24a64d58a64881849a0ba8865465bfc0aebe3607",
+      "sha256": "90b6b1538b39e53f441e3e2155d89426295fd4314c2dbc2fff90c14e8538328d",
       "installed_file": "player/footstep/rock_00.wav"
     },
     {
@@ -837,9 +837,9 @@
       "duration": 0.185,
       "centroid_hz": 842.1,
       "crest": 5.95,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 11884,
-      "sha256": "4da4228a2c526f23985ae39803136627a7212c8b418bd6e2e8f11be0516419f7",
+      "sha256": "a046a8b8efde1bf83e1748a6c421d742829b7fc89a0d54b068511518f18d39c0",
       "installed_file": "player/footstep/rock_01.wav"
     },
     {
@@ -851,9 +851,9 @@
       "duration": 0.155,
       "centroid_hz": 697.9,
       "crest": 4.5,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 9964,
-      "sha256": "210365b55af37615bfe8426deb38462930c9955148712c70f7f42bf9849398b8",
+      "sha256": "5fdf6161c7ee0a1771b989f50458941f825c60d088f985f1d089cf46fb83fe47",
       "installed_file": "player/footstep/rock_02.wav"
     },
     {
@@ -865,9 +865,9 @@
       "duration": 0.165,
       "centroid_hz": 692.7,
       "crest": 4.35,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 10604,
-      "sha256": "041b802e0a9e7839d86bc4bfb012e947d2a0ddff46d6a5095cf1be4cdb3fd3fe",
+      "sha256": "5b91e213011a47f365f07b464405fab05f1b1ef3474e004ca22151986f4bce6a",
       "installed_file": "player/footstep/rock_03.wav"
     },
     {
@@ -879,9 +879,9 @@
       "duration": 0.195,
       "centroid_hz": 568.2,
       "crest": 3.52,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 12524,
-      "sha256": "3c95ebc39f96cef1893e021e052bc231e2870e0407681c88722ae861bad1abb1",
+      "sha256": "1b557dc7eb87c8b94bcbb524f52b8aeddf5f43d04411754337b9fcfcff82b665",
       "installed_file": "player/footstep/rock_04.wav"
     },
     {
@@ -893,9 +893,9 @@
       "duration": 0.165,
       "centroid_hz": 590.4,
       "crest": 3.17,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 10604,
-      "sha256": "61b1ac67a54c4d6f87b65d9594b10e28774a1681db13f43099920d053f0123b2",
+      "sha256": "fb01d37c1260c500faef0969d89b063feac8c2d4fa8e33a1f18f601ffa89a089",
       "installed_file": "player/footstep/rock_05.wav"
     },
     {
@@ -907,9 +907,9 @@
       "duration": 0.85,
       "centroid_hz": 5657.7,
       "crest": 7.08,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 54444,
-      "sha256": "a14057305dbf5fc12b2d2b861cb72d439df11db9166c6455a6963b26724fb3f2",
+      "sha256": "83e38e6e6e31f5117356fe214bebb4f4e5d232087045fd15eb1f35fadf86a452",
       "installed_file": "player/slide_00.wav"
     },
     {
@@ -921,9 +921,9 @@
       "duration": 0.785,
       "centroid_hz": 6109.3,
       "crest": 6.57,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 50284,
-      "sha256": "2962cab39b2bafa2e8236e4e642fb5660b9ac5a4dabaa9baab861d786e466aa5",
+      "sha256": "4381d313f98144094be5dbdbe77301b8bf20e91328370a7bc5295b1afca9fa43",
       "installed_file": "player/slide_01.wav"
     },
     {
@@ -935,9 +935,9 @@
       "duration": 0.85,
       "centroid_hz": 5085.3,
       "crest": 6.71,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.026539563534669,
       "bytes": 54444,
-      "sha256": "393d2a373430fcd19430cb77c286155ccd5345defdcdc73b91cb3f208ffdba68",
+      "sha256": "95e100c5ad63bce84c3e392766b363415e03e8056d70eb23fa0aa4e0033f74d7",
       "installed_file": "player/slide_02.wav"
     },
     {
@@ -949,9 +949,9 @@
       "duration": 0.815,
       "centroid_hz": 5654.3,
       "crest": 5.72,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.072496758780259,
       "bytes": 52204,
-      "sha256": "12a4d6355b036ba7bba86b9bcaa5e607f48ba26985646aec48328a469b4399a2",
+      "sha256": "9b15688d9b1ca3f3236f9abb22608381b9d9648830dee7ccc59e7a3ffcc023a0",
       "installed_file": "player/slide_03.wav"
     },
     {
@@ -963,9 +963,9 @@
       "duration": 0.195,
       "centroid_hz": 3427.2,
       "crest": 5.84,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 12524,
-      "sha256": "2fe81f2aa39a18f16fd89d7a938f884cd833429163262bfb751c089509eac5da",
+      "sha256": "ce8df1ee7324e87843b378aaffcd13c3a20f1f624b04b0a81ca4b0a8e411ba7f",
       "installed_file": "player/land_00.wav"
     },
     {
@@ -977,9 +977,9 @@
       "duration": 0.215,
       "centroid_hz": 3890.8,
       "crest": 4.87,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090241,
       "bytes": 13804,
-      "sha256": "e33c8e4b5630f379fcd4400f05e17b86e49a6d3a46777191041e2e0766b0c5c6",
+      "sha256": "a49f643cb0d610964183b31213d13fa09a95fb1e5cab39dd6d767fc1d16e64a5",
       "installed_file": "player/land_01.wav"
     },
     {
@@ -991,79 +991,79 @@
       "duration": 0.165,
       "centroid_hz": 3423.4,
       "crest": 4.58,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 10604,
-      "sha256": "6c900186f7eee01325e6046738c7e1230577c72a33e603c0421b5ead3665db23",
+      "sha256": "6976698b40ab3353ff9a64c19d3d16f3fd937788c6ae37136e2c52bedecc7232",
       "installed_file": "player/land_02.wav"
     },
     {
       "event": "pickup.xp",
       "file": "pickup/xp_00.wav",
-      "source": "DSGNTonl_USABLE-Magic Coin_HY_PC.wav",
-      "source_start": 8.535,
-      "source_end": 8.885,
+      "source": "DSGNTonl_USABLE-Metallic Item_HY_PC.wav",
+      "source_start": 20.785,
+      "source_end": 21.135,
       "duration": 0.35,
-      "centroid_hz": 5523.6,
-      "crest": 8.43,
-      "peak_dbfs": -6.02,
+      "centroid_hz": 10089.8,
+      "crest": 14.87,
+      "peak_dbfs": -16.310163978357746,
       "bytes": 22444,
-      "sha256": "94f3db7e8792d10e59f0056fe710e3e78fad6dba4f61ffd11553d58c1fea8ff0",
+      "sha256": "75e12ff1248d89ffac4623cb96a0aa396bbb2aeeb836f5bd592375f56bc487ac",
       "installed_file": "pickup/xp_00.wav"
     },
     {
       "event": "pickup.xp",
       "file": "pickup/xp_01.wav",
-      "source": "DSGNTonl_USABLE-Magic Coin_HY_PC.wav",
-      "source_start": 12.525,
-      "source_end": 12.875,
+      "source": "DSGNTonl_USABLE-Metallic Item_HY_PC.wav",
+      "source_start": 4.785,
+      "source_end": 5.135,
       "duration": 0.35,
-      "centroid_hz": 5997.6,
-      "crest": 8.17,
-      "peak_dbfs": -6.02,
+      "centroid_hz": 10444.6,
+      "crest": 11.55,
+      "peak_dbfs": -15.25389784978083,
       "bytes": 22444,
-      "sha256": "decc3c1a21fdc56a49a8bf788d2c0398a1a71c5ce59492831d802fd78fb40024",
+      "sha256": "09d3b0a1f6a610c4b82bc1862a0477d7913752c84b7d0929c41475255c0a3a54",
       "installed_file": "pickup/xp_01.wav"
     },
     {
       "event": "pickup.xp",
       "file": "pickup/xp_02.wav",
-      "source": "DSGNTonl_USABLE-Magic Coin_HY_PC.wav",
-      "source_start": 4.525,
-      "source_end": 4.875,
+      "source": "DSGNTonl_USABLE-Metallic Item_HY_PC.wav",
+      "source_start": 12.785,
+      "source_end": 13.135,
       "duration": 0.35,
-      "centroid_hz": 5772.6,
-      "crest": 7.9,
-      "peak_dbfs": -6.02,
+      "centroid_hz": 10279.4,
+      "crest": 10.88,
+      "peak_dbfs": -14.553556875234985,
       "bytes": 22444,
-      "sha256": "e3a336f4e1e309dbe1de5b7703105630c46092a74012270de29ab390ee943a25",
+      "sha256": "a771f72f52ab620ff337f7313ea4260444fd16959cacf8f6b287cff25aa63e56",
       "installed_file": "pickup/xp_02.wav"
     },
     {
       "event": "pickup.xp",
       "file": "pickup/xp_03.wav",
-      "source": "DSGNTonl_USABLE-Magic Coin_HY_PC.wav",
-      "source_start": 0.495,
-      "source_end": 0.845,
+      "source": "DSGNTonl_USABLE-Metallic Item_HY_PC.wav",
+      "source_start": 8.785,
+      "source_end": 9.135,
       "duration": 0.35,
-      "centroid_hz": 6856.1,
-      "crest": 7.65,
-      "peak_dbfs": -6.02,
+      "centroid_hz": 9936.7,
+      "crest": 8.85,
+      "peak_dbfs": -10.711478289193902,
       "bytes": 22444,
-      "sha256": "c29602d16e3bc11d3aaefcf7762f0887e49e4a619b56655ea29f76c098f689ef",
+      "sha256": "43dbd6f90e4e90b40ee4fd6b10a1ba603923a3dd40df5ce4431558c0bdc22582",
       "installed_file": "pickup/xp_03.wav"
     },
     {
       "event": "pickup.xp",
       "file": "pickup/xp_04.wav",
-      "source": "DSGNTonl_SKILL IMPACT-Energy Crystal_HY_PC.wav",
-      "source_start": 4.745,
-      "source_end": 5.095,
+      "source": "DSGNTonl_USABLE-Metallic Item_HY_PC.wav",
+      "source_start": 0.535,
+      "source_end": 0.885,
       "duration": 0.35,
-      "centroid_hz": 4305.2,
-      "crest": 6.21,
-      "peak_dbfs": -6.02,
+      "centroid_hz": 10380.3,
+      "crest": 8.44,
+      "peak_dbfs": -12.162491632166137,
       "bytes": 22444,
-      "sha256": "ce82eb3f8d8e09044a0dd94bce2c77555ce40b6e44cb2fd9753867c583209809",
+      "sha256": "6fdc08121239f873bf7d831c0086aa9f07a096f7d2dd810c23f3b7b85d886ee7",
       "installed_file": "pickup/xp_04.wav"
     },
     {
@@ -1075,9 +1075,9 @@
       "duration": 0.13,
       "centroid_hz": 6890.2,
       "crest": 13.99,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -11.238057063640884,
       "bytes": 8364,
-      "sha256": "98bc8dd10471345d30290b81e23b459297973ab9ddeee0b87f8fa1a7f29906bc",
+      "sha256": "5dbe2d1508c48444c102ecc0f14d6cb30a41e249f1a1bee71b00b079b0dd37d5",
       "installed_file": "ui/hover_00.wav"
     },
     {
@@ -1089,9 +1089,9 @@
       "duration": 0.13,
       "centroid_hz": 6559.5,
       "crest": 13.11,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -7.744115982359366,
       "bytes": 8364,
-      "sha256": "d00a358f4f14dc01a99cea52d3ebec4a13acc40e7c722b677f6eaae3a69b8829",
+      "sha256": "4be281612561e132f9395445f2d2e51bc22308356dc140b7c20c6316b76d47ec",
       "installed_file": "ui/hover_01.wav"
     },
     {
@@ -1103,9 +1103,9 @@
       "duration": 0.13,
       "centroid_hz": 6029.0,
       "crest": 13.22,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.4011912621738665,
       "bytes": 8364,
-      "sha256": "4fd5d2762c04b0bdbf8e8deaa3f06bfe030e2d7739b301fc9d02d449362ef095",
+      "sha256": "c2afa348aad500c07fe74ebba978fe7b1b272ea26705761aaa47ed794f119283",
       "installed_file": "ui/hover_02.wav"
     },
     {
@@ -1117,9 +1117,9 @@
       "duration": 0.2,
       "centroid_hz": 5463.0,
       "crest": 13.76,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 12844,
-      "sha256": "6a2e234520e9ccf818d3ac7dd77a1c41085a2d5d4270e0c0ff8f5f4215a2a7df",
+      "sha256": "bcccc9377f335848eaec8d42b9c608455da467eed9b8b1eb49a14def2a793da1",
       "installed_file": "ui/confirm_00.wav"
     },
     {
@@ -1131,9 +1131,9 @@
       "duration": 0.2,
       "centroid_hz": 5460.5,
       "crest": 17.16,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -7.308368709690395,
       "bytes": 12844,
-      "sha256": "e42557f00823a79fe0ea12c3986130f4350c12a7595e092ef994430761b27ec1",
+      "sha256": "ecca391fc5b2fa5cca5ba4874517888a770f49a3035e34389e9fefe19bf50a9d",
       "installed_file": "ui/confirm_01.wav"
     },
     {
@@ -1145,9 +1145,9 @@
       "duration": 0.2,
       "centroid_hz": 5351.3,
       "crest": 17.45,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -8.441685828216269,
       "bytes": 12844,
-      "sha256": "944a0d54ec2845489adfd7d710c0bba8d3c0597342488cfefe82ec0d42bdfc73",
+      "sha256": "4b5314f3ba55969a974f95453fd7c8761adfd3d56c9b6e63ee6172731e90dfe0",
       "installed_file": "ui/confirm_02.wav"
     },
     {
@@ -1159,9 +1159,9 @@
       "duration": 0.315,
       "centroid_hz": 4608.3,
       "crest": 9.73,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090241,
       "bytes": 20204,
-      "sha256": "69610eca8ac959e2fa91e25d3b376aecd4f0c7923f8d5fde878c449c36f36469",
+      "sha256": "f562fa45fcef6815f36b5d6ab138c0d6cdb23ad7680d87c502ff20e7e85e6188",
       "installed_file": "ui/open_00.wav"
     },
     {
@@ -1173,9 +1173,9 @@
       "duration": 0.35,
       "centroid_hz": 2960.6,
       "crest": 7.46,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090243,
       "bytes": 22444,
-      "sha256": "3a94f4f47bb1218211b7322e82db9d723073119723495740f7aea80b2bbf88d5",
+      "sha256": "e1efc5eec5c8be145ba2a77daeea2a3f5bc851261ebd5ea208c9339144646224",
       "installed_file": "ui/open_01.wav"
     },
     {
@@ -1187,9 +1187,9 @@
       "duration": 0.35,
       "centroid_hz": 4601.1,
       "crest": 7.07,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090241,
       "bytes": 22444,
-      "sha256": "c9eada90b36e17ea164797f9443c5149a093430820ba58351f3ffd9d7b1866e4",
+      "sha256": "ca8be9fae7664afc3105ab72bd0decf4fc86eee21dc37d736369dd8a514ffc07",
       "installed_file": "ui/open_02.wav"
     },
     {
@@ -1201,9 +1201,9 @@
       "duration": 0.25,
       "centroid_hz": 5804.5,
       "crest": 6.85,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.425152352232802,
       "bytes": 16044,
-      "sha256": "ec7e12321fc2a11559420e507140e480c9ed0f3149814ea901f330f31ed2bc31",
+      "sha256": "0ca4ce65b683851513a1b00226d2f645bbee6f56d97ed271e6561cbff7c8183c",
       "installed_file": "ui/close_00.wav"
     },
     {
@@ -1215,9 +1215,9 @@
       "duration": 0.25,
       "centroid_hz": 5897.8,
       "crest": 6.13,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.2823673894257634,
       "bytes": 16044,
-      "sha256": "22b249673b460f89da88a9caa607922e6b7de31d8fc10adb51c332213c6960a0",
+      "sha256": "5d0d432e238cc7259973c2ba9e8bb409ac4c67ef92c99e39b0a44d0acfc5f146",
       "installed_file": "ui/close_01.wav"
     },
     {
@@ -1229,9 +1229,9 @@
       "duration": 0.25,
       "centroid_hz": 5318.2,
       "crest": 5.58,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090243,
       "bytes": 16044,
-      "sha256": "363c7e2ab6c68a2a3f4719201cbdeb130f2c82e30fa394a33890730d30e137f0",
+      "sha256": "3a6409b91424f776a3676224728e92abfd24478d2dc64a046d6d8cacb81a89f9",
       "installed_file": "ui/close_02.wav"
     },
     {
@@ -1243,9 +1243,9 @@
       "duration": 0.45,
       "centroid_hz": 4241.2,
       "crest": 7.24,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.04948776615161,
       "bytes": 28844,
-      "sha256": "7a65087d11a9fc6c60cd07b4d67fc95f20ac6432c4b3d84ca355b9215770f2dd",
+      "sha256": "878543cee20ba8ce4df1eaceaae6bd12cd1aae7d0cb6c6f1983bfa88dc961db8",
       "installed_file": "ui/purchase_00.wav"
     },
     {
@@ -1257,9 +1257,9 @@
       "duration": 0.45,
       "centroid_hz": 5346.5,
       "crest": 6.87,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 28844,
-      "sha256": "a3a467abf25b518b875dd4f1aad0e9b5019dd85ebc0d2f7a29a55547d429b40c",
+      "sha256": "1d878e2ecc3be297577d8e7134ffe477a61795c275d8c7d3348fbec9664960ab",
       "installed_file": "ui/purchase_01.wav"
     },
     {
@@ -1271,9 +1271,9 @@
       "duration": 0.45,
       "centroid_hz": 3584.9,
       "crest": 5.56,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.188464965258166,
       "bytes": 28844,
-      "sha256": "916885c95fdfe356b72d1b401a31cfdbf13404d1ff13e0c4c40bb3cac17eb86c",
+      "sha256": "f1ad29522f69ec4cf30f1b31e6731091d164201df56d63448bce233cafe38dd1",
       "installed_file": "ui/purchase_02.wav"
     },
     {
@@ -1285,9 +1285,9 @@
       "duration": 0.805,
       "centroid_hz": 7837.0,
       "crest": 12.67,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.792734267078641,
       "bytes": 51564,
-      "sha256": "7d7e6ed8d67d7a09212c79ad130e20c57259b90082aff39e6bda0190aec69071",
+      "sha256": "224a06caf28d7266be9ceb74c8ff38adacea93f16438666ec1bef7e0ad705049",
       "installed_file": "reward/level_up_00.wav"
     },
     {
@@ -1299,9 +1299,9 @@
       "duration": 0.805,
       "centroid_hz": 6699.7,
       "crest": 11.06,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -7.633112687104107,
       "bytes": 51564,
-      "sha256": "cd575ef64cfd128f2d6263bd714f35a1ead55451c6897be1c762b8e87eae5549",
+      "sha256": "82a39ccceebf97c1ed38cf4fd577c9e041e6ddca48d70fb75532ccf6d8c01da6",
       "installed_file": "reward/level_up_01.wav"
     },
     {
@@ -1313,9 +1313,9 @@
       "duration": 0.835,
       "centroid_hz": 7679.9,
       "crest": 10.78,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -10.44062682288704,
       "bytes": 53484,
-      "sha256": "1f412eea9c67fe61a13244c715936a7cfe0e4b3feb1f6e78f486ff7c2006ddb1",
+      "sha256": "879b0e494716176c3a676d0996e34f31fce78393f94e2a037b937837c187a965",
       "installed_file": "reward/level_up_02.wav"
     },
     {
@@ -1327,9 +1327,9 @@
       "duration": 0.1,
       "centroid_hz": 4225.1,
       "crest": 5.34,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090241,
       "bytes": 6444,
-      "sha256": "31f62973f8ab812c21ff34a6768b38278adeb128ee28cf2396545523e23c44fa",
+      "sha256": "6e98985b08c1b3cbd7941f8d287ed9d7bcde9a4de5c788a5269a7b03d98500c4",
       "installed_file": "reward/chest/tick_00.wav"
     },
     {
@@ -1341,9 +1341,9 @@
       "duration": 0.1,
       "centroid_hz": 4975.6,
       "crest": 5.23,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.026539563534669,
       "bytes": 6444,
-      "sha256": "2f1746273021b696e7e125557c54277431e80c530d02ce772a18390582bb1d32",
+      "sha256": "b92bc94cff729e50a289a30f3c98c60a8ca078e173ea79fcd114422ff5c4af7e",
       "installed_file": "reward/chest/tick_01.wav"
     },
     {
@@ -1355,9 +1355,9 @@
       "duration": 0.1,
       "centroid_hz": 4694.6,
       "crest": 5.19,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.2823673894257634,
       "bytes": 6444,
-      "sha256": "3af585809ac7072c4e58ebc238ed7101f166b8f1544374ebe67e866c7d8c5ebf",
+      "sha256": "f39c35d8babdee2c6b1ff1423937459c7ce848ed014bf6ce9de108092d7424fe",
       "installed_file": "reward/chest/tick_02.wav"
     },
     {
@@ -1369,9 +1369,9 @@
       "duration": 1.365,
       "centroid_hz": 7883.1,
       "crest": 12.82,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -12.590923716718237,
       "bytes": 87404,
-      "sha256": "cd7cc9e4ff4f7e004795f4b01fd431a688835a3a4d98efad2e081552c6c030ac",
+      "sha256": "39e3b642c2009ec4fddd2ad414a50e2eba371a690943f220eb22db4b723b3e49",
       "installed_file": "reward/chest/reveal_00.wav"
     },
     {
@@ -1383,9 +1383,9 @@
       "duration": 1.175,
       "centroid_hz": 8530.2,
       "crest": 11.26,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -11.113674656942262,
       "bytes": 75244,
-      "sha256": "cb58f321466729f243206ae2f2da012412bbee66e01ee2c524eb459073bf5f1f",
+      "sha256": "ce690c06966b8c3ea82ecfed1dc075c3dab7fb45717e7e3a0c633fc5be2fed5e",
       "installed_file": "reward/chest/reveal_01.wav"
     },
     {
@@ -1397,9 +1397,9 @@
       "duration": 1.4,
       "centroid_hz": 7642.8,
       "crest": 10.76,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -11.072606544321086,
       "bytes": 89644,
-      "sha256": "24611c4671bf2b55cc5fe400ef6bfc3f4710086b5405d7c31edaea8361ebf9b8",
+      "sha256": "e596a82615511bdbe95c97e332a32df6c23f177bfba48cb5ba147b5df1870b87",
       "installed_file": "reward/chest/reveal_02.wav"
     },
     {
@@ -1411,9 +1411,9 @@
       "duration": 0.585,
       "centroid_hz": 4816.0,
       "crest": 6.54,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090242,
       "bytes": 37484,
-      "sha256": "37bcf88b8114b289e84b7de3d2c1d8035ccd9261ac684a4f30ce6c8a4a9fe6d3",
+      "sha256": "60625d283d6e372bf96dd47e4d688db4acda6fe4173dec086e19c04714d50bc3",
       "installed_file": "reward/chest/legendary_00.wav"
     },
     {
@@ -1425,9 +1425,9 @@
       "duration": 0.545,
       "centroid_hz": 4760.7,
       "crest": 6.49,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090241,
       "bytes": 34924,
-      "sha256": "be21455c0dbfdf15f4b09c7759034c0a154530c526e0f6a801f2536e8ef1d3fd",
+      "sha256": "68f3a5780ca25dbb17a7f286f620ddb2ec29b57f99198bc04f6ae858895ef62e",
       "installed_file": "reward/chest/legendary_01.wav"
     },
     {
@@ -1439,9 +1439,9 @@
       "duration": 0.635,
       "centroid_hz": 4765.8,
       "crest": 6.44,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.021130074090241,
       "bytes": 40684,
-      "sha256": "582c0c52db60476d7cccdf0345ffdf4e163136b8f28d57f58bb438df1eb8b841",
+      "sha256": "409434757e7c27701392da565ce79b9e9d42d063360e3af95fe7073af1421c82",
       "installed_file": "reward/chest/legendary_02.wav"
     },
     {
@@ -1453,9 +1453,9 @@
       "duration": 0.85,
       "centroid_hz": 4318.0,
       "crest": 7.7,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -8.261971355813927,
       "bytes": 54444,
-      "sha256": "7611d8ac2abbf8d4531efcfc3ce28664b1bd7086513c0a15c243c92b0bd4c90e",
+      "sha256": "e931b2fc4f1da680d76165d102676e221a596c8ca4d518f1672c7d993cee08a1",
       "installed_file": "boss/warning_00.wav"
     },
     {
@@ -1467,9 +1467,9 @@
       "duration": 0.85,
       "centroid_hz": 6662.8,
       "crest": 5.73,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -8.173489541717345,
       "bytes": 54444,
-      "sha256": "bf02b9809ae5a3ddcbdc15828b298c462fc55f0f7a30c65184f12fe976962a8d",
+      "sha256": "64f1079712de4b3bdbf31d0f7fef8352aab56faa8e6ce459a6e4e8c9737a4072",
       "installed_file": "boss/warning_01.wav"
     },
     {
@@ -1481,13 +1481,19 @@
       "duration": 0.85,
       "centroid_hz": 7000.2,
       "crest": 5.27,
-      "peak_dbfs": -6.02,
+      "peak_dbfs": -6.6931814335796345,
       "bytes": 54444,
-      "sha256": "c2b58b4863e23ffaca2d8978f45bd87852e6223615fbfc13cd5bfd4fedb845a1",
+      "sha256": "927a2673a1136d6a6cd1972a35073a34c306314d6e94410945e97deed0e7fa25",
       "installed_file": "boss/warning_02.wav"
     }
   ],
-  "bytes": 3190904,
+  "bytes": 3207224,
+  "dark_pass": {
+    "lowpass_hz": 5000,
+    "soft_saturation": true,
+    "quantization_bits": 10,
+    "note": "Darker source reselection, restrained grain and lower runtime pitch. No auditory verification claimed."
+  },
   "installed_unique_files": 106,
-  "installed_unique_bytes": 3190904
+  "installed_unique_bytes": 3207224
 }

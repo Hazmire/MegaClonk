@@ -22,7 +22,7 @@ func run():
  check(audio.voices.size()==24 and audio.music_players.size()==2,"Bounded 24 SFX/UI voices and two music crossfade players")
  for name in ["Master","Music","SFX","UI","Ambience"]:check(AudioServer.get_bus_index(name)>=0,"Independent native audio bus: "+name)
  check(audio.events.size()>=30 and audio.streams.size()>100,"Only curated/preloaded event resources registered")
- for event in ["weapon.revolver.fire","weapon.lightning.zap","weapon.chunkers.impact","weapon.aegis.impact","player.damage","player.footstep.grass","player.footstep.rock","player.slide","pickup.xp","enemy.explosion"]:
+ for event in ["weapon.revolver.fire","weapon.lightning.zap","weapon.chunkers.impact","weapon.aegis.impact","player.damage","player.footstep.grass","player.footstep.rock","player.slide","pickup.xp","combat.explosion"]:
   var files=audio.events[event].files;var previous="";var varied=true
   for i in 200:
    var sample=audio.choose(event)

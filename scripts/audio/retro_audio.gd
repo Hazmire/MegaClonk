@@ -67,7 +67,7 @@ func choose(event: String) -> String:
  if files.size()>1 and index==int(last_samples.get(event,-1)):index=(index+1+rng.randi_range(0,files.size()-2))%files.size()
  last_samples[event]=index;return files[index]
 func emit(event: String,position_value: Vector3=Vector3.INF,gain: float=1.0) -> bool:
- if not events.has(event):return false
+ if event.begins_with("enemy.") or not events.has(event):return false
  var config=events[event]
  if clock-float(last_events.get(event,-100))<float(config.get("cooldown",0.05)):cooldown_suppressed+=1;return false
  var priority=int(config.get("priority",1));var spatial=position_value.is_finite();var candidate=-1;var active_event=0
@@ -87,7 +87,7 @@ func emit(event: String,position_value: Vector3=Vector3.INF,gain: float=1.0) -> 
  var path=choose(event)
  if path.is_empty():return false
  var stream=streams[path];var voice=voices[candidate];var player=voice.player;player.stop();player.stream=stream;player.bus=config.get("bus","SFX")
- var pitch=float(config.get("pitch",0.04));player.pitch_scale=rng.randf_range(1-pitch,1+pitch)
+ var pitch=float(config.get("pitch",0.04));player.pitch_scale=float(config.get("base_pitch",1.0))*rng.randf_range(1-pitch,1+pitch)
  player.volume_db=float(config.get("gain_db",-12))+linear_to_db(maxf(gain,0.001))+rng.randf_range(-0.7,0.7)
  if spatial:player.global_position=position_value
  if AudioServer.get_driver_name()!="Dummy":player.play()

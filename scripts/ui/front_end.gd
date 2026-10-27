@@ -21,6 +21,9 @@ var orbit=0.0
 var map_tick=0.0
 var settings_back: Callable
 var in_run=false
+const HEALTH_COLOR=Color("801421")
+var health_text: Label
+var character_health: ProgressBar
 var loadout_icons: VBoxContainer
 var icon_fingerprint=""
 var active_tab="weapons"
@@ -62,10 +65,13 @@ func setup(owner_game: Node) -> void:
  hud_root=Control.new();hud_root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);hud_root.mouse_filter=Control.MOUSE_FILTER_IGNORE;root.add_child(hud_root)
  game.ui=self
  game.hud=text("",hud_root,18);game.hud.hide()
- game.health_bar=ProgressBar.new();game.health_bar.position=Vector2(28,162);game.health_bar.size=Vector2(270,15);game.health_bar.show_percentage=false;hud_root.add_child(game.health_bar)
+ game.health_bar=ProgressBar.new();game.health_bar.position=Vector2(28,220);game.health_bar.size=Vector2(270,22);game.health_bar.show_percentage=false;hud_root.add_child(game.health_bar)
  game.xp_bar=ProgressBar.new();game.xp_bar.position=Vector2(0,698);game.xp_bar.size=Vector2(1280,22);game.xp_bar.show_percentage=false;hud_root.add_child(game.xp_bar)
- for pair in [[game.health_bar,Color("e17f83")],[game.xp_bar,Color("75cdb2")]]:
+ for pair in [[game.health_bar,HEALTH_COLOR],[game.xp_bar,Color("75cdb2")]]:
   var fill=StyleBoxFlat.new();fill.bg_color=pair[1];pair[0].add_theme_stylebox_override("fill",fill)
+ var hp_background=StyleBoxFlat.new();hp_background.bg_color=Color("26090f");hp_background.border_color=Color("13070a");hp_background.set_border_width_all(1);game.health_bar.add_theme_stylebox_override("background",hp_background)
+ health_text=Label.new();health_text.name="HealthValue";health_text.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);health_text.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;health_text.vertical_alignment=VERTICAL_ALIGNMENT_CENTER;health_text.add_theme_font_size_override("font_size",15);health_text.mouse_filter=Control.MOUSE_FILTER_IGNORE;game.health_bar.add_child(health_text)
+ character_health=ProgressBar.new();character_health.name="CharacterHealth";character_health.size=Vector2(64,7);character_health.show_percentage=false;character_health.mouse_filter=Control.MOUSE_FILTER_IGNORE;character_health.add_theme_stylebox_override("background",hp_background.duplicate());var hp_fill=StyleBoxFlat.new();hp_fill.bg_color=HEALTH_COLOR;character_health.add_theme_stylebox_override("fill",hp_fill);character_health.add_theme_font_size_override("font_size",1);character_health.size=Vector2(64,7);hud_root.add_child(character_health)
  xp_label=text("",hud_root,14);xp_label.position=Vector2(450,698);xp_label.custom_minimum_size.x=380;xp_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
  loadout_label=text("",hud_root,14);loadout_label.position=Vector2(28,14)
  loadout_icons=VBoxContainer.new();loadout_icons.position=Vector2(28,38);loadout_icons.add_theme_constant_override("separation",5);hud_root.add_child(loadout_icons)
@@ -73,8 +79,8 @@ func setup(owner_game: Node) -> void:
  timer_label=text("",hud_root,30);timer_label.position=Vector2(525,24);timer_label.custom_minimum_size.x=230;timer_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
  event_label=text("",hud_root,16);event_label.position=Vector2(380,62);event_label.custom_minimum_size.x=520;event_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
  boss_panel=VBoxContainer.new();boss_panel.position=Vector2(415,95);boss_panel.custom_minimum_size.x=450;hud_root.add_child(boss_panel)
- status_label=text("",hud_root,16);status_label.position=Vector2(28,198)
- quest_tracker=text("",hud_root,13);quest_tracker.position=Vector2(28,320);quest_tracker.custom_minimum_size=Vector2(270,0);quest_tracker.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+ status_label=text("",hud_root,16);status_label.position=Vector2(28,252)
+ quest_tracker=text("",hud_root,13);quest_tracker.position=Vector2(28,375);quest_tracker.custom_minimum_size=Vector2(270,0);quest_tracker.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
  minimap=RunMinimap.new();minimap.game=game;minimap.position=Vector2(1040,450);minimap.size=Vector2(210,210);hud_root.add_child(minimap)
  var legend=text("YOU • PORTAL • TREASURE",hud_root,12);legend.position=Vector2(1040,670)
  game.notice=text("",root,18);game.notice.position=Vector2(350,646);game.notice.custom_minimum_size.x=590;game.notice.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
@@ -287,11 +293,13 @@ func update_hud() -> void:
  if fingerprint!=icon_fingerprint:
   icon_fingerprint=fingerprint
   for child in loadout_icons.get_children():loadout_icons.remove_child(child);child.queue_free()
-  var weapon_row=HBoxContainer.new();weapon_row.name="EquippedItems";weapon_row.add_theme_constant_override("separation",4);loadout_icons.add_child(weapon_row)
+  var equipment_rows=VBoxContainer.new();equipment_rows.name="EquippedItems";equipment_rows.add_theme_constant_override("separation",4);loadout_icons.add_child(equipment_rows)
+  var weapon_row=HBoxContainer.new();weapon_row.name="Weapons";weapon_row.add_theme_constant_override("separation",4);equipment_rows.add_child(weapon_row)
   for id in game.weapons:
    var meta=game.equipment_meta("weapons",id,int(game.weapons[id].level));var tile=RewardScreens.icon(self,weapon_row,"weapons",str(id),"Lv. %d"%int(game.weapons[id].level),Rarity.definition(meta.rarity).color,40);tile.tooltip_text=meta.name;tile.set_meta("equipment_uid",meta.uid)
+  var tome_row=HBoxContainer.new();tome_row.name="Tomes";tome_row.add_theme_constant_override("separation",4);equipment_rows.add_child(tome_row)
   for id in game.tomes:
-   var meta=game.equipment_meta("tomes",id,int(game.tomes[id]));var tile=RewardScreens.icon(self,weapon_row,"tomes",str(id),"Lv. %d"%int(game.tomes[id]),Rarity.definition(meta.rarity).color,40);tile.tooltip_text=meta.name;tile.set_meta("equipment_uid",meta.uid)
+   var meta=game.equipment_meta("tomes",id,int(game.tomes[id]));var tile=RewardScreens.icon(self,tome_row,"tomes",str(id),"Lv. %d"%int(game.tomes[id]),Rarity.definition(meta.rarity).color,40);tile.tooltip_text=meta.name;tile.set_meta("equipment_uid",meta.uid)
   var ability_row=HBoxContainer.new();loadout_icons.add_child(ability_row)
   icon_tile(ability_row,"traits",game.loadout_runtime.trait_id,LoadoutCatalog.entry("traits",game.loadout_runtime.trait_id).get("name","Trait"),true)
   icon_tile(ability_row,"ultimates",game.loadout_runtime.ultimate_id,LoadoutCatalog.entry("ultimates",game.loadout_runtime.ultimate_id).get("name","Ultimate"),true)
@@ -300,6 +308,9 @@ func update_hud() -> void:
  timer_label.text="%02d:%02d"%[int(left)/60,int(left)%60] if left>0 else "00:00 • ENDLESS"
  timer_label.modulate=Color("f68c7a") if left<=0 else Color("f2e5c4")
  game.health_bar.max_value=game.stats.max_health;game.health_bar.value=game.health
+ health_text.text="%d / %d"%[ceili(maxf(0,game.health)),ceili(game.stats.max_health)]
+ character_health.max_value=game.stats.max_health;character_health.value=game.health
+ update_character_health()
  xp_label.text="LEVEL %d • %.0f / %.0f XP"%[game.level,game.xp,Catalog.threshold(game.level)]
  if is_instance_valid(ultimate_badge):ultimate_badge.text="READY" if game.loadout_runtime.cooldown<=0 else str(ceili(game.loadout_runtime.cooldown))+"s"
  game.xp_bar.max_value=Catalog.threshold(game.level);game.xp_bar.value=game.xp;game.xp_bar.tooltip_text="Level %d • %.0f / %.0f XP"%[game.level,game.xp,Catalog.threshold(game.level)]
@@ -364,7 +375,14 @@ func settings(back: Callable) -> void:
     action("%s: %s"%[key,OS.get_keycode_string(game.bindings[key])],keys_grid,func():game.pending_binding=key;game.toast("Press a key for "+key))
  action("Save & back",col,func():game.progress.data.settings=game.settings;game.progress.data.settings.bindings=game.bindings;game.progress.save();back.call())
  action("Quit game",col,func():get_tree().quit())
+func update_character_health() -> void:
+ if not is_instance_valid(game) or game.mode!="run" or not is_instance_valid(game.player) or not is_instance_valid(game.player.camera):character_health.hide();return
+ var point=game.player.global_position+Vector3.UP*0.05;var camera=game.player.camera
+ if (point-camera.global_position).dot(-camera.global_basis.z)<=0.05:character_health.hide();return
+ var screen=camera.unproject_position(point);character_health.position=screen+Vector2(-32,12)
+ character_health.visible=game.mode=="run" and not camera.is_position_behind(point) and Rect2(Vector2.ZERO,get_viewport().get_visible_rect().size).has_point(screen)
 func _process(delta: float) -> void:
+ update_character_health()
  if not is_instance_valid(game):return
  if game.mode!="run":
   game.message_time-=delta

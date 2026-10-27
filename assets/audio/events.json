@@ -14,7 +14,8 @@
       "priority": 2,
       "max_voices": 3,
       "gain_db": -14,
-      "pitch": 0.055
+      "pitch": 0.055,
+      "base_pitch": 0.92
     },
     "weapon.sword.swing": {
       "files": [
@@ -28,7 +29,8 @@
       "priority": 2,
       "max_voices": 3,
       "gain_db": -14,
-      "pitch": 0.055
+      "pitch": 0.055,
+      "base_pitch": 0.88
     },
     "weapon.firestaff.cast": {
       "files": [
@@ -42,7 +44,8 @@
       "priority": 2,
       "max_voices": 3,
       "gain_db": -14,
-      "pitch": 0.055
+      "pitch": 0.055,
+      "base_pitch": 0.88
     },
     "weapon.lightning.zap": {
       "files": [
@@ -57,7 +60,8 @@
       "priority": 2,
       "max_voices": 3,
       "gain_db": -14,
-      "pitch": 0.055
+      "pitch": 0.055,
+      "base_pitch": 0.88
     },
     "weapon.chunkers.impact": {
       "files": [
@@ -72,7 +76,8 @@
       "priority": 2,
       "max_voices": 3,
       "gain_db": -14,
-      "pitch": 0.055
+      "pitch": 0.055,
+      "base_pitch": 0.88
     },
     "weapon.bone.throw": {
       "files": [
@@ -85,7 +90,8 @@
       "priority": 2,
       "max_voices": 3,
       "gain_db": -14,
-      "pitch": 0.055
+      "pitch": 0.055,
+      "base_pitch": 0.88
     },
     "weapon.bow.fire": {
       "files": [
@@ -98,7 +104,8 @@
       "priority": 2,
       "max_voices": 3,
       "gain_db": -14,
-      "pitch": 0.055
+      "pitch": 0.055,
+      "base_pitch": 0.88
     },
     "weapon.bananarang.throw": {
       "files": [
@@ -111,7 +118,8 @@
       "priority": 2,
       "max_voices": 3,
       "gain_db": -14,
-      "pitch": 0.055
+      "pitch": 0.055,
+      "base_pitch": 0.88
     },
     "weapon.aura.pulse": {
       "files": [
@@ -124,7 +132,8 @@
       "priority": 2,
       "max_voices": 3,
       "gain_db": -14,
-      "pitch": 0.055
+      "pitch": 0.055,
+      "base_pitch": 0.88
     },
     "weapon.mines.place": {
       "files": [
@@ -137,7 +146,8 @@
       "priority": 2,
       "max_voices": 3,
       "gain_db": -14,
-      "pitch": 0.055
+      "pitch": 0.055,
+      "base_pitch": 0.88
     },
     "weapon.aegis.impact": {
       "files": [
@@ -151,22 +161,8 @@
       "priority": 2,
       "max_voices": 3,
       "gain_db": -14,
-      "pitch": 0.055
-    },
-    "enemy.explosion": {
-      "files": [
-        "res://assets/audio/sfx/enemy/explosion_00.wav",
-        "res://assets/audio/sfx/enemy/explosion_01.wav",
-        "res://assets/audio/sfx/enemy/explosion_02.wav",
-        "res://assets/audio/sfx/enemy/explosion_03.wav",
-        "res://assets/audio/sfx/enemy/explosion_04.wav"
-      ],
-      "bus": "SFX",
-      "cooldown": 0.15,
-      "priority": 1,
-      "max_voices": 3,
-      "gain_db": -14,
-      "pitch": 0.055
+      "pitch": 0.055,
+      "base_pitch": 0.88
     },
     "player.damage": {
       "files": [
@@ -180,7 +176,8 @@
       "priority": 5,
       "max_voices": 3,
       "gain_db": -11,
-      "pitch": 0.055
+      "pitch": 0.055,
+      "base_pitch": 0.88
     },
     "player.footstep.grass": {
       "files": [
@@ -196,7 +193,8 @@
       "priority": 1,
       "max_voices": 3,
       "gain_db": -18,
-      "pitch": 0.055
+      "pitch": 0.055,
+      "base_pitch": 0.88
     },
     "player.footstep.rock": {
       "files": [
@@ -212,7 +210,8 @@
       "priority": 1,
       "max_voices": 3,
       "gain_db": -18,
-      "pitch": 0.055
+      "pitch": 0.055,
+      "base_pitch": 0.88
     },
     "player.slide": {
       "files": [
@@ -226,7 +225,8 @@
       "priority": 1,
       "max_voices": 2,
       "gain_db": -14,
-      "pitch": 0.055
+      "pitch": 0.055,
+      "base_pitch": 0.88
     },
     "player.land": {
       "files": [
@@ -239,7 +239,8 @@
       "priority": 1,
       "max_voices": 3,
       "gain_db": -14,
-      "pitch": 0.055
+      "pitch": 0.055,
+      "base_pitch": 0.88
     },
     "pickup.xp": {
       "files": [
@@ -254,7 +255,8 @@
       "priority": 1,
       "max_voices": 2,
       "gain_db": -14,
-      "pitch": 0.055
+      "pitch": 0.055,
+      "base_pitch": 0.82
     },
     "ui.hover": {
       "files": [
@@ -267,7 +269,8 @@
       "priority": 1,
       "max_voices": 3,
       "gain_db": -18,
-      "pitch": 0.055
+      "pitch": 0.055,
+      "base_pitch": 0.82
     },
     "ui.confirm": {
       "files": [
@@ -280,7 +283,8 @@
       "priority": 1,
       "max_voices": 3,
       "gain_db": -18,
-      "pitch": 0.055
+      "pitch": 0.055,
+      "base_pitch": 0.82
     },
     "ui.open": {
       "files": [
@@ -293,7 +297,8 @@
       "priority": 1,
       "max_voices": 3,
       "gain_db": -18,
-      "pitch": 0.055
+      "pitch": 0.055,
+      "base_pitch": 0.82
     },
     "ui.close": {
       "files": [
@@ -306,7 +311,8 @@
       "priority": 1,
       "max_voices": 3,
       "gain_db": -18,
-      "pitch": 0.055
+      "pitch": 0.055,
+      "base_pitch": 0.82
     },
     "ui.purchase": {
       "files": [
@@ -319,7 +325,8 @@
       "priority": 1,
       "max_voices": 3,
       "gain_db": -18,
-      "pitch": 0.055
+      "pitch": 0.055,
+      "base_pitch": 0.82
     },
     "reward.level_up": {
       "files": [
@@ -332,7 +339,8 @@
       "priority": 4,
       "max_voices": 3,
       "gain_db": -11,
-      "pitch": 0.035
+      "pitch": 0.035,
+      "base_pitch": 0.82
     },
     "reward.chest.tick": {
       "files": [
@@ -345,7 +353,8 @@
       "priority": 4,
       "max_voices": 3,
       "gain_db": -11,
-      "pitch": 0.035
+      "pitch": 0.035,
+      "base_pitch": 0.82
     },
     "reward.chest.reveal": {
       "files": [
@@ -358,7 +367,8 @@
       "priority": 4,
       "max_voices": 3,
       "gain_db": -11,
-      "pitch": 0.035
+      "pitch": 0.035,
+      "base_pitch": 0.82
     },
     "reward.chest.legendary": {
       "files": [
@@ -371,7 +381,8 @@
       "priority": 4,
       "max_voices": 3,
       "gain_db": -11,
-      "pitch": 0.035
+      "pitch": 0.035,
+      "base_pitch": 0.82
     },
     "boss.warning": {
       "files": [
@@ -384,20 +395,8 @@
       "priority": 5,
       "max_voices": 3,
       "gain_db": -11,
-      "pitch": 0.055
-    },
-    "enemy.death": {
-      "files": [
-        "res://assets/audio/sfx/legacy/Enemy_death___Monste__1_1766764309706.mp3",
-        "res://assets/audio/sfx/legacy/Enemy_death___Monste__2_1766764305947.mp3",
-        "res://assets/audio/sfx/legacy/Enemy_death___Monste__3_1766764302127.mp3"
-      ],
-      "bus": "SFX",
-      "gain_db": -23,
-      "priority": 0,
-      "cooldown": 0.16,
-      "max_voices": 2,
-      "pitch": 0.04
+      "pitch": 0.055,
+      "base_pitch": 1.0
     },
     "ambient.forest": {
       "files": [
@@ -410,7 +409,8 @@
       "priority": 0,
       "cooldown": 0.16,
       "max_voices": 2,
-      "pitch": 0.04
+      "pitch": 0.04,
+      "base_pitch": 1.0
     },
     "reward.applause": {
       "files": [
@@ -421,7 +421,24 @@
       "priority": 4,
       "cooldown": 0.6,
       "max_voices": 1,
-      "pitch": 0.015
+      "pitch": 0.015,
+      "base_pitch": 0.82
+    },
+    "combat.explosion": {
+      "files": [
+        "res://assets/audio/sfx/combat/explosion_00.wav",
+        "res://assets/audio/sfx/combat/explosion_01.wav",
+        "res://assets/audio/sfx/combat/explosion_02.wav",
+        "res://assets/audio/sfx/combat/explosion_03.wav",
+        "res://assets/audio/sfx/combat/explosion_04.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.15,
+      "priority": 1,
+      "max_voices": 3,
+      "gain_db": -14,
+      "pitch": 0.055,
+      "base_pitch": 0.88
     }
   }
 }

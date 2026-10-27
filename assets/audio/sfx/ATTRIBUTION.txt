@@ -5,5 +5,5 @@ Licence: Creative Commons Attribution 4.0 International (CC BY 4.0)
 https://creativecommons.org/licenses/by/4.0/
 https://creativecommons.org/licenses/by/4.0/legalcode
 Licence identification supplied by the project owner from the publisher page, 27 October 2026. Publisher page returned HTTP403 in this cloud environment; no licence file in the supplied archive.
-Changes: selected transient variations from source reels, stereo-to-mono conversion, resampled 96000Hz/24bit to32000Hz/16bit, conservative peak adjustment and short edge fades. Detailed source filenames and offsets: docs/audio/CURATION.json.
+Changes: selected transient variations from source reels, stereo-to-mono conversion, resampled 96000Hz/24bit to32000Hz/16bit, conservative peak adjustment and short edge fades; v12 source reselection, 5kHz low-pass, mild saturation/10bit grain and lower runtime playback pitches. Detailed source filenames and offsets: docs/audio/CURATION.json.
 No endorsement by the original creator is implied.
