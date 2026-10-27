@@ -1,3 +1,7 @@
+# Retro Audio11 playtest
+
+Extract the entire ZIP and launch BONK_INFINITY.exe, or Launch_Compatibility.bat. In Settings → Audio, all five sliders apply immediately and persist. Listen to each weapon, grounded footsteps, slide/landing, XP cascades and chest reveals. Check that white enemy flashes restore, contact shunts remain restrained and explosions launch more strongly. Original supplied music loops and crossfades between menu/stages. Full inventory, attribution and test limits: RETRO_AUDIO.md. No auditioning/native Windows audio-device certification is claimed. Older guides below are historical.
+
 # Art reset 10 playtest
 
 Extract the entire Windows ZIP and launch BONK_INFINITY.exe, or Launch_Compatibility.bat. Start a new run for the focused ten-weapon roster. Old equipped archived weapons still work; new offers exclude them. Newly acquired weapons and tomes are Common; existing upgrades retain supported rarity tiers. Traits use neutral borders.

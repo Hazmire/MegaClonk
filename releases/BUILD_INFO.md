@@ -1,3 +1,25 @@
+# Verified Retro Audio v11 publication
+
+[Download Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/retro-audio-v11/BONK_INFINITY_Windows_x64.zip). Extract the entire ZIP and launch BONK_INFINITY.exe, or Launch_Compatibility.bat. The ZIP tracked directly in this repository is an older build; use this release download.
+
+- Clean source: `7ab7312f390474e35e5d00afff23c14e42c33224`.
+- Successful publishing workflow: https://github.com/Hazmire/MegaClonk/actions/runs/40588840574
+- Successful PR validation: https://github.com/Hazmire/MegaClonk/actions/runs/40588875421
+- Release asset ID `682980577`; 123,951,986bytes.
+- ZIP SHA256: `bae772210404e0208cf00afd4cd64230e8d137e019cb2177b01735bf426df6cd`.
+- Actions artifact ID `12772834404`, BONK_INFINITY-Windows-x64; 124,945,156bytes; not expired at verification; expires26 November2026.
+- Actions artifact digest: `sha256:2e4391beee657dc8dc4a2a58ffe609c6b685394d700f2c7f513d6a4fbab68d1f`. The durable release ZIP was downloaded separately and verified.
+
+All26 suites passed locally (1,076 named checks) and in clean GitHub CI, alongside the existing200-seed world/physics/placement audits. CI success was read from the Actions job/step API; the signed full-log host returns403, so no independently counted CI transcript is claimed. The downloaded ZIP matches GitHub size/digest and every archive CRC, with clean expected BUILD_INFO. Linux Godot ran its embedded pack for180 frames plus all five UI/stage/v9/art/audio smoke gates. Source, compiled and published white-flash/settings renders were viewed. This validates exported resources, not native Windows execution.
+
+Four supplied original tracks and106 selected Pixel Combat clips (3,190,904bytes) are integrated. Six existing legacy ambience/death recordings and an original project clap bed remain. The complete2.04GB library stays outside the project and export. Attribution and curation offsets are shipped.
+
+[Full inventory, mappings and evidence](../docs/RETRO_AUDIO.md) · [Raw verification](RETRO_AUDIO_VALIDATION.json) · [PR #5](https://github.com/Hazmire/MegaClonk/pull/5). Merge PR #5 into Full-Release after review; the download works independently.
+
+**Open playtest gates:** files were not auditioned. Native Windows/device/spatial mix, subjective timbres, loop joins and live crossfade timing require listening. ALSA-null capture is unclocked and only establishes decoded signal. Dense dispatch cost0.51ms mean at500 synthetic impact-requesting enemies; this does not solve the existing horde/GPU frame budget.
+
+Earlier verified publications follow.
+
 # Verified shrine rewards and pursuit v9 publication
 
 [Download Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/shrine-rewards-v9/BONK_INFINITY_Windows_x64.zip). Extract and run BONK_INFINITY.exe, or Launch_Compatibility.bat.

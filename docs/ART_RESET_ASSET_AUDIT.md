@@ -20,7 +20,7 @@ Native Godot FBX import resolved all portal texture references and extracted fou
 
 Portal: both Portal_01 and Portal_01_Hole are instantiated, fitted to 4.4m overall height and given a restrained shader using all three supplied maps. Its nonblocking interaction behavior is preserved. Day/night HDR textures feed three cached sky resources: day/natural, night/violet and night/crimson. No third source panorama is claimed.
 
-Scenery: PSX_Tree1/2/3, PSX_Treetrunk and PSX_Rock are used alongside the existing supplied Nature kit. Outer visible boundary walls are replaced by seeded layered rock instances; the original watertight terrain collision remains separate. Ground samples the supplied earth/grass textures. Existing vertical terraces and ramps remain in place.
+Scenery: PSX_Tree2/3, PSX_Treetrunk and PSX_Rock are used alongside the existing supplied Nature kit. PSX_Tree1 and the remaining small mesh bakes are retained as reusable source assets, not claimed as additional runtime placements. Outer visible boundary walls are replaced by seeded layered rock instances; the original watertight terrain collision remains separate. Ground samples the supplied earth/grass textures. Existing vertical terraces and ramps remain in place.
 
 Effects: supplied native vfx_status_shatter.tscn supports Chunkus impacts and Golem summons; aura_particle.gdshader supports fire/arcane weapon effects; imported PSX_Rock supports debris. They use prewarmed bounded pools. Ambient and route-aware portal wind adapt the supplied CC0 noise particle shader without depth-buffer sampling. Existing PSX flipbooks, lightning shaders and sound assets remain active.
 
