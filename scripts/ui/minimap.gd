@@ -38,7 +38,11 @@ func _draw() -> void:
    "Shop":color=Color("83d678")
    "Heal":color=Color("f57579")
    "Elite Statue":color=Color("ffac5e")
+   "Boss Statue":color=Color("d78aff")
+   "Free Chest":color=Color("ffe79b")
   draw_colored_polygon(PackedVector2Array([p+Vector2(0,-3)*mark,p+Vector2(3,0)*mark,p+Vector2(0,3)*mark,p+Vector2(-3,0)*mark]),color)
+ for chest in game.drop_chests:
+  if visible_at(chest.node.position):draw_rect(Rect2(point(chest.node.position)-Vector2.ONE*3*mark,Vector2.ONE*6*mark),Color("ffe79b"))
  for e in game.enemies:
   if e.hp>0 and visible_at(e.pos):draw_circle(point(e.pos),(4 if e.kind>=8 else 3 if e.get("elite",false) else 1.5)*mark,Color("ffd365") if e.get("elite",false) else Color("f387a0"))
  if is_instance_valid(game.portal) and visible_at(game.portal.position):draw_arc(point(game.portal.position),6*mark,0,TAU,20,Color("6bd3ff"),2*mark)

@@ -38,7 +38,7 @@ static func build(game: Node) -> void:
   var type=i%3
   var tree=["CommonTree_1","CommonTree_3","CommonTree_5"][type]
   var mesh=ImportedArt.mesh(NATURE+tree+".gltf",7.5,7)
-  game.prop_instance("mega_"+tree,mesh,Color.WHITE,position,Vector3.ONE*scale_value,true,rng.randf()*TAU)
+  game.prop_instance("mega_"+tree,StageThemes.decor(mesh,game.stage),Color.WHITE,position,Vector3.ONE*scale_value,true,rng.randf()*TAU)
   game.prop_collider(position,0.45*scale_value,4*scale_value)
   if game.prop_batches["mega_"+tree].multimesh.visible_instance_count>=140:break
  for i in 600:
@@ -46,14 +46,14 @@ static func build(game: Node) -> void:
   if ForestMap.is_ramp(data,p,1) or p.distance_to(Vector2(data.spawn.x,data.spawn.z))<12:continue
   var model=["Grass_Common_Short","Fern_1","Flower_3_Group","Bush_Common","Bush_Common_Flowers"][i%5]
   var height=0.6 if i%5<3 else 1.0
-  game.prop_instance("mega_"+model,ImportedArt.mesh(NATURE+model+".gltf",height,2),Color.WHITE,Vector3(p.x,game.terrain_height(p.x,p.y),p.y),Vector3.ONE*rng.randf_range(0.8,1.2),true,rng.randf()*TAU)
+  game.prop_instance("mega_"+model,StageThemes.decor(ImportedArt.mesh(NATURE+model+".gltf",height,2),game.stage),Color.WHITE,Vector3(p.x,game.terrain_height(p.x,p.y),p.y),Vector3.ONE*rng.randf_range(0.8,1.2),true,rng.randf()*TAU)
  for i in 40:
   var p=Vector2(rng.randf_range(-90,90),rng.randf_range(-90,90))
   if ForestMap.protected(data,p,3):continue
   var mesh=ImportedArt.mesh(NATURE+"Rock_Medium_1.gltf",2,4)
   var position=Vector3(p.x,game.terrain_height(p.x,p.y),p.y)
   if not spaced(game,position,1.8):continue
-  game.prop_instance("mega_rock",mesh,Color.WHITE,position,Vector3.ONE,true);game.prop_collider(position,1.8,mesh.get_aabb().size.y)
+  game.prop_instance("mega_rock",StageThemes.decor(mesh,game.stage,true),Color.WHITE,position,Vector3.ONE,true);game.prop_collider(position,1.8,mesh.get_aabb().size.y)
  var props_done=Time.get_ticks_usec()
  ForestAtmosphere.add_grass(game,data,rng)
  var grass_done=Time.get_ticks_usec()

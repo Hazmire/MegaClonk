@@ -1,3 +1,7 @@
+# Stage themes and physical swarms
+
+The stage/swarms gameplay increment and all 22 source suites are implemented and passing. See [guide](STAGE_SWARMS.md) and [checklist](../TODO_STAGE_SWARMS.md). Windows publication is pending. Dense 500-enemy CPU cost remains above the 60FPS frame budget; native Windows execution is untested. Earlier release history follows.
+
 # Latest increment: Vertical Forest
 
 Milestones 2–4 add four elevation bands, adaptive ramps, layered sky, fog and seeded constrained object placement. Version-3 saves retain their old terrain. See VERTICAL_FOREST.md and VERTICAL_PERFORMANCE.md. Milestones 5–10 add blue/red XP gems, queued levels and reference-based upgrade/chest/shop/build screens; see REWARD_UI.md. All fifteen regression suites pass. Windows v7 reward/UI publication and downloaded compiled-world/UI checks are verified; see releases/BUILD_INFO.md. Native Windows execution remains untested. Historical status follows.

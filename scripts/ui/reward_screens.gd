@@ -7,7 +7,9 @@ static func style(color: Color=Color("b8b09a"),background: Color=Color("202626")
  box.content_margin_left=12;box.content_margin_right=12;box.content_margin_top=10;box.content_margin_bottom=10
  return box
 static func button(ui: FrontEnd,parent: Node,label: String,callback: Callable,tint: Color=Color("51585a")) -> Button:
- var control=ui.action(label,parent,callback)
+ var generation=ui.reward_generation
+ var control=ui.action(label,parent,func():
+  if ui.reward_generation==generation:callback.call())
  control.custom_minimum_size=Vector2(120,44)
  for state in ["normal","hover","pressed","focus","disabled"]:
   var box=style(Color("a6a89f") if state=="normal" else Color("fff0bf"),tint.darkened(0.25) if state=="pressed" else tint.lightened(0.15) if state in ["hover","focus"] else tint.darkened(0.55) if state=="disabled" else tint)
@@ -35,8 +37,8 @@ static func world_map(ui: FrontEnd,from_pause: bool) -> void:
  var game=ui.game;game.mode="map";ui.clear();ui.map_return_to_pause=from_pause;ui.minimap.reveal(game.player.position)
  var shade=ColorRect.new();shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);shade.color=Color(0.005,0.025,0.04,0.45);shade.mouse_filter=Control.MOUSE_FILTER_IGNORE;ui.menu.add_child(shade)
  var center=frame(ui,Vector2(24,28),Vector2(860,652),"FOREST · Stage %d · World map"%game.stage)
- var map=RunMinimap.new();map.game=game;map.reveal_all=ui.minimap.reveal_all;map.explored=ui.minimap.explored;map.terrain_colors=ui.minimap.terrain_colors;map.custom_minimum_size=Vector2(560,470);map.size_flags_horizontal=Control.SIZE_EXPAND_FILL;center.add_child(map)
- ui.text("N ↑    Gold: chest · Green: shop · Red: healing · Cyan: shrine\nOrange: elite · Blue ring: portal · White: you · Pink: enemies",center,14)
+ var map=RunMinimap.new();map.game=game;map.reveal_all=ui.minimap.reveal_all;map.explored=ui.minimap.explored;map.terrain_colors=ui.minimap.terrain_colors;map.custom_minimum_size=Vector2(560,450);map.size_flags_horizontal=Control.SIZE_EXPAND_FILL;center.add_child(map)
+ ui.text("N ↑    Gold: chest · Green: shop · Red: healing · Cyan: shrine\nOrange: elite · Purple: boss statue · Blue ring: portal\nWhite: you · Pink: enemies · Pale gold: free reward chests",center,14)
  button(ui,center,"BACK" if from_pause else "RESUME",game.pause_menu if from_pause else game.resume).grab_focus()
  statistics(ui,frame(ui,Vector2(938,28),Vector2(318,652),"Stats"))
 static func frame(ui: FrontEnd,pos: Vector2,dimensions: Vector2,title: String) -> VBoxContainer:
@@ -170,7 +172,8 @@ static func upgrades(ui: FrontEnd) -> void:
 static func inventory(ui: FrontEnd) -> void:
  var game=ui.game;game.mode="build";var center=layout(ui,"Your build & character stats")
  ui.heading("Current run",center,26)
- ui.paragraph("Level %d · Stage %d\n%d kills · %.0f total damage\n%d gold · %d chests opened"%[game.level,game.stage,game.kills,game.damage_total,game.gold,game.chests_opened],center,520)
+ ui.text("Additional Bosses: +%d · %d per future encounter"%[game.additional_boss_count,1+game.additional_boss_count],center,18)
+ ui.paragraph("Level %d · Stage %d\n%d kills · %.0f total damage\n%d gold · %d paid chests · %d free chests"%[game.level,game.stage,game.kills,game.damage_total,game.gold,game.chests_opened,int(game.run_metrics.get("free_chests",0))],center,520)
  for id in game.weapons:
   ui.heading(Catalog.WEAPONS[id][0]+" · Lv "+str(game.weapons[id].level),center,20)
   ui.paragraph(game.weapon_tooltip(id),center,520)

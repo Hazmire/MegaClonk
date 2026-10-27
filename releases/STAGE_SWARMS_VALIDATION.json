@@ -1,0 +1,17 @@
+{
+  "status": "source_passed_publication_pending",
+  "engine": "4.7.2",
+  "suites": 22,
+  "named_checks": 761,
+  "layout_seeds": 200,
+  "decorated_worlds": 200,
+  "collision_rays": 104353,
+  "enemy_traversal_checks": 400,
+  "interaction_checks": 1000,
+  "cliff_drop_cases": 73,
+  "object_layout_seeds": 200,
+  "free_chest_seeds": 13,
+  "native_windows_executed": false,
+  "gaming_gpu_60fps_verified": false,
+  "publication_blocker": "GitHub HTTP 401 Bad credentials"
+}

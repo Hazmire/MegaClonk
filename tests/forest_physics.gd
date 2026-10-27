@@ -74,9 +74,9 @@ func run():
    await process_frame
    Input.action_press("interact");game.update_interactions(0.01);Input.action_release("interact")
    if not chest.used or game.items.size()!=old_count+1:reasons.append("Chest cannot be opened")
-   interactions+=1;game.mode="pause";game.player.active=false;await process_frame
+   interactions+=1;game.resume();game.mode="pause";game.player.active=false;await process_frame
    game.player.position=shrine.node.position
-   Input.action_press("interact");game.update_interactions(0.01);Input.action_release("interact");game.update_interactions(12)
+   game.update_interactions(4);game.update_interactions(4)
    if not shrine.used:reasons.append("Charge shrine cannot complete")
    interactions+=1;game.mode="pause";game.player.active=false;await process_frame
    game.player.position=statue.node.position

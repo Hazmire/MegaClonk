@@ -1,3 +1,7 @@
+# Active stage/swarms increment
+
+The stage/swarms gameplay increment and all 22 source suites are implemented and passing. See [checklist](TODO_STAGE_SWARMS.md) and [guide](docs/STAGE_SWARMS.md). Windows publication is pending. Dense 500-enemy CPU cost remains above the 60FPS frame budget; native Windows execution is untested. Earlier release history follows.
+
 # Active milestone status
 
 The rarity foundation, Vertical Forest terrain/atmosphere/placement and XP/reward UI increments are implemented. See [milestone evidence](TODO_RARITY_WORLD.md), [reward UI](docs/REWARD_UI.md), [world previews](docs/VERTICAL_FOREST.md) and [performance](docs/VERTICAL_PERFORMANCE.md). Earlier history follows.

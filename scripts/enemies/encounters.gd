@@ -19,7 +19,7 @@ static func initialize(game: Node, e: Dictionary, id: String) -> void:
  var d=config(id);var scaling=(1+(game.stage-1)*0.6)*(1+(game.tier-1)*0.3)*game.stats.difficulty
  if id=="ghost":scaling*=1+maxf(0,game.stage_time-game.STAGE_SECONDS)/120
  e.encounter=id;e.variant=d;e.hp=d.health*scaling;e.max_hp=e.hp;e.speed=d.speed;e.damage=d.damage*scaling;e.scale=d.scale
- e.radius=d.get("radius",0.6);e.ability_clock=10.0 if id=="chunkus" else 12.0;e.aoe_remaining=0.0;e.owner_key=str(game.stage)+"_golem";e.elite=id=="statue_elite"
+ e.radius=d.get("radius",0.6);e.ability_clock=10.0 if id=="chunkus" else 12.0;e.aoe_remaining=0.0;e.owner_key=str(game.stage)+"_golem_"+str(e.get("crowd_id",game.crowd.next_id));e.elite=id=="statue_elite"
  e.state="move";e.action="";e.windup=0.0;e.recovery=0.0;e.charge_time=0.0;e.charge_direction=Vector3.ZERO;e.charge_hit=false;e.hit_time=0.0;e.special_cds={};e.wave_clock=0.0;e.waves=0
 static func step(game: Node, e: Dictionary, delta: float) -> void:
  if e.encounter in ["chunkus","rock_golem","statue_elite","lesser_golem"]:
@@ -125,10 +125,12 @@ static func modern_step(game: Node,e: Dictionary,delta: float) -> void:
   e.ability_clock-=delta
   if e.ability_clock<=0:
    e.ability_clock+=12
-   var count=0
+   var count=0;var total=0
    for enemy in game.enemies:
-    if enemy.hp>0 and enemy.get("summon_owner","")==e.owner_key:count+=1
-   for i in mini(3,12-count):
+    if enemy.hp>0 and enemy.get("encounter","")=="lesser_golem":
+     total+=1
+     if enemy.get("summon_owner","")==e.owner_key:count+=1
+   for i in mini(3,mini(12-count,preload("res://assets/config/stage_update.tres").global_golem_cap-total)):
     var angle=float(i)*TAU/3+e.age
     var point=e.pos+Vector3(cos(angle),0,sin(angle))*5
     var summoned=game.spawn_enemy(12,point)

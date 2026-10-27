@@ -11,6 +11,8 @@ a slowing chest reel, shared shop/build screens and blue/red XP gemstones.
 
 The GitHub reference images now also inform the [pause, expanded map and UI refinements](docs/REFERENCE_UI.md). Press **M** in a run to open the discovered-world map.
 
+The latest source adds [stage themes, physical swarms, automatic shrines and multiplied bosses](docs/STAGE_SWARMS.md). This increment is not yet published; the download below remains the verified previous release.
+
 ## Download and play
 
 - [Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/reference-ui-v7.1/BONK_INFINITY_Windows_x64.zip)

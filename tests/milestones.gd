@@ -71,7 +71,7 @@ func run():
  check(game.loadout_runtime.cooldown==120 and game.player.jump_multiplier==2 and game.player.collision_mask==1,"Ghost uses 120s cooldown and preserves terrain collision")
  game.mode="pause";game.player.active=false;game.enemies.clear()
  game.stage_event("miniboss_1");game.stage_event("miniboss_2")
- check(game.enemies.size()==2 and game.enemies[0].encounter=="champion" and game.enemies[1].encounter=="hunter","Timed encounters spawn distinct genuine miniboss types")
+ check(game.enemies.size()==2 and game.enemies.all(func(e):return e.encounter in BossEncounters.MINI),"Timed encounters use the existing miniboss variant pool")
  for id in ["colossus","sovereign"]:
   game.boss_variant=id;var boss=game.spawn_enemy(8,game.player.position+Vector3(10,0,0))
   check(boss.variant.attacks.size()==3 and boss.variant.mesh!=null,"Three specials and unique model: "+id)

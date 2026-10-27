@@ -36,6 +36,7 @@ var camera: Camera3D
 var collider: CollisionShape3D
 var hurt_time = 0.0
 var dead = false
+var crowd_world: Node
 var last_facing = 0.0
 
 func _ready() -> void:
@@ -133,6 +134,7 @@ func _physics_process(delta: float) -> void:
   jumps+=1
   if wall_jump:velocity+=get_wall_normal()*6
  if can_climb and is_on_wall() and Input.is_action_pressed("forward") and not low and not Input.is_action_just_pressed("jump") and maxf(absf(position.x),absf(position.z))<73: velocity.y=8*stats.speed*movement_multiplier*RULES.climb_speed_ratio*stats.get("climb",1)
+ if is_instance_valid(crowd_world):velocity=crowd_world.crowd.player_velocity(crowd_world,velocity,delta)
  move_and_slide()
  hurt_time=maxf(0,hurt_time-delta)
  if not is_instance_valid(avatar): return

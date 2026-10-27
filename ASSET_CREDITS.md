@@ -78,3 +78,6 @@ The static cloud/gradient sky (`shaders/forest_sky.gdshader`), region/placement 
 
 ## GitHub UI references (2026-10-26)
 The five root-level `Megabonk_*` / `firefox_WjCOcSAmyE.png` screenshots uploaded by the user are layout references only. Original frames, button styling and map markers are implemented in project code. Screenshots are excluded from playable exports; no reference-game icons or pixels are extracted. See docs/REFERENCE_UI.md for the reference-to-screen mapping.
+
+## Stage themes and physical swarms (2026-10-27)
+Original stage palette resources, atlas-preserving vegetation tint shader, shrine orb shader, shared procedural chest geometry and horned boss-statue assembly are project work. Existing supplied vegetation, enemies, icon art and fonts retain their previously recorded licences. No new third-party downloads were introduced. Actual rendered previews are in docs/images/stage-swarms/.

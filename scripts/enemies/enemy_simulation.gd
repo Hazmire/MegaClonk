@@ -90,6 +90,6 @@ static func step(game: Node, e: Dictionary, delta: float) -> void:
  else:e.pos=game.constrain_enemy_motion(e.pos,e.pos+(direction*speed+e.knock)*delta)
  e.knock=e.knock.move_toward(Vector3.ZERO,delta*15)
  if e.get("climb",{}).is_empty() and e.get("drop",{}).is_empty():
-  if not "flying" in modules:e.pos=game.avoid_props(e.pos)
+  if not "flying" in modules and not e.get("ordinary",false):e.pos=game.avoid_props(e.pos)
   e.pos.x=clampf(e.pos.x,-95,95);e.pos.z=clampf(e.pos.z,-95,95)
   e.pos.y=game.terrain_height(e.pos.x,e.pos.z)+0.65+(1.3+sin(e.age*3)*0.25 if "flying" in modules else 0)

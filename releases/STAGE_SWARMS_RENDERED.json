@@ -1,0 +1,109 @@
+{
+  "chest_death": {
+    "chests": 25,
+    "mean_ms": 0.03376,
+    "p95_ms": 0.041,
+    "worst_ms": 0.192
+  },
+  "collect_25_and_first_reel_ms": 18.846,
+  "hardware_limit": "Cloud host; CPU scope AI/contact/crowd/grid/FX/HUD. Viewport timings include Mesa only when rendered. No native Windows or gaming-GPU FPS proof.",
+  "multiboss": {
+    "bosses": 8,
+    "cpu": {
+      "mean_ms": 1.67316666666667,
+      "p95_ms": 1.509,
+      "worst_ms": 5.765
+    },
+    "lesser_golems": 15,
+    "pending": 0,
+    "rendered": true,
+    "viewport_frame": {
+      "mean_ms": 189.478555555556,
+      "p95_ms": 211.71,
+      "worst_ms": 231.614
+    }
+  },
+  "queued_presentations": 25,
+  "renderer": "X11",
+  "shrine_interactions_cpu": {
+    "mean_ms": 0.28475,
+    "p95_ms": 0.313,
+    "worst_ms": 0.328
+  },
+  "stage_setup": [
+    {
+      "ms": 201.294,
+      "stage": 1
+    },
+    {
+      "ms": 202.085,
+      "stage": 2
+    },
+    {
+      "ms": 207.397,
+      "stage": 3
+    }
+  ],
+  "swarms": [
+    {
+      "cpu": {
+        "mean_ms": 2.72833333333333,
+        "p95_ms": 2.879,
+        "worst_ms": 4.161
+      },
+      "enemies": 50,
+      "rendered": true,
+      "requested": 50,
+      "viewport_frame": {
+        "mean_ms": 214.193833333333,
+        "p95_ms": 225.485,
+        "worst_ms": 233.65
+      }
+    },
+    {
+      "cpu": {
+        "mean_ms": 5.10833333333333,
+        "p95_ms": 5.471,
+        "worst_ms": 5.784
+      },
+      "enemies": 100,
+      "rendered": true,
+      "requested": 100,
+      "viewport_frame": {
+        "mean_ms": 275.108833333333,
+        "p95_ms": 293.975,
+        "worst_ms": 297.517
+      }
+    },
+    {
+      "cpu": {
+        "mean_ms": 13.0438333333333,
+        "p95_ms": 13.377,
+        "worst_ms": 13.437
+      },
+      "enemies": 250,
+      "rendered": true,
+      "requested": 250,
+      "viewport_frame": {
+        "mean_ms": 444.8185,
+        "p95_ms": 473.43,
+        "worst_ms": 493.911
+      }
+    },
+    {
+      "cpu": {
+        "mean_ms": 26.2971666666667,
+        "p95_ms": 27.08,
+        "worst_ms": 27.22
+      },
+      "enemies": 500,
+      "rendered": true,
+      "requested": 500,
+      "viewport_frame": {
+        "mean_ms": 736.693833333333,
+        "p95_ms": 779.421,
+        "worst_ms": 847.103
+      }
+    }
+  ]
+}

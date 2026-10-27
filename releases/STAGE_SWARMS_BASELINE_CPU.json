@@ -1,0 +1,25 @@
+{
+  "source": "042813f68278d580c4458679988251505db4eda4",
+  "swarms": [
+    {
+      "enemies": 50,
+      "mean_ms": 1.08079166666667,
+      "worst_ms": 1.293
+    },
+    {
+      "enemies": 100,
+      "mean_ms": 2.09095833333333,
+      "worst_ms": 2.291
+    },
+    {
+      "enemies": 250,
+      "mean_ms": 5.07499166666667,
+      "worst_ms": 5.36
+    },
+    {
+      "enemies": 500,
+      "mean_ms": 10.0817,
+      "worst_ms": 10.53
+    }
+  ]
+}

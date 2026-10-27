@@ -8,9 +8,10 @@ const HALF=96.0
 const SIDE=96
 static var cache: Dictionary={}
 static var generation_version=4
+static var object_version=1
 static func layout(seed_value: int) -> Dictionary:
  var cache_key=seed_value
- if cache.has(cache_key) and int(cache[cache_key].terrain_version)==generation_version:return cache[cache_key]
+ if cache.has(cache_key) and int(cache[cache_key].terrain_version)==generation_version and int(cache[cache_key].get("object_version",0))==object_version:return cache[cache_key]
  var started=Time.get_ticks_usec()
  var rng=RandomNumberGenerator.new();rng.seed=seed_value
  var draft=ForestRegions.draft(rng,SETTINGS) if generation_version>=4 else draft_regions(rng)
@@ -38,7 +39,7 @@ static func layout(seed_value: int) -> Dictionary:
  var elite_region=(spawn_region+int(regions.size()/2))%regions.size()
  while elite_region in [spawn_region,portal_region]:elite_region=(elite_region+1)%regions.size()
  var elite2: Vector2=regions[elite_region].get("anchor",regions[elite_region].rect.get_center())
- var data={"seed":seed_value,"terrain_version":generation_version,"regions":regions,"ramps":ramps,"pois":pois,
+ var data={"seed":seed_value,"object_version":object_version,"terrain_version":generation_version,"regions":regions,"ramps":ramps,"pois":pois,
   "spawn":Vector3(spawn2.x,regions[spawn_region].height,spawn2.y),"spawn_region":spawn_region,
   "elite":Vector3(elite2.x,regions[elite_region].height,elite2.y),
   "portal":Vector3(portal2.x,regions[portal_region].height,portal2.y),"generation_attempts":draft.attempts}
@@ -80,7 +81,7 @@ static func layout(seed_value: int) -> Dictionary:
   data.portal.y=0.0;data.spawn.y=0.0;data.elite.y=0.0
   push_warning("Repaired forest seed %s: %s"%[seed_value,data.failure_reason])
  var graph_done=Time.get_ticks_usec()
- if generation_version>=4 and data.first_attempt_valid:ForestPlacement.populate(data,SETTINGS)
+ if (generation_version>=4 or object_version>=1) and data.first_attempt_valid:ForestPlacement.populate(data,SETTINGS)
  data.generation_metrics={"draft_ms":(draft_done-started)/1000.0,"planes_ms":(planes_done-draft_done)/1000.0,"connectivity_ms":(graph_done-planes_done)/1000.0,"placement_ms":(Time.get_ticks_usec()-graph_done)/1000.0,"total_ms":(Time.get_ticks_usec()-started)/1000.0}
  if cache.size()>=4:cache.erase(cache.keys()[0])
  cache[cache_key]=data;return data
@@ -154,8 +155,9 @@ static func is_ramp(data: Dictionary,p: Vector2,margin: float=0) -> bool:
 static func protected(data: Dictionary,p: Vector2,margin: float=0) -> bool:
  if p.distance_to(Vector2(data.spawn.x,data.spawn.z))<12+margin or p.distance_to(Vector2(data.elite.x,data.elite.z))<10+margin or p.distance_to(Vector2(data.portal.x,data.portal.z))<10+margin:return true
  if is_ramp(data,p,4+margin):return true
- for pos in data.pois:
-  if p.distance_to(Vector2(pos.x,pos.z))<5+margin:return true
+ for i in data.pois.size():
+  var pos: Vector3=data.pois[i];var radius=10 if data.get("poi_kinds",[]).size()>i and data.poi_kinds[i]=="Elite Statue" else 5
+  if p.distance_to(Vector2(pos.x,pos.z))<radius+margin:return true
  # Wide cross-shaped approach lanes on every plateau connect all ramp mouths.
  var center=Vector2.ZERO
  for region in data.regions:

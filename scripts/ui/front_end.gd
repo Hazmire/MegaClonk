@@ -33,6 +33,7 @@ var reward_consumed=false
 var reward_focus: Dictionary={}
 var reward_tweens: Array=[]
 var map_return_to_pause=false
+var stage_banner: Control
 
 func setup(owner_game: Node) -> void:
  process_mode=Node.PROCESS_MODE_ALWAYS
@@ -97,6 +98,7 @@ func stop_reward_animations() -> void:
 func _exit_tree() -> void:
  stop_reward_animations()
 func clear() -> void:
+ if is_instance_valid(stage_banner):stage_banner.hide()
  stop_reward_animations()
  reward_generation+=1;reward_consumed=false
  if is_instance_valid(game.notice):game.notice.text=""
@@ -369,15 +371,34 @@ func update_boss_bars() -> void:
  for e in game.enemies:
   if e.kind in [8,9,10] and e.hp>0:bosses.append(e)
  bosses.sort_custom(func(a,b):return a.kind<b.kind)
+ var rows=[]
+ for e in bosses.slice(0,3 if bosses.size()>4 else 4):rows.append({"name":e.variant.name,"hp":e.hp,"max_hp":e.max_hp,"kind":e.kind})
+ if bosses.size()>4:
+  var hp=0.0;var maximum=0.0
+  for e in bosses.slice(3):hp+=maxf(0,e.hp);maximum+=e.max_hp
+  rows.append({"name":"%d more bosses (combined)"%(bosses.size()-3),"hp":hp,"max_hp":maximum,"kind":8})
  var fingerprint=""
- for e in bosses:fingerprint+=str(e.kind)+str(e.get("encounter",""))
+ for row in rows:fingerprint+=row.name+str(row.kind)
  if fingerprint!=boss_fingerprint:
   boss_fingerprint=fingerprint
   for child in boss_panel.get_children():boss_panel.remove_child(child);child.queue_free()
   boss_widgets.clear()
-  for e in bosses:
-   var label=text("",boss_panel,16);var bar=ProgressBar.new();bar.custom_minimum_size=Vector2(450,10);bar.show_percentage=false;boss_panel.add_child(bar)
-   var fill=StyleBoxFlat.new();fill.bg_color=Color("e56f73") if e.kind==8 else Color("d9a95f");bar.add_theme_stylebox_override("fill",fill)
+  for row in rows:
+   var label=text("",boss_panel,15);var bar=ProgressBar.new();bar.custom_minimum_size=Vector2(450,8);bar.show_percentage=false;boss_panel.add_child(bar)
+   var fill=StyleBoxFlat.new();fill.bg_color=Color("e56f73") if row.kind==8 else Color("d9a95f");bar.add_theme_stylebox_override("fill",fill)
    boss_widgets.append({"label":label,"bar":bar})
- for i in bosses.size():
-  var e=bosses[i];boss_widgets[i].label.text="%s  %d / %d"%[e.variant.name,maxf(0,e.hp),e.max_hp];boss_widgets[i].bar.max_value=e.max_hp;boss_widgets[i].bar.value=maxf(0,e.hp)
+ for i in rows.size():
+  var row=rows[i];boss_widgets[i].label.text="%s  %d / %d"%[row.name,maxf(0,row.hp),row.max_hp];boss_widgets[i].bar.max_value=row.max_hp;boss_widgets[i].bar.value=maxf(0,row.hp)
+
+func stage_intro(number: int) -> void:
+ if is_instance_valid(stage_banner):stage_banner.queue_free()
+ var banner=Label.new();stage_banner=banner;banner.mouse_filter=Control.MOUSE_FILTER_IGNORE;banner.process_mode=Node.PROCESS_MODE_ALWAYS
+ banner.text="STAGE %d — %s"%[number,StageThemes.config(number).title];banner.position=Vector2(300,102);banner.custom_minimum_size=Vector2(680,60);banner.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;banner.add_theme_font_size_override("font_size",32)
+ banner.add_theme_color_override("font_color",StageThemes.config(number).accent);banner.add_theme_color_override("font_shadow_color",Color("121522"));banner.add_theme_constant_override("shadow_offset_x",2);banner.add_theme_constant_override("shadow_offset_y",2)
+ root.add_child(banner);banner.modulate.a=0;banner.scale=Vector2.ONE*0.92;banner.pivot_offset=Vector2(340,30)
+ var tween=banner.create_tween();tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+ tween.tween_property(banner,"modulate:a",1.0,0.3)
+ if not game.settings.reduced:
+  tween.parallel().tween_property(banner,"scale",Vector2.ONE,0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+  tween.tween_property(banner,"self_modulate",Color(1.25,1.25,1.25),0.25);tween.tween_property(banner,"self_modulate",Color.WHITE,0.25)
+ tween.tween_interval(1.5);tween.tween_property(banner,"modulate:a",0.0,0.6);tween.tween_callback(banner.queue_free)
