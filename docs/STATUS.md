@@ -1,6 +1,6 @@
 # Shrine rewards and pursuit update
 
-The v9 implementation and 23 source suites are passing (859 named checks). [Rules, fixes and balancing](REWARDS_AI_V9.md). Render/export/publication evidence remains pending. Dense-swarm performance and native Windows playtesting remain open. Earlier releases follow.
+The v9 implementation and 23 source suites are passing (859 named checks). [Rules, fixes and balancing](REWARDS_AI_V9.md). Source and compiled renders were viewed, all four export gates passed, and the published v9 ZIP was downloaded and checked. See releases/BUILD_INFO.md. Dense-swarm performance and native Windows playtesting remain open. Earlier releases follow.
 
 # Stage themes and physical swarms
 

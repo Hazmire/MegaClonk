@@ -1,5 +1,9 @@
 # Latest verified Windows playtest
 
+[Download shrine rewards and pursuit v9](https://github.com/Hazmire/MegaClonk/releases/download/shrine-rewards-v9/BONK_INFINITY_Windows_x64.zip). [Provenance](BUILD_INFO.md) · [Checksum](REWARDS_V9_SHA256SUMS) · [Verification](REWARDS_V9_VALIDATION.json). Dense-swarm performance remains open; native Windows execution is untested. Earlier history follows.
+
+# Latest verified Windows playtest
+
 [Stage themes and physical swarms v8](https://github.com/Hazmire/MegaClonk/releases/download/stage-swarms-v8/BONK_INFINITY_Windows_x64.zip). See [BUILD_INFO](BUILD_INFO.md), [checksum](STAGE_SWARMS_SHA256SUMS) and [verification](STAGE_SWARMS_VALIDATION.json). Dense-swarm performance remains open; native Windows execution is untested. Earlier history follows.
 
 # Current Windows playtest

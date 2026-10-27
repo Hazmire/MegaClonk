@@ -46,4 +46,37 @@ The minimap and expanded map read the active camera's world forward vector proje
 
 All 23 local suites passed: 859 named checks, including 95 new focused checks, plus the existing seeded terrain/decoration/object audits. Golden Shrine sampling produced **1,986 of 100,000 placements (1.986%)**. Each normal rarity weight, all 45 stat/tier bonuses, near-cap and insufficient-stat cases, saved fixed choices, stale input across queued shrines, continuous pursuit/contact and live HUD/map/quest behavior passed. Natural 3.5-second and skipped icon reveals preserve reward RNG and never grant again. Particle pool tests advance fifteen seconds without stopping or growing.
 
-Rendered captures, same-host baseline comparison and Windows publication remain pending verification. No native Windows execution, audible audio or gaming-GPU 60FPS claim is made by headless Linux pack validation.
+The final local regression rerun also passed all 859 assertions. Source and compiled Windows game resources were rendered and viewed, including normal/Golden shrine cards, central chest reveal, persistent level-up confetti and horizontal HUD at 720p/1080p/1440p. The fifteen source captures are in [the preview directory](images/rewards-v9). The local clean Windows export passed compiled world, UI, stage/swarms and v9 smoke gates. [The v9 Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/shrine-rewards-v9/BONK_INFINITY_Windows_x64.zip) is published. The actual downloaded ZIP matched GitHub size/digest and passed every archive CRC. Its BUILD_INFO confirms clean source ea6c26f; the downloaded embedded pack passed a 180-frame world run and the reward/UI, stage/swarms and v9 gates without script/resource errors. [Publishing workflow](https://github.com/Hazmire/MegaClonk/actions/runs/40544084785) and [PR #4](https://github.com/Hazmire/MegaClonk/pull/4). Merge PR #4 into Full-Release to update the default branch; downloading does not require merging.
+
+## Performance observations
+
+The workspace host restarted during development. The following v8 baseline and final v9 samples were measured sequentially on that replacement host, with rendering excluded. Shared-host scheduling varies; these do not establish gaming-PC FPS or isolate every cause of the difference. Both versions exceed the 16.67ms full-frame CPU budget at 500 enemies, and this update does not resolve that limitation.
+
+| Enemies | v8 CPU mean | v9 CPU mean / worst |
+| --- | ---: | ---: |
+| 50 | 2.86 ms | 3.20 / 7.04 ms |
+| 100 | 5.84 ms | 8.00 / 23.57 ms |
+| 250 | 17.26 ms | 19.86 / 40.25 ms |
+| 500 | 35.02 ms | 38.55 / 48.31 ms |
+
+The v9 500-enemy CPU mean is about 10% higher than the same-host v8 sample. Eight bosses plus fifteen owned minions averaged 1.40ms CPU, worst 5.73ms. Twenty-five simultaneous death/drop events averaged 0.047ms; collecting all twenty-five and opening the first reveal took 33.62ms. The 1,000-gem test averaged 1.25ms per update; opening a chest overlay averaged 19.81ms and a level-up overlay 32.32ms including headless frame processing. These UI openings can hitch. The confetti uses fixed draw-particle arrays rather than per-particle nodes. Raw reports are in releases/REWARDS_V9_*.json.
+
+The known software-Mesa sky-texture shutdown diagnostic remains; no new script/shader/resource errors appeared in rendered captures. Audio assets and playback scheduling were exercised, but audible output is unverified.
+
+## Modified systems
+
+| System | Main files |
+| --- | --- |
+| XP lifecycle, modal/save queues and audio | scripts/core/game.gd |
+| Shrine generation, charging, reward data | scripts/world/shrine_charging.gd, scripts/rewards/shrine_rewards.gd, assets/config/stat_rewards.tres, stage_update.tres |
+| Continuous pursuit | scripts/enemies/enemy_simulation.gd |
+| Quest states and live progress | scripts/meta/meta_progress.gd, scripts/ui/front_end.gd |
+| Reward screens, particles and equipment HUD | scripts/ui/reward_screens.gd, reward_celebration.gd, front_end.gd |
+| Camera-facing map | scripts/ui/minimap.gd |
+| Regression, rendered fixtures and compiled gates | tests/rewards_ai_v9.gd, rewards_v9_visual.gd, tools/export_v9_smoke.gd |
+
+![Golden Shrine choices](images/rewards-v9/golden_1280.png)
+![Legendary chest reveal](images/rewards-v9/chest_1280.png)
+![Equipped-item HUD](images/rewards-v9/hud_1280.png)
+
+ No native Windows execution, audible audio or gaming-GPU 60FPS claim is made by headless Linux pack validation.

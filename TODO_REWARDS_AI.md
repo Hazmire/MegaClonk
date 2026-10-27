@@ -9,7 +9,10 @@ Audit: XP update forcibly attracts every gem aged >25 seconds and has no explici
 - [x] Configurable decay and saved three-choice rarity shrine rewards; seeded golden shrines.
 - [x] Single-icon chest reveal and persistent bounded celebration/audio.
 - [x] Horizontal owned-equipment HUD and camera-facing map marker.
-- [ ] Integration, rendering at three resolutions, distribution/performance audit.
-- [ ] Clean commits, gated Windows export and verified publication.
+- [x] Integration, rendering at three resolutions, distribution/performance audit.
+- [x] Clean commits, gated Windows export and verified publication.
+- [ ] Dense 500-enemy optimisation and native Windows/gaming-GPU playtesting.
 
 No claim of native Windows execution or gaming-GPU 60FPS is permitted without actual evidence.
+
+Final local evidence: 23 suites, 859 named checks, 95 focused v9 checks, 1,986 Golden Shrines in 100,000 seeded placements, 15 source renders and compiled-pack captures at three resolutions, clean local export with four compiled gates. Source ea6c26f is pushed; PR #4 is open. Publishing workflow 40544084785 passed all 23 suites and four export gates. Downloaded shrine-rewards-v9 ZIP matched GitHub size/digest, passed every archive CRC and identified clean source ea6c26f. That downloaded pack passed a 180-frame world run plus reward/UI, stage/swarms and v9 smoke gates without script/resource errors. Dense-swarm CPU performance remains above the 60FPS budget (v9 38.55ms mean at 500 vs same-host v8 35.02ms); no gaming-GPU or native Windows certification is claimed.

@@ -1,3 +1,24 @@
+# Verified shrine rewards and pursuit v9 publication
+
+[Download Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/shrine-rewards-v9/BONK_INFINITY_Windows_x64.zip). Extract and run BONK_INFINITY.exe, or Launch_Compatibility.bat.
+
+- Clean source: `ea6c26f0609035b61c683f2818ea6398165048a2`.
+- Successful publishing workflow: https://github.com/Hazmire/MegaClonk/actions/runs/40544084785
+- Release asset ID `682241148`; 111,701,124 bytes.
+- ZIP SHA256: `ebb8a404460edbc21b40eaa4658d5f80356ffb7ac24fab70c9493845b43e28b2`.
+- Actions artifact ID `12752198576`, BONK_INFINITY-Windows-x64; 112,603,909 bytes; not expired at verification; expires 26 November 2026.
+- GitHub-reported artifact digest: `b5063634674aa557679ec70990fb022f46174d0da9677e25dc35def894384dd9`. The durable release ZIP, rather than the separate Actions artifact archive, was downloaded and inspected.
+
+The published ZIP was downloaded; GitHub size/digest and every archive CRC match. BUILD_INFO confirms clean expected source. Linux Godot loaded its embedded game resources for a 180-frame world run plus explicit reward/UI, stage/swarms and v9 smoke checks, without script/resource errors. These validate compiled resources, not native Windows machine-code execution.
+
+All 23 source suites pass locally and in the release workflow. The final local run recorded 859 assertions, including 95 focused v9 checks, plus 200 layout/decoration/object seeds. Golden Shrine sampling produced 1,986/100,000 placements (1.986%). Original and compiled reward screens/HUD were rendered and viewed at 720p/1080p/1440p. Existing crowd support, traversal, contact intervals, boss abilities, multipliers and chest/save queues remain covered.
+
+**Performance remains open:** the final cloud CPU means at 50/100/250/500 enemies were 3.20/8.00/19.86/38.55ms; same-host v8 baseline was 2.86/5.84/17.26/35.02ms. The 500-enemy v9 worst was 48.31ms. These are shared-host samples, not gaming-PC FPS; both versions exceed a 16.67ms CPU budget. A 25-chest collection/reveal burst measured 33.62ms. Known Mesa sky-texture shutdown diagnostics remain. Native Windows execution, audible audio and gaming-GPU 60FPS are unverified.
+
+[Rules, stat table, root causes and screenshots](../docs/REWARDS_AI_V9.md) · [Raw verification](REWARDS_V9_VALIDATION.json) · [PR #4](https://github.com/Hazmire/MegaClonk/pull/4). PR #3 was merged as 00ed498; merge PR #4 into Full-Release for this update. The new download works independently. The ZIP tracked directly in this directory is an older build.
+
+Earlier verified publications follow.
+
 # Verified Stage Themes and Physical Swarms v8 publication
 
 [Download Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/stage-swarms-v8/BONK_INFINITY_Windows_x64.zip). Extract and launch `BONK_INFINITY.exe`, or `Launch_Compatibility.bat`. Start a new run for the expanded object layout.

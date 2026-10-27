@@ -1,0 +1,66 @@
+{
+  "source_commit": "ea6c26f0609035b61c683f2818ea6398165048a2",
+  "engine": "4.7.2",
+  "local_suites": 23,
+  "named_checks": 859,
+  "v9_focused_checks": 95,
+  "golden_distribution": {
+    "sample": 100000,
+    "golden": 1986,
+    "rate_percent": 1.986
+  },
+  "world_layout_seeds": 200,
+  "decorated_world_seeds": 200,
+  "world_object_seeds": 200,
+  "local_export_gates": [
+    "world",
+    "reward_ui",
+    "stage_swarms",
+    "rewards_ai_v9"
+  ],
+  "rendered_resolutions": [
+    "1280x720",
+    "1920x1080",
+    "2560x1440"
+  ],
+  "rendered_source_captures": 15,
+  "compiled_pack_rendered": true,
+  "native_windows_execution": false,
+  "audible_audio_verified": false,
+  "gaming_gpu_60fps_verified": false,
+  "publication": "verified",
+  "known_limits": [
+    "Dense 500-enemy cloud CPU remains above 16.67ms budget",
+    "25-chest collection/reveal burst hitch",
+    "Known Mesa sky-texture shutdown diagnostic"
+  ],
+  "release": {
+    "release_url": "https://github.com/Hazmire/MegaClonk/releases/tag/shrine-rewards-v9",
+    "target_commitish": "ea6c26f0609035b61c683f2818ea6398165048a2",
+    "asset_id": 682241148,
+    "asset_bytes": 111701124,
+    "zip_sha256": "ebb8a404460edbc21b40eaa4658d5f80356ffb7ac24fab70c9493845b43e28b2",
+    "download_url": "https://github.com/Hazmire/MegaClonk/releases/download/shrine-rewards-v9/BONK_INFINITY_Windows_x64.zip",
+    "zip_crc_passed": true,
+    "build_info": "MEGACLONK v9 shrine rarities, reward effects, relentless pursuit and HUD fixes\nGodot 4.7.2\nSource commit: ea6c26f0609035b61c683f2818ea6398165048a2\nUncommitted source at build time: False\nWindows execution requires native playtesting.\n",
+    "native_windows_executed": false
+  },
+  "workflow": "https://github.com/Hazmire/MegaClonk/actions/runs/40544084785",
+  "workflow_passed": true,
+  "actions_artifact": {
+    "id": 12752198576,
+    "name": "BONK_INFINITY-Windows-x64",
+    "size_in_bytes": 112603909,
+    "digest": "sha256:b5063634674aa557679ec70990fb022f46174d0da9677e25dc35def894384dd9",
+    "expired": false,
+    "expires_at": "2026-11-26T16:54:18Z"
+  },
+  "published_pack_world_frames": 180,
+  "published_pack_smoke_gates": [
+    "reward_ui",
+    "stage_swarms",
+    "rewards_ai_v9"
+  ],
+  "published_pack_script_resource_errors": 0,
+  "source_pr": "https://github.com/Hazmire/MegaClonk/pull/4"
+}

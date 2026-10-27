@@ -1,0 +1,8 @@
+{
+  "drop_1000_ms": 182.487,
+  "gem_update_ms_per_tick": 1.2485,
+  "renderer": "headless; rendering excluded; software-host timing only",
+  "unmerged_gems": 1000,
+  "upgrade_open_ms_including_frame": 32.31895,
+  "chest_icon_open_ms_including_frame": 19.8147
+}
