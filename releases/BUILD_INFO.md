@@ -1,3 +1,18 @@
+# Verified dusk update15 publication
+
+[Download Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/dusk-loadouts-v15/BONK_INFINITY_Windows_x64.zip). Extract everything and launch BONK_INFINITY.exe, or Launch_Compatibility.bat.
+
+- Clean source: `879b6ed191670560cac9e3a70eb83b53f98d81f4`.
+- Successful30-suite publishing workflow: https://github.com/Hazmire/MegaClonk/actions/runs/40685330334
+- Successful PR validation: https://github.com/Hazmire/MegaClonk/actions/runs/40685340607
+- Asset `684893765`; 150,672,020bytes.
+- SHA256: `e96300ff99e480165bc780c5edeefddccb088c1415c1b72a18db11f8ed6c5a33`.
+- Actions artifact `12815375784`; verified not expired.
+
+The downloaded ZIP matches size/digest and every CRC. BUILD_INFO identifies the expected clean commit. Linux Godot ran180 frames and all eight compiled smoke gates, including42 dusk-feature checks and80 visual-regression checks. Both exported MP3 data hashes match the named uploads; native loop flags and uninterrupted game-track selection across stages pass. Raw duplicate music copies are excluded. The actual downloaded menu, tome unlock grid and shrine decay/zero states were rendered and viewed.
+
+Native Windows execution, audio-device listening and gaming-GPU performance remain unverified. [Guide and gallery](../docs/DUSK_UPDATE.md) · [Raw proof](DUSK_VALIDATION.json) · [PR#6](https://github.com/Hazmire/MegaClonk/pull/6). Runtime source remains on the PR branch until merged into Full-Release. The download works before merging. The workflow now preserves published version files; older records below describe verification at their publication time.
+
 # Verified visual fixes14 publication
 
 [Download Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/grimdark-fixes-v14/BONK_INFINITY_Windows_x64.zip). Extract the entire ZIP and launch BONK_INFINITY.exe or Launch_Compatibility.bat.

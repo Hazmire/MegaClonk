@@ -1,0 +1,29 @@
+{
+  "release": "https://github.com/Hazmire/MegaClonk/releases/tag/dusk-loadouts-v15",
+  "download": "https://github.com/Hazmire/MegaClonk/releases/download/dusk-loadouts-v15/BONK_INFINITY_Windows_x64.zip",
+  "asset_id": 684893765,
+  "size": 150672020,
+  "sha256": "e96300ff99e480165bc780c5edeefddccb088c1415c1b72a18db11f8ed6c5a33",
+  "source_commit": "879b6ed191670560cac9e3a70eb83b53f98d81f4",
+  "zip_crc": "all pass",
+  "build_info": "MEGACLONK v15 dusk music, ten tomes and shop menu\nGodot 4.7.2\nSource commit: 879b6ed191670560cac9e3a70eb83b53f98d81f4\nUncommitted source at build time: False\nWindows execution requires native playtesting.\n",
+  "native_windows_executed": false,
+  "workflow": "https://github.com/Hazmire/MegaClonk/actions/runs/40685330334",
+  "pr_workflow": "https://github.com/Hazmire/MegaClonk/actions/runs/40685340607",
+  "artifact_id": 12815375784,
+  "ci_suites": 30,
+  "compiled_smoke_gates": 8,
+  "world_frames": 180,
+  "focused_dusk_checks": 42,
+  "visual_regression_checks": 80,
+  "render_gallery": "docs/images/dusk-update/published-*.png",
+  "music": {
+    "menu_sha256": "7f3ed0b30c41f7da3715ee93ff594a7c6bd08ce17378a15ee384cf4c4ccf3374",
+    "game_sha256": "c9a83f56ef4b0227040fe16556d30891a39c3008771a9d32bb843f46b201e78c",
+    "matches_uploaded_bytes": true,
+    "contexts": 2,
+    "native_loop_flags": true,
+    "raw_duplicates_excluded": true
+  },
+  "native_audio_device_auditioned": false
+}

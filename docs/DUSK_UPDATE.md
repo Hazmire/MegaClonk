@@ -24,3 +24,9 @@ Unlocked tomes can be enabled or disabled for new acquisitions, and those choice
 The menu uses the native shop visual in the map's protected spawn clearing, with the actual idle player in front. A bounded slow camera arc keeps them framed, rather than orbiting the map origin or moving through cliffs. Play uses a closer framing. The preview merchant is visual only and is removed with the menu world when a run begins.
 
 Validation includes purchase gates, toggle persistence, disabled/stale offer rejection, all ten actual stat effects and distinct atlas regions, music-loop state and stage continuity, shrine decay labels, hidden quest HUD and camera bounds. Native Windows/audio-device playtesting is not certified; publication evidence is recorded separately in releases/BUILD_INFO.md. Versioned release files are preserved after publication; later branch builds still upload Actions artifacts.
+
+## Verified download and rendered gallery
+
+[Windows15 ZIP](https://github.com/Hazmire/MegaClonk/releases/download/dusk-loadouts-v15/BONK_INFINITY_Windows_x64.zip) · [publication proof](../releases/BUILD_INFO.md).
+
+Actual downloaded-pack captures: [shop menu](images/dusk-update/published-menu.png), [ten tome entries](images/dusk-update/published-tomes.png), [residual charge](images/dusk-update/published-decaying-shrine.png), [zero charge](images/dusk-update/published-empty-shrine.png). These use a test camera for the shrine close-ups. Both music files are byte-identical to the uploaded originals; looping and context selection were verified without claiming an audio-device audition.

@@ -25,9 +25,11 @@ The [grimdark PSX update](docs/GRIMDARK.md) replaces the runtime player, enemies
 
 The [visual fixes14 update](docs/VISUAL_FIXES.md) makes solid geometry opaque, limits shrine progress to active charging, adds the supplied walking Autopsy Zombie and crab, repairs retained elite walking/facing and prevents accumulated slide/crouch deformation. The published ZIP has passed29 CI suites, seven downloaded-pack smoke gates and rendered opacity checks.
 
+The [dusk update15](docs/DUSK_UPDATE.md) adds your two looping music tracks, ten unlockable/toggleable tomes with generated icons, residual shrine progress, a quest-free run HUD and a stable player/shop menu camera. The downloaded build passes30 CI suites and eight compiled smoke gates.
+
 ## Download and play
 
-- [Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/grimdark-fixes-v14/BONK_INFINITY_Windows_x64.zip)
+- [Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/dusk-loadouts-v15/BONK_INFINITY_Windows_x64.zip)
 - [GitHub Actions builds](https://github.com/Hazmire/MegaClonk/actions/workflows/windows-build.yml)
 - [PR #6 — merge into Full-Release](https://github.com/Hazmire/MegaClonk/pull/6)
 
