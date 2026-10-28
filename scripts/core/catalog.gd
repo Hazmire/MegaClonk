@@ -65,6 +65,18 @@ const CHARACTERS = [
  ["Dicehead", 26, "Random stat each level", "random"],
  ["Roberto", 29, "Free item every minute", "chest"]
 ]
+# Stable internal IDs preserve old saves; only these ten enter new reward pools.
+const ACTIVE_TOMES=["Precision","Might","Multishot","Colossus","Haste","Wind","Vitality","Vampire","Wisdom","Greed"]
+const TOME_NAMES={"Precision":"Crit Tome","Might":"Damage Tome","Multishot":"Projectile Tome","Colossus":"Size Tome","Haste":"Attack Speed Tome","Wind":"Movement Speed Tome","Vitality":"Max HP Tome","Vampire":"Lifesteal Tome","Wisdom":"XP Tome","Greed":"Gold Tome"}
+static func tome_name(id: String) -> String:return TOME_NAMES.get(id,id+" Tome")
+static func tome_description(id: String) -> String:
+ if not TOMES.has(id):return ""
+ var data=TOMES[id]
+ if id=="Multishot":return "+1 total weapon projectile per level."
+ if id=="Vitality":return "+20 maximum HP per level."
+ var labels={"Precision":"critical-hit chance","Might":"damage","Colossus":"attack size","Haste":"attack speed","Wind":"movement speed","Vampire":"lifesteal","Wisdom":"XP gain","Greed":"gold gain"}
+ if not TOME_NAMES.has(id):return "%s %+.2f per level"%[str(data[0]).replace("_"," "),data[1]]
+ return "+%.0f%% %s per level."%[float(data[1])*100,labels.get(id,str(data[0]).replace("_"," "))]
 const TOMES = {
  "Might": ["damage", 0.15], "Haste": ["haste", 0.12],
  "Precision": ["crit", 0.06], "Ruin": ["crit_damage", 0.25],

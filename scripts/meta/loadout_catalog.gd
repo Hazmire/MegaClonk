@@ -47,6 +47,11 @@ static func entries(category: String) -> Array:
    for i in Catalog.ACTIVE_WEAPONS:
     var w=Catalog.WEAPONS[i]
     result.append({"id":str(i),"name":w[0],"description":"%s • %.0f damage • %.2fs cooldown"%[w[1],w[2],w[3]],"goal":0,"cost":0 if i in [0,1,6,7] else 15+i*3})
+  "tomes":
+   var requirements={"Multishot":[100,100],"Colossus":[150,100],"Vampire":[250,150],"Greed":[60,75]}
+   for id in Catalog.ACTIVE_TOMES:
+    var requirement=requirements.get(id,[0,0])
+    result.append({"id":id,"name":Catalog.tome_name(id),"description":Catalog.tome_description(id),"goal":requirement[0],"cost":requirement[1]})
   "traits": result=TRAITS.duplicate(true)
   "ultimates": result=ULTIMATES.duplicate(true)
   "items":

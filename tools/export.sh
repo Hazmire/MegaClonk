@@ -67,7 +67,15 @@ if ! tools/godot.sh --headless --path /tmp --main-pack "$PWD/builds/windows/BONK
 fi
 cat "$log_path"
 if grep -Eq 'SCRIPT ERROR|^ERROR:' "$log_path"; then exit 1; fi
-if ! grep -q 'VISUAL CORRECTIONS: 79 checks, 0 failures' "$log_path"; then exit 1; fi
+if ! grep -Eq 'VISUAL CORRECTIONS: [0-9]+ checks, 0 failures' "$log_path"; then exit 1; fi
+if ! tools/godot.sh --headless --path /tmp --main-pack "$PWD/builds/windows/BONK_INFINITY.exe" --script "$PWD/tests/dusk_update.gd" > "$log_path" 2>&1; then
+ cat "$log_path"
+ exit 1
+fi
+cat "$log_path"
+if grep -Eq 'SCRIPT ERROR|^ERROR:' "$log_path"; then exit 1; fi
+if ! grep -Eq 'DUSK UPDATE: [0-9]+ checks, 0 failures' "$log_path"; then exit 1; fi
+cp docs/DUSK_UPDATE.md builds/windows/
 cp docs/VISUAL_FIXES.md builds/windows/
 cp docs/GRIMDARK.md docs/GRIMDARK_ASSET_AUDIT.md docs/GRIMDARK_PERFORMANCE.md builds/windows/
 cp shaders/vendor_psx/LICENSE.txt builds/windows/PSX_VISUALS_UNLICENSE.txt
@@ -115,7 +123,7 @@ from zipfile import ZipFile, ZIP_DEFLATED
 import subprocess
 commit = subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
 dirty = bool(subprocess.check_output(['git','status','--porcelain'],text=True).strip())
-Path('builds/windows/BUILD_INFO.txt').write_text('MEGACLONK v14 opaque geometry, zombie/crab animation and stable slide\nGodot 4.7.2\nSource commit: '+commit+'\nUncommitted source at build time: '+str(dirty)+'\nWindows execution requires native playtesting.\n')
+Path('builds/windows/BUILD_INFO.txt').write_text('MEGACLONK v15 dusk music, ten tomes and shop menu\nGodot 4.7.2\nSource commit: '+commit+'\nUncommitted source at build time: '+str(dirty)+'\nWindows execution requires native playtesting.\n')
 with ZipFile('builds/BONK_INFINITY_Windows_x64.zip','w',ZIP_DEFLATED) as z:
  for p in sorted(Path('builds/windows').iterdir()):
   if p.is_file(): z.write(p,p.name)

@@ -31,6 +31,6 @@ func run():
  var health=game.health;var velocity=game.player.velocity;game.hurt_contact(10,game.player.position+Vector3.RIGHT)
  if not require(game.health==health and game.player.velocity==velocity,"Compiled contact damage ignores immunity"):return
  audio.music_stage(2)
- if not require(audio.current_track.ends_with("Arcade.Groove.1.mp3"),"Compiled stage music incorrect"):return
+ if not require(audio.current_track.ends_with("hollow_dusk.mp3"),"Compiled stage music incorrect"):return
  game.queue_free();await process_frame;await process_frame;await process_frame
  print("EXPORTED RETRO AUDIO V11 SMOKE COMPLETE");quit()

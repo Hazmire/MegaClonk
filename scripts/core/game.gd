@@ -1139,8 +1139,8 @@ func upgrade_pool() -> Array:
     var choice={"type":"weapon","id":id,"key":"w%d"%id}
     if weapons.has(id):choice.merge(WeaponUpgrades.proposal(id,rng));choice["expected_level"]=int(weapons[id].level)
     pool.append(choice)
- for name in Catalog.TOMES:
-  if (tomes.has(name) and tomes[name]<10) or (not tomes.has(name) and tomes.size()<tome_limit()):
+ for name in Catalog.ACTIVE_TOMES:
+  if (tomes.has(name) and tomes[name]<10) or (not tomes.has(name) and tomes.size()<tome_limit() and (sandbox or MetaProgress.enabled(progress.data,"tomes",name))):
    if not name in banished: pool.append({"type":"tome","id":name,"key":name})
  if pool.is_empty():
   for i in 3:pool.append({"type":"supply","id":str(i),"key":"supply"+str(i)})
@@ -1170,7 +1170,9 @@ func apply_upgrade(choice: Dictionary) -> void:
     weapons[id].level+=1;weapons[id]["rarity"]=choice.get("metadata",{}).get("rarity",weapons[id].get("rarity","common"))
   elif id in Catalog.ACTIVE_WEAPONS and (sandbox or MetaProgress.enabled(progress.data,"weapons",str(id))) and weapons.size()<weapon_limit():equip(id)
  else:
-  var name=choice.id
+  var name=str(choice.id)
+  if not Catalog.TOMES.has(name):return
+  if not tomes.has(name) and not sandbox and (name not in Catalog.ACTIVE_TOMES or not MetaProgress.enabled(progress.data,"tomes",name)):return
   if not tomes.has(name) and tomes.size()>=tome_limit():return
   if int(tomes.get(name,0))>=10:return
   tome_rarities[name]="common" if not tomes.has(name) else choice.get("metadata",{}).get("rarity",tome_rarities.get(name,"common"))
@@ -1284,7 +1286,7 @@ func sandbox_menu() -> void:
    for node in weapons[id].visuals: node.queue_free()
    for ally in weapons[id].summons: ally.node.queue_free()
   weapons.clear())
- button("Add random tome",col,func(): var names=Catalog.TOMES.keys(); var name=names[rng.randi_range(0,names.size()-1)]; apply_upgrade({"type":"tome","id":name}))
+ button("Add random tome",col,func(): var names=Catalog.ACTIVE_TOMES; var name=names[rng.randi_range(0,names.size()-1)]; apply_upgrade({"type":"tome","id":name}))
  button("Add item",col,award_item)
  title("Map seed: %s • F6 overlay • F7 repeat • F8 next"%stage_map_seed(),col,18)
  var seed_input=LineEdit.new();seed_input.text=str(stage_map_seed());seed_input.placeholder_text="Map seed";col.add_child(seed_input)

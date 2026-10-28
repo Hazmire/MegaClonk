@@ -27,7 +27,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Install checksum-verified Godot 4.7.2 and export templates
         run: python3 tools/install_engine.py
-      - name: Import project and run all twenty-nine regression and seeded-world suites
+      - name: Import project and run all thirty regression and seeded-world suites
         run: tools/validate.sh
       - name: Export Windows x64 with embedded game resources
         run: |
@@ -56,8 +56,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if gh release view grimdark-fixes-v14 >/dev/null 2>&1; then
-            gh release upload grimdark-fixes-v14 builds/BONK_INFINITY_Windows_x64.zip --clobber
+          if gh release view dusk-loadouts-v15 >/dev/null 2>&1; then
+            echo "Preserving the verified versioned release; this run still publishes its Actions artifact."
           else
-            gh release create grimdark-fixes-v14 builds/BONK_INFINITY_Windows_x64.zip --target "$GITHUB_SHA" --prerelease --title "MEGACLONK — Opaque World and Animated Enemies 14" --notes-file docs/VISUAL_FIXES_RELEASE.md
+            gh release create dusk-loadouts-v15 builds/BONK_INFINITY_Windows_x64.zip --target "$GITHUB_SHA" --prerelease --title "MEGACLONK — Dusk Music, Tomes and Shop Menu 15" --notes-file docs/DUSK_UPDATE_RELEASE.md
           fi

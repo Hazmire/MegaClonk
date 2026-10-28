@@ -83,10 +83,10 @@ func run():
  for id in Catalog.ACTIVE_WEAPONS:
   var key="weapon.chunkers.impact" if id==4 else WeaponVFX.sound(id);identity.append(key)
  check(identity.size()==10 and identity.all(func(k):return audio.events.has(k)),"All ten active weapons map to appropriate registered identities")
- check(audio.tracks.size()==3 and not audio.menu_track.is_empty(),"All four supplied original tracks configured")
+ check(audio.tracks.size()==1 and not audio.menu_track.is_empty(),"Exactly one supplied looping menu and game track configured")
  var track=audio.current_track;var slot=audio.music_slot;audio.music_stage(game.stage)
  check(audio.current_track==track and audio.music_slot==slot,"Same-stage music does not restart")
- audio.music_stage(2);check(audio.current_track.ends_with("Arcade.Groove.1.mp3") and audio.music_tween.is_valid(),"Stage transition uses supplied track and configurable crossfade")
+ audio.music_stage(2);check(audio.current_track==track and audio.music_slot==slot,"Stage transitions preserve the same looping game track")
  var probe=MotionProbe.new();root.add_child(probe);var motion_game=MotionGame.new();motion_game.player=probe;motion_game.audio=audio;var motion=MovementAudio.new()
  for voice in audio.voices:voice.until=0
  audio.clock+=10;audio.last_events.clear();accepted=audio.accepted;probe.velocity=Vector3.ZERO

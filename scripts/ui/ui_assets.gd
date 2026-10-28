@@ -11,6 +11,12 @@ static func icon(category: String, id: String) -> Texture2D:
   if cache.has(key):return cache[key]
   var atlas=load("res://assets/art_reset/icons/weapons.png") as Texture2D
   var index=Catalog.ACTIVE_WEAPONS.find(int(id));var texture=AtlasTexture.new();texture.atlas=atlas;texture.region=Rect2(Vector2(index%5,int(index/5))*Vector2(atlas.get_width()/5.0,atlas.get_height()/2.0),Vector2(atlas.get_width()/5.0,atlas.get_height()/2.0));texture.filter_clip=true;cache[key]=texture;return texture
+ if category=="tomes" and id in Catalog.ACTIVE_TOMES:
+  if cache.has(key):return cache[key]
+  var atlas=load("res://assets/ui/tomes/dusk_tomes.png") as Texture2D
+  var index=Catalog.ACTIVE_TOMES.find(id);var cell=Vector2(atlas.get_width()/5.0,atlas.get_height()/2.0)
+  var texture=AtlasTexture.new();texture.atlas=atlas;texture.region=Rect2(Vector2(index%5,int(index/5))*cell,cell);texture.filter_clip=true
+  cache[key]=texture;return texture
  if category=="tomes":
   var path="res://assets/vendor/items/Icon"+("35" if posmod(id.hash(),2)==0 else "43")+".png"
   return load(path)

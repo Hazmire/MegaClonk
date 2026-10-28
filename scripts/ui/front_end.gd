@@ -18,6 +18,10 @@ var minimap: RunMinimap
 var menu_camera: Camera3D
 var preview_mode="home"
 var orbit=0.0
+var menu_shop: Node3D
+var menu_focus=Vector3.ZERO
+var menu_player_position=Vector3.ZERO
+var menu_world_instance=0
 var map_tick=0.0
 var settings_back: Callable
 var in_run=false
@@ -144,13 +148,36 @@ func prepare_backdrop() -> void:
  game.mode="menu"
  if not is_instance_valid(game.player) or not is_instance_valid(game.enemy_view):
   game.variants.initialize(0);game.biome=0;game.run_seed=12;game.build_stage()
- if not is_instance_valid(menu_camera):
+ if not is_instance_valid(menu_camera) or menu_camera.get_parent()!=game.world:
   menu_camera=Camera3D.new();game.world.add_child(menu_camera)
+ if menu_world_instance!=game.world.get_instance_id() or not is_instance_valid(menu_shop) or not menu_shop.is_inside_tree():
+  # The protected spawn clearing keeps the close camera away from cliffs/trees.
+  # This is the native shop visual, not an interactive merchant added to the run.
+  menu_shop=Node3D.new();menu_shop.name="MenuShopBackdrop";game.world.add_child(menu_shop)
+  menu_shop.position=game.map_layout.spawn
+  GrimdarkObjects.populate(menu_shop,"Shop",game.stage)
+  menu_world_instance=game.world.get_instance_id();orbit=0.0
+  var forward=menu_shop.basis.z.normalized()
+  menu_player_position=menu_shop.position+forward*3.2
+  menu_player_position.y=game.terrain_height(menu_player_position.x,menu_player_position.z)+.1
+  menu_focus=menu_player_position+Vector3.UP*1.1
  menu_camera.current=true
- game.player.active=false
- game.player.position=Vector3(0,game.terrain_height(0,0),0)
+ game.player.active=false;game.player.position=menu_player_position
+ game.player.avatar.rotation.y=atan2(menu_shop.basis.z.x,menu_shop.basis.z.z)
+ game.player.avatar.set_damage_flash(false);game.player.avatar.animate("idle",0,.1)
+ game.enemy_view.hide();game.player.avatar.show()
  game.notice.text="";game.message_time=0
- game.player.avatar.show()
+ if is_instance_valid(game.audio):game.audio.music_menu()
+ update_menu_camera(0)
+func update_menu_camera(delta: float) -> void:
+ if not is_instance_valid(menu_camera) or not is_instance_valid(menu_shop):return
+ orbit+=delta*.12
+ # A bounded arc keeps the shop behind the adventurer and avoids terrain clipping.
+ var yaw=atan2(menu_shop.basis.z.x,menu_shop.basis.z.z)+sin(orbit)*.22
+ var radius=7.0 if preview_mode=="home" else 5.7
+ menu_camera.position=menu_focus+Vector3(sin(yaw)*radius,1.65,cos(yaw)*radius)
+ menu_camera.h_offset=-3.1 if preview_mode=="home" else -1.3
+ menu_camera.fov=55;menu_camera.look_at(menu_focus)
 func home() -> void:
  in_run=false;game.mode="menu";preview_mode="home";prepare_backdrop();clear()
  if is_instance_valid(game.audio):game.audio.music_menu()
@@ -204,7 +231,7 @@ func unlocks() -> void:
  game.mode="unlocks";preview_mode="home"
  var col=page("Unlocks & collection");paragraph(wallet(),col,800)
  var tabs=HBoxContainer.new();col.add_child(tabs)
- for category in ["weapons","traits","items","ultimates"]:
+ for category in ["weapons","tomes","traits","items","ultimates"]:
   action(category.capitalize(),tabs,func():active_tab=category;unlocks())
  var body=HBoxContainer.new();col.add_child(body)
  var grid=GridContainer.new();grid.columns=5;body.add_child(grid)
@@ -212,7 +239,9 @@ func unlocks() -> void:
  paragraph("Select an entry to inspect it. Enabled entries may appear during runs. Starting weapons ignore this toggle.",detail,370)
  for e in LoadoutCatalog.entries(active_tab):
   var open=MetaProgress.unlocked(game.progress.data,active_tab,e.id)
-  var button=Button.new();button.custom_minimum_size=Vector2(130,86);button.clip_text=true;button.text_overrun_behavior=TextServer.OVERRUN_TRIM_ELLIPSIS;button.icon_alignment=HORIZONTAL_ALIGNMENT_CENTER;button.vertical_icon_alignment=VERTICAL_ALIGNMENT_TOP;button.add_theme_font_size_override("font_size",14);button.tooltip_text=e.name;button.text=e.name+("\nON" if MetaProgress.enabled(game.progress.data,active_tab,e.id) else ("\nOFF" if open else "\nLOCKED"));button.icon=UIAssets.icon(active_tab,e.id);button.expand_icon=true;button.add_theme_constant_override("icon_max_width",30);grid.add_child(button)
+  var button=Button.new();button.custom_minimum_size=Vector2(130,86);button.clip_text=true;button.text_overrun_behavior=TextServer.OVERRUN_TRIM_ELLIPSIS;button.icon_alignment=HORIZONTAL_ALIGNMENT_CENTER;button.vertical_icon_alignment=VERTICAL_ALIGNMENT_TOP;button.add_theme_font_size_override("font_size",14);button.tooltip_text=e.name;button.text=(e.name.trim_suffix(" Tome")+"\nTome" if active_tab=="tomes" else e.name)+("\nON" if MetaProgress.enabled(game.progress.data,active_tab,e.id) else ("\nOFF" if open else "\nLOCKED"));button.icon=UIAssets.icon(active_tab,e.id);button.expand_icon=true;button.add_theme_constant_override("icon_max_width",40 if active_tab=="tomes" else 30)
+  if active_tab=="tomes":button.custom_minimum_size.y=108
+  grid.add_child(button)
   if not open:button.modulate=Color("82908b")
   button.pressed.connect(func():
    for child in detail.get_children():detail.remove_child(child);child.queue_free()
@@ -223,11 +252,13 @@ func unlocks() -> void:
     else:action("Disable from runs" if MetaProgress.enabled(game.progress.data,active_tab,e.id) else "Enable in runs",detail,func():MetaProgress.toggle(game.progress.data,active_tab,e.id);game.progress.save();unlocks())
    else:
     # Locked entries reveal their requirement, never their effect text.
-    paragraph("Unlock: %d silver"%e.cost if active_tab=="weapons" else "Unlock: %d lifetime kills"%e.goal,detail,370)
-    if active_tab=="weapons":
+    var requirement="Unlock: %d silver"%e.cost if active_tab=="weapons" else "Unlock: %d lifetime kills"%e.goal
+    if active_tab=="tomes":requirement="Unlock: %d lifetime kills and %d silver"%[e.goal,e.cost]
+    paragraph(requirement,detail,370)
+    if active_tab in ["weapons","tomes"]:
      action("Unlock for %d silver"%e.cost,detail,func():
       if MetaProgress.purchase(game.progress.data,active_tab,e.id):game.progress.save();unlocks()
-      else:game.toast("Not enough silver"))
+      else:game.toast("Meet the kill milestone and silver cost"))
    )
  heading("Account upgrades",col,21)
  for kind in ["weapon","tome"]:
@@ -317,11 +348,7 @@ func update_hud() -> void:
  status_label.text="HP %d/%d  •  LV %d  •  KILLS %d\nTab • Build & stats"%[maxf(0,game.health),game.stats.max_health,game.level,game.kills]
  status_label.text+="\n[%s] %s • %s"%[OS.get_keycode_string(game.bindings.ultimate),LoadoutCatalog.entry("ultimates",game.loadout_runtime.ultimate_id).get("name","Ultimate"),"READY" if game.loadout_runtime.cooldown<=0 else "%ds"%ceili(game.loadout_runtime.cooldown)]
  if game.loadout_runtime.remaining>0:status_label.text+="\nULTIMATE ACTIVE • %.1fs"%game.loadout_runtime.remaining
- var tracked=[]
- for q in quest_definitions:
-  var value=MetaProgress.live_quest_value(game,q)
-  if MetaProgress.quest_state(game.progress.data,q,value)=="active" and tracked.size()<3:tracked.append("%s  %d/%d"%[q.name,value,q.target])
- quest_tracker.text="QUESTS IN PROGRESS\n"+"\n".join(tracked) if not tracked.is_empty() else ""
+ quest_tracker.text="";quest_tracker.hide()
  update_boss_bars()
  if game.settings.fps:status_label.text+="\n%d FPS"%Engine.get_frames_per_second()
 func pause() -> void:
@@ -393,10 +420,7 @@ func _process(delta: float) -> void:
   game.message_time-=delta
   if game.message_time<=0:game.notice.text=""
  if menu.visible and is_instance_valid(menu_camera) and menu_camera.is_inside_tree() and game.mode in ["menu","play","unlocks","quests","settings"]:
-  if preview_mode=="home":
-   orbit+=delta*0.035;menu_camera.h_offset=0;menu_camera.position=Vector3(cos(orbit)*28,16,sin(orbit)*28);menu_camera.look_at(Vector3(0,0,0))
-  else:
-   menu_camera.h_offset=-1.6;menu_camera.position=Vector3(0,2.5,5.5);menu_camera.look_at(Vector3(0,1,0))
+  update_menu_camera(delta)
   if is_instance_valid(game.player):game.player.avatar.animate("idle",0,delta)
  if game.mode=="run":
   map_tick+=delta

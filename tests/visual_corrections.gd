@@ -42,8 +42,9 @@ func run():
  for object in game.interactables:
   if ShrineCharging.is_shrine(object):shrine=object;break
  var label=shrine.node.get_node("ChargeProgress")
- game.mode="run";ShrineCharging.tick(game,shrine,0,.1);verify(label.visible,"Charging progress appears inside active shrine")
- ShrineCharging.tick(game,shrine,10,.1);verify(not label.visible,"Progress disappears after leaving AOE")
+ game.mode="run";ShrineCharging.tick(game,shrine,0,1.0);verify(label.visible,"Charging progress appears inside active shrine")
+ ShrineCharging.tick(game,shrine,10,.1);verify(label.visible,"Residual progress stays visible after leaving AOE")
+ ShrineCharging.tick(game,shrine,10,1);verify(not label.visible,"Progress disappears when decay reaches zero")
  ShrineCharging.tick(game,shrine,0,.1);game.mode="pause";game.frontend._process(.01);verify(not label.visible,"Paused shrine progress is hidden")
  game.mode="run";shrine.used=true;ShrineCharging.visual(game,shrine,true);verify(not label.visible,"Completed shrine has no floating progress label")
  game.queue_free();await process_frame;await process_frame

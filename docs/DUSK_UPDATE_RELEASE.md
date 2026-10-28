@@ -1,0 +1,3 @@
+MEGACLONK15: one looping menu track and one looping game track using the uploaded music; shrine text remains while charge decays outside the area; ten focused tomes with generated grimdark icons, unlocks and saved on/off toggles; no quest tracker on the run HUD; a stable slow-panning shop/player menu backdrop.
+
+Extract the entire ZIP and run BONK_INFINITY.exe, or Launch_Compatibility.bat. Unlocks → Tomes controls new acquisitions. Projectile means total weapon projectile count. Existing saves keep already-earned effects. Read DUSK_UPDATE.md. Native Windows execution and listening-device validation still need local playtesting.
