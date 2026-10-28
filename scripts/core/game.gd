@@ -712,7 +712,7 @@ func update_enemies(real_delta: float) -> void:
   var facing = atan2(direction.x,direction.z)
   var transform = Transform3D(Basis(Vector3.UP,facing).scaled(Vector3.ONE*e.scale),e.pos-Vector3.UP*0.65*e.scale)
   mm.set_instance_transform(boss_count,transform)
-  mm.set_instance_color(boss_count,Color.WHITE if e.get("hit_time",0)>0 else Color("91ddff") if e.slow>0 else (Color("b0ed72") if e.poison>0 else colors[e.kind]))
+  mm.set_instance_color(boss_count,Color.WHITE if e.get("hit_time",0)>0 else Color("91ddff") if e.slow>0 else (Color("b0ed72") if e.poison>0 else StatusManager.tint(e,colors[e.kind])))
   boss_count+=1
  mm.visible_instance_count=boss_count
  enemy_view.end_frame()

@@ -52,9 +52,11 @@ func draw_enemy(e: Dictionary, viewer: Vector3) -> void:
  var scale_value=e.scale*float(e.variant.get("visual_scale",1))
  var color: Color=e.variant.get("visual_tint",Color.WHITE)
  if e.hit_time>0:color=Color("ff0804")
+ elif StatusManager.stunned(e):color=Color("fff08a")
  elif e.frozen>0:color=Color("91dfff")
  elif e.poison>0:color=Color("bcff83")
  elif e.burn>0:color=Color("ffc086")
+ elif e.has("fx"):color=StatusManager.tint(e,color)
  if e.state=="windup" and e.action=="explode":scale_value*=1+0.12*sin(e.age*24)
  var emergence=smoothstep(0,OrdinaryRoster.SETTINGS.spawn_seconds,e.age)
  var below=(1-emergence)*2.0*scale_value

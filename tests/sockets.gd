@@ -142,7 +142,7 @@ func status_framework():
  StatusManager.leave();StatusManager.leave();StatusManager.leave();StatusManager.leave()
  check(StatusManager.depth==0 and StatusManager.enter(),"Depth never underflows")
  StatusManager.leave()
- check(StatusManager.modify_damage(null,e,37.5,true,0)==37.5,"Damage hook is a pass-through until elements are socketed")
+ check(StatusManager.modify_damage(StubGame.new(),e,37.5,true,0)==37.5,"Damage hook leaves damage alone for unsocketed weapons")
  var g=StubGame.new();g.weapons[0]={};WeaponSockets.ensure(g.weapons[0])
  check(StatusManager.weapon_elements(g,0).is_empty() and StatusManager.weapon_elements(g,-3).is_empty() and StatusManager.weapon_elements(g,9).is_empty(),"Unsocketed, non-weapon and unknown sources have no elements")
  WeaponSockets.install(g.weapons[0],"ice")
@@ -198,7 +198,7 @@ func integration():
  game.weapons[0].sockets={"unlocked":1,"gems":["ice"]}
  var hp=e.hp
  game.hit(e,5,0)
- check(e.hp==hp-5,"A socketed weapon's damage is unchanged until elements are implemented")
+ check(e.hp==hp-5,"An ice gem does not change the hit's own damage")
  StatusManager.start_cooldown(e,"stun_proc",5.0)
  game.hit(e,1,-1)
  check(e.has("fx"),"Status state survives unrelated damage")
