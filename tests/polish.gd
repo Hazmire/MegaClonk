@@ -11,7 +11,7 @@ func run():
  game=load("res://scenes/main/main.tscn").instantiate();root.add_child(game);await process_frame
  game.sandbox=true;game.map_seed_override=9;game.next_run_seed=123;game.begin_run();game.mode="pause";game.player.active=false;game.settings.invincible=true
  await physics_frame;await physics_frame
- verify(game.world.get_node("TerraceTerrain").material_override.shader.resource_path.ends_with("forest_floor.gdshader"),"World-space floor shader replaces flat ground")
+ verify(game.world.get_node("TerraceTerrain").material_override.shader.resource_path.ends_with("grimdark_terrain.gdshader"),"World-space floor shader replaces flat ground")
  var env=game.world.get_child(0).environment
  verify(env.background_mode==Environment.BG_SKY and env.sky!=null and env.fog_enabled and env.fog_density>=0.003 and env.fog_density<=0.008,"Layered blue sky and readable distance fog are configured")
  var min_crest=1000.0
@@ -22,7 +22,7 @@ func run():
   if str(key).begins_with("wind_grass"):
    grasses+=game.prop_batches[key].multimesh.visible_instance_count
    verify(game.prop_batches[key].visibility_range_end<=60,"Grass chunk has a bounded draw distance")
- verify(grasses>0 and grasses<650,"Uploaded grass shader uses sparse batched non-colliding clumps")
+ verify(grasses>0 and grasses<650,"Supplied grass model uses sparse batched non-colliding clumps")
  game.enemies.clear();game.pickups.clear();game.effects.clear();game.player.position=Vector3.ZERO;game.stats.crit=0;game.stats.gold_gain=1;game.gold=0;game.debug_combat=true
  var reward=0.0
  for i in 100:
@@ -49,16 +49,20 @@ func run():
  verify(game.weapons[4].visuals[0].mesh==WeaponArt.mesh("stone") and game.weapons[4].debris.multimesh.instance_count==12,"Chunkers uses real stone geometry and instanced foot debris")
  game.stats.count=5;game.update_special_visuals(0.016);verify(game.weapons[4].visuals.size()==game.orbit_count(4),"Orbit visuals respond to projectile-count upgrades")
  var actor=game.player.avatar;var position=game.player.position
- verify(actor.playback.get_animation_library("").get_animation_list().size()==4,"Only four core animations control the Ranger")
+ verify(actor.playback.has_animation("k_idle") and actor.playback.has_animation("k_walk"),"Knight retains supplied idle and walk clips")
  var lengths=[]
  for b in actor.rig.get_bone_count():lengths.append(actor.rig.get_bone_rest(b).origin.length())
  for state in ["idle","run","jump","fall","slide","crouch"]:
   for tick in 10:actor.animate(state,6,0.02)
   actor.rig.force_update_all_bone_transforms();var valid=true
   for b in actor.rig.get_bone_count():
-   if actor.rig.get_bone_name(b)!="pelvis" and absf(actor.rig.get_bone_pose_position(b).length()-lengths[b])>0.005:valid=false
-  verify(valid,"Generic %s preserves bone lengths and limb attachments"%state)
- actor.animate("hit",6,0.1);verify(actor.animation_state=="move","Taking damage does not interrupt moving locomotion")
+   if not actor.rig.get_bone_global_pose(b).is_finite():valid=false
+   # Supplied Knight clips animate Body bob and shoulder translations.
+   # Limb segments must retain lengths; root/shoulder motion is authored.
+   if actor.rig.get_bone_name(b).begins_with("Lower") or actor.rig.get_bone_name(b).begins_with("Foot") or actor.rig.get_bone_name(b).begins_with("Hand"):
+    if absf(actor.rig.get_bone_pose_position(b).length()-lengths[b])>0.005:valid=false
+  verify(valid,"Knight %s preserves bone lengths and finite skeleton transforms"%state)
+ actor.animate("hit",6,0.1);verify(actor.playback.current_animation=="k_walk","Taking damage does not interrupt moving locomotion")
  verify(game.player.position==position,"Animation never applies root motion to physics")
  # Find real downward edges for all orientations and both elevation differences.
  var passed=0;var attempted=0

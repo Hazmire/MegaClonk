@@ -350,7 +350,7 @@ func settings(back: Callable) -> void:
    for label in ["1280 × 720","1600 × 900","1920 × 1080"]:resolution.add_item(label)
    list.add_child(resolution);resolution.item_selected.connect(func(i):DisplayServer.window_set_size([Vector2i(1280,720),Vector2i(1600,900),Vector2i(1920,1080)][i]))
   var keys=[]
-  if group=="Graphics":keys=["render_scale","visual_intensity","reduced","numbers","shake","fps"]
+  if group=="Graphics":keys=["render_scale","retro_scale","psx_warp","psx_snap","psx_dither","visual_intensity","reduced","numbers","shake","fps"]
   if group=="Audio":keys=["master","music","effects","ui_volume","ambience"]
   if group=="Gameplay":keys=["sensitivity","invert","focus_pause"]
   for key in keys:
@@ -360,7 +360,7 @@ func settings(back: Callable) -> void:
    else:
     var caption=text(({"master":"Master volume","music":"Music volume","effects":"Sound effects volume","ui_volume":"UI volume","ambience":"Ambient volume"}).get(key,key.replace("_"," ").capitalize()),list,16)
     if group=="Audio":caption.text+=" · %d%%"%roundi(float(game.settings[key])*100)
-    var slider=HSlider.new();slider.min_value=0.0005 if key=="sensitivity" else (0.5 if key=="render_scale" else 0.0);slider.max_value=0.008 if key=="sensitivity" else 1.0;slider.step=0.0001 if key=="sensitivity" else 0.05;slider.value=game.settings[key];slider.custom_minimum_size.x=700;list.add_child(slider)
+    var slider=HSlider.new();slider.min_value=0.0005 if key=="sensitivity" else (0.5 if key=="render_scale" else (0.25 if key=="retro_scale" else 0.0));slider.max_value=0.008 if key=="sensitivity" else 1.0;slider.step=0.0001 if key=="sensitivity" else 0.05;slider.value=game.settings[key];slider.custom_minimum_size.x=700;list.add_child(slider)
     slider.value_changed.connect(func(value):
      game.settings[key]=value;game.apply_settings()
      if group=="Audio":

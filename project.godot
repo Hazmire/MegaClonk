@@ -17,3 +17,13 @@ textures/default_filters/use_nearest_mipmap_filter=false
 
 [physics]
 common/physics_ticks_per_second=60
+
+[shader_globals]
+psx_affine_strength={"type":"float","value":0.25}
+psx_precision_uv={"type":"float","value":0.0}
+psx_precision_xy={"type":"float","value":1462.857}
+psx_precision_z={"type":"float","value":0.0}
+psx_fog_color={"type":"color","value":Color(0.16, 0.18, 0.17, 1)}
+psx_fog_near={"type":"float","value":24.0}
+psx_fog_far={"type":"float","value":72.0}
+psx_bit_depth={"type":"int","value":5}

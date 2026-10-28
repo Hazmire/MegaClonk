@@ -118,17 +118,17 @@ func run():
   climber.pos=Vector3(94,game.terrain_height(94,0)+0.65,0);game.player.position=Vector3(110,40,0)
   for i in 100:EnemySimulation.step(game,climber,0.02)
   verify(absf(climber.pos.x)<=94 and climber.get("climb",{}).is_empty(),"Enemy cannot climb the outer boundary")
- var actor=game.player.avatar;actor.animate("run",SimpleRangerClips.SPEED,0.2)
- verify(is_equal_approx(actor.playback.speed_scale,1),"Ranger stride rate matches calibrated actual velocity")
- var clip=actor.playback.get_animation("move");verify(clip.length>0.1 and clip.get_track_count()>=65,"Ranger locomotion animates the actual full skeleton")
+ var actor=game.player.avatar;actor.animate("run",4.5,0.2)
+ verify(is_equal_approx(actor.playback.speed_scale,1),"Knight stride rate matches calibrated actual velocity")
+ var clip=actor.playback.get_animation("k_walk");verify(clip.length>0.1 and clip.get_track_count()>=14,"Knight locomotion animates the actual full skeleton")
  var max_foot_error=0.0
- actor.playback.play("move",0)
+ actor.playback.play("k_walk",0)
  for frame in 20:
   var phase=float(frame)/20
   actor.playback.seek(phase*clip.length,true);actor.playback.advance(0);actor.rig.force_update_all_bone_transforms()
-  var bone=actor.rig.find_bone("foot_l")
+  var bone=actor.rig.find_bone("Foot.l")
   var foot=actor.rig.get_bone_global_pose(bone).origin
-  var hip=actor.rig.get_bone_global_pose(actor.rig.find_bone("pelvis")).origin
+  var hip=actor.rig.get_bone_global_pose(actor.rig.find_bone("Body")).origin
   max_foot_error=maxf(max_foot_error,foot.distance_to(hip))
  verify(max_foot_error<1.5,"Generic locomotion keeps feet attached within anatomical reach")
  game.enemies.clear();game.player.position=game.map_layout.spawn;game.settings.invincible=true

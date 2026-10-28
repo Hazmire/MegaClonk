@@ -3,17 +3,21 @@ extends RefCounted
 const SETTINGS=preload("res://assets/config/stage_update.tres")
 static var chest_mesh: Mesh
 static var materials: Dictionary={}
-static func material(free: bool) -> StandardMaterial3D:
- if not materials.has(free):
-  var value=ModelBuilder.material();value.albedo_color=Color("bbffe5") if free else Color.WHITE
-  if free:value.emission_enabled=true;value.emission=Color("ffe6a6");value.emission_energy_multiplier=0.18
-  materials[free]=value
- return materials[free]
+static func material(_free: bool) -> Material:
+ # Keep the supplied crate atlas on each surface; never replace it with flat colour.
+ return null
 static func mesh() -> Mesh:
  if chest_mesh==null:
-  var parts=[ModelBuilder.part(ModelBuilder.cube(Vector3(1.05,0.55,0.75)),Vector3(0,0.3,0),"805637"),ModelBuilder.part(ModelBuilder.cube(Vector3(1.1,0.22,0.8)),Vector3(0,0.68,0),"b47b41")]
-  for side in [-1,1]:parts.append(ModelBuilder.part(ModelBuilder.cube(Vector3(0.09,0.78,0.83)),Vector3(side*0.4,0.4,0),"ffd976"))
-  parts.append(ModelBuilder.part(ModelBuilder.cube(Vector3(0.18,0.22,0.08)),Vector3(0,0.45,0.42),"fff1a5"));chest_mesh=ModelBuilder.bake(parts)
+  var base=preload("res://assets/grimdark/baked/props/crate.res")
+  var result=ArrayMesh.new()
+  for surface in base.get_surface_count():
+   var arrays=base.surface_get_arrays(surface);var vertices=arrays[Mesh.ARRAY_VERTEX];var normals=arrays[Mesh.ARRAY_NORMAL]
+   var scaling=Vector3(1.1/base.get_aabb().size.x,.75,.8/base.get_aabb().size.z)
+   for i in vertices.size():vertices[i]*=scaling;normals[i]=(normals[i]/scaling).normalized()
+   arrays[Mesh.ARRAY_VERTEX]=vertices;arrays[Mesh.ARRAY_NORMAL]=normals
+   result.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES,arrays)
+   result.surface_set_material(surface,GrimdarkMaterials.material(base.surface_get_material(surface)))
+  chest_mesh=result
  return chest_mesh
 static func safe_position(game: Node,p: Vector3) -> Vector3:
  var cell=game.forest_navigation.nearest_cell(p)

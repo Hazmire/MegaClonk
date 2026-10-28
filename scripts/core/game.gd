@@ -109,7 +109,8 @@ var run_metrics: Dictionary={}
 var chests_opened=0
 var legacy_weapon_slots=0
 var legacy_tome_slots=0
-var settings = {"visual_intensity":0.7,"render_scale":1.0,"quality":1,"master":0.7,"effects":0.7,"ui_volume":0.65,"ambience":0.35,"music":0.3,"sensitivity":0.0025,"invert":false,"reduced":false,"fps":false,"focus_pause":true,"shake":true,"numbers":true,"invincible":false}
+var grimdark_renderer: GrimdarkRenderer
+var settings = {"retro_scale":0.5,"psx_warp":0.25,"psx_snap":0.35,"psx_dither":true,"visual_intensity":0.7,"render_scale":1.0,"quality":1,"master":0.7,"effects":0.7,"ui_volume":0.65,"ambience":0.35,"music":0.3,"sensitivity":0.0025,"invert":false,"reduced":false,"fps":false,"focus_pause":true,"shake":true,"numbers":true,"invincible":false}
 var pending_binding = ""
 var bindings = {"forward":KEY_W,"back":KEY_S,"left":KEY_A,"right":KEY_D,"jump":KEY_SPACE,"crouch":KEY_CTRL,"interact":KEY_E,"inspect":KEY_TAB,"ultimate":KEY_Q,"map":KEY_M}
 var music: AudioStreamPlayer
@@ -157,6 +158,7 @@ func _ready() -> void:
  if not MetaProgress.unlocked(progress.data,"ultimates",selected_ultimate):selected_ultimate="nova"
  frontend=FrontEnd.new();add_child(frontend);frontend.setup(self)
  build_menu_world()
+ grimdark_renderer=GrimdarkRenderer.new();add_child(grimdark_renderer);grimdark_renderer.setup(self)
  main_menu()
  smoke_mode = "--smoke" in OS.get_cmdline_user_args()
  for argument in OS.get_cmdline_user_args():
@@ -252,7 +254,7 @@ func build_menu_world() -> void:
  create_avatar(world, selected_character, Vector3(10,0,-10)).scale = Vector3.ONE * 3
 func create_avatar(parent: Node3D, index: int, pos: Vector3) -> Node3D:
  if debug_combat:combat_counters["scenes"]=int(combat_counters.get("scenes",0))+1
- var node=RangerVisual.new()
+ var node=KnightVisual.new()
  parent.add_child(node)
  node.position=pos
  node.set_meta("character_index",index)
@@ -370,17 +372,9 @@ func build_stage() -> void:
   var model = Node3D.new()
   world.add_child(model)
   model.position = p
-  var color = [Color("efba5d"),Color("7fffd2"),Color("85baff"),Color("f4d3ff"),Color("ff7082"),Color("a8e47c")][i%6]
-  mesh_node(cylinder(0.9,0.4),Color("626e7b"),model,Vector3.UP*0.2)
-  if kind in ["Chest","Free Chest"]:
-   var chest=MeshInstance3D.new();chest.mesh=RewardDrops.mesh();chest.material_override=RewardDrops.material(kind=="Free Chest");model.add_child(chest)
-  else:mesh_node(box(Vector3(1,1,1)) if kind=="Shop" else cylinder(0.35,2,0.05),color,model,Vector3.UP, true)
+  GrimdarkObjects.populate(model,kind,stage)
   var object={"node":model,"kind":kind,"used":false,"charge":0.0}
-  if kind=="Shop":
-   object.tier=ShopSystem.tier(rng)
-   for child in model.get_children():child.queue_free()
-   var seller=RangerVisual.new();model.add_child(seller);seller.name="Seller"
-   mesh_node(cylinder(1.1,0.15),Color("e6b64d") if object.tier=="Legendary" else (Color("9c80e2") if object.tier=="Rare" else Color("77c797")),model,Vector3.UP*0.1,true)
+  if kind=="Shop":object.tier=ShopSystem.tier(rng)
   interactables.append(object)
  ShrineCharging.setup(self)
  combat_fx=CombatFX.new();world.add_child(combat_fx)
@@ -854,11 +848,11 @@ func make_portal() -> void:
  assert(forest_navigation.reachable(map_layout.portal))
  portal=Node3D.new();world.add_child(portal)
  portal.position=map_layout.portal
- ArtResetWorld.portal(self)
+ GrimdarkObjects.portal(self)
  refresh_portal()
 func refresh_portal() -> void:
  if not is_instance_valid(portal):return
- ArtResetWorld.refresh_portal(self)
+ GrimdarkObjects.refresh_portal(self)
 func activate_portal() -> bool:
  if portal_state=="summoned":return false
  if portal_state=="exit":return advance_stage()
@@ -1314,6 +1308,7 @@ func settings_menu(back: Callable) -> void:
  frontend.settings(back)
 
 func apply_settings() -> void:
+ if is_instance_valid(grimdark_renderer):grimdark_renderer.apply_settings()
  if is_instance_valid(audio):audio.volumes(settings)
  get_viewport().scaling_3d_scale=float(settings.render_scale)
  get_viewport().msaa_3d=Viewport.MSAA_4X if int(settings.quality)==2 else Viewport.MSAA_DISABLED
@@ -1742,11 +1737,7 @@ func enemy_line_clear(pos: Vector3,target: Vector3) -> bool:
 
 func create_elite_statue(position: Vector3=Vector3.INF) -> void:
  var statue=Node3D.new();statue.name="EliteStatue";world.add_child(statue);statue.position=map_layout.elite if position==Vector3.INF else position
- mesh_node(cylinder(1.7,0.5),Color("54466c"),statue,Vector3.UP*0.25)
- var guardian=mesh_node(BestiaryFrames.mesh("Knight","enemy_idle",0),Color.WHITE,statue,Vector3.UP*0.5)
- guardian.material_override=null
- var jewel=mesh_node(ModelBuilder.cone(0.45,0.9),Color("f7c763"),statue,Vector3.UP*3,true)
- jewel.rotation.z=PI
+ GrimdarkObjects.populate(statue,"Elite Statue",stage)
  interactables.append({"node":statue,"kind":"Elite Statue","used":false,"charge":0.0})
 func activate_elite_statue(statue: Dictionary) -> bool:
  if statue.used or elite_active:return false
@@ -1817,12 +1808,7 @@ func orbit_position(id: int,index: int) -> Vector3:
 
 func create_boss_statue(position: Vector3) -> void:
  var statue=Node3D.new();statue.name="BossMultiplierStatue";world.add_child(statue);statue.position=position
- mesh_node(cylinder(1.35,0.45),Color("332c43"),statue,Vector3.UP*0.22)
- mesh_node(box(Vector3(0.8,1.8,0.7)),Color("242734"),statue,Vector3.UP*1.2)
- mesh_node(ModelBuilder.cone(0.7,0.8,0.35),Color("49455c"),statue,Vector3.UP*2.4)
- for side in [-1,1]:
-  var horn=mesh_node(ModelBuilder.cone(0.2,0.9),Color("bd618d"),statue,Vector3(side*0.5,3,0),true);horn.rotation.z=-side*0.4
-  mesh_node(box(Vector3(0.13,0.12,0.1)),Color("ff6685"),statue,Vector3(side*0.23,2.45,0.42),true)
+ GrimdarkObjects.populate(statue,"Boss Statue",stage)
  interactables.append({"node":statue,"kind":"Boss Statue","used":false,"charge":0.0})
 
 func activate_boss_statue(statue: Dictionary) -> bool:

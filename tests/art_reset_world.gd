@@ -56,8 +56,8 @@ func run():
  check(wind.factor==0 and not wind.stream.visible and not wind.vortex.visible and wind.ambient.emitting,"Completed portal fades guidance/vortex while ambient wind continues")
  for stage_value in [1,2,3]:
   game.stage=stage_value;game.build_stage();var sky=game.world.get_child(0).environment.sky.sky_material
-  check(sky.get_shader_parameter("panorama")== (ArtResetWorld.DAY if stage_value==1 else ArtResetWorld.NIGHT),"Stage loads supplied HDR panorama: "+str(stage_value))
-  check(game.portal.has_node("PortalAsset") and game.portal.get_node("PortalAsset").find_children("*","MeshInstance3D",true,false).size()==2,"Portal uses both supplied FBX mesh components")
+  check(sky is ProceduralSkyMaterial and sky.sky_top_color==StageThemes.config(stage_value).zenith,"Stage loads grimdark sky palette: "+str(stage_value))
+  check(game.portal.has_node("PortalAsset") and game.portal.get_node("PortalAsset").find_children("*","MeshInstance3D",true,false).size()==2,"Portal uses supplied stone arch and rune effect")
  var fx=game.combat_fx.supplied;var nodes=fx.get_child_count()
  check(game.combat_fx.supplied_burst("shatter",game.player.position,2),"Supplied native shatter scene plays as a bounded boss effect")
  check(game.combat_fx.supplied_burst("fire",game.player.position,1),"Supplied aura shader powers weapon/bug fire effects")

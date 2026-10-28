@@ -22,10 +22,10 @@ func run():
   var trees=game.prop_batches.get("mega_CommonTree_1")
   if number in [2,3] and trees!=null:
    var material=trees.multimesh.mesh.surface_get_material(0)
-   check(material is ShaderMaterial and material.get_shader_parameter("foliage")==theme.foliage,"Actual tree material recolours foliage in stage "+str(number))
+   check(material is ShaderMaterial and material.get_shader_parameter("season")==StageThemes.index(number),"Actual tree material recolours foliage in stage "+str(number))
   var base=ImportedArt.mesh(ForestWorld.NATURE+"CommonTree_1.gltf",7.5,7)
   check(StageThemes.decor(base,number)==StageThemes.decor(base,number),"Stage decoration materials/meshes are reused")
- check(names[0]=="GREEN FOREST" and names[1]=="VIOLET FOREST" and names[2]=="CRIMSON FOREST" and names[3]==names[0],"Green/violet/crimson themes explicitly cycle after stage three")
+ check(names[0]=="BLIGHTED FOREST" and names[1]=="WITHERING FOREST" and names[2]=="DEADLANDS" and names[3]==names[0],"Living/withering/dead themes explicitly cycle after stage three")
  check(palettes[0]!=palettes[1] and palettes[1]!=palettes[2],"Stages change world materials rather than a screen overlay")
  game.stage=2;game.build_stage();game.show_stage_intro();check(game.announced_stages==[1,2],"New stage announces once")
  check(game.save_run("user://themes-test.json") and game.load_run("user://themes-test.json"),"Themed run saves and loads")

@@ -12,7 +12,7 @@ static func config(id: String) -> Dictionary:
  "champion":{"name":"Brute Champion","health":650.0,"speed":2.0,"damage":20.0,"scale":1.7,"reward":30,"attacks":["slam","charge"]},
  "hunter":{"name":"Shadow Hunter","health":480.0,"speed":4.8,"damage":17.0,"scale":1.4,"reward":30,"attacks":["leap","cleave"]},
  "ghost":{"name":"Endless Revenant","health":100.0,"speed":5.5,"damage":16.0,"scale":1.0,"reward":4,"attacks":["cleave"]}}
- var d=table[id].duplicate(true);d.id=id;d.model="";d.mesh=model(id);return d
+ var d=table[id].duplicate(true);d.visual_model=d.get("visual_model",{"colossus":"Behemoth","sovereign":"Ghost","champion":"Champion","hunter":"Hunter","ghost":"Ghost"}.get(id,"Puglin"));d.id=id;d.model="";d.mesh=model(id);return d
 static func model(id: String) -> Mesh:
  return BestiaryFrames.mesh("Golem" if id in ["rock_golem","lesser_golem"] else ("Knight" if id=="statue_elite" else ("Puglin" if id in ["colossus","champion","chunkus"] else "Imp")),"enemy_idle",0)
 static func initialize(game: Node, e: Dictionary, id: String) -> void:

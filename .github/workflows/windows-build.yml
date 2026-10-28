@@ -27,7 +27,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Install checksum-verified Godot 4.7.2 and export templates
         run: python3 tools/install_engine.py
-      - name: Import project and run all twenty-seven regression and seeded-world suites
+      - name: Import project and run all twenty-eight regression and seeded-world suites
         run: tools/validate.sh
       - name: Export Windows x64 with embedded game resources
         run: |
@@ -52,12 +52,12 @@ jobs:
           if-no-files-found: error
           retention-days: 30
       - name: Publish durable Windows playtest download
-        if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/retro-audio-v11')
+        if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/grimdark-psx-v13')
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if gh release view dark-feedback-v12.1 >/dev/null 2>&1; then
-            gh release upload dark-feedback-v12.1 builds/BONK_INFINITY_Windows_x64.zip --clobber
+          if gh release view grimdark-psx-v13 >/dev/null 2>&1; then
+            gh release upload grimdark-psx-v13 builds/BONK_INFINITY_Windows_x64.zip --clobber
           else
-            gh release create dark-feedback-v12.1 builds/BONK_INFINITY_Windows_x64.zip --target "$GITHUB_SHA" --prerelease --title "MEGACLONK — Dark Combat Audio and Health HUD 12.1" --notes-file docs/DARK_FEEDBACK_RELEASE.md
+            gh release create grimdark-psx-v13 builds/BONK_INFINITY_Windows_x64.zip --target "$GITHUB_SHA" --prerelease --title "MEGACLONK — Grimdark PSX Forest Playtest 13" --notes-file docs/GRIMDARK_RELEASE.md
           fi
