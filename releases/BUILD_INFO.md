@@ -1,3 +1,20 @@
+# Verified Grimdark PSX13.1 publication
+
+[Download Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/grimdark-psx-v13.1/BONK_INFINITY_Windows_x64.zip). Extract everything and launch BONK_INFINITY.exe, or Launch_Compatibility.bat.
+
+- Clean game source: `c2209e6ea108119bd65f637d43155b75ffbd3c22`.
+- Successful28-suite publishing workflow: https://github.com/Hazmire/MegaClonk/actions/runs/40670792426
+- Successful PR validation: https://github.com/Hazmire/MegaClonk/actions/runs/40670800363
+- Release asset ID `684613057`; 134,927,445bytes.
+- ZIP SHA256: `659ed35dbecbb256bbd68e32537f41d31183d0532c17798c94cb19b6ded59a74`.
+- Actions artifact ID `12808403283`; verified not expired.
+
+Downloaded size/digest and every CRC match. BUILD_INFO confirms the expected commit and no uncommitted files. Linux Godot ran180 world frames and all six compiled smoke gates. The downloaded pack was rendered and viewed at1280×720 with640×360 internal world and sharp UI. Native Windows execution remains untested. Simplified supplemental animation,500-enemy CPU cost and Mesa shutdown diagnostics remain documented limitations.
+
+[Guide](../docs/GRIMDARK.md) · [Performance](../docs/GRIMDARK_PERFORMANCE.md) · [Published screenshot](../docs/images/grimdark/published_13_1.png) · [Raw proof](GRIMDARK_VALIDATION.json) · [PR#6](https://github.com/Hazmire/MegaClonk/pull/6).
+
+13.1 commits a generated Godot smoke-script UID missing in13; the earlier build's dirty-worktree flag is not presented as clean. Use13.1. Source updates are on the PR branch until merged into Full-Release; the download works independently.
+
 # Verified Dark Feedback v12.1 publication
 
 [Download Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/dark-feedback-v12.1/BONK_INFINITY_Windows_x64.zip). Extract everything and launch BONK_INFINITY.exe, or Launch_Compatibility.bat.

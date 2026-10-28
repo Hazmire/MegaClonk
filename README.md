@@ -25,9 +25,9 @@ The [grimdark PSX update](docs/GRIMDARK.md) replaces the runtime player, enemies
 
 ## Download and play
 
-- [Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/dark-feedback-v12.1/BONK_INFINITY_Windows_x64.zip)
+- [Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/grimdark-psx-v13.1/BONK_INFINITY_Windows_x64.zip)
 - [GitHub Actions builds](https://github.com/Hazmire/MegaClonk/actions/workflows/windows-build.yml)
-- [PR #5 — merge into Full-Release](https://github.com/Hazmire/MegaClonk/pull/5)
+- [PR #6 — merge into Full-Release](https://github.com/Hazmire/MegaClonk/pull/6)
 
 Start a **new run** to see the new terrain; older checkpoints retain their original maps.
 Extract and launch **BONK_INFINITY.exe**, or **Launch_Compatibility.bat** if Vulkan

@@ -21,3 +21,5 @@ Asset rebuild: extract source archives outside res://, set MEGACLONK_PSX_SOURCE,
 - [Red player damage](images/grimdark/knight_damage_red.png), [sharp HUD over retro world](images/grimdark/hud.png).
 
 All screenshots were rendered and viewed under Mesa llvmpipe. Shutdown texture diagnostics and native-platform limits are disclosed in GRIMDARK_PERFORMANCE.md.
+
+[Verified13.1 Windows download](https://github.com/Hazmire/MegaClonk/releases/download/grimdark-psx-v13.1/BONK_INFINITY_Windows_x64.zip) · [actual downloaded-pack render](images/grimdark/published_13_1.png) · [publication proof](../releases/BUILD_INFO.md).
