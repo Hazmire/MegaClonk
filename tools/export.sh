@@ -117,13 +117,20 @@ cat > builds/windows/Launch_Compatibility.bat <<'BAT'
 cd /d "%~dp0"
 start "" "BONK_INFINITY.exe" --rendering-method gl_compatibility
 BAT
+if ! tools/godot.sh --headless --path /tmp --main-pack "$PWD/builds/windows/BONK_INFINITY.exe" --script "$PWD/tools/export_socket_smoke.gd" > "$log_path" 2>&1; then
+ cat "$log_path"
+ exit 1
+fi
+cat "$log_path"
+if grep -Eq 'SCRIPT ERROR|^ERROR:' "$log_path"; then exit 1; fi
+if ! grep -q 'EXPORTED SOCKETS SMOKE COMPLETE' "$log_path"; then exit 1; fi
 python3 - <<'PY'
 from pathlib import Path
 from zipfile import ZipFile, ZIP_DEFLATED
 import subprocess
 commit = subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
 dirty = bool(subprocess.check_output(['git','status','--porcelain'],text=True).strip())
-Path('builds/windows/BUILD_INFO.txt').write_text('MEGACLONK v15 dusk music, ten tomes and shop menu\nGodot 4.7.2\nSource commit: '+commit+'\nUncommitted source at build time: '+str(dirty)+'\nWindows execution requires native playtesting.\n')
+Path('builds/windows/BUILD_INFO.txt').write_text('MEGACLONK v16 elemental sockets, Imbue Stations, vases and power-ups\nGodot 4.7.2\nSource commit: '+commit+'\nUncommitted source at build time: '+str(dirty)+'\nWindows execution requires native playtesting.\n')
 with ZipFile('builds/BONK_INFINITY_Windows_x64.zip','w',ZIP_DEFLATED) as z:
  for p in sorted(Path('builds/windows').iterdir()):
   if p.is_file(): z.write(p,p.name)
