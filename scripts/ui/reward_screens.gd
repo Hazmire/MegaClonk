@@ -159,10 +159,13 @@ static func upgrades(ui: FrontEnd) -> void:
   var category="weapons" if choice.type=="weapon" else "tomes"
   var rank=int(game.weapons[choice.id].level) if choice.type=="weapon" and game.weapons.has(choice.id) else int(game.tomes.get(choice.id,0)) if choice.type=="tome" else 0
   var description=choice.metadata.description
-  if choice.type=="weapon" and rank>0:description=WeaponUpgrades.description(int(choice.id),game.weapons[choice.id],choice.attribute)
+  var card_meta=choice.metadata
+  if choice.type=="weapon" and rank>0:
+   description=WeaponUpgrades.description(int(choice.id),game.weapons[choice.id],choice.attribute,game)
+   card_meta=choice.metadata.duplicate();card_meta["name"]="%s — %s"%[Catalog.weapon_name(int(choice.id)),WeaponUpgrades.label(int(choice.id),choice.attribute)]
   elif choice.type=="tome":
    var stat=Catalog.TOMES[choice.id][0];description=stat.replace("_"," ").capitalize()+": "+BuildStats.value(stat,game.stats[stat])+" → "+BuildStats.value(stat,game.stats[stat]+Catalog.TOMES[choice.id][1])
-  var button=offer(ui,center,category,choice.id,rank,description,func():game.apply_upgrade(choice);game.resume(),"",choice.metadata)
+  var button=offer(ui,center,category,choice.id,rank,description,func():game.apply_upgrade(choice);game.resume(),"",card_meta)
   button.focus_entered.connect(func():ui.reward_focus=choice)
   button.mouse_entered.connect(func():ui.reward_focus=choice)
   if first==null:first=button;ui.reward_focus=choice

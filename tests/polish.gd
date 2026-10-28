@@ -47,12 +47,6 @@ func run():
  game.numbers.show_damage(Vector3(1,1,1),4,true,Color.YELLOW,1.01)
  verify(game.numbers.active.size()==1 and game.numbers.active[0].amount==7,"Nearby rapid damage numbers aggregate without losing displayed damage")
  game.numbers.tick(1);verify(game.numbers.active.is_empty(),"Pooled number expires and releases its bucket")
- game.weapons.clear();game.equip(4);game.stats.count=3;game.stats.size=1;game.elapsed=2
- game.update_special_visuals(0.016)
- verify(game.weapons[4].visuals.size()==game.orbit_count(4),"Chunkers visual count matches damaging orbit count")
- for i in game.orbit_count(4):verify(game.weapons[4].visuals[i].position.is_equal_approx(game.orbit_position(4,i)),"Orbit rock shares exact damage position")
- verify(game.weapons[4].visuals[0].mesh==WeaponArt.mesh("stone") and game.weapons[4].debris.multimesh.instance_count==12,"Chunkers uses real stone geometry and instanced foot debris")
- game.stats.count=5;game.update_special_visuals(0.016);verify(game.weapons[4].visuals.size()==game.orbit_count(4),"Orbit visuals respond to projectile-count upgrades")
  var actor=game.player.avatar;var position=game.player.position
  verify(actor.playback.has_animation("k_idle") and actor.playback.has_animation("k_walk"),"Knight retains supplied idle and walk clips")
  var lengths=[]

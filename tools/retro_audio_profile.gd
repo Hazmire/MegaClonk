@@ -15,9 +15,9 @@ func run():
   for frame in 240:
    game.audio.clock+=1.0/60
    var start=Time.get_ticks_usec()
-   for i in game.enemies.size():game.audio.emit("weapon.chunkers.impact",game.enemies[i].pos)
+   for i in game.enemies.size():game.audio.emit("weapon.revolver.hit",game.enemies[i].pos)
    for i in 8:game.audio.emit("pickup.xp",game.player.position)
-   game.audio.emit("weapon.revolver.fire",game.player.position);game.audio.emit("weapon.lightning.zap",game.player.position)
+   game.audio.emit("weapon.revolver.fire",game.player.position);game.audio.emit("weapon.lightning.strike",game.player.position)
    if frame%60==0:game.audio.emit("player.damage");game.audio.emit("boss.warning")
    samples.append((Time.get_ticks_usec()-start)/1000.0);maximum=maxi(maximum,int(game.audio.diagnostics().active_voices))
   var row=summary(samples);row.enemies=game.enemies.size();row.requested=count;row.max_voices=maximum;row.accepted=game.audio.accepted-before;row.cooldown_suppressed=game.audio.cooldown_suppressed-suppressed;row.voice_suppressed=game.audio.voice_suppressed-voice_limit;result.cases.append(row);print("AUDIO PROFILE "+JSON.stringify(row))

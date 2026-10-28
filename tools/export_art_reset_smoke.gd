@@ -6,7 +6,7 @@ func require(value: bool,message: String) -> bool:
 func run():
  var game=load("res://scenes/main/main.tscn").instantiate();root.add_child(game);await process_frame
  game.sandbox=true;game.settings.focus_pause=false;game.next_run_seed=923;game.map_seed_override=9;game.begin_run();game.set_physics_process(false);game.player.active=false
- if not require(Catalog.ACTIVE_WEAPONS.size()==10 and LoadoutCatalog.entries("weapons").size()==10,"Compiled active roster is not ten"):return
+ if not require(Catalog.ACTIVE_WEAPONS.size()==8 and LoadoutCatalog.entries("weapons").size()==8,"Compiled active roster is not eight"):return
  game.weapons.clear();game.tomes.clear()
  for choice in game.upgrade_pool():
   if choice.type in ["weapon","tome"] and not require(choice.metadata.rarity=="common","Compiled acquisition is not Common"):return

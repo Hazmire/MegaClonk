@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Curate supplied long variation reels OUTSIDE project first; optional --install.
+"""NOTE: weapon.* events are owned by tools/curate_weapon_audio.py (Weapon Overhaul 2.0); running this script no longer writes them.
+Curate supplied long variation reels OUTSIDE project first; optional --install.
 No synthesis or bulk library import. Requires ffmpeg/numpy for offline analysis.
 """
 from pathlib import Path
@@ -14,17 +15,6 @@ def darken(clip):
  x*=min(1.35,peak/max(float(abs(x).max()),1e-8));return np.clip(x,-.5,.5)
 # Semantic shortlist; waveform scoring rejects silence/weak snippets. Listening is not claimed.
 groups={
- 'weapon.revolver.fire':(['DSGNMisc_HIT-Mecha Laser Pistol','DSGNMisc_PROJECTILE-Hollow Point'],6,.55),
- 'weapon.sword.swing':(['DSGNMisc_MELEE-Bit Sword','DSGNMisc_MELEE-Sword Slash'],4,.5),
- 'weapon.firestaff.cast':(['DSGNImpt_EXPLOSION-Scorched'],4,.65),
- 'weapon.lightning.zap':(['DSGNImpt_EXPLOSION-Electric Hit'],5,.55),
- 'weapon.chunkers.impact':(['DSGNImpt_EXPLOSION-Crunching','DSGNImpt_EXPLOSION-Cruncher'],5,.6),
- 'weapon.bone.throw':(['SWSH_MOVEMENT-Bamboo Whip'],3,.45),
- 'weapon.bow.fire':(['WHSH_MOVEMENT-Simple Whoosh'],3,.38),
- 'weapon.bananarang.throw':(['WHSH_MOVEMENT-Wind Sweep Swish'],3,.5),
- 'weapon.aura.pulse':(['MAGSpel_CAST-Hollow Spell'],3,.65),
- 'weapon.mines.place':(['UIClick_INTERFACE-Metallic Click'],3,.25),
- 'weapon.aegis.impact':(['DSGNMisc_HIT-Zap Metal','FGHTImpt_MELEE-Gut Punch'],4,.65),
  'combat.explosion':(['DSGNImpt_EXPLOSION-Bit Bomb','DSGNImpt_EXPLOSION-Pyro Burst'],5,.9),
  'player.damage':(['DSGNMisc_MELEE-Sword Slash'],4,.4),
  'player.footstep.grass':(['FEETMisc_STEP-Boots on Grass'],8,.25),

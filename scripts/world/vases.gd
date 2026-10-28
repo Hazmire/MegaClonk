@@ -25,7 +25,7 @@ const VARIANTS=[
 const HIT_HEIGHT=0.5
 # Weapon kinds that normally need an enemy in range before they fire. When none is in range
 # they may aim at the nearest vase instead, so every weapon can break vases on its own.
-const AIM_KINDS=["fireball","chain","bounce","pierce","bullet","return","rocket","lob","scatter","dice","wave","beam","rail","hitscan"]
+const AIM_KINDS=["slash","fireball","lightning","arrow","bullet","scythe","aura","shotgun"]
 
 # ---------------------------------------------------------------- placement (pure)
 static func lane_distance(data: Dictionary,p: Vector2) -> float:

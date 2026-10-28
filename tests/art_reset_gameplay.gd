@@ -9,9 +9,9 @@ func _initialize():call_deferred("run")
 func run():
  var game=load("res://scenes/main/main.tscn").instantiate();root.add_child(game);await process_frame
  game.sandbox=true;game.settings.focus_pause=false;game.settings.invincible=false;game.next_run_seed=923;game.map_seed_override=9;game.begin_run();game.set_physics_process(false);game.player.active=false;game.enemies.clear()
- check(Catalog.ACTIVE_WEAPONS.size()==10,"Exactly ten stable active weapon IDs")
+ check(Catalog.ACTIVE_WEAPONS.size()==8,"Exactly eight stable active weapon IDs")
  var entries=LoadoutCatalog.entries("weapons")
- check(entries.size()==10 and entries.all(func(e):return int(e.id) in Catalog.ACTIVE_WEAPONS),"Loadouts and unlocks expose only ten active weapons")
+ check(entries.size()==8 and entries.all(func(e):return int(e.id) in Catalog.ACTIVE_WEAPONS),"Loadouts and unlocks expose only eight active weapons")
  var regions=[]
  for id in Catalog.ACTIVE_WEAPONS:
   var texture=UIAssets.icon("weapons",str(id));var identity=str(texture.region) if texture is AtlasTexture else texture.resource_path
@@ -34,9 +34,9 @@ func run():
  check(tome.metadata.rarity=="legendary","Existing tome upgrades retain Legendary support")
  game.apply_upgrade(tome)
  check(game.equipment_meta("weapons",2).rarity=="rare" and game.equipment_meta("tomes","Vampire").rarity=="legendary","Displayed equipment tiers follow applied upgrades")
- game.equip(13)
- check(game.save_run("user://art-reset-legacy.json") and game.load_run("user://art-reset-legacy.json") and game.weapons.has(13) and game.weapons[2].rarity=="rare" and game.tome_rarities.Vampire=="legendary","Archived weapon implementations and owned rarity state survive old-style loadout checkpoint")
- check(not game.upgrade_pool().any(func(c):return c.type=="weapon" and c.id==13),"Owned archived weapon does not reappear in new reward pool")
+ game.equip(15)
+ check(game.save_run("user://art-reset-legacy.json") and game.load_run("user://art-reset-legacy.json") and game.weapons.has(15) and game.weapons[2].rarity=="rare" and game.tome_rarities.Vampire=="legendary","Owned weapon rarity and tome state survive an old-style loadout checkpoint")
+ check(not game.upgrade_pool().any(func(c):return c.type=="weapon" and not int(c.id) in Catalog.ACTIVE_WEAPONS),"Removed weapons never appear in the reward pool")
  game.mode="pause";game.frontend.inventory();await process_frame
  var trait_icon: Control
  for node in RewardScreens.descendants(game.frontend.menu):

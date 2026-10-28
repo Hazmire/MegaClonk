@@ -5,12 +5,14 @@ const WEAPON_ICONS=[15,20,35,29,30,18,12,7,31,18,33,25,13,37,26,9,38,12,24,28,43
 const ITEM_ICONS=[12,46,5,20,34,28,9,13,19,26,42,25,43]
 # Licensed supplied ability demo icons take precedence; original temporary glyphs
 # remain for weapon/item/tome packs whose usage terms are not yet verified.
+# weapons.png keeps its original cell order; ids 0, 1 and 15 (Sword, Firestaff, Shotgun) use the vendor fallback until icons are supplied.
+const LEGACY_WEAPON_ICON={2:2,6:5,7:6,9:7,10:8}
 static func icon(category: String, id: String) -> Texture2D:
  var key=category+":"+id
- if category=="weapons" and int(id) in Catalog.ACTIVE_WEAPONS and not int(id) in [0,1]:
+ if category=="weapons" and LEGACY_WEAPON_ICON.has(int(id)):
   if cache.has(key):return cache[key]
   var atlas=load("res://assets/art_reset/icons/weapons.png") as Texture2D
-  var index=Catalog.ACTIVE_WEAPONS.find(int(id));var texture=AtlasTexture.new();texture.atlas=atlas;texture.region=Rect2(Vector2(index%5,int(index/5))*Vector2(atlas.get_width()/5.0,atlas.get_height()/2.0),Vector2(atlas.get_width()/5.0,atlas.get_height()/2.0));texture.filter_clip=true;cache[key]=texture;return texture
+  var index=int(LEGACY_WEAPON_ICON[int(id)]);var texture=AtlasTexture.new();texture.atlas=atlas;texture.region=Rect2(Vector2(index%5,int(index/5))*Vector2(atlas.get_width()/5.0,atlas.get_height()/2.0),Vector2(atlas.get_width()/5.0,atlas.get_height()/2.0));texture.filter_clip=true;cache[key]=texture;return texture
  if category=="tomes" and id in Catalog.ACTIVE_TOMES:
   if cache.has(key):return cache[key]
   var atlas=load("res://assets/ui/tomes/dusk_tomes.png") as Texture2D

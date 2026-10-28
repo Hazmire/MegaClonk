@@ -26,7 +26,7 @@ func run():
  check(all_reachable,"30 forest seeds have connected portal/objective regions")
  check(smooth,"Broad planar terrain has no steep internal noise spikes")
  var random=RandomNumberGenerator.new();random.seed=25
- for id in Catalog.WEAPONS.size():
+ for id in Catalog.ACTIVE_WEAPONS:
   var proposals={}
   for i in 40:proposals[WeaponUpgrades.proposal(id,random).attribute]=true
   check(proposals.size()>=3,"Weapon %d has meaningful distinct upgrade attributes"%id)

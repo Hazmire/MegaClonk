@@ -3,45 +3,23 @@ extends RefCounted
 
 # Independent balance values. Reference names supplied by the design brief;
 # none of these numbers are claimed to reproduce Megabonk formulas.
-const ACTIVE_WEAPONS=[0,1,2,4,5,6,7,9,10,16]
-const WEAPONS = [
- ["Sword", "sweep", 22.0, 0.85, 5.0, "#ffe2a1"],
- ["Firestaff", "fireball", 18.0, 1.0, 24.0, "#ff793b"],
- ["Lightning Staff", "chain", 20.0, 1.3, 22.0, "#8bdfff"],
- ["Flamewalker", "trail", 10.0, 0.7, 3.0, "#ff5c23"],
- ["Chunkers", "orbit", 17.0, 0.75, 4.0, "#c4a0ff"],
- ["Bone", "bounce", 16.0, 0.9, 20.0, "#f1edd1"],
- ["Bow", "pierce", 22.0, 0.9, 32.0, "#b7e978"],
- ["Revolver", "bullet", 32.0, 0.8, 27.0, "#ffe5a6"],
- ["Aegis", "orbit", 18.0, 0.8, 4.0, "#69c5ff"],
- ["Bananarang", "return", 20.0, 1.0, 18.0, "#ffdf43"],
- ["Aura", "aura", 8.0, 0.6, 5.0, "#f5a7ff"],
- ["Axe", "lob", 38.0, 1.5, 16.0, "#b8cfdf"],
- ["Space Noodle", "chain", 15.0, 0.9, 18.0, "#efb3ff"],
- ["Sniper Rifle", "beam", 65.0, 1.9, 52.0, "#ffeac0"],
- ["Slutty Rocket", "rocket", 44.0, 1.8, 35.0, "#ff995e"],
- ["Shotgun", "scatter", 14.0, 1.2, 14.0, "#ffd178"],
- ["Mines", "mine", 55.0, 1.6, 4.0, "#e9be50"],
- ["Wireless Dagger", "chain", 18.0, 0.7, 18.0, "#67f9ff"],
- ["Frostwalker", "frost_trail", 9.0, 0.7, 4.0, "#8ce8ff"],
- ["Tornado", "vortex", 13.0, 1.4, 22.0, "#c5f9ef"],
- ["Dexecutioner", "execute", 32.0, 1.2, 18.0, "#e58bff"],
- ["Blood Magic", "drain", 24.0, 1.1, 20.0, "#ef5272"],
- ["Black Hole", "gravity", 18.0, 2.5, 25.0, "#a978ff"],
- ["Poison Flask", "poison", 9.0, 1.5, 22.0, "#a3ef5f"],
- ["Katana", "dash_slash", 35.0, 1.0, 8.0, "#ffbadd"],
- ["Dragon's Breath", "cone", 12.0, 0.45, 9.0, "#ff7a40"],
- ["Dice", "dice", 25.0, 1.2, 25.0, "#ffffff"],
- ["Hero Sword", "wave", 30.0, 1.1, 28.0, "#ffe278"],
- ["Corrupted Sword", "corrupt", 42.0, 1.5, 7.0, "#bb64ff"],
- ["Scythe", "reap", 34.0, 1.3, 7.0, "#89f0bd"],
- ["Ice Crystal", "freeze", 24.0, 1.4, 23.0, "#91dfff"],
- ["Chrono Slicer", "chrono", 21.0, 0.8, 5.0, "#5fffe3"],
- ["Thunder Rail", "rail", 55.0, 1.6, 50.0, "#79afff"],
- ["Spore Cannon", "spore", 15.0, 1.5, 26.0, "#b4fc73"],
- ["Gravity Hammer", "hammer", 65.0, 2.2, 20.0, "#bda1ff"],
- ["Phantom Legion", "summon", 25.0, 1.0, 22.0, "#7affce"]
-]
+# Weapon Overhaul 2.0: exactly eight weapons. Ids are stable legacy ids (saves, unlocks and mastery
+# metrics key on them), so the roster is a sparse table; ids not listed here no longer exist.
+# Row: [name, kind, base damage (per hit / pellet), base cooldown, targeting range, ui colour].
+const ACTIVE_WEAPONS=[0,1,2,6,7,9,10,15]
+const WEAPONS = {
+ 0:["Sword", "slash", 22.0, 1.0, 7.0, "#f2f2ec"],
+ 1:["Firestaff", "fireball", 18.0, 1.1, 24.0, "#ff793b"],
+ 2:["Lightning Staff", "lightning", 20.0, 1.3, 22.0, "#5b9bff"],
+ 6:["Bow", "arrow", 22.0, 0.9, 32.0, "#cfd2c4"],
+ 7:["Revolver", "bullet", 32.0, 0.8, 27.0, "#c4c8cf"],
+ 9:["Scythes", "scythe", 20.0, 1.3, 18.0, "#b48f5d"],
+ 10:["Aura", "aura", 8.0, 0.6, 5.0, "#3f9a45"],
+ 15:["Shotgun", "shotgun", 14.0, 1.3, 11.0, "#ffd178"]
+}
+# Ids that existed before the overhaul and were deleted (or never shipped); saves drop them safely.
+static func weapon_exists(id: int) -> bool:return WEAPONS.has(id)
+static func weapon_name(id: int) -> String:return str(WEAPONS[id][0]) if WEAPONS.has(id) else "Retired weapon"
 const CHARACTERS = [
  ["Fox", 1, "Luck grows each level", "luck"],
  ["Sir Oofie", 0, "Armor grows each level", "armor"],

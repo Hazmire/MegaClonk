@@ -15,7 +15,7 @@ func clear_case():
  for effect in game.effects:
   if effect.node.has_meta("pool_key"):game.pool.release(effect.node)
   else:effect.node.queue_free()
- game.effects.clear();game.projectiles.clear();game.fields.clear();game.weapons.clear()
+ game.effects.clear();game.projectiles.clear();game.weapons.clear()
  game.mode="run";game.frontend.enter_run();game.player.active=false
 func step():
  game.update_enemies(1.0/60);game.rebuild_grid();game.combat_fx.tick(1.0/60,true);game.update_effects(1.0/60);game.update_hud()

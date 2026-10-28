@@ -27,13 +27,13 @@ func batch(key: String, mesh: Mesh, capacity: int) -> MultiMesh:
  return node.multimesh
 func begin_frame() -> void:
  counts.clear();last_transforms.clear()
-func put(key: String, mesh: Mesh, transform: Transform3D, color: Color, capacity: int = 500, spectral: bool=false) -> void:
+func put(key: String, mesh: Mesh, transform: Transform3D, color: Color, capacity: int = 500, spectral: bool=false, flash: float=0.0, flash_tint: float=0.0) -> void:
  var mm=batch(key,mesh,capacity)
  var index=int(counts.get(key,0))
  if index>=capacity: return
  mm.set_instance_transform(index,transform)
  mm.set_instance_color(index,color)
- mm.set_instance_custom_data(index,Color(1 if color==Color("ff0804") else 0,1 if spectral else 0,0,0))
+ mm.set_instance_custom_data(index,Color(flash,1 if spectral else 0,flash_tint,0))
  counts[key]=index+1
 func draw_enemy(e: Dictionary, viewer: Vector3) -> void:
  var model=str(e.variant.get("visual_model","Puglin" if e.kind in [8,9] and e.get("encounter","")!="sovereign" else "Imp"))
@@ -51,8 +51,10 @@ func draw_enemy(e: Dictionary, viewer: Vector3) -> void:
  if e.hit_time>0:tilt=-0.15
  var scale_value=e.scale*float(e.variant.get("visual_scale",1))
  var color: Color=e.variant.get("visual_tint",Color.WHITE)
- if e.hit_time>0:color=Color("ff0804")
- elif StatusManager.stunned(e):color=Color("fff08a")
+ # Status tints always show; the hit flash is a separate, transient white overlay (stepped, 0.10s) on top.
+ var flash=0.0
+ if e.hit_time>0:flash=1.0 if e.hit_time>0.04 else 0.55
+ if StatusManager.stunned(e):color=Color("fff08a")
  elif e.frozen>0:color=Color("91dfff")
  elif e.poison>0:color=Color("bcff83")
  elif e.burn>0:color=Color("ffc086")
@@ -63,7 +65,7 @@ func draw_enemy(e: Dictionary, viewer: Vector3) -> void:
  if not e.get("climb",{}).is_empty():tilt=-0.25
  var base=Transform3D(Basis.from_euler(Vector3(tilt,facing,0)).scaled(Vector3.ONE*scale_value),e.pos-Vector3.UP*(0.65+below))
  last_transforms[e.variant.id]=base
- put(key,mesh,base,color,500,e.get("encounter","")=="ghost")
+ put(key,mesh,base,color,500,e.get("encounter","")=="ghost",flash,float(e.get("flash_tint",0.0)))
  if e.get("elite",false):
   put("elite_emblems",emblem_mesh,Transform3D(Basis(Vector3.FORWARD,PI),e.pos+Vector3.UP*2.7),Color("ffd365"))
 func end_frame() -> void:

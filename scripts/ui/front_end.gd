@@ -236,7 +236,7 @@ func play_screen() -> void:
  if game.progress.data.leaderboard.is_empty():paragraph("Your greatest runs will be recorded here.",right,214)
  for i in mini(5,game.progress.data.leaderboard.size()):
   var record=game.progress.data.leaderboard[i]
-  paragraph("#%d • %d kills • %02d:%02d\n%s\n%s / %s"%[i+1,record.kills,int(record.time)/60,int(record.time)%60,Catalog.WEAPONS[int(record.weapon)][0],LoadoutCatalog.entry("traits",str(record.trait)).get("name",record.trait),LoadoutCatalog.entry("ultimates",str(record.ultimate)).get("name",record.ultimate)],right,210)
+  paragraph("#%d • %d kills • %02d:%02d\n%s\n%s / %s"%[i+1,record.kills,int(record.time)/60,int(record.time)%60,Catalog.weapon_name(int(record.weapon)),LoadoutCatalog.entry("traits",str(record.trait)).get("name",record.trait),LoadoutCatalog.entry("ultimates",str(record.ultimate)).get("name",record.ultimate)],right,210)
 func unlocks() -> void:
  game.mode="unlocks";preview_mode="home"
  var col=page("Unlocks & collection");paragraph(wallet(),col,800)
@@ -278,7 +278,7 @@ func unlocks() -> void:
    if MetaProgress.buy_slot(game.progress.data,kind):game.progress.save();unlocks()
    else:game.toast("Complete quests and claim silver rewards"))
 func quest_description(q: Dictionary) -> String:
- if q.metric.begins_with("weapon:"):return "%d kills using %s"%[q.target,Catalog.WEAPONS[int(q.metric.get_slice(":",1))][0]]
+ if q.metric.begins_with("weapon:"):return "%d kills using %s"%[q.target,Catalog.weapon_name(int(q.metric.get_slice(":",1)))]
  match q.metric:
   "kills":return "Defeat %d enemies"%q.target
   "survival":return "Survive %d seconds in one run"%q.target
@@ -358,7 +358,7 @@ func update_hud() -> void:
  if stopwatch_overlay:stopwatch_overlay.update_state(game.world_time,frame_delta)
  update_tally(frame_delta)
  var weapon_names: Array[String]=[]
- for id in game.weapons:weapon_names.append("%s %d"%[Catalog.WEAPONS[id][0],game.weapons[id].level])
+ for id in game.weapons:weapon_names.append("%s %d"%[Catalog.weapon_name(id),game.weapons[id].level])
  var tome_names: Array[String]=[]
  for id in game.tomes:tome_names.append("%s %d"%[id,game.tomes[id]])
  loadout_label.text="ARSENAL %d/%d • TOMES %d/%d"%[game.weapons.size(),game.weapon_limit(),game.tomes.size(),game.tome_limit()]

@@ -119,7 +119,6 @@ func weapons_break_vases():
   for i in 120:
    game.elapsed+=0.05
    game.update_weapons(0.05)
-   game.update_fields(0.05)
    await physics_frame
    game.update_projectiles(0.05)
   if Vases.remaining(game)<before:broke.append(id)
