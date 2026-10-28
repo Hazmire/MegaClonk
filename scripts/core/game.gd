@@ -824,7 +824,8 @@ func kill_enemy(index: int) -> void:
  var source=int(e.get("last_weapon",-1))
  if source>=0:run_metrics["weapon:"+str(source)]=int(run_metrics.get("weapon:"+str(source),0))+1
  if e.kind in [9,10]:
-  run_metrics["minibosses"]=int(run_metrics.get("minibosses",0))+1;gold+=25
+  run_metrics["minibosses"]=int(run_metrics.get("minibosses",0))+1
+  for coin in 5:WorldPickups.spawn_gold(self,e.pos+Vector3(rng.randf_range(-1,1),0.5,rng.randf_range(-1,1)),5)
  if e.kind>=8:
   if effects.size()<48:
    var model=e.variant.get("visual_model","Puglin" if e.get("encounter","") in ["colossus","champion"] else "Imp")
@@ -840,14 +841,14 @@ func kill_enemy(index: int) -> void:
    portal_state="exit"
    refresh_portal()
    toast("ALL STAGE BOSSES DEFEATED • The portal is open.")
-  gold += 50
+  for coin in 10:WorldPickups.spawn_gold(self,e.pos+Vector3(rng.randf_range(-2,2),0.5,rng.randf_range(-2,2)),5)
  for i in (6 if e.kind==8 else 1):
   add_xp_drop(e.pos+Vector3(rng.randf()-0.5,0,rng.randf()-0.5),float(e.variant.reward if e.has("variant") else 5))
  if XPGems.eligible(e) and gem_rng.randf()<XPGems.RED_CHANCE:add_red_gem(e.pos)
- # Gold is automatically collected on every kill; no per-coin physics objects.
+ # Kill gold drops as a coin that always flies to the player and pays on arrival.
  gold_fraction+=stats.gold_gain
  var gained=int(gold_fraction)
- gold+=gained
+ if gained>0:WorldPickups.spawn_gold(self,e.pos+Vector3.UP*0.5,gained)
  gold_fraction-=gained
  enemies.remove_at(index)
  if e.get("elite",false) and elite_active and not elite_rewarded:
@@ -897,6 +898,7 @@ func activate_portal() -> bool:
  return true
 func advance_stage() -> bool:
  if not boss_dead or portal_state!="exit":return false
+ WorldPickups.settle(self) # coins still in flight are paid before the checkpoint
  # Persist both sides of the transition; an interrupted generation can resume safely.
  if not save_run():toast("Cannot advance: checkpoint save failed");return false
  stage+=1;world_content_version=WORLD_CONTENT_VERSION
@@ -1301,6 +1303,7 @@ func show_build() -> void:
 
 func finish_run(victory: bool) -> void:
  mode="results"
+ WorldPickups.settle(self)
  world_time.reset()
  if not victory and health<=0:
   player.dead=true

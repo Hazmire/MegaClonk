@@ -49,3 +49,9 @@ A repeat of the 250 case gave 14.0–14.9 (none), 14.9–16.4 (ice), 17.1–18.3
 * Socket diamonds show on the top-left HUD weapon icons, with element names in the tooltip.
 * Picking up a gem raises a banner at the top of the screen coloured by element.
 Tests added: `tests/pickup_ui.gd`, extra checks in `vases_powerups` and `imbue_station`. Still unverified visually: tally position and size, banner placement, the new gem icon in shop cards.
+
+## Playtest feedback round 2
+* Kill gold (and miniboss/boss gold) now drops as coins that always home in on the player, accelerating from any distance, and pay on arrival with the coin sound. Coins still in flight are paid out when a stage ends or the run finishes, so no gold is lost.
+* Gold/XP head numbers: the lifespan bug was the timers being advanced once per HUD update (several per rendered frame) instead of by real time; they now use wall-clock time and stay for 4 s after the last gain (fading over the last 0.8 s), then restart from zero.
+* Gold shows as `$N`, XP as `+N`; the shown number counts up quickly towards the real total, each step bounces the text (bigger totals bounce harder), font reduced from 26 to 20 with a soft shadow instead of an outline.
+* Existing tests that assumed instant kill gold were updated (`stage_loop`, `polish`) to account for coins arriving in flight. Not visually verified: bounce feel, number position, coin flight speed.

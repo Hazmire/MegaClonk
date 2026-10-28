@@ -6,7 +6,7 @@ extends RefCounted
 # normal collection path instead of a parallel one.
 const TUNING={
  "heal_fraction":0.25,
- "collect_radius":1.5,"attract_radius":4.0,"gold_limit":160,
+ "collect_radius":1.5,"attract_radius":4.0,"gold_limit":160,"coin_speed_start":14.0,"coin_speed_ramp":30.0,"coin_speed_max":48.0,
  "magnet":{"batch":24,"batch_interval":0.0166,"start_speed":22.0,"acceleration":70.0,"max_speed":64.0}
 }
 const POWERUP_DISTANCE=2.4 # power-ups land this far from the player, outside the walk-over radius
@@ -77,6 +77,21 @@ static func near_player(game: Node,vase_pos: Vector3) -> Vector3:
  var spot=from+direction*POWERUP_DISTANCE
  spot.y=game.terrain_height(spot.x,spot.z)+0.8
  return spot
+# A coin that always flies to the player (enemy kills, vases). `value` gold is paid on arrival.
+static func spawn_gold(game: Node,pos: Vector3,value: int) -> void:
+ if value<=0:return
+ if spawn(game,"gold",pos,value) and not game.world_pickups.is_empty() and game.world_pickups.back().kind=="gold":
+  game.world_pickups.back()["attracted"]=true
+# Pays every coin still in flight (stage change, run end) so no gold is ever lost.
+static func settle(game: Node) -> int:
+ var paid=0
+ for i in range(game.world_pickups.size()-1,-1,-1):
+  var p: Dictionary=game.world_pickups[i]
+  if p.kind!="gold":continue
+  game.gold+=int(p.value);paid+=int(p.value)
+  if is_instance_valid(p.node):game.pool.release(p.node)
+  game.world_pickups.remove_at(i)
+ return paid
 # Turns a vase reward description into world objects at `pos`. XP, gold and gems fly straight
 # to the player; Heart, Magnet and Stopwatch wait near the player until walked onto.
 static func spawn_reward(game: Node,pos: Vector3,reward: Dictionary) -> void:
@@ -89,7 +104,7 @@ static func spawn_reward(game: Node,pos: Vector3,reward: Dictionary) -> void:
   "gold":
    for i in count:
     var offset=Vector3.RIGHT.rotated(Vector3.UP,TAU*float(i)/float(count)+0.6)*0.7
-    if spawn(game,"gold",pos+offset,int(reward.get("value",5))) and not game.world_pickups.is_empty():game.world_pickups.back()["attracted"]=true
+    spawn_gold(game,pos+offset,int(reward.get("value",5)))
   "gem":
    if spawn(game,"gem",pos,0,str(reward.get("element",""))):game.world_pickups.back()["attracted"]=true
   "heart","magnet","stopwatch":spawn(game,str(reward.kind),near_player(game,pos))
@@ -102,7 +117,11 @@ static func update(game: Node,delta: float) -> void:
   p.age+=delta;p.node.rotation.y+=delta*1.7
   var distance=p.node.position.distance_to(target)
   if p.kind in ATTRACTED and not p.attracted and distance<float(TUNING.attract_radius)*game.stats.pickup:p.attracted=true
-  if p.attracted:p.node.position=p.node.position.move_toward(target,delta*maxf(10.0,18.0-distance))
+  if p.attracted and p.kind=="gold":
+   # Coins home in on the player and accelerate, wherever they were dropped.
+   p["homing"]=float(p.get("homing",0.0))+delta
+   p.node.position=p.node.position.move_toward(target,delta*minf(float(TUNING.coin_speed_max),float(TUNING.coin_speed_start)+float(p.homing)*float(TUNING.coin_speed_ramp)))
+  elif p.attracted:p.node.position=p.node.position.move_toward(target,delta*maxf(10.0,18.0-distance))
   else:p.node.position.y=float(p.base_y)+sin(p.age*2.4)*0.08
   if distance<float(TUNING.collect_radius):
    game.world_pickups.remove_at(i)
@@ -171,4 +190,6 @@ static func restore(game: Node,records: Variant) -> void:
  if not records is Array:return
  for record in records:
   if not record is Dictionary or not record.get("position") is Array or record.position.size()!=3:continue
-  spawn(game,str(record.get("kind","")),Vector3(record.position[0],record.position[1],record.position[2]),int(record.get("value",0)),str(record.get("element","")))
+  var kind=str(record.get("kind",""))
+  if kind=="gold":spawn_gold(game,Vector3(record.position[0],record.position[1],record.position[2]),int(record.get("value",0)))
+  else:spawn(game,kind,Vector3(record.position[0],record.position[1],record.position[2]),int(record.get("value",0)),str(record.get("element","")))

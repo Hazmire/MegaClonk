@@ -30,7 +30,12 @@ func run():
  while not game.enemies.is_empty():game.kill_enemy(game.enemies.size()-1)
  var granted=0.0
  for pickup in game.pickups:granted+=pickup.value
- verify(granted==reward and game.gold==100,"XP merging preserves every XP point and gold reward")
+ var coin_gold=0
+ for coin in game.world_pickups:
+  if coin.kind=="gold":coin_gold+=int(coin.value)
+ verify(granted==reward and game.gold+coin_gold==100,"XP merging preserves every XP point and gold reward (gold arrives as coins)")
+ WorldPickups.settle(game)
+ verify(game.gold==100,"Coins in flight pay out in full when settled")
  verify(game.pickups.size()<10,"Nearby mass-death XP is aggregated")
  verify(game.effects.size()<=48,"Mass deaths have a bounded corpse budget")
  var created=game.pool.created

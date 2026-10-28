@@ -89,8 +89,8 @@ func setup(owner_game: Node) -> void:
  gold_label=text("",hud_root,20);gold_label.position=Vector2(1010,25)
  timer_label=text("",hud_root,30);timer_label.position=Vector2(525,24);timer_label.custom_minimum_size.x=230;timer_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
  event_label=text("",hud_root,16);event_label.position=Vector2(380,62);event_label.custom_minimum_size.x=520;event_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
- tally_gold=text("",hud_root,26);tally_gold.add_theme_color_override("font_color",PickupTally.GOLD_COLOR);tally_gold.add_theme_constant_override("outline_size",6);tally_gold.add_theme_color_override("font_outline_color",Color(0,0,0,0.9));tally_gold.hide()
- tally_xp=text("",hud_root,26);tally_xp.add_theme_color_override("font_color",PickupTally.XP_COLOR);tally_xp.add_theme_constant_override("outline_size",6);tally_xp.add_theme_color_override("font_outline_color",Color(0,0,0,0.9));tally_xp.hide()
+ tally_gold=text("",hud_root,20);tally_gold.add_theme_color_override("font_color",PickupTally.GOLD_COLOR);tally_gold.add_theme_color_override("font_shadow_color",Color(0,0,0,0.75));tally_gold.add_theme_constant_override("shadow_offset_x",1);tally_gold.add_theme_constant_override("shadow_offset_y",1);tally_gold.mouse_filter=Control.MOUSE_FILTER_IGNORE;tally_gold.hide()
+ tally_xp=text("",hud_root,20);tally_xp.add_theme_color_override("font_color",PickupTally.XP_COLOR);tally_xp.add_theme_color_override("font_shadow_color",Color(0,0,0,0.75));tally_xp.add_theme_constant_override("shadow_offset_x",1);tally_xp.add_theme_constant_override("shadow_offset_y",1);tally_xp.mouse_filter=Control.MOUSE_FILTER_IGNORE;tally_xp.hide()
  gem_label=heading("",hud_root,26);gem_label.position=Vector2(240,112);gem_label.custom_minimum_size.x=800;gem_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;gem_label.add_theme_constant_override("outline_size",8);gem_label.add_theme_color_override("font_outline_color",Color(0,0,0,0.9));gem_label.hide()
  boss_panel=VBoxContainer.new();boss_panel.position=Vector2(415,95);boss_panel.custom_minimum_size.x=450;hud_root.add_child(boss_panel)
  status_label=text("",hud_root,16);status_label.position=Vector2(28,252)
@@ -327,21 +327,36 @@ func gem_notice(element: String) -> void:
  gem_label.add_theme_color_override("font_color",Elements.color(element).lightened(0.15))
  gem_notice_left=3.5;gem_label.modulate.a=1.0;gem_label.show()
 # Running +gold / +XP totals beside the player's head, and the fading gem banner.
+# Wall-clock seconds since the previous HUD update. update_hud can run several times per
+# rendered frame (physics ticks), so counting get_process_delta_time() each call would make
+# timers run several times too fast.
+var last_hud_msec=-1
+func real_delta() -> float:
+ var now=Time.get_ticks_msec()
+ var delta=0.0 if last_hud_msec<0 else clampf((now-last_hud_msec)/1000.0,0.0,0.25)
+ last_hud_msec=now
+ return delta
+func place_counter(label: Label,counter: PickupTally.Counter,text_value: String,at: Vector2) -> void:
+ label.text=text_value;label.visible=text_value!="" and hud_root.visible
+ label.pivot_offset=Vector2(0,label.size.y)
+ label.scale=Vector2.ONE*(1.0+0.45*counter.bounce)
+ label.position=at+Vector2(0,-counter.bounce*5.0)
+ label.rotation=-counter.bounce*0.05
+ label.modulate=Color(1,1,1,counter.alpha()).lerp(Color(1.6,1.6,1.6,counter.alpha()),clampf(counter.bounce*0.5,0.0,0.6))
 func update_tally(delta: float) -> void:
  tally.update(game,delta)
  var origin=Vector2(640,330)
  if is_instance_valid(game.player) and is_instance_valid(game.player.camera) and DisplayServer.get_name()!="headless" and not game.player.camera.is_position_behind(game.player.position):
   origin=game.player.camera.unproject_position(game.player.position+Vector3.UP*2.3)
- tally_gold.text=tally.gold_text();tally_gold.visible=tally.gold_text()!="" and hud_root.visible
- tally_gold.position=origin+Vector2(46,-34);tally_gold.modulate.a=tally.alpha(tally.gold_left)
- tally_xp.text=tally.xp_text();tally_xp.visible=tally.xp_text()!="" and hud_root.visible
- tally_xp.position=origin+Vector2(46,-4);tally_xp.modulate.a=tally.alpha(tally.xp_left)
+ place_counter(tally_gold,tally.gold,tally.gold_text(),origin+Vector2(44,-30))
+ place_counter(tally_xp,tally.xp,tally.xp_text(),origin+Vector2(44,-2))
  if gem_notice_left>0.0:
   gem_notice_left-=delta;gem_label.modulate.a=clampf(gem_notice_left,0.0,1.0)
   if gem_notice_left<=0.0:gem_label.hide()
 func update_hud() -> void:
- if stopwatch_overlay:stopwatch_overlay.update_state(game.world_time,get_process_delta_time())
- update_tally(get_process_delta_time())
+ var frame_delta=real_delta()
+ if stopwatch_overlay:stopwatch_overlay.update_state(game.world_time,frame_delta)
+ update_tally(frame_delta)
  var weapon_names: Array[String]=[]
  for id in game.weapons:weapon_names.append("%s %d"%[Catalog.WEAPONS[id][0],game.weapons[id].level])
  var tome_names: Array[String]=[]

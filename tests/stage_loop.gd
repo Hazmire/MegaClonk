@@ -41,7 +41,7 @@ func run():
  game.kill_enemy(game.enemies.find(boss))
  check(game.boss_dead and game.portal_state=="exit" and game.mode=="pause","Boss death unlocks exit without ending stage")
  game.stage_clock.advance(135);game.stage_time=game.stage_clock.elapsed
- game.gold=123;game.level=7;game.stats.damage=1.35
+ WorldPickups.settle(game);game.gold=123;game.level=7;game.stats.damage=1.35
  game.weapons[game.selected_weapon].level=4
  game.loadout_runtime.cooldown=60
  var selection=game.variants.serialize()
