@@ -123,7 +123,8 @@ static func offer(ui: FrontEnd,parent: Node,category: String,id: Variant,rank: i
  var button=Button.new();button.custom_minimum_size=Vector2(552,122);button.add_theme_stylebox_override("normal",style(tier.color,tier.color.darkened(0.91)));button.add_theme_stylebox_override("hover",style(tier.color.lightened(0.3),tier.color.darkened(0.8)));button.add_theme_stylebox_override("focus",style(Color("fff0bf"),tier.color.darkened(0.82)));parent.add_child(button)
  var margin=MarginContainer.new();margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);margin.add_theme_constant_override("margin_left",14);margin.add_theme_constant_override("margin_right",14);margin.add_theme_constant_override("margin_top",9);margin.add_theme_constant_override("margin_bottom",9);button.add_child(margin)
  var row=HBoxContainer.new();row.add_theme_constant_override("separation",14);margin.add_child(row)
- icon(ui,row,category,str(id),"",tier.color,66)
+ if category=="gems":GemIcon.add(row,str(id),tier.color,66)
+ else:icon(ui,row,category,str(id),"",tier.color,66)
  var body=VBoxContainer.new();body.size_flags_horizontal=Control.SIZE_EXPAND_FILL;row.add_child(body)
  var headline=HBoxContainer.new();body.add_child(headline)
  var rarity=ui.text(tier.name,headline,14);rarity.add_theme_color_override("font_color",tier.color);rarity.size_flags_horizontal=Control.SIZE_EXPAND_FILL
@@ -184,19 +185,30 @@ static func inventory(ui: FrontEnd) -> void:
  ui.action("RESUME",center,game.resume).grab_focus()
 static func imbue_station(ui: FrontEnd,object: Dictionary) -> void:
  SocketScreens.imbue_station(ui,object)
+static func gem_offer(ui: FrontEnd,center: Node,object: Dictionary,code: int) -> void:
+ var game=ui.game;var element=GemRewards.offer_element(code);var price=ImbueRules.SHOP_PRICE
+ var sold=GemRewards.has_code(object.get("sold",[]),code) or object.get("used",false)
+ var meta={"rarity":"rare","name":Elements.display_name(element)+" Socket Gem","uid":"gem_"+element}
+ var button=offer(ui,center,"gems",element,0,Elements.summary(element)+"\nSocket it into a weapon at an Imbue Station.",func():
+  if not GemRewards.buy_offer(game,object,code).ok:ui.reward_consumed=false;game.toast("Purchase unavailable"),"SOLD" if sold else "NEED %d gold"%price if game.gold<price else "BUY · %d gold"%price,meta)
+ button.disabled=sold or game.gold<price
 static func shop(ui: FrontEnd,object: Dictionary) -> void:
  var game=ui.game;game.mode="shop";ui.shop_object=object
- if not object.has("offers"):object.offers=ShopSystem.offers(object.get("tier","Common"),game.available_items(),game.rng)
+ if not object.has("offers"):
+  object.offers=ShopSystem.offers(object.get("tier","Common"),game.available_items(),game.rng)
+  GemRewards.mix_offers(game,object)
  ui.shop_offers=object.offers
  var center=layout(ui,object.get("tier","Common")+" shop · Gold %d"%game.gold)
  ui.text("One purchase per seller",center,15)
  for id_value in object.offers:
-  var id=int(id_value);var price=ShopSystem.price(id);var sold=id in object.get("sold",[])
+  var id=int(id_value)
+  if GemRewards.is_gem_offer(id):
+   gem_offer(ui,center,object,id);continue
+  var price=ShopSystem.price(id);var sold=id in object.get("sold",[])
   var button=offer(ui,center,"items",id,game.items.count(Catalog.ITEMS[id][0]),Catalog.item_description(id),func():
    if not game.buy_shop(object,id,price):ui.reward_consumed=false;game.toast("Purchase unavailable"),"SOLD" if sold or object.get("used",false) else "NEED %d gold"%price if game.gold<price else "BUY · %d gold"%price)
   button.disabled=sold or game.gold<price or object.get("used",false) or not id in game.available_items()
  if object.offers.is_empty():ui.paragraph("No enabled items available",center,520)
- SocketScreens.shop_gems(ui,center,object)
  button(ui,center,"LEAVE SHOP",game.resume).grab_focus()
 static func reward(ui: FrontEnd,item: Array) -> void:
  var game=ui.game;game.mode="reward";var center=layout(ui,"Treasure discovered")

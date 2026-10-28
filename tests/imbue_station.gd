@@ -119,24 +119,45 @@ func shop_and_chests():
  for obj in game.interactables:
   if obj.kind=="Shop":shop=obj;break
  game.gold=1000;game.gems.reset()
- shop["gem_offers"]=GemRewards.shop_offers(game,game.interactables.find(shop))
- check(shop.gem_offers.size()==2 and shop.gem_offers[0]!=shop.gem_offers[1],"Shop offers two distinct gems")
- var offers_again=GemRewards.shop_offers(game,game.interactables.find(shop))
- check(offers_again==shop.gem_offers,"Shop gem offers are deterministic")
- var element=shop.gem_offers[0]
- var result=GemRewards.buy(game,shop,element)
- check(result.ok and game.gold==750 and game.gems.count(element)==1,"Buying a gem costs 250 and adds it to the inventory (not installed)")
- var installed=0
- for id in game.weapons:installed+=WeaponSockets.gems(game.weapons[id]).size()
- check(installed==1 or installed==0,"Purchased gems are not auto-installed")
- check(not GemRewards.buy(game,shop,element).ok and game.gold==750,"A sold gem cannot be bought twice")
- game.gold=100
- check(not GemRewards.buy(game,shop,shop.gem_offers[1]).ok and game.gold==100 and game.gems.total()==1,"Insufficient gold buys nothing")
- var absent=""
- for e in Elements.IDS:
-  if not e in shop.gem_offers:absent=e;break
+ # Gems are ordinary slots in the shop's randomised offers.
+ var mixed_slots=0;var shops=0;var all_valid=true
+ for stage_number in [1,2,3]:
+  for seed_value in [9,3,17,42]:
+   rebuild(stage_number,seed_value)
+   for obj in game.interactables:
+    if obj.kind!="Shop":continue
+    obj.erase("offers");obj.erase("sold");obj.used=false
+    obj.offers=ShopSystem.offers(obj.get("tier","Common"),game.available_items(),game.rng)
+    var before=obj.offers.duplicate()
+    GemRewards.mix_offers(game,obj)
+    shops+=1
+    if obj.offers.size()!=before.size():all_valid=false
+    var seen=[]
+    for code in obj.offers:
+     if GemRewards.is_gem_offer(code):
+      mixed_slots+=1
+      if GemRewards.offer_element(int(code)) in seen:all_valid=false
+      seen.append(GemRewards.offer_element(int(code)))
+     elif int(code)<0 or int(code)>=Catalog.ITEMS.size():all_valid=false
+ check(shops>=10 and mixed_slots>0 and mixed_slots<shops*3,"Some, but not all, shop slots become gems (%d of %d slots)"%[mixed_slots,shops*3])
+ check(all_valid,"Gem slots are valid and distinct within a shop")
+ rebuild(1,9)
+ for obj in game.interactables:
+  if obj.kind=="Shop":shop=obj;break
+ shop.erase("offers");shop.used=false;shop.erase("sold")
+ shop["offers"]=[GemRewards.offer_code("ice"),0,1]
+ game.mode="shop"
+ var gold_before=game.gold
+ var result=GemRewards.buy_offer(game,shop,GemRewards.offer_code("ice"))
+ check(result.ok and game.gold==gold_before-250 and game.gems.count("ice")==1,"Buying a gem slot costs 250 and adds it to the inventory (not installed)")
+ check(shop.used and GemRewards.has_code(shop.sold,GemRewards.offer_code("ice")),"A gem purchase uses the shop's one purchase")
+ game.mode="shop"
+ check(not GemRewards.buy_offer(game,shop,GemRewards.offer_code("ice")).ok and game.gems.count("ice")==1,"A sold gem slot cannot be bought twice")
+ shop.used=false;shop.sold=[];game.mode="shop";game.gold=100
+ check(not GemRewards.buy_offer(game,shop,GemRewards.offer_code("ice")).ok and game.gold==100,"Insufficient gold buys nothing")
  game.gold=1000
- check(not GemRewards.buy(game,shop,absent).ok and game.gold==1000,"Gems not on offer are refused")
+ check(not GemRewards.buy_offer(game,shop,GemRewards.offer_code("fire")).ok and game.gold==1000,"A gem not on offer is refused")
+ game.mode="run"
  # Chest gems
  var granted=0
  game.gems.reset()
@@ -166,12 +187,15 @@ func save_load():
  var shop=null
  for obj in game.interactables:
   if obj.kind=="Shop":shop=obj;break
- shop["gem_offers"]=["ice","fire"];shop["gem_sold"]=["ice"]
+ shop["offers"]=[GemRewards.offer_code("ice"),0,1];shop["sold"]=[GemRewards.offer_code("ice")]
  check(game.save_run("user://test-imbue-run.json"),"Run with a station and shop gems saves")
  rebuild(1,9)
  check(game.load_run("user://test-imbue-run.json"),"Run loads")
  var shop2=null
  for obj in game.interactables:
   if obj.kind=="Shop":shop2=obj;break
- check(shop2.get("gem_offers",[])==["ice","fire"] and shop2.get("gem_sold",[])==["ice"],"Shop gem offers and sales survive save/load")
+ var loaded_offers=shop2.get("offers",[]).map(func(v): return int(v))
+ var loaded_sold=shop2.get("sold",[]).map(func(v): return int(v))
+ check(loaded_offers==[GemRewards.offer_code("ice"),0,1] and loaded_sold==[GemRewards.offer_code("ice")],"Shop gem slots and sales survive save/load")
+ check(GemRewards.is_gem_offer(shop2.offers[0]) and GemRewards.has_code(shop2.sold,GemRewards.offer_code("ice")),"Loaded (float) codes still read as gem slots and sales")
  check(ImbueStation.count(game)==1,"Station still exists after load")

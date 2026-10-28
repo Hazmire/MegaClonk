@@ -9,6 +9,7 @@ const TUNING={
  "collect_radius":1.5,"attract_radius":4.0,"gold_limit":160,
  "magnet":{"batch":24,"batch_interval":0.0166,"start_speed":22.0,"acceleration":70.0,"max_speed":64.0}
 }
+const POWERUP_DISTANCE=2.4 # power-ups land this far from the player, outside the walk-over radius
 const KINDS=["gold","gem","heart","magnet","stopwatch"]
 const ATTRACTED=["gold","gem"] # drift to the player like XP; power-ups are walk-over only
 static var meshes: Dictionary={}
@@ -67,20 +68,31 @@ static func spawn(game: Node,kind: String,pos: Vector3,value: int=0,element: Str
  node.scale=Vector3.ONE*scale_for(kind);node.visibility_range_end=70;node.visibility_range_end_margin=5
  game.world_pickups.append({"kind":kind,"node":node,"age":randf()*3.0,"value":value,"element":element,"base_y":pos.y,"attracted":false})
  return true
-# Turns a vase reward description into world objects at `pos`.
+# Where a power-up lands: a short step from the player towards the vase, clear of the pickup
+# radius, so it is never collected by accident and the player decides whether to walk onto it.
+static func near_player(game: Node,vase_pos: Vector3) -> Vector3:
+ var from: Vector3=game.player.position
+ var direction=Vector3(vase_pos.x-from.x,0.0,vase_pos.z-from.z)
+ direction=Vector3.FORWARD if direction.length()<0.1 else direction.normalized()
+ var spot=from+direction*POWERUP_DISTANCE
+ spot.y=game.terrain_height(spot.x,spot.z)+0.8
+ return spot
+# Turns a vase reward description into world objects at `pos`. XP, gold and gems fly straight
+# to the player; Heart, Magnet and Stopwatch wait near the player until walked onto.
 static func spawn_reward(game: Node,pos: Vector3,reward: Dictionary) -> void:
  var count=maxi(1,int(reward.get("count",1)))
  match str(reward.get("kind","")):
   "xp":
    for i in count:
     var offset=Vector3.RIGHT.rotated(Vector3.UP,TAU*float(i)/float(count))*0.9
-    game.pickups.append({"node":XPGems.acquire(game,pos+offset),"value":float(reward.get("value",5.0)),"age":0.0})
+    game.pickups.append({"node":XPGems.acquire(game,pos+offset),"value":float(reward.get("value",5.0)),"age":0.0,"attracted":true,"attraction_reason":"vase"})
   "gold":
    for i in count:
     var offset=Vector3.RIGHT.rotated(Vector3.UP,TAU*float(i)/float(count)+0.6)*0.7
-    spawn(game,"gold",pos+offset,int(reward.get("value",5)))
-  "gem":spawn(game,"gem",pos,0,str(reward.get("element","")))
-  "heart","magnet","stopwatch":spawn(game,str(reward.kind),pos)
+    if spawn(game,"gold",pos+offset,int(reward.get("value",5))) and not game.world_pickups.is_empty():game.world_pickups.back()["attracted"]=true
+  "gem":
+   if spawn(game,"gem",pos,0,str(reward.get("element",""))):game.world_pickups.back()["attracted"]=true
+  "heart","magnet","stopwatch":spawn(game,str(reward.kind),near_player(game,pos))
 
 # ---------------------------------------------------------------- per-frame update
 static func update(game: Node,delta: float) -> void:
@@ -103,8 +115,7 @@ static func collect(game: Node,p: Dictionary) -> void:
   "gold":
    game.gold+=int(p.value);game.play_sound("pickup.gold")
   "gem":
-   game.gems.add(str(p.element));game.play_sound("gem.pickup")
-   game.toast("%s socket gem acquired"%Elements.display_name(str(p.element)))
+   game.gems.add(str(p.element));game.gem_discovered(str(p.element))
   "heart":heal(game)
   "magnet":magnet(game)
   "stopwatch":stopwatch(game)

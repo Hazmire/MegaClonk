@@ -41,3 +41,11 @@ A repeat of the 250 case gave 14.0–14.9 (none), 14.9–16.4 (ice), 17.1–18.3
 * **Audio:** the new sounds load and are registered, but I could not listen to them; levels and character are untested by ear.
 * **Gameplay feel/balance:** all GUESS values above are placeholders awaiting playtesting; frame-rate on real hardware at 250–500 enemies is unmeasured.
 * The Stopwatch also slows status clocks (poison ticks, chill decay, stun) because they run on hostile time; this was a design choice, not a spec statement.
+
+## Playtest feedback round 1
+* Vase Heart / Magnet / Stopwatch now land 2.4 m from the player (towards the vase), outside the 1.5 m pickup radius, and are only collected by walking onto them. XP, gold and gems from vases fly straight to the player.
+* Running gold (gold text) and XP (blue text) totals appear to the right of the player's head and clear 4 s after the last gain (`ui/pickup_tally.gd`).
+* Shop gems are now ordinary slots in a shop's randomised offers (25% per slot, one purchase per seller like items) instead of a separate section.
+* Socket diamonds show on the top-left HUD weapon icons, with element names in the tooltip.
+* Picking up a gem raises a banner at the top of the screen coloured by element.
+Tests added: `tests/pickup_ui.gd`, extra checks in `vases_powerups` and `imbue_station`. Still unverified visually: tally position and size, banner placement, the new gem icon in shop cards.

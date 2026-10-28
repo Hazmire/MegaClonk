@@ -14,6 +14,7 @@ func run():
  loot()
  breaking()
  await weapons_break_vases()
+ reward_placement()
  heart()
  magnet()
  await stopwatch()
@@ -136,6 +137,44 @@ func weapons_break_vases():
  check(not Vases.smash(game,near),"A second press does nothing")
  check(Vases.nearest_in_reach(game,game.player.position).get("id",-1)!=v.id,"A broken vase no longer offers the prompt")
  fresh_stage(1)
+
+func reward_placement():
+ fresh_stage(1)
+ game.player.position=game.vases[0].pos+Vector3(1.6,0,0)
+ var player_pos: Vector3=game.player.position
+ var distances_ok=true;var walk_over=true
+ for kind in ["heart","magnet","stopwatch"]:
+  game.world_pickups.clear()
+  WorldPickups.spawn_reward(game,game.vases[0].pos,{"kind":kind,"count":1})
+  var p=game.world_pickups.back()
+  var d=Vector2(p.node.position.x-player_pos.x,p.node.position.z-player_pos.z).length()
+  if d<float(WorldPickups.TUNING.collect_radius)+0.5 or d>3.5:distances_ok=false
+  if p.attracted:walk_over=false
+  var hp=game.health;var count=game.world_pickups.size()
+  for i in 20:WorldPickups.update(game,0.05)
+  if game.world_pickups.size()!=count:walk_over=false # must not be collected until walked onto
+ check(distances_ok,"Vase power-ups land just outside pickup range, close to the player")
+ check(walk_over,"Vase power-ups are not collected or attracted until walked onto")
+ game.world_pickups.clear()
+ WorldPickups.spawn_reward(game,game.vases[0].pos,{"kind":"heart","count":1})
+ game.player.position=game.world_pickups.back().node.position
+ WorldPickups.update(game,0.05)
+ check(game.world_pickups.is_empty(),"Walking onto a power-up collects it")
+ game.player.position=player_pos
+ game.pickups.clear();game.world_pickups.clear();game.gold=0
+ WorldPickups.spawn_reward(game,game.vases[0].pos,{"kind":"xp","count":3,"value":4.0})
+ WorldPickups.spawn_reward(game,game.vases[0].pos,{"kind":"gold","count":3,"value":6})
+ WorldPickups.spawn_reward(game,game.vases[0].pos,{"kind":"gem","count":1,"element":"fire"})
+ var flying=true
+ for p in game.pickups:
+  if not p.get("attracted",false):flying=false
+ for p in game.world_pickups:
+  if not p.attracted:flying=false
+ check(flying and game.pickups.size()==3 and game.world_pickups.size()==4,"XP, gold and gems from vases fly straight to the player")
+ game.mode="run"
+ for i in 120:
+  game.update_pickups(0.05);WorldPickups.update(game,0.05)
+ check(game.pickups.is_empty() and game.world_pickups.is_empty() and game.gold==18 and game.gems.count("fire")>=1,"They are all collected without walking onto them")
 
 func heart():
  game.stats.max_health=200.0;game.health=100.0

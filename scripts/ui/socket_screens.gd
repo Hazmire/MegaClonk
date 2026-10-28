@@ -63,20 +63,3 @@ static func imbue_station(ui: FrontEnd,object: Dictionary) -> void:
    button.tooltip_text=tip
  if game.weapons.is_empty():ui.text("You have no weapons.",list,16)
  RewardScreens.button(ui,center,"LEAVE",game.resume).grab_focus()
-# Gem offers appended to the shop screen. Offers are fixed per shop and persist in saves.
-static func shop_gems(ui: FrontEnd,center: Node,object: Dictionary) -> void:
- var game=ui.game
- if game.world_content_version<2:return
- if not object.has("gem_offers") or object.gem_offers.is_empty():object["gem_offers"]=GemRewards.shop_offers(game,game.interactables.find(object))
- ui.heading("Socket gems · %d gold each"%ImbueRules.SHOP_PRICE,center,20)
- var row=HBoxContainer.new();row.add_theme_constant_override("separation",8);center.add_child(row)
- for element in object.gem_offers:
-  var sold=element in object.get("gem_sold",[])
-  var label="SOLD" if sold else "%s gem · %dg"%[Elements.display_name(element),ImbueRules.SHOP_PRICE]
-  var button=RewardScreens.button(ui,row,label,func():
-   var result=GemRewards.buy(game,object,str(element))
-   if result.ok:game.play_sound("purchase");game.toast("%s gem purchased"%Elements.display_name(element))
-   else:game.toast(ImbueRules.reason_text(str(result.reason)))
-   ui.reward_consumed=false;RewardScreens.shop(ui,object),Elements.color(str(element)).darkened(0.45))
-  button.custom_minimum_size=Vector2(200,40);button.disabled=sold or game.gold<ImbueRules.SHOP_PRICE
-  button.tooltip_text="%s — %s\nBought gems go to your inventory; install them at an Imbue Station."%[Elements.display_name(str(element)),Elements.summary(str(element))]

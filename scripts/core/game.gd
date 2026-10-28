@@ -449,6 +449,10 @@ func resume() -> void:
  xp_bar.show()
  player.active = true
  Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+# Coloured "gem discovered" banner at the top of the screen (vase, chest and shop gems).
+func gem_discovered(element: String) -> void:
+ play_sound("gem.pickup")
+ if is_instance_valid(frontend):frontend.gem_notice(element)
 func toast(text: String) -> void:
  notice.text = text
  message_time = 4
@@ -1507,7 +1511,7 @@ func save_run(path: String = "user://active-run.json") -> bool:
  var saved_pickups=[]
  for pickup in pickups: saved_pickups.append({"position":[pickup.node.position.x,pickup.node.position.y,pickup.node.position.z],"value":pickup.value,"age":pickup.age,"red":pickup.get("red",false),"attracted":pickup.get("attracted",false),"attraction_reason":pickup.get("attraction_reason","")})
  var used=[]
- for object in interactables: used.append({"kind":object.kind,"used":object.used,"charge":object.charge,"tier":object.get("tier","Common"),"offers":object.get("offers",null),"gem_offers":object.get("gem_offers",[]),"gem_sold":object.get("gem_sold",[]),"sold":object.get("sold",[]),"shrine_reward":object.get("shrine_reward",{}),"golden":object.get("golden",false),"shrine_choices":object.get("shrine_choices",[])})
+ for object in interactables: used.append({"kind":object.kind,"used":object.used,"charge":object.charge,"tier":object.get("tier","Common"),"offers":object.get("offers",null),"sold":object.get("sold",[]),"shrine_reward":object.get("shrine_reward",{}),"golden":object.get("golden",false),"shrine_choices":object.get("shrine_choices",[])})
  var data={"version":2,"next_enemy_id":crowd.next_id,"drop_chests":RewardDrops.serialize(self),"vases_broken":Vases.serialize(self),"world_pickups":WorldPickups.serialize(self),"stopwatch":world_time.serialize(),"reward_queue":reward_queue,"active_reward":active_reward,"shrine_reward_queue":shrine_reward_queue,"active_shrine_reward":active_shrine_reward,"announced_stages":announced_stages,"gem_rng_state":str(gem_rng.state),"pending_upgrades":pending_upgrades+(1 if mode=="upgrade" else 0),"terrain_version":terrain_version,"world_content_version":world_content_version,"additional_boss_count":additional_boss_count,"boss_encounters":boss_encounters,"map_seed_override":map_seed_override,"stage_clock":stage_clock.serialize(),"boss_variant":boss_variant,"ghost_budget":ghost_budget,"portal_state":portal_state,"loadout":loadout_runtime.serialize(),"selected_weapon":selected_weapon,"run_metrics":run_metrics,"chests_opened":chests_opened,"legacy_weapon_slots":legacy_weapon_slots,"legacy_tome_slots":legacy_tome_slots,"minimap":serialize_minimap(),"variants":variants.serialize(),"spawn_rng_state":str(spawn_rng.state),"elite_active":elite_active,"elite_rewarded":elite_rewarded,"rng_state":str(rng.state),"character":character,"biome":biome,"selected_biome":selected_biome,"tier":tier,"stage":stage,"elapsed":elapsed,"stage_time":stage_time,"stats":stats,"health":health,"xp":xp,"level":level,"kills":kills,"gold":gold,"weapons":saved_weapons,"amulets":amulets,"amulets_found":amulets_found,"gems":gems.serialize(),"tomes":tomes,"tome_rarities":tome_rarities,"items":items,"sandbox":sandbox,"position":[player.position.x,player.position.y,player.position.z],"enemies":saved_enemies,"boss_spawned":boss_spawned,"boss_dead":boss_dead,"interactables":used,"damage_total":damage_total,"rerolls":rerolls,"banished":banished,"pickups":saved_pickups,"damage_by_weapon":damage_by_weapon,"gold_fraction":gold_fraction,"camera":[player.yaw,player.pitch,player.zoom]}
  var file=FileAccess.open(path+".tmp",FileAccess.WRITE)
  if not file: return false
@@ -1596,8 +1600,6 @@ func load_run(path: String = "user://active-run.json") -> bool:
   if world_content_version==0 and interactables[i].kind=="Charge Shrine":interactables[i].charge=minf(8,interactables[i].charge*8.0/12)
   if data.interactables[saved_index].get("offers") is Array:interactables[i]["offers"]=data.interactables[saved_index].offers
   interactables[i]["sold"]=data.interactables[saved_index].get("sold",[])
-  interactables[i]["gem_offers"]=data.interactables[saved_index].get("gem_offers",[])
-  interactables[i]["gem_sold"]=data.interactables[saved_index].get("gem_sold",[])
   interactables[i]["shrine_reward"]=data.interactables[saved_index].get("shrine_reward",{})
   interactables[i]["golden"]=data.interactables[saved_index].get("golden",interactables[i].get("golden",false))
   interactables[i]["shrine_choices"]=data.interactables[saved_index].get("shrine_choices",[])

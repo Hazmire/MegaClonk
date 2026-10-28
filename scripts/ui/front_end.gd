@@ -5,6 +5,11 @@ var root: Control
 var menu: Control
 var hud_root: Control
 var stopwatch_overlay: StopwatchOverlay
+var tally=PickupTally.new()
+var tally_gold: Label
+var tally_xp: Label
+var gem_label: Label
+var gem_notice_left=0.0
 var loadout_label: Label
 var gold_label: Label
 var boss_panel: VBoxContainer
@@ -84,6 +89,9 @@ func setup(owner_game: Node) -> void:
  gold_label=text("",hud_root,20);gold_label.position=Vector2(1010,25)
  timer_label=text("",hud_root,30);timer_label.position=Vector2(525,24);timer_label.custom_minimum_size.x=230;timer_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
  event_label=text("",hud_root,16);event_label.position=Vector2(380,62);event_label.custom_minimum_size.x=520;event_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+ tally_gold=text("",hud_root,26);tally_gold.add_theme_color_override("font_color",PickupTally.GOLD_COLOR);tally_gold.add_theme_constant_override("outline_size",6);tally_gold.add_theme_color_override("font_outline_color",Color(0,0,0,0.9));tally_gold.hide()
+ tally_xp=text("",hud_root,26);tally_xp.add_theme_color_override("font_color",PickupTally.XP_COLOR);tally_xp.add_theme_constant_override("outline_size",6);tally_xp.add_theme_color_override("font_outline_color",Color(0,0,0,0.9));tally_xp.hide()
+ gem_label=heading("",hud_root,26);gem_label.position=Vector2(240,112);gem_label.custom_minimum_size.x=800;gem_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;gem_label.add_theme_constant_override("outline_size",8);gem_label.add_theme_color_override("font_outline_color",Color(0,0,0,0.9));gem_label.hide()
  boss_panel=VBoxContainer.new();boss_panel.position=Vector2(415,95);boss_panel.custom_minimum_size.x=450;hud_root.add_child(boss_panel)
  status_label=text("",hud_root,16);status_label.position=Vector2(28,252)
  quest_tracker=text("",hud_root,13);quest_tracker.position=Vector2(28,375);quest_tracker.custom_minimum_size=Vector2(270,0);quest_tracker.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
@@ -314,15 +322,33 @@ func enter_run() -> void:
  stop_reward_animations()
  in_run=true;icon_fingerprint=""
  menu.hide();hud_root.show();game.player.camera.current=true
+func gem_notice(element: String) -> void:
+ gem_label.text="◆  %s GEM DISCOVERED  ◆"%Elements.display_name(element).to_upper()
+ gem_label.add_theme_color_override("font_color",Elements.color(element).lightened(0.15))
+ gem_notice_left=3.5;gem_label.modulate.a=1.0;gem_label.show()
+# Running +gold / +XP totals beside the player's head, and the fading gem banner.
+func update_tally(delta: float) -> void:
+ tally.update(game,delta)
+ var origin=Vector2(640,330)
+ if is_instance_valid(game.player) and is_instance_valid(game.player.camera) and DisplayServer.get_name()!="headless" and not game.player.camera.is_position_behind(game.player.position):
+  origin=game.player.camera.unproject_position(game.player.position+Vector3.UP*2.3)
+ tally_gold.text=tally.gold_text();tally_gold.visible=tally.gold_text()!="" and hud_root.visible
+ tally_gold.position=origin+Vector2(46,-34);tally_gold.modulate.a=tally.alpha(tally.gold_left)
+ tally_xp.text=tally.xp_text();tally_xp.visible=tally.xp_text()!="" and hud_root.visible
+ tally_xp.position=origin+Vector2(46,-4);tally_xp.modulate.a=tally.alpha(tally.xp_left)
+ if gem_notice_left>0.0:
+  gem_notice_left-=delta;gem_label.modulate.a=clampf(gem_notice_left,0.0,1.0)
+  if gem_notice_left<=0.0:gem_label.hide()
 func update_hud() -> void:
  if stopwatch_overlay:stopwatch_overlay.update_state(game.world_time,get_process_delta_time())
+ update_tally(get_process_delta_time())
  var weapon_names: Array[String]=[]
  for id in game.weapons:weapon_names.append("%s %d"%[Catalog.WEAPONS[id][0],game.weapons[id].level])
  var tome_names: Array[String]=[]
  for id in game.tomes:tome_names.append("%s %d"%[id,game.tomes[id]])
  loadout_label.text="ARSENAL %d/%d • TOMES %d/%d"%[game.weapons.size(),game.weapon_limit(),game.tomes.size(),game.tome_limit()]
  var equipment=[]
- for id in game.weapons:equipment.append(str(id)+":"+str(game.weapons[id].level)+":"+str(game.weapons[id].get("rarity","common")))
+ for id in game.weapons:equipment.append(str(id)+":"+str(game.weapons[id].level)+":"+str(game.weapons[id].get("rarity","common"))+":"+str(game.weapons[id].get("sockets",{})))
  var fingerprint=str(equipment)+str(game.tomes)+str(game.tome_rarities)+str(game.weapon_limit())+str(game.tome_limit())+game.loadout_runtime.trait_id+game.loadout_runtime.ultimate_id
  if fingerprint!=icon_fingerprint:
   icon_fingerprint=fingerprint
@@ -330,7 +356,7 @@ func update_hud() -> void:
   var equipment_rows=VBoxContainer.new();equipment_rows.name="EquippedItems";equipment_rows.add_theme_constant_override("separation",4);loadout_icons.add_child(equipment_rows)
   var weapon_row=HBoxContainer.new();weapon_row.name="Weapons";weapon_row.add_theme_constant_override("separation",4);equipment_rows.add_child(weapon_row)
   for id in game.weapons:
-   var meta=game.equipment_meta("weapons",id,int(game.weapons[id].level));var tile=RewardScreens.icon(self,weapon_row,"weapons",str(id),"Lv. %d"%int(game.weapons[id].level),Rarity.definition(meta.rarity).color,40);tile.tooltip_text=meta.name;tile.set_meta("equipment_uid",meta.uid)
+   var meta=game.equipment_meta("weapons",id,int(game.weapons[id].level));var tile=RewardScreens.icon(self,weapon_row,"weapons",str(id),"Lv. %d"%int(game.weapons[id].level),Rarity.definition(meta.rarity).color,40);tile.tooltip_text=meta.name+"\n"+SocketScreens.tooltip(game.weapons[id]);tile.set_meta("equipment_uid",meta.uid);SocketScreens.add_pips(tile,game.weapons[id])
   var tome_row=HBoxContainer.new();tome_row.name="Tomes";tome_row.add_theme_constant_override("separation",4);equipment_rows.add_child(tome_row)
   for id in game.tomes:
    var meta=game.equipment_meta("tomes",id,int(game.tomes[id]));var tile=RewardScreens.icon(self,tome_row,"tomes",str(id),"Lv. %d"%int(game.tomes[id]),Rarity.definition(meta.rarity).color,40);tile.tooltip_text=meta.name;tile.set_meta("equipment_uid",meta.uid)
