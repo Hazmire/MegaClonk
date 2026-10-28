@@ -1,7 +1,7 @@
 shader_type spatial;
-render_mode vertex_lighting,diffuse_lambert,specular_disabled;
+render_mode vertex_lighting,diffuse_lambert,specular_disabled,cull_disabled;
 #define BILLBOARD_DISABLED
-#define ALPHA_OPAQUE
+#define ALPHA_DISABLED
 #define VERTEX_FOG_ENABLED
 #include "res://shaders/vendor_psx/psx.gdshaderinc"
 uniform sampler2D earth_texture:source_color,repeat_enable,filter_nearest;

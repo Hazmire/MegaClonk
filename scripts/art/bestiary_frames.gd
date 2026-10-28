@@ -1,7 +1,7 @@
 class_name BestiaryFrames
 extends RefCounted
 # Stable logical IDs preserve saved runs; geometry comes from the new supplied packs.
-const SOURCES={"Goblin":"Character_Monster_01","Skeleton":"Character_Monster","Imp":"Character_Monster_02","Puglin":"Character_Monster_08","Knight":"Character_Killer_07","Golem":"Wrapper","BlightHusk":"Character_Monster_03","Behemoth":"Character_Monster_06","Champion":"Character_Monster_07","Hunter":"Character_Monster_04","Ghost":"Character_Monster_05"}
+const SOURCES={"Goblin":"Autopsy","Skeleton":"Autopsy","Imp":"Autopsy","Puglin":"HoodBrute","Knight":"EliteKnight","Golem":"Wrapper","BlightHusk":"Crab","Behemoth":"Autopsy","Champion":"HoodChampion","Hunter":"Autopsy","Ghost":"Autopsy"}
 static var meshes: Dictionary={}
 static var materials: Dictionary={}
 static func source_path(model: String,state: String="enemy_idle",frame: int=0) -> String:
@@ -11,7 +11,7 @@ static func mesh(model: String,state: String,frame: int) -> ArrayMesh:
  if meshes.has(key):return meshes[key]
  var result=load(source_path(model,state,frame)).duplicate() as ArrayMesh
  # Preserve established creature collision/visual scale relationships.
- var factor=1.25/1.8 if model in ["Puglin","BlightHusk","Behemoth","Champion"] else 1.0
+ var factor=1.25/1.8 if model in ["Puglin","Behemoth","Champion"] else 1.0
  if factor!=1.0:
   var rebuilt=ArrayMesh.new()
   for surface in result.get_surface_count():

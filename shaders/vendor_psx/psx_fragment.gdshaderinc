@@ -13,7 +13,7 @@ vec2 uv = mix(UV, v_uv / v_clip.w, psx_affine_strength);
 	}
 
 #if !defined ALPHA_DISABLED
-	ALPHA *= albedo.a;
+	ALPHA = albedo.a;
 #if defined ALPHA_SCISSOR
 	ALPHA_SCISSOR_THRESHOLD = u_alpha_scissor_threshold;
 #endif

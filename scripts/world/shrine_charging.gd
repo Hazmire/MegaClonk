@@ -34,6 +34,7 @@ static func visual(game: Node,object: Dictionary,inside: bool) -> void:
  game.shrine_orbs.multimesh.set_instance_transform(int(object.shrine_index),transform)
  game.shrine_orbs.multimesh.set_instance_custom_data(int(object.shrine_index),Color(fraction,1 if inside else 0,1 if object.used else 0,1 if object.get("golden",false) else 0))
  var label=object.node.get_node("ChargeProgress") as Label3D
+ label.visible=inside and not object.used and game.mode=="run" and game.health>0
  var text="COMPLETE" if object.used else ("CHARGING %d%%"%int(fraction*100) if inside else "SHRINE · %d%%"%int(fraction*100))
  if object.get("golden",false):text="GOLDEN · "+text;label.modulate=Color("ffe08a")
  if object.used and object.node.has_node("GoldenParticles"):object.node.get_node("GoldenParticles").emitting=false

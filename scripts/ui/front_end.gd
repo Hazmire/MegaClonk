@@ -386,6 +386,10 @@ func _process(delta: float) -> void:
  update_character_health()
  if not is_instance_valid(game):return
  if game.mode!="run":
+  for object in game.interactables:
+   if ShrineCharging.is_shrine(object) and is_instance_valid(object.node):
+    var label=object.node.get_node_or_null("ChargeProgress")
+    if label:label.hide()
   game.message_time-=delta
   if game.message_time<=0:game.notice.text=""
  if menu.visible and is_instance_valid(menu_camera) and menu_camera.is_inside_tree() and game.mode in ["menu","play","unlocks","quests","settings"]:

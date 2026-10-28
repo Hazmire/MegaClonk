@@ -27,7 +27,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Install checksum-verified Godot 4.7.2 and export templates
         run: python3 tools/install_engine.py
-      - name: Import project and run all twenty-eight regression and seeded-world suites
+      - name: Import project and run all twenty-nine regression and seeded-world suites
         run: tools/validate.sh
       - name: Export Windows x64 with embedded game resources
         run: |
@@ -56,8 +56,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if gh release view grimdark-psx-v13.1 >/dev/null 2>&1; then
-            gh release upload grimdark-psx-v13.1 builds/BONK_INFINITY_Windows_x64.zip --clobber
+          if gh release view grimdark-fixes-v14 >/dev/null 2>&1; then
+            gh release upload grimdark-fixes-v14 builds/BONK_INFINITY_Windows_x64.zip --clobber
           else
-            gh release create grimdark-psx-v13.1 builds/BONK_INFINITY_Windows_x64.zip --target "$GITHUB_SHA" --prerelease --title "MEGACLONK — Grimdark PSX Forest Playtest 13.1" --notes-file docs/GRIMDARK_RELEASE.md
+            gh release create grimdark-fixes-v14 builds/BONK_INFINITY_Windows_x64.zip --target "$GITHUB_SHA" --prerelease --title "MEGACLONK — Opaque World and Animated Enemies 14" --notes-file docs/VISUAL_FIXES_RELEASE.md
           fi

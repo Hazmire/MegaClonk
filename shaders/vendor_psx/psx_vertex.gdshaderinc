@@ -54,7 +54,7 @@ v_vertex_color = COLOR.rgb;
 
 	v_clip = MODELVIEW_MATRIX * vec4(VERTEX, 1.0);
 	float fov = 2.0 * atan(1.0 / PROJECTION_MATRIX[1][1]);
-	float clip_depth = v_clip.z * fov;
+	float clip_depth = (v_clip.z > 0.0 ? 1.0 : -1.0) * max(abs(v_clip.z * fov), 0.01);
 
 	if (precision_xy != 0.0) {
 		v_clip.xy = trunc((v_clip.xy / clip_depth) * precision_xy) * clip_depth / precision_xy;

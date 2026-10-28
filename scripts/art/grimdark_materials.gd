@@ -5,7 +5,7 @@ static var meshes: Dictionary={}
 static func material(original: Material,stage: int=1,foliage: bool=false,player: bool=false) -> ShaderMaterial:
  var key=(str(original.get_instance_id()) if original else "white")+":"+str(stage)+":"+str(foliage)+":"+str(player)
  if materials.has(key):return materials[key]
- var result=ShaderMaterial.new();result.shader=preload("res://shaders/grimdark_surface.gdshader")
+ var result=ShaderMaterial.new();result.shader=preload("res://shaders/grimdark_surface.gdshader") if foliage and original is BaseMaterial3D and original.transparency!=BaseMaterial3D.TRANSPARENCY_DISABLED else preload("res://shaders/grimdark_opaque.gdshader")
  if original is BaseMaterial3D:
   result.set_shader_parameter("u_albedo_texture",original.albedo_texture if original.albedo_texture else original.emission_texture)
   result.set_shader_parameter("u_albedo_color",Color.WHITE if original.albedo_texture==null and original.emission_texture!=null else original.albedo_color)

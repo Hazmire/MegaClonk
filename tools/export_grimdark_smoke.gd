@@ -11,7 +11,7 @@ func run():
  for kind in 8:
   for choice in 2:
    var config=EnemyCatalog.variant(kind,choice);var mesh=BestiaryFrames.mesh(config.visual_model,"enemy_move",2)
-   if not require(mesh.get_surface_count()>0 and mesh.surface_get_material(0).shader.resource_path.ends_with("grimdark_surface.gdshader"),"Compiled horror frame/material missing"):return
+   if not require(mesh.get_surface_count()>0 and mesh.surface_get_material(0).shader.resource_path.ends_with("grimdark_opaque.gdshader"),"Compiled horror frame/material missing"):return
  for stage_value in [1,2,3]:
   game.stage=stage_value;game.build_stage();game.player.active=false;await process_frame
   if not require(game.portal.has_node("PortalAsset/Ring") and game.portal_wind.guidance.valid,"Compiled supplied portal or red guidance missing"):return

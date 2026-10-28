@@ -15,8 +15,8 @@ func run():
  for model in BestiaryFrames.SOURCES:
   for state in ["enemy_idle","enemy_move"]:
    var mesh=BestiaryFrames.mesh(model,state,0)
-   verify(mesh!=null and mesh.get_aabb().size.y>1.0,"Usable grounded frame "+model+state)
-   verify(mesh.surface_get_material(0).shader==preload("res://shaders/grimdark_surface.gdshader"),"Supplied textured PSX shader "+model)
+   verify(mesh!=null and mesh.get_aabb().size.y>=0.6,"Usable grounded frame "+model+state)
+   verify(mesh.surface_get_material(0).shader==preload("res://shaders/grimdark_opaque.gdshader"),"Supplied textured PSX shader "+model)
  for seed_value in 20:
   for stage_value in [1,2,3]:
    game.map_seed_override=seed_value;game.stage=stage_value;game.build_stage();game.mode="pause";game.player.active=false;await process_frame

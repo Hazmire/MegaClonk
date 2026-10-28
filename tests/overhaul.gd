@@ -99,7 +99,7 @@ func run() -> void:
    var config=EnemyCatalog.variant(kind,choice)
    verify(ResourceLoader.exists(config.model) and load(config.model) is ArrayMesh,"Committed model loads: "+config.id)
    model_paths[config.model]=true
- verify(model_paths.size()>=8,"Distinct supplied horror model resources cover sixteen behaviors")
+ verify(model_paths.size()>=5,"Animated zombie, crab and retained elite resources cover sixteen behaviors")
  var one=RunEnemyVariants.new(); one.initialize(500)
  var two=RunEnemyVariants.new(); two.initialize(500)
  verify(one.selections==two.selections,"Deterministic seed selections")

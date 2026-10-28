@@ -10,6 +10,8 @@ var state_time=0.0
 var previous_input="idle"
 var landing=0.0
 var surfaces: Array[MeshInstance3D]=[]
+var base_positions: Array[Vector3]=[]
+var base_rotations: Array[Quaternion]=[]
 static var damage_material: ShaderMaterial
 func _ready() -> void:
  model=preload("res://assets/grimdark/knight/Knight_ready.glb").instantiate()
@@ -24,6 +26,11 @@ func _ready() -> void:
  playback.get_animation("k_idle").loop_mode=Animation.LOOP_LINEAR
  playback.get_animation("k_walk").loop_mode=Animation.LOOP_LINEAR
  playback.play("k_idle");playback.advance(0)
+ capture_base_pose()
+func capture_base_pose() -> void:
+ base_positions.clear();base_rotations.clear()
+ for bone in rig.get_bone_count():
+  base_positions.append(rig.get_bone_pose_position(bone));base_rotations.append(rig.get_bone_pose_rotation(bone))
 func animate(state: String,speed: float,delta: float) -> void:
  if not is_instance_valid(playback):return
  if state!=previous_input:
@@ -33,7 +40,12 @@ func animate(state: String,speed: float,delta: float) -> void:
  var clip="k_walk" if speed>0.2 and state not in ["death","slide","jump","fall","glide"] else "k_idle"
  if playback.current_animation!=clip:playback.play(clip,0.1)
  playback.speed_scale=clampf(speed/4.5,0.2,2.5) if clip=="k_walk" else 1.0
+ # Undo the previous procedural layer before advancing the authored clip.
+ # Some idle tracks are constant/absent, so AnimationPlayer alone does not reset them.
+ for bone in rig.get_bone_count():
+  rig.set_bone_pose_position(bone,base_positions[bone]);rig.set_bone_pose_rotation(bone,base_rotations[bone])
  playback.advance(delta)
+ capture_base_pose()
  var tilt=Vector3.ZERO
  var height=0.0
  if state=="crouch":height=-0.45;tilt.x=0.38
