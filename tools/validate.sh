@@ -40,7 +40,7 @@ if ! tools/godot.sh --headless --path . --script tests/milestones.gd > "$log_pat
 fi
 cat "$log_path"
 if grep -Eq 'SCRIPT ERROR|^ERROR:' "$log_path"; then exit 1; fi
-for suite in rarity terrace_seeds forest_physics forest_traversal dynamic_seeds dynamic_gameplay polish cliff_drops vertical_gameplay reward_ui stage_themes enemy_contact crowd_physics reward_drops shrine_charging world_objects boss_multiplier rewards_ai_v9 art_reset_gameplay art_reset_world retro_audio dark_feedback grimdark visual_corrections dusk_update sockets; do
+for suite in rarity terrace_seeds forest_physics forest_traversal dynamic_seeds dynamic_gameplay polish cliff_drops vertical_gameplay reward_ui stage_themes enemy_contact crowd_physics reward_drops shrine_charging world_objects boss_multiplier rewards_ai_v9 art_reset_gameplay art_reset_world retro_audio dark_feedback grimdark visual_corrections dusk_update sockets vases_powerups; do
  if ! tools/godot.sh --headless --path . --script "tests/$suite.gd" > "$log_path" 2>&1; then
   cat "$log_path"
   exit 1

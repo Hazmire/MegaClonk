@@ -3,6 +3,10 @@ extends Node3D
 const RUN_RULES=preload("res://assets/config/run_rules.tres")
 const STAGE_SECONDS = StageClock.DURATION
 const ENEMY_LIMIT = 500
+# Bumped when new procedural world content (vases, Imbue Stations) is added. Saves keep the
+# version they were made with so their object layout never changes underneath them; runs adopt
+# the latest version on their next stage.
+const WORLD_CONTENT_VERSION = 2
 var rng = RandomNumberGenerator.new()
 var progress = Progress.new()
 var stats = Catalog.base_stats()
@@ -23,6 +27,9 @@ var interactables: Array[Dictionary] = []
 var landmarks: Array[Vector3]=[]
 var weapons: Dictionary = {}
 var gems=GemInventory.new()
+var world_time=WorldTime.new()
+var vases: Array=[]
+var world_pickups: Array=[]
 var tomes: Dictionary = {}
 var tome_rarities: Dictionary={}
 var items: Array = []
@@ -273,7 +280,7 @@ func begin_run() -> void:
  stage = 1
  run_seed=next_run_seed if next_run_seed>=0 else rng.randi()
  variants.initialize(run_seed)
- world_content_version=1;additional_boss_count=0
+ world_content_version=WORLD_CONTENT_VERSION;additional_boss_count=0
  gem_rng.seed=run_seed+719477;pending_upgrades=0;announced_stages.clear();reward_queue.clear();active_reward=-1;shrine_reward_queue.clear();active_shrine_reward={};crowd.next_id=1
  rng.seed=run_seed
  stats = Catalog.base_stats()
@@ -330,6 +337,7 @@ func build_stage() -> void:
  fields.clear()
  pending_blasts.clear()
  pickups.clear()
+ world_pickups=[];vases=[];world_time.reset()
  effects.clear()
  interactables.clear();landmarks.clear()
  grid.clear()
@@ -380,6 +388,7 @@ func build_stage() -> void:
   if kind=="Shop":object.tier=ShopSystem.tier(rng)
   interactables.append(object)
  ShrineCharging.setup(self)
+ Vases.build(self)
  combat_fx=CombatFX.new();world.add_child(combat_fx)
  pool = MeshPool.new()
  world.add_child(pool)
@@ -486,6 +495,8 @@ func _physics_process(delta: float) -> void:
  loadout_runtime.tick(self,delta)
  loadout_runtime.cooldown=maxf(0,loadout_runtime.cooldown-delta*stats.get("ultimate_haste",0))
  elapsed += delta
+ world_time.tick(delta)
+ var hostile_delta=world_time.hostile(delta)
  for event_id in stage_clock.advance(delta):
   stage_event(event_id)
  stage_time = stage_clock.elapsed
@@ -511,18 +522,18 @@ func _physics_process(delta: float) -> void:
    if not storm_target.is_empty():hit(storm_target,45*stats.storm,-3);lightning_arc(player.position+Vector3.UP,storm_target.pos,Color.CYAN)
   tick_passive()
   passive_clock -= 1
- spawn_clock -= delta
+ spawn_clock -= hostile_delta
  # Budgeted spawning: no catch-up burst after a long frame; bounded ordinary counts.
- spawn_budget=minf(6,spawn_budget+delta*RUN_RULES.base_spawn_rate*stage_clock.pressure()*(1+(stage-1)*RUN_RULES.stage_spawn_growth))
+ spawn_budget=minf(6,spawn_budget+hostile_delta*RUN_RULES.base_spawn_rate*stage_clock.pressure()*(1+(stage-1)*RUN_RULES.stage_spawn_growth))
  if spawn_clock<=0 and spawn_budget>=1 and enemies.size()<ENEMY_LIMIT-8:
   var count=mini(3,int(spawn_budget))
   for i in count:spawn_enemy()
   spawn_budget-=count
   spawn_clock=0.25
  if stage_clock.endless():
-  ghost_budget=minf(3,ghost_budget+delta*(RUN_RULES.ghost_base_rate+maxf(0,stage_time-STAGE_SECONDS)/RUN_RULES.ghost_growth_seconds))
+  ghost_budget=minf(3,ghost_budget+hostile_delta*(RUN_RULES.ghost_base_rate+maxf(0,stage_time-STAGE_SECONDS)/RUN_RULES.ghost_growth_seconds))
   if ghost_budget>=1 and enemies.size()<ENEMY_LIMIT-8:spawn_enemy(11);ghost_budget-=1
- BossEncounters.tick(self,delta)
+ BossEncounters.tick(self,hostile_delta)
  update_enemies(delta)
  rebuild_grid()
  update_special_visuals(delta)
@@ -531,6 +542,7 @@ func _physics_process(delta: float) -> void:
  update_fields(delta)
  update_blasts(delta)
  update_pickups(delta)
+ WorldPickups.update(self,delta)
  update_effects(delta)
  if mode=="run":update_interactions(delta)
  for i in range(enemies.size()-1,-1,-1):
@@ -596,11 +608,14 @@ func spawn_enemy(kind: int = -1, at: Vector3 = Vector3.INF) -> Dictionary:
  enemies.append(enemy)
  if effects.size()<70:combat_fx.burst("smoke_puff",enemy.pos-Vector3.UP*0.5,0.5)
  return enemy
-func update_enemies(delta: float) -> void:
+func update_enemies(real_delta: float) -> void:
+ # Everything below is hostile simulation, so it runs on Stopwatch-scaled time. The player,
+ # weapons, camera, UI and audio never go through here.
+ var delta=world_time.hostile(real_delta)
  if debug_combat:
   combat_pool_start=pool.created;combat_burst_start=combat_fx.bursts_created
   combat_counters={"hits":0,"deaths":0,"xp_drops":0,"xp_merged":0,"scenes":0,"freed_nodes":0}
- if is_instance_valid(forest_navigation):forest_navigation.tick(delta,player.position)
+ if is_instance_valid(forest_navigation):forest_navigation.tick(real_delta,player.position)
  crowd.rebuild(enemies)
  var colors = [Color("ee7d70"),Color("ffc05f"),Color("a28cae"),Color("e0d3a0"),Color("f55e67"),Color("b0dafa"),Color("aeef7a"),Color("80b9cb"),Color("cf7aff")]
  var mm = enemy_mesh.multimesh
@@ -767,6 +782,7 @@ func hit(e: Dictionary, base: float, weapon: int) -> void:
  if critical and not settings.reduced: flash(e.pos,Color("fff3aa"),0.4)
  StatusManager.on_hit(self,e,weapon,critical,actual)
 func area(pos: Vector3, radius: float, damage: float, weapon: int, status: String = "") -> void:
+ if weapon>=0:Vases.strike_sphere(self,pos,radius,weapon)
  for e in nearby(pos,radius):
   hit(e,damage,weapon)
   if status == "slow": e.slow = 2.0*stats.duration
@@ -874,7 +890,7 @@ func advance_stage() -> bool:
  if not boss_dead or portal_state!="exit":return false
  # Persist both sides of the transition; an interrupted generation can resume safely.
  if not save_run():toast("Cannot advance: checkpoint save failed");return false
- stage+=1;world_content_version=1
+ stage+=1;world_content_version=WORLD_CONTENT_VERSION
  map_seed_override=-1
  run_metrics["stage"]=maxi(stage,int(run_metrics.get("stage",1)))
  if stage_time<STAGE_SECONDS:run_metrics["early_stage"]=int(run_metrics.get("early_stage",0))+1
@@ -894,6 +910,8 @@ func update_weapons(delta: float) -> void:
   var haste = stats.haste + (minf(moving_time,20)*0.02 if character==2 else 0)
   state.clock = float(w[3])/haste/(1+WeaponUpgrades.value(state,"haste"))
   var target = nearest(player.position,w[4]*stats.size*(1+WeaponUpgrades.value(state,"range")),w[1] in ["beam","rail"])
+  # With no enemy in range, aiming weapons may target the nearest vase so every weapon can break them.
+  if target.is_empty() and w[1] in Vases.AIM_KINDS:target=Vases.target(self,player.position,w[4]*stats.size*(1+WeaponUpgrades.value(state,"range")))
   var power = WeaponUpgrades.damage(id,state)
   var radius = stats.size*(1+WeaponUpgrades.value(state,"radius"))
   var count = mini(16,int(stats.count)+int(WeaponUpgrades.value(state,"count")))
@@ -908,6 +926,7 @@ func update_weapons(delta: float) -> void:
      if w[1] in ["aura","reap","corrupt"] or direction.dot((e.pos-origin).normalized())>0.1:
       hit(e,power,id)
       if w[1]=="corrupt": e.poison=3;e["poison_source"]=id
+    Vases.strike_arc(self,origin,direction,r,w[1] in ["aura","reap","corrupt"],id)
     if w[1]=="aura": flash(origin,color,r)
     else: slash_arc(origin,direction,r,color)
     if w[1]=="reap": health = minf(stats.max_health,health+1)
@@ -930,12 +949,17 @@ func update_weapons(delta: float) -> void:
      hit(e,power*(2 if w[1]=="execute" and e.hp/e.max_hp<0.3 else 1),id)
      if w[1]=="freeze": e.frozen=1.5*stats.duration
      lightning_arc(origin,e.pos,color)
+     Vases.strike_sphere(self,e.pos,1.2,id)
+    if target.has("vase"):
+     lightning_arc(origin,target.pos,color)
+     Vases.strike_sphere(self,target.pos,1.6,id)
     if w[1]=="drain": health=minf(stats.max_health,health+3)
    "hitscan","beam","rail":
     if target.is_empty(): continue
     var length = float(w[4])*(1+WeaponUpgrades.value(state,"range"))
     var end = origin+direction*length
     beam(origin,end,color)
+    Vases.strike_segment(self,origin,end,1.2*radius,id)
     var hits = 0
     for e in nearby(origin,length):
      var along = clampf((e.pos-origin).dot(direction),0,length)
@@ -999,9 +1023,11 @@ func segment_distance(p: Vector3, a: Vector3, b: Vector3) -> float:
  var segment = b-a
  var t = clampf((p-a).dot(segment)/maxf(segment.length_squared(),0.001),0,1)
  return p.distance_to(a+segment*t)
-func update_projectiles(delta: float) -> void:
+func update_projectiles(real_delta: float) -> void:
  for i in range(projectiles.size()-1,-1,-1):
   var p = projectiles[i]
+  # Hostile projectiles follow Stopwatch time; the player's own projectiles never do.
+  var delta=real_delta*(world_time.scale if p.hostile else 1.0)
   p.life -= delta
   p.age += delta
   var previous = p.node.position
@@ -1013,6 +1039,7 @@ func update_projectiles(delta: float) -> void:
   var next_position=p.node.position+p.velocity*delta
   var collision=get_world_3d().direct_space_state.intersect_ray(PhysicsRayQueryParameters3D.create(previous,next_position,1))
   p.node.position=collision.position if not collision.is_empty() else next_position
+  if not collision.is_empty() and not p.hostile and collision.collider is Node and collision.collider.has_meta("vase_id"):Vases.break_vase(self,int(collision.collider.get_meta("vase_id")),p.weapon)
   if not collision.is_empty() or p.node.position.y<terrain_height(p.node.position.x,p.node.position.z)+0.08:
    if collision.is_empty():p.node.position.y=terrain_height(p.node.position.x,p.node.position.z)+0.1
    combat_fx.burst("impact_concrete",p.node.position,1.5)
@@ -1061,7 +1088,8 @@ func update_fields(delta: float) -> void:
   f.clock-=delta
   if f.clock<=0:
    var targets=nearby(f.node.position,f.radius)
-   if not f.mine or targets.size()>0:
+   var vase_hits=Vases.strike_sphere(self,f.node.position,f.radius,f.weapon)
+   if not f.mine or targets.size()>0 or vase_hits>0:
     for e in targets:
      hit(e,f.damage,f.weapon)
      if f.status=="poison":
@@ -1070,7 +1098,7 @@ func update_fields(delta: float) -> void:
      if f.status=="slow": e.slow=2*stats.duration
      if f.status=="pull": e.knock+=(f.node.position-e.pos).normalized()*8
     f.clock=0.5
-    if f.mine and targets.size()>0:
+    if f.mine and (targets.size()>0 or vase_hits>0):
      combat_fx.supplied_burst("debris",f.node.position,1.5);combat_fx.burst("explosion_small",f.node.position,clampf(f.radius/2,1,3));play_sound("explosion");flash(f.node.position,Color("ffc56a"),f.radius); f.life=0
   if f.life<=0: f.node.queue_free(); fields.remove_at(i)
 func flash(pos: Vector3, color: Color, radius: float) -> void:
@@ -1084,7 +1112,8 @@ func beam(a: Vector3,b: Vector3,color: Color) -> void:
 func update_effects(delta: float) -> void:
  if is_instance_valid(numbers):numbers.tick(delta)
  for i in range(effects.size()-1,-1,-1):
-  effects[i].life-=delta
+  # Hostile warning rings last as long as the (Stopwatch-slowed) attack they announce.
+  effects[i].life-=delta*(world_time.scale if effects[i].get("telegraph",false) else 1.0)
   if effects[i].has("velocity"):
    effects[i].velocity+=Vector3.DOWN*delta*6
    effects[i].node.position+=effects[i].velocity*delta
@@ -1109,7 +1138,9 @@ func update_pickups(delta: float) -> void:
   var distance = p.node.position.distance_to(player.position+Vector3.UP)
   if not p.get("attracted",false) and distance<5*stats.pickup:
    p["attracted"]=true;p["attraction_reason"]="pickup_range";p["attraction_distance"]=distance;p["attraction_radius"]=5*stats.pickup
-  if p.get("attracted",false):
+  if p.get("magnet",false):
+   p.node.position=WorldPickups.magnet_step(p,player.position+Vector3.UP,delta)
+  elif p.get("attracted",false):
    p.node.position=p.node.position.move_toward(player.position+Vector3.UP,delta*maxf(10,18-distance))
   if distance<1.2:
    if p.get("red",false):grant_red_level()
@@ -1219,6 +1250,11 @@ func update_interactions(delta: float) -> void:
   notice.text="E  /  "+("Advance to stage %d"%(stage+1) if portal_state=="exit" else ("Boss active • defeat the stage guardian" if portal_state=="summoned" else "Summon the stage boss"))
   if Input.is_action_just_pressed("interact"):activate_portal()
   return
+ var vase=Vases.nearest_in_reach(self,player.position)
+ if not vase.is_empty() and (closest.is_empty() or Vector2(vase.pos.x-player.position.x,vase.pos.z-player.position.z).length()<closest.node.position.distance_to(player.position)):
+  notice.text="E  /  Smash vase"
+  if Input.is_action_just_pressed("interact"):Vases.smash(self,vase)
+  return
  if closest.is_empty(): return
  if closest.kind=="Boss Statue":
   notice.text="[%s] Increase Boss Count (+1 for this run)\nFuture miniboss/stage encounters: %d bosses"%[OS.get_keycode_string(bindings.interact),additional_boss_count+2]
@@ -1255,6 +1291,7 @@ func show_build() -> void:
 
 func finish_run(victory: bool) -> void:
  mode="results"
+ world_time.reset()
  if not victory and health<=0:
   player.dead=true
   var dying_avatar=player.avatar
@@ -1465,7 +1502,7 @@ func save_run(path: String = "user://active-run.json") -> bool:
  for pickup in pickups: saved_pickups.append({"position":[pickup.node.position.x,pickup.node.position.y,pickup.node.position.z],"value":pickup.value,"age":pickup.age,"red":pickup.get("red",false),"attracted":pickup.get("attracted",false),"attraction_reason":pickup.get("attraction_reason","")})
  var used=[]
  for object in interactables: used.append({"kind":object.kind,"used":object.used,"charge":object.charge,"tier":object.get("tier","Common"),"offers":object.get("offers",null),"sold":object.get("sold",[]),"shrine_reward":object.get("shrine_reward",{}),"golden":object.get("golden",false),"shrine_choices":object.get("shrine_choices",[])})
- var data={"version":2,"next_enemy_id":crowd.next_id,"drop_chests":RewardDrops.serialize(self),"reward_queue":reward_queue,"active_reward":active_reward,"shrine_reward_queue":shrine_reward_queue,"active_shrine_reward":active_shrine_reward,"announced_stages":announced_stages,"gem_rng_state":str(gem_rng.state),"pending_upgrades":pending_upgrades+(1 if mode=="upgrade" else 0),"terrain_version":terrain_version,"world_content_version":world_content_version,"additional_boss_count":additional_boss_count,"boss_encounters":boss_encounters,"map_seed_override":map_seed_override,"stage_clock":stage_clock.serialize(),"boss_variant":boss_variant,"ghost_budget":ghost_budget,"portal_state":portal_state,"loadout":loadout_runtime.serialize(),"selected_weapon":selected_weapon,"run_metrics":run_metrics,"chests_opened":chests_opened,"legacy_weapon_slots":legacy_weapon_slots,"legacy_tome_slots":legacy_tome_slots,"minimap":serialize_minimap(),"variants":variants.serialize(),"spawn_rng_state":str(spawn_rng.state),"elite_active":elite_active,"elite_rewarded":elite_rewarded,"rng_state":str(rng.state),"character":character,"biome":biome,"selected_biome":selected_biome,"tier":tier,"stage":stage,"elapsed":elapsed,"stage_time":stage_time,"stats":stats,"health":health,"xp":xp,"level":level,"kills":kills,"gold":gold,"weapons":saved_weapons,"gems":gems.serialize(),"tomes":tomes,"tome_rarities":tome_rarities,"items":items,"sandbox":sandbox,"position":[player.position.x,player.position.y,player.position.z],"enemies":saved_enemies,"boss_spawned":boss_spawned,"boss_dead":boss_dead,"interactables":used,"damage_total":damage_total,"rerolls":rerolls,"banished":banished,"pickups":saved_pickups,"damage_by_weapon":damage_by_weapon,"gold_fraction":gold_fraction,"camera":[player.yaw,player.pitch,player.zoom]}
+ var data={"version":2,"next_enemy_id":crowd.next_id,"drop_chests":RewardDrops.serialize(self),"vases_broken":Vases.serialize(self),"world_pickups":WorldPickups.serialize(self),"stopwatch":world_time.serialize(),"reward_queue":reward_queue,"active_reward":active_reward,"shrine_reward_queue":shrine_reward_queue,"active_shrine_reward":active_shrine_reward,"announced_stages":announced_stages,"gem_rng_state":str(gem_rng.state),"pending_upgrades":pending_upgrades+(1 if mode=="upgrade" else 0),"terrain_version":terrain_version,"world_content_version":world_content_version,"additional_boss_count":additional_boss_count,"boss_encounters":boss_encounters,"map_seed_override":map_seed_override,"stage_clock":stage_clock.serialize(),"boss_variant":boss_variant,"ghost_budget":ghost_budget,"portal_state":portal_state,"loadout":loadout_runtime.serialize(),"selected_weapon":selected_weapon,"run_metrics":run_metrics,"chests_opened":chests_opened,"legacy_weapon_slots":legacy_weapon_slots,"legacy_tome_slots":legacy_tome_slots,"minimap":serialize_minimap(),"variants":variants.serialize(),"spawn_rng_state":str(spawn_rng.state),"elite_active":elite_active,"elite_rewarded":elite_rewarded,"rng_state":str(rng.state),"character":character,"biome":biome,"selected_biome":selected_biome,"tier":tier,"stage":stage,"elapsed":elapsed,"stage_time":stage_time,"stats":stats,"health":health,"xp":xp,"level":level,"kills":kills,"gold":gold,"weapons":saved_weapons,"gems":gems.serialize(),"tomes":tomes,"tome_rarities":tome_rarities,"items":items,"sandbox":sandbox,"position":[player.position.x,player.position.y,player.position.z],"enemies":saved_enemies,"boss_spawned":boss_spawned,"boss_dead":boss_dead,"interactables":used,"damage_total":damage_total,"rerolls":rerolls,"banished":banished,"pickups":saved_pickups,"damage_by_weapon":damage_by_weapon,"gold_fraction":gold_fraction,"camera":[player.yaw,player.pitch,player.zoom]}
  var file=FileAccess.open(path+".tmp",FileAccess.WRITE)
  if not file: return false
  file.store_string(JSON.stringify(data)); file.close()
@@ -1474,7 +1511,7 @@ func load_run(path: String = "user://active-run.json") -> bool:
  if not FileAccess.file_exists(path): return false
  var data=JSON.parse_string(FileAccess.get_file_as_string(path))
  if not data is Dictionary or not int(data.get("version",0)) in [1,2]: return false
- if int(data.get("terrain_version",1))>4 or int(data.get("world_content_version",0))>1:return false
+ if int(data.get("terrain_version",1))>4 or int(data.get("world_content_version",0))>WORLD_CONTENT_VERSION:return false
  var restored=RunEnemyVariants.new()
  if not restored.restore(data.get("variants",{})): return false
  for key in ["character","biome","tier","stage","stats","position","weapons","enemies"]:
@@ -1565,6 +1602,9 @@ func load_run(path: String = "user://active-run.json") -> bool:
  rng.seed=run_seed; rng.state=int(data.rng_state)
  restore_minimap(data.get("minimap",{}))
  RewardDrops.restore(self,data.get("drop_chests",[]))
+ Vases.restore(self,data.get("vases_broken",[]))
+ WorldPickups.restore(self,data.get("world_pickups",[]))
+ world_time.restore(data.get("stopwatch",{}))
  reward_queue=[]
  for id in data.get("reward_queue",[]):
   if int(id)>=0 and int(id)<Catalog.ITEMS.size():reward_queue.append(int(id))
@@ -1637,7 +1677,7 @@ func schedule_blast(pos: Vector3, radius: float, damage: float, delay: float) ->
 func update_blasts(delta: float) -> void:
  for i in range(pending_blasts.size()-1,-1,-1):
   var blast=pending_blasts[i]
-  blast.delay-=delta
+  blast.delay-=world_time.hostile(delta)
   if blast.delay>0: continue
   combat_fx.burst("explosion_small",blast.pos,clampf(blast.radius/2,1,4))
   flash(blast.pos,Color("ffaf67"),blast.radius)

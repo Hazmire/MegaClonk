@@ -4,6 +4,7 @@ var game: Node
 var root: Control
 var menu: Control
 var hud_root: Control
+var stopwatch_overlay: StopwatchOverlay
 var loadout_label: Label
 var gold_label: Label
 var boss_panel: VBoxContainer
@@ -67,6 +68,7 @@ func setup(owner_game: Node) -> void:
  headline_font=load("res://assets/fonts/Kurland.ttf") if ResourceLoader.exists("res://assets/fonts/Kurland.ttf") else load("res://assets/fonts/PixelatedElegance.ttf")
  menu=Control.new();menu.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);root.add_child(menu)
  hud_root=Control.new();hud_root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);hud_root.mouse_filter=Control.MOUSE_FILTER_IGNORE;root.add_child(hud_root)
+ stopwatch_overlay=StopwatchOverlay.new();stopwatch_overlay.setup(root,hud_root);hud_root.add_child(stopwatch_overlay)
  game.ui=self
  game.hud=text("",hud_root,18);game.hud.hide()
  game.health_bar=ProgressBar.new();game.health_bar.position=Vector2(28,220);game.health_bar.size=Vector2(270,22);game.health_bar.show_percentage=false;hud_root.add_child(game.health_bar)
@@ -313,6 +315,7 @@ func enter_run() -> void:
  in_run=true;icon_fingerprint=""
  menu.hide();hud_root.show();game.player.camera.current=true
 func update_hud() -> void:
+ if stopwatch_overlay:stopwatch_overlay.update_state(game.world_time,get_process_delta_time())
  var weapon_names: Array[String]=[]
  for id in game.weapons:weapon_names.append("%s %d"%[Catalog.WEAPONS[id][0],game.weapons[id].level])
  var tome_names: Array[String]=[]

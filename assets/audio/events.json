@@ -439,6 +439,177 @@
       "gain_db": -14,
       "pitch": 0.055,
       "base_pitch": 0.88
+    },
+    "vase.break": {
+      "files": [
+        "res://assets/audio/sfx/sockets/vase_break_00.wav",
+        "res://assets/audio/sfx/sockets/vase_break_01.wav",
+        "res://assets/audio/sfx/sockets/vase_break_02.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.04,
+      "priority": 2,
+      "max_voices": 4,
+      "gain_db": -12,
+      "pitch": 0.06,
+      "base_pitch": 1.0
+    },
+    "pickup.gold": {
+      "files": [
+        "res://assets/audio/sfx/sockets/pickup_gold_00.wav",
+        "res://assets/audio/sfx/sockets/pickup_gold_01.wav",
+        "res://assets/audio/sfx/sockets/pickup_gold_02.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.03,
+      "priority": 1,
+      "max_voices": 3,
+      "gain_db": -16,
+      "pitch": 0.04,
+      "base_pitch": 1.0
+    },
+    "gem.pickup": {
+      "files": [
+        "res://assets/audio/sfx/sockets/gem_pickup_00.wav",
+        "res://assets/audio/sfx/sockets/gem_pickup_01.wav",
+        "res://assets/audio/sfx/sockets/gem_pickup_02.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.03,
+      "priority": 1,
+      "max_voices": 3,
+      "gain_db": -17,
+      "pitch": 0.04,
+      "base_pitch": 1.0
+    },
+    "powerup.heart": {
+      "files": [
+        "res://assets/audio/sfx/sockets/powerup_heart_00.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.2,
+      "priority": 4,
+      "max_voices": 2,
+      "gain_db": -10,
+      "pitch": 0.0,
+      "base_pitch": 1.0
+    },
+    "powerup.magnet": {
+      "files": [
+        "res://assets/audio/sfx/sockets/powerup_magnet_00.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.3,
+      "priority": 4,
+      "max_voices": 2,
+      "gain_db": -10,
+      "pitch": 0.0,
+      "base_pitch": 1.0
+    },
+    "powerup.stopwatch": {
+      "files": [
+        "res://assets/audio/sfx/sockets/powerup_stopwatch_00.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.3,
+      "priority": 4,
+      "max_voices": 2,
+      "gain_db": -9,
+      "pitch": 0.0,
+      "base_pitch": 1.0
+    },
+    "imbue.interact": {
+      "files": [
+        "res://assets/audio/sfx/sockets/imbue_interact_00.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.1,
+      "priority": 3,
+      "max_voices": 2,
+      "gain_db": -11,
+      "pitch": 0.0,
+      "base_pitch": 1.0
+    },
+    "imbue.install": {
+      "files": [
+        "res://assets/audio/sfx/sockets/imbue_install_00.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.2,
+      "priority": 4,
+      "max_voices": 2,
+      "gain_db": -9,
+      "pitch": 0.0,
+      "base_pitch": 1.0
+    },
+    "status.poison": {
+      "files": [
+        "res://assets/audio/sfx/sockets/status_poison_00.wav",
+        "res://assets/audio/sfx/sockets/status_poison_01.wav",
+        "res://assets/audio/sfx/sockets/status_poison_02.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.25,
+      "priority": 1,
+      "max_voices": 2,
+      "gain_db": -20,
+      "pitch": 0.06,
+      "base_pitch": 1.0
+    },
+    "status.ice_shatter": {
+      "files": [
+        "res://assets/audio/sfx/sockets/status_ice_shatter_00.wav",
+        "res://assets/audio/sfx/sockets/status_ice_shatter_01.wav",
+        "res://assets/audio/sfx/sockets/status_ice_shatter_02.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.1,
+      "priority": 2,
+      "max_voices": 3,
+      "gain_db": -16,
+      "pitch": 0.06,
+      "base_pitch": 1.0
+    },
+    "status.ignite": {
+      "files": [
+        "res://assets/audio/sfx/sockets/status_ignite_00.wav",
+        "res://assets/audio/sfx/sockets/status_ignite_01.wav",
+        "res://assets/audio/sfx/sockets/status_ignite_02.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.2,
+      "priority": 1,
+      "max_voices": 2,
+      "gain_db": -18,
+      "pitch": 0.05,
+      "base_pitch": 1.0
+    },
+    "status.stun": {
+      "files": [
+        "res://assets/audio/sfx/sockets/status_stun_00.wav",
+        "res://assets/audio/sfx/sockets/status_stun_01.wav",
+        "res://assets/audio/sfx/sockets/status_stun_02.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.15,
+      "priority": 2,
+      "max_voices": 3,
+      "gain_db": -16,
+      "pitch": 0.05,
+      "base_pitch": 1.0
+    },
+    "status.combo": {
+      "files": [
+        "res://assets/audio/sfx/sockets/status_combo_00.wav",
+        "res://assets/audio/sfx/sockets/status_combo_01.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.15,
+      "priority": 3,
+      "max_voices": 3,
+      "gain_db": -13,
+      "pitch": 0.04,
+      "base_pitch": 1.0
     }
   }
 }
