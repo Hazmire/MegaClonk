@@ -54,6 +54,13 @@ fi
 cat "$log_path"
 if grep -Eq 'SCRIPT ERROR|^ERROR:' "$log_path"; then exit 1; fi
 if ! grep -q 'EXPORTED RETRO AUDIO V11 SMOKE COMPLETE' "$log_path"; then exit 1; fi
+if ! tools/godot.sh --headless --path /tmp --main-pack "$PWD/builds/windows/BONK_INFINITY.exe" --script "$PWD/tools/export_grimdark_smoke.gd" > "$log_path" 2>&1; then
+ cat "$log_path"
+ exit 1
+fi
+cat "$log_path"
+if grep -Eq 'SCRIPT ERROR|^ERROR:' "$log_path"; then exit 1; fi
+if ! grep -q 'EXPORTED GRIMDARK V13 SMOKE COMPLETE' "$log_path"; then exit 1; fi
 cp docs/GRIMDARK.md docs/GRIMDARK_ASSET_AUDIT.md docs/GRIMDARK_PERFORMANCE.md builds/windows/
 cp shaders/vendor_psx/LICENSE.txt builds/windows/PSX_VISUALS_UNLICENSE.txt
 cp assets/grimdark/knight/texture_source.txt builds/windows/KNIGHT_TEXTURE_CREDIT.txt
