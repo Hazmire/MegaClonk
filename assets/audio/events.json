@@ -461,10 +461,10 @@
         "res://assets/audio/sfx/sockets/pickup_gold_02.wav"
       ],
       "bus": "SFX",
-      "cooldown": 0.03,
+      "cooldown": 0.06,
       "priority": 1,
-      "max_voices": 3,
-      "gain_db": -16,
+      "max_voices": 2,
+      "gain_db": -30,
       "pitch": 0.04,
       "base_pitch": 1.0
     },

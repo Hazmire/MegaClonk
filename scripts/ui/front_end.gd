@@ -345,11 +345,11 @@ func place_counter(label: Label,counter: PickupTally.Counter,text_value: String,
  label.modulate=Color(1,1,1,counter.alpha()).lerp(Color(1.6,1.6,1.6,counter.alpha()),clampf(counter.bounce*0.5,0.0,0.6))
 func update_tally(delta: float) -> void:
  tally.update(game,delta)
- var origin=Vector2(640,330)
+ var origin=Vector2(640,380)
  if is_instance_valid(game.player) and is_instance_valid(game.player.camera) and DisplayServer.get_name()!="headless" and not game.player.camera.is_position_behind(game.player.position):
-  origin=game.player.camera.unproject_position(game.player.position+Vector3.UP*2.3)
- place_counter(tally_gold,tally.gold,tally.gold_text(),origin+Vector2(44,-30))
- place_counter(tally_xp,tally.xp,tally.xp_text(),origin+Vector2(44,-2))
+  origin=game.player.camera.unproject_position(game.player.position+Vector3.UP*1.5)
+ place_counter(tally_gold,tally.gold,tally.gold_text(),origin+Vector2(44,-16))
+ place_counter(tally_xp,tally.xp,tally.xp_text(),origin+Vector2(44,10))
  if gem_notice_left>0.0:
   gem_notice_left-=delta;gem_label.modulate.a=clampf(gem_notice_left,0.0,1.0)
   if gem_notice_left<=0.0:gem_label.hide()

@@ -53,7 +53,7 @@ def combo(i): return mix(noise(0.3, 0.12, 0.3) * 0.5, cat(tone(220, 0.12, 440, "
 # event -> (generator, files, cooldown, priority, max_voices, gain_db, pitch)
 EV = {
  "vase.break": (vase, 3, 0.04, 2, 4, -12, 0.06),
- "pickup.gold": (gold, 3, 0.03, 1, 3, -16, 0.04),
+ "pickup.gold": (gold, 3, 0.06, 1, 2, -30, 0.04),
  "gem.pickup": (gem, 3, 0.03, 1, 3, -17, 0.04),
  "powerup.heart": (heart, 1, 0.2, 4, 2, -10, 0.0),
  "powerup.magnet": (magnet, 1, 0.3, 4, 2, -10, 0.0),
