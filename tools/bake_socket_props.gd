@@ -2,7 +2,7 @@ extends SceneTree
 # Bakes only the models added for breakable vases (and later the Imbue Station) into unit-height
 # meshes under assets/grimdark/baked/props, using the same ImportedArt pipeline as
 # bake_grimdark.gd. Kept separate so existing baked assets are never regenerated.
-const MODELS=["terracotta_vase","terracotta_vase_small","terracotta_vase_open","terracotta_vase_open_small"]
+const MODELS=["stone_square_half_1m","wood_support_metal_ring"] # terracotta vases were baked in the previous step
 func _initialize():call_deferred("run")
 func run():
  for id in MODELS:

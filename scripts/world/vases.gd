@@ -118,6 +118,8 @@ static func plan(data: Dictionary,stage: int,blocked: Callable=Callable()) -> Ar
 
 # ---------------------------------------------------------------- runtime nodes
 static func prop_blocked(game: Node,pos: Vector3) -> bool:
+ for obj in game.interactables:
+  if obj.kind==ImbueStation.KIND and Vector2(pos.x-obj.node.position.x,pos.z-obj.node.position.z).length()<4.0:return true
  var cell=Vector2i(floori(pos.x/8),floori(pos.z/8))
  for cx in range(cell.x-1,cell.x+2):
   for cz in range(cell.y-1,cell.y+2):

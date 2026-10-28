@@ -132,3 +132,4 @@ Pixel Combat remains CC BY4.0 / Helton Yan, with the same source and licence lin
 ## Elemental sockets update
 - **PSX Modular Medieval — terracotta vase models** (`assets/grimdark/medieval/terracotta_vase*.glb`), from the user-supplied `psx-assets` release; use authorized by the user for this personal game. Baked to `assets/grimdark/baked/props/` by `tools/bake_socket_props.gd`.
 - **Socket/vase/power-up/status sound effects** (`assets/audio/sfx/sockets/`): original, procedurally synthesised by `tools/generate_socket_audio.py`. Power-up, gem and coin meshes are original procedural geometry.
+- **PSX Modular Medieval — stone_square_half_1m, wood_support_metal_ring** (Imbue Station forge), same supplied release and authorization as above; baked by `tools/bake_socket_props.gd`.

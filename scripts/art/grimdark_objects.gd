@@ -18,6 +18,18 @@ static func populate(parent: Node3D,kind: String,stage: int) -> void:
   "Boss Statue":
    part(parent,"palace_obelisk",3.1,Vector3.ZERO,stage)
    part(parent,"PS1_Skull",.65,Vector3(0,1.6,.5),stage)
+  "Imbue Station":
+   # Forge look from supplied PSX medieval blocks: stone plinth, ringed wooden frame, shrine and four element crystals.
+   part(parent,"stone_square_half_1m",1.5,Vector3.ZERO,stage)
+   part(parent,"wood_support_metal_ring",1.8,Vector3(0,.5,0),stage)
+   part(parent,"palace_shrine",.9,Vector3(0,.5,-.45),stage)
+   var colors=[Color("7ee05a"),Color("7fd8ff"),Color("ff7a2e"),Color("ffe45c")]
+   for i in 4:
+    var gem=MeshInstance3D.new();var prism=PrismMesh.new();prism.size=Vector3(.28,.5,.28);gem.mesh=prism
+    var material=StandardMaterial3D.new();material.albedo_color=colors[i];material.emission_enabled=true;material.emission=colors[i];material.emission_energy_multiplier=1.3;material.shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED
+    gem.material_override=material;gem.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    gem.position=Vector3(cos(TAU*i/4.0+.785)*1.05,1.1,sin(TAU*i/4.0+.785)*1.05);gem.rotation.y=TAU*i/4.0
+    parent.add_child(gem)
   "Heal":
    part(parent,"palace_shrine",1.2,Vector3.ZERO,stage)
    part(parent,"PS1_Skull",.35,Vector3.UP*1.25,stage)

@@ -364,6 +364,8 @@ func upgrades() -> void:
  RewardScreens.upgrades(self)
 func shop(object: Dictionary) -> void:
  RewardScreens.shop(self,object)
+func imbue_station(object: Dictionary) -> void:
+ RewardScreens.imbue_station(self,object)
 func reward(item: Array) -> void:
  RewardScreens.reward(self,item)
 func settings(back: Callable) -> void:

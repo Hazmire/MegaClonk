@@ -30,3 +30,16 @@ static func install(game: Object, weapon_id: int, element: String) -> Dictionary
   return {"ok":false,"reason":"gem_remove_failed","cost":0}
  game.gold-=price
  return {"ok":true,"reason":"","cost":price}
+# Player-facing wording for a problem() / buy() reason code.
+static func reason_text(reason: String) -> String:
+ match reason:
+  "weapon_not_owned":return "Weapon not owned"
+  "invalid_element":return "Unknown element"
+  "no_free_socket":return "No free socket"
+  "duplicate_element":return "This weapon already holds that element"
+  "no_gem":return "You have no gem of that element"
+  "insufficient_gold":return "Not enough gold"
+  "not_enough_gold":return "Not enough gold"
+  "sold":return "Sold out"
+  "not_offered":return "Not for sale here"
+ return reason.replace("_"," ").capitalize()

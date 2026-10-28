@@ -70,10 +70,12 @@ static func equipment(ui: FrontEnd,parent: Node) -> void:
    var rank=int(owned[id].level) if category=="weapons" else int(owned[id])
    var meta=game.equipment_meta(category,id,rank)
    var tile=icon(ui,grid,category,str(id),"Lv %d"%rank,Rarity.definition(meta.rarity).color,46);tile.tooltip_text=game.weapon_tooltip(int(id)) if category=="weapons" else meta.description
+   if category=="weapons":SocketScreens.add_pips(tile,game.weapons[id])
   var limit=game.weapon_limit() if category=="weapons" else game.tome_limit()
   for index in range(owned.size(),maxi(4,limit)):
    var empty=PanelContainer.new();empty.custom_minimum_size=Vector2(46,62);empty.add_theme_stylebox_override("panel",style(Color("4e5553"),Color("171c1b")));empty.tooltip_text=("Empty " if index<limit else "Locked ")+category.trim_suffix("s")+" slot";grid.add_child(empty)
    var mark=ui.text("—" if index<limit else "LOCK",empty,12);mark.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;mark.vertical_alignment=VERTICAL_ALIGNMENT_CENTER;mark.modulate=Color("6e7875")
+ SocketScreens.gem_inventory(ui,parent)
  ui.heading("Items",parent,20)
  var items_grid=GridContainer.new();items_grid.columns=5;parent.add_child(items_grid)
  for id in Catalog.ITEMS.size():
@@ -178,7 +180,10 @@ static func inventory(ui: FrontEnd) -> void:
  for id in game.weapons:
   ui.heading(Catalog.WEAPONS[id][0]+" · Lv "+str(game.weapons[id].level),center,20)
   ui.paragraph(game.weapon_tooltip(id),center,520)
+  ui.paragraph(SocketScreens.tooltip(game.weapons[id]),center,520)
  ui.action("RESUME",center,game.resume).grab_focus()
+static func imbue_station(ui: FrontEnd,object: Dictionary) -> void:
+ SocketScreens.imbue_station(ui,object)
 static func shop(ui: FrontEnd,object: Dictionary) -> void:
  var game=ui.game;game.mode="shop";ui.shop_object=object
  if not object.has("offers"):object.offers=ShopSystem.offers(object.get("tier","Common"),game.available_items(),game.rng)
@@ -191,6 +196,7 @@ static func shop(ui: FrontEnd,object: Dictionary) -> void:
    if not game.buy_shop(object,id,price):ui.reward_consumed=false;game.toast("Purchase unavailable"),"SOLD" if sold or object.get("used",false) else "NEED %d gold"%price if game.gold<price else "BUY · %d gold"%price)
   button.disabled=sold or game.gold<price or object.get("used",false) or not id in game.available_items()
  if object.offers.is_empty():ui.paragraph("No enabled items available",center,520)
+ SocketScreens.shop_gems(ui,center,object)
  button(ui,center,"LEAVE SHOP",game.resume).grab_focus()
 static func reward(ui: FrontEnd,item: Array) -> void:
  var game=ui.game;game.mode="reward";var center=layout(ui,"Treasure discovered")
@@ -206,12 +212,15 @@ static func reward(ui: FrontEnd,item: Array) -> void:
  image.name="CyclingIcon"
  var description=ui.paragraph(Catalog.item_description(id),center,520);description.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;description.hide()
  ui.text("Reward added to your build",center,14)
+ var gem_found=game.chest_gem;game.chest_gem=""
+ var gem_line=ui.text("",center,16);gem_line.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;gem_line.hide()
+ if gem_found!="":gem_line.text="◆ %s socket gem found!"%Elements.display_name(gem_found);gem_line.add_theme_color_override("font_color",Elements.color(gem_found))
  var controls=HBoxContainer.new();center.add_child(controls)
  var proceed=button(ui,controls,"CONTINUE",game.resume,Color("276292"));proceed.disabled=true
  var generation=ui.reward_generation
  var reveal=func():
   if ui.reward_generation!=generation or not is_instance_valid(tile) or tile.get_meta("revealed",false):return
-  game.audio.stop_event("reward.chest.tick");tile.set_meta("revealed",true);image.texture=UIAssets.icon("items",str(id));rarity.text=tier.name.to_upper();name.text=item[0];description.show();proceed.disabled=false;proceed.grab_focus();ui.chest_skip=Callable()
+  game.audio.stop_event("reward.chest.tick");tile.set_meta("revealed",true);image.texture=UIAssets.icon("items",str(id));rarity.text=tier.name.to_upper();name.text=item[0];description.show();gem_line.visible=gem_found!="";proceed.disabled=false;proceed.grab_focus();ui.chest_skip=Callable()
   if tier.id=="legendary" and effect.has_meta("global_celebration"):effect.get_meta("global_celebration").burst(tier.color,2.0*game.settings.visual_intensity)
   effect.burst(tier.color,float(tier.celebration)*game.settings.visual_intensity);game.play_sound("applause",0.25+0.75*float(tier.celebration));game.play_sound("reward.chest.legendary" if tier.id=="legendary" else "reward.chest.reveal",0.4+0.6*float(tier.celebration))
  var eligible=game.available_items()
