@@ -1,0 +1,3 @@
+MEGACLONK14 fixes opaque floor/wall rendering, hides shrine progress unless actively charging inside its area, replaces standard enemies with the supplied Autopsy Zombie and small exploding enemies with the animated crab, repairs retained elite walking/facing and stops player slide/crouch poses accumulating transforms.
+
+Extract the complete ZIP and run BONK_INFINITY.exe, or Launch_Compatibility.bat. Read VISUAL_FIXES.md. Existing movement, combat, rewards and silent enemy hits/deaths are preserved. Native Windows execution remains untested; cloud checks validate and render the exported pack through Linux Godot.

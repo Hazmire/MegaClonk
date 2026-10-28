@@ -1,3 +1,7 @@
+# Retro audio and white feedback v11
+
+Four original tracks, curated variation pools, five persistent volume buses, white enemy flashes, contact shunts and movement/reward audio are implemented. All26 local suites /1,076 checks pass; clean CI and all five compiled export gates also pass. The published Windows ZIP was downloaded and checked; see releases/BUILD_INFO.md and [full guide](RETRO_AUDIO.md). No auditioning/native Windows/GPU audio-device certification is claimed. Earlier history follows.
+
 # Shrine rewards and pursuit update
 
 The v9 implementation and 23 source suites are passing (859 named checks). [Rules, fixes and balancing](REWARDS_AI_V9.md). Source and compiled renders were viewed, all four export gates passed, and the published v9 ZIP was downloaded and checked. See releases/BUILD_INFO.md. Dense-swarm performance and native Windows playtesting remain open. Earlier releases follow.

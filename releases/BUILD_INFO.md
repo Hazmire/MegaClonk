@@ -1,3 +1,105 @@
+# Verified dusk update15 publication
+
+[Download Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/dusk-loadouts-v15/BONK_INFINITY_Windows_x64.zip). Extract everything and launch BONK_INFINITY.exe, or Launch_Compatibility.bat.
+
+- Clean source: `879b6ed191670560cac9e3a70eb83b53f98d81f4`.
+- Successful30-suite publishing workflow: https://github.com/Hazmire/MegaClonk/actions/runs/40685330334
+- Successful PR validation: https://github.com/Hazmire/MegaClonk/actions/runs/40685340607
+- Asset `684893765`; 150,672,020bytes.
+- SHA256: `e96300ff99e480165bc780c5edeefddccb088c1415c1b72a18db11f8ed6c5a33`.
+- Actions artifact `12815375784`; verified not expired.
+
+The downloaded ZIP matches size/digest and every CRC. BUILD_INFO identifies the expected clean commit. Linux Godot ran180 frames and all eight compiled smoke gates, including42 dusk-feature checks and80 visual-regression checks. Both exported MP3 data hashes match the named uploads; native loop flags and uninterrupted game-track selection across stages pass. Raw duplicate music copies are excluded. The actual downloaded menu, tome unlock grid and shrine decay/zero states were rendered and viewed.
+
+Native Windows execution, audio-device listening and gaming-GPU performance remain unverified. [Guide and gallery](../docs/DUSK_UPDATE.md) · [Raw proof](DUSK_VALIDATION.json) · [PR#6](https://github.com/Hazmire/MegaClonk/pull/6). Runtime source remains on the PR branch until merged into Full-Release. The download works before merging. The workflow now preserves published version files; older records below describe verification at their publication time.
+
+# Verified visual fixes14 publication
+
+[Download Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/grimdark-fixes-v14/BONK_INFINITY_Windows_x64.zip). Extract the entire ZIP and launch BONK_INFINITY.exe or Launch_Compatibility.bat.
+
+- Clean source: `acebbd473afe1232e5ad968917518f48c354823f`.
+- Successful29-suite publishing workflow: https://github.com/Hazmire/MegaClonk/actions/runs/40677327163
+- Successful PR validation: https://github.com/Hazmire/MegaClonk/actions/runs/40677338967
+- Release asset `684735558`; 139,651,426bytes.
+- SHA256: `f37074a6eb5c1eab7ba332f4c4e36d2b14c527085f12d9f7b024ef5585ed9a35`.
+- Actions artifact `12811975464`; verified not expired.
+
+Downloaded size/digest and every CRC pass. BUILD_INFO confirms the expected clean source. Linux Godot ran180 frames and all seven compiled smoke gates, including79 focused regression checks. The downloaded pack passed rendered front/back opaque-occlusion checks. Actual rendered captures confirm hidden outside-shrine text, visible active charging text, zombie/crab models and a stable slide after thousands of updates. Native Windows execution remains untested; prior software-renderer shutdown diagnostics remain documented.
+
+[Fix guide and screenshots](../docs/VISUAL_FIXES.md) · [Raw proof](VISUAL_FIXES_VALIDATION.json) · [PR#6](https://github.com/Hazmire/MegaClonk/pull/6). Runtime changes are on the PR branch until merged into Full-Release. The download works independently. Earlier builds below are historical and do not contain these corrections.
+
+# Verified Grimdark PSX13.1 publication
+
+[Download Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/grimdark-psx-v13.1/BONK_INFINITY_Windows_x64.zip). Extract everything and launch BONK_INFINITY.exe, or Launch_Compatibility.bat.
+
+- Clean game source: `c2209e6ea108119bd65f637d43155b75ffbd3c22`.
+- Successful28-suite publishing workflow: https://github.com/Hazmire/MegaClonk/actions/runs/40670792426
+- Successful PR validation: https://github.com/Hazmire/MegaClonk/actions/runs/40670800363
+- Release asset ID `684613057`; 134,927,445bytes.
+- ZIP SHA256: `659ed35dbecbb256bbd68e32537f41d31183d0532c17798c94cb19b6ded59a74`.
+- Actions artifact ID `12808403283`; verified not expired.
+
+Downloaded size/digest and every CRC match. BUILD_INFO confirms the expected commit and no uncommitted files. Linux Godot ran180 world frames and all six compiled smoke gates. The downloaded pack was rendered and viewed at1280×720 with640×360 internal world and sharp UI. Native Windows execution remains untested. Simplified supplemental animation,500-enemy CPU cost and Mesa shutdown diagnostics remain documented limitations.
+
+[Guide](../docs/GRIMDARK.md) · [Performance](../docs/GRIMDARK_PERFORMANCE.md) · [Published screenshot](../docs/images/grimdark/published_13_1.png) · [Raw proof](GRIMDARK_VALIDATION.json) · [PR#6](https://github.com/Hazmire/MegaClonk/pull/6).
+
+13.1 commits a generated Godot smoke-script UID missing in13; the earlier build's dirty-worktree flag is not presented as clean. Use13.1. Source updates are on the PR branch until merged into Full-Release; the download works independently.
+
+# Verified Dark Feedback v12.1 publication
+
+[Download Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/dark-feedback-v12.1/BONK_INFINITY_Windows_x64.zip). Extract everything and launch BONK_INFINITY.exe, or Launch_Compatibility.bat.
+
+- Clean source: `c427760d249708809bcd288ee74aac89e024508f`.
+- Successful27-suite publishing workflow: https://github.com/Hazmire/MegaClonk/actions/runs/40595447540
+- Release asset ID `683094848`; 123,874,900bytes.
+- ZIP SHA256: `0f5c0bc4175df620313f9a8a63ce4329e99f4ef37882782fd4cbc0254a542952`.
+- Actions artifact ID `12777370563`; not expired at verification.
+
+Downloaded size/digest, every archive CRC and clean expected source pass. Linux Godot ran180 world frames and all five compiled smoke gates, including bar height after theme layout. The pre-hotfix full local run passed1,086 named checks; the final size correction passes14 focused checks, and clean CI passes all27 suites. Source and exported renders confirm a7px character bar. Native Windows execution and sound auditioning remain unverified.
+
+[Guide/screenshot](../docs/DARK_FEEDBACK.md) · [Raw proof](DARK_FEEDBACK_VALIDATION.json) · [PR #5](https://github.com/Hazmire/MegaClonk/pull/5). Enemy hit/death/self-destruct sounds are silent, weapon feedback remains, effects are darker, tomes have a separate row, and matching dark-red health bars include numbered HP on the left. Existing dense-horde performance limits remain. Use this release ZIP; binaries tracked elsewhere in Git are older.
+
+# Historical Dark Feedback v12 publication
+
+Superseded by12.1: Godot retained a27px character-bar height despite the requested7px size;12.1 applies the thin size after theme layout and verifies rendered pixels.
+
+[Download Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/dark-feedback-v12/BONK_INFINITY_Windows_x64.zip). Extract the entire ZIP and launch BONK_INFINITY.exe, or Launch_Compatibility.bat.
+
+- Clean source: `f203a3503f45958b5a4c5eea912c7534fc83f254`.
+- Successful publishing workflow: https://github.com/Hazmire/MegaClonk/actions/runs/40593680375
+- Successful PR validation: https://github.com/Hazmire/MegaClonk/actions/runs/40593690314
+- Release asset ID `683067158`; 123,869,365bytes.
+- ZIP SHA256: `502a905476776fb6c316353b09a49c944eb54833d1df936c24970199b8ba6800`.
+- Actions artifact ID `12775711951`; 124,864,984bytes; not expired at verification.
+
+Downloaded ZIP size/digest and every archive CRC match. BUILD_INFO confirms the expected clean source. Linux Godot ran the published embedded pack for180 frames and all five compiled smoke gates, including silent enemy event registry, tome row and HP checks. All27 suites passed locally (1,086 named checks) and in clean GitHub CI. Source and compiled HUD renders were viewed.
+
+Enemy hit/death/self-destruct feedback is silent, weapons retain their audio, effects use a darker source/filter/pitch pass, tomes have a separate row, and both health bars are dark red with current/max numbers inside the left bar. [Guide and screenshot](../docs/DARK_FEEDBACK.md) · [Raw verification](DARK_FEEDBACK_VALIDATION.json) · [PR #5](https://github.com/Hazmire/MegaClonk/pull/5). The tracked ZIP elsewhere in Git is older; use this release download. Merge PR #5 into Full-Release after review; this download works independently.
+
+Files were not auditioned; native Windows/audio-device testing and existing dense-horde/GPU limitations remain. Earlier publications follow.
+
+# Verified Retro Audio v11 publication
+
+[Download Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/retro-audio-v11/BONK_INFINITY_Windows_x64.zip). Extract the entire ZIP and launch BONK_INFINITY.exe, or Launch_Compatibility.bat. The ZIP tracked directly in this repository is an older build; use this release download.
+
+- Clean source: `7ab7312f390474e35e5d00afff23c14e42c33224`.
+- Successful publishing workflow: https://github.com/Hazmire/MegaClonk/actions/runs/40588840574
+- Successful PR validation: https://github.com/Hazmire/MegaClonk/actions/runs/40588875421
+- Release asset ID `682980577`; 123,951,986bytes.
+- ZIP SHA256: `bae772210404e0208cf00afd4cd64230e8d137e019cb2177b01735bf426df6cd`.
+- Actions artifact ID `12772834404`, BONK_INFINITY-Windows-x64; 124,945,156bytes; not expired at verification; expires26 November2026.
+- Actions artifact digest: `sha256:2e4391beee657dc8dc4a2a58ffe609c6b685394d700f2c7f513d6a4fbab68d1f`. The durable release ZIP was downloaded separately and verified.
+
+All26 suites passed locally (1,076 named checks) and in clean GitHub CI, alongside the existing200-seed world/physics/placement audits. CI success was read from the Actions job/step API; the signed full-log host returns403, so no independently counted CI transcript is claimed. The downloaded ZIP matches GitHub size/digest and every archive CRC, with clean expected BUILD_INFO. Linux Godot ran its embedded pack for180 frames plus all five UI/stage/v9/art/audio smoke gates. Source, compiled and published white-flash/settings renders were viewed. This validates exported resources, not native Windows execution.
+
+Four supplied original tracks and106 selected Pixel Combat clips (3,190,904bytes) are integrated. Six existing legacy ambience/death recordings and an original project clap bed remain. The complete2.04GB library stays outside the project and export. Attribution and curation offsets are shipped.
+
+[Full inventory, mappings and evidence](../docs/RETRO_AUDIO.md) · [Raw verification](RETRO_AUDIO_VALIDATION.json) · [PR #5](https://github.com/Hazmire/MegaClonk/pull/5). Merge PR #5 into Full-Release after review; the download works independently.
+
+**Open playtest gates:** files were not auditioned. Native Windows/device/spatial mix, subjective timbres, loop joins and live crossfade timing require listening. ALSA-null capture is unclocked and only establishes decoded signal. Dense dispatch cost0.51ms mean at500 synthetic impact-requesting enemies; this does not solve the existing horde/GPU frame budget.
+
+Earlier verified publications follow.
+
 # Verified shrine rewards and pursuit v9 publication
 
 [Download Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/shrine-rewards-v9/BONK_INFINITY_Windows_x64.zip). Extract and run BONK_INFINITY.exe, or Launch_Compatibility.bat.

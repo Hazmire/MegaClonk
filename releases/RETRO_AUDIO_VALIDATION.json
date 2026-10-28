@@ -1,0 +1,177 @@
+{
+  "source_commit": "7ab7312f390474e35e5d00afff23c14e42c33224",
+  "workflow_run": 40588840574,
+  "release_url": "https://github.com/Hazmire/MegaClonk/releases/tag/retro-audio-v11",
+  "asset_id": 682980577,
+  "bytes": 123951986,
+  "sha256": "bae772210404e0208cf00afd4cd64230e8d137e019cb2177b01735bf426df6cd",
+  "github_digest": "sha256:bae772210404e0208cf00afd4cd64230e8d137e019cb2177b01735bf426df6cd",
+  "download_url": "https://github.com/Hazmire/MegaClonk/releases/download/retro-audio-v11/BONK_INFINITY_Windows_x64.zip",
+  "zip_crc_passed": true,
+  "build_info": "MEGACLONK v11 retro sound, original music and visceral combat feedback\nGodot 4.7.2\nSource commit: 7ab7312f390474e35e5d00afff23c14e42c33224\nUncommitted source at build time: False\nWindows execution requires native playtesting.\n",
+  "curated_pixel_clips": 106,
+  "curated_pixel_bytes": 3190904,
+  "source_library_in_export": false,
+  "native_windows_executed": false,
+  "auditioned": false,
+  "local_visuals_viewed": true,
+  "source_audio_tests": 165,
+  "signal_capture": {
+    "driver": "ALSA null (unclocked)",
+    "duration_recorded_seconds": 1424.021768707483,
+    "peak_dbfs": -15.84152735881467,
+    "rms_dbfs": -38.5626383727515,
+    "clipped_samples": 0,
+    "auditioned": false,
+    "limitation": "Null sink runs faster than real time; signal/decoder/mixer smoke only, not live pacing, crossfade timing or physical output proof."
+  },
+  "dispatch_profile": {
+    "cases": [
+      {
+        "accepted": 90,
+        "cooldown_suppressed": 14220,
+        "enemies": 50,
+        "max_voices": 15,
+        "mean_ms": 0.0861416666666668,
+        "p95_ms": 0.138,
+        "requested": 50,
+        "voice_suppressed": 98,
+        "worst_ms": 0.272
+      },
+      {
+        "accepted": 86,
+        "cooldown_suppressed": 26220,
+        "enemies": 100,
+        "max_voices": 13,
+        "mean_ms": 0.146970833333333,
+        "p95_ms": 0.205,
+        "requested": 100,
+        "voice_suppressed": 102,
+        "worst_ms": 0.32
+      },
+      {
+        "accepted": 83,
+        "cooldown_suppressed": 62220,
+        "enemies": 250,
+        "max_voices": 13,
+        "mean_ms": 0.3061,
+        "p95_ms": 0.394,
+        "requested": 250,
+        "voice_suppressed": 105,
+        "worst_ms": 0.554
+      },
+      {
+        "accepted": 88,
+        "cooldown_suppressed": 122220,
+        "enemies": 500,
+        "max_voices": 13,
+        "mean_ms": 0.509283333333333,
+        "p95_ms": 0.694,
+        "requested": 500,
+        "voice_suppressed": 100,
+        "worst_ms": 1.583
+      }
+    ],
+    "driver": "Dummy",
+    "note": "CPU dispatch/aggregation only under Dummy; no physical mixer or target-GPU timing claim."
+  },
+  "published_world_frames": 180,
+  "published_compiled_smokes": [
+    "ui",
+    "stage",
+    "v9",
+    "art_reset",
+    "retro_audio"
+  ],
+  "actions_artifacts": [
+    {
+      "id": 12772834404,
+      "node_id": "MDg6QXJ0aWZhY3QxMjc3MjgzNDQwNA==",
+      "name": "BONK_INFINITY-Windows-x64",
+      "size_in_bytes": 124945156,
+      "url": "https://api.github.com/repos/Hazmire/MegaClonk/actions/artifacts/12772834404",
+      "archive_download_url": "https://api.github.com/repos/Hazmire/MegaClonk/actions/artifacts/12772834404/zip",
+      "expired": false,
+      "digest": "sha256:2e4391beee657dc8dc4a2a58ffe609c6b685394d700f2c7f513d6a4fbab68d1f",
+      "created_at": "2026-10-27T21:52:05Z",
+      "updated_at": "2026-10-27T21:52:05Z",
+      "expires_at": "2026-11-26T21:51:58Z",
+      "workflow_run": {
+        "id": 40588840574,
+        "repository_id": 1431110158,
+        "head_repository_id": 1431110158,
+        "head_branch": "retro-audio-v11",
+        "head_sha": "7ab7312f390474e35e5d00afff23c14e42c33224"
+      }
+    }
+  ],
+  "source_suites": 26,
+  "local_source_named_checks": 1076,
+  "ci_success": true,
+  "ci_jobs": {
+    "jobs": [
+      {
+        "conclusion": "success",
+        "name": "windows-build",
+        "status": "completed",
+        "steps": [
+          {
+            "conclusion": "success",
+            "name": "Set up job",
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Configure writable tool directories",
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Check out source and generated models",
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Install checksum-verified Godot 4.7.2 and export templates",
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Import project and run all twenty-six regression and seeded-world suites",
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Export Windows x64 with embedded game resources",
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Upload playable Windows ZIP artifact",
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Publish durable Windows playtest download",
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Post Check out source and generated models",
+            "status": "completed"
+          },
+          {
+            "conclusion": "success",
+            "name": "Complete job",
+            "status": "completed"
+          }
+        ]
+      }
+    ]
+  },
+  "ci_log_note": "Signed full-log host returns403 in this environment; success recorded through Actions job/step API, not a separately counted CI transcript.",
+  "pr_validation_run": 40588875421,
+  "pr_validation_success": true,
+  "published_visuals_viewed": true,
+  "verified_date_utc": "2026-10-27"
+}

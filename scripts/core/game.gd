@@ -109,12 +109,15 @@ var run_metrics: Dictionary={}
 var chests_opened=0
 var legacy_weapon_slots=0
 var legacy_tome_slots=0
-var settings = {"visual_intensity":0.7,"render_scale":1.0,"quality":1,"master":0.7,"effects":0.7,"music":0.3,"sensitivity":0.0025,"invert":false,"reduced":false,"fps":false,"focus_pause":true,"shake":true,"numbers":true,"invincible":false}
+var grimdark_renderer: GrimdarkRenderer
+var settings = {"retro_scale":0.5,"psx_warp":0.25,"psx_snap":0.35,"psx_dither":true,"visual_intensity":0.7,"render_scale":1.0,"quality":1,"master":0.7,"effects":0.7,"ui_volume":0.65,"ambience":0.35,"music":0.3,"sensitivity":0.0025,"invert":false,"reduced":false,"fps":false,"focus_pause":true,"shake":true,"numbers":true,"invincible":false}
 var pending_binding = ""
 var bindings = {"forward":KEY_W,"back":KEY_S,"left":KEY_A,"right":KEY_D,"jump":KEY_SPACE,"crouch":KEY_CTRL,"interact":KEY_E,"inspect":KEY_TAB,"ultimate":KEY_Q,"map":KEY_M}
 var music: AudioStreamPlayer
 var sfx: Array[AudioStreamPlayer] = []
 var sound_bank: Dictionary={}
+var audio: RetroAudio
+var movement_audio=MovementAudio.new()
 var sound_last: Dictionary={}
 var sfx_cursor = 0
 var combat_fx: CombatFX
@@ -155,6 +158,7 @@ func _ready() -> void:
  if not MetaProgress.unlocked(progress.data,"ultimates",selected_ultimate):selected_ultimate="nova"
  frontend=FrontEnd.new();add_child(frontend);frontend.setup(self)
  build_menu_world()
+ grimdark_renderer=GrimdarkRenderer.new();add_child(grimdark_renderer);grimdark_renderer.setup(self)
  main_menu()
  smoke_mode = "--smoke" in OS.get_cmdline_user_args()
  for argument in OS.get_cmdline_user_args():
@@ -208,7 +212,8 @@ func button(text: String, parent: Node, callback: Callable) -> Button:
  node.text = text
  node.custom_minimum_size.y = 40
  parent.add_child(node)
- node.pressed.connect(func(): tone(660, 0.06); callback.call())
+ node.mouse_entered.connect(func():play_sound("ui.hover"))
+ node.pressed.connect(func(): play_sound("ui.confirm"); callback.call())
  return node
 func clear_panel(heading: String) -> VBoxContainer:
  return frontend.page(heading)
@@ -249,7 +254,7 @@ func build_menu_world() -> void:
  create_avatar(world, selected_character, Vector3(10,0,-10)).scale = Vector3.ONE * 3
 func create_avatar(parent: Node3D, index: int, pos: Vector3) -> Node3D:
  if debug_combat:combat_counters["scenes"]=int(combat_counters.get("scenes",0))+1
- var node=RangerVisual.new()
+ var node=KnightVisual.new()
  parent.add_child(node)
  node.position=pos
  node.set_meta("character_index",index)
@@ -367,17 +372,9 @@ func build_stage() -> void:
   var model = Node3D.new()
   world.add_child(model)
   model.position = p
-  var color = [Color("efba5d"),Color("7fffd2"),Color("85baff"),Color("f4d3ff"),Color("ff7082"),Color("a8e47c")][i%6]
-  mesh_node(cylinder(0.9,0.4),Color("626e7b"),model,Vector3.UP*0.2)
-  if kind in ["Chest","Free Chest"]:
-   var chest=MeshInstance3D.new();chest.mesh=RewardDrops.mesh();chest.material_override=RewardDrops.material(kind=="Free Chest");model.add_child(chest)
-  else:mesh_node(box(Vector3(1,1,1)) if kind=="Shop" else cylinder(0.35,2,0.05),color,model,Vector3.UP, true)
+  GrimdarkObjects.populate(model,kind,stage)
   var object={"node":model,"kind":kind,"used":false,"charge":0.0}
-  if kind=="Shop":
-   object.tier=ShopSystem.tier(rng)
-   for child in model.get_children():child.queue_free()
-   var seller=RangerVisual.new();model.add_child(seller);seller.name="Seller"
-   mesh_node(cylinder(1.1,0.15),Color("e6b64d") if object.tier=="Legendary" else (Color("9c80e2") if object.tier=="Rare" else Color("77c797")),model,Vector3.UP*0.1,true)
+  if kind=="Shop":object.tier=ShopSystem.tier(rng)
   interactables.append(object)
  ShrineCharging.setup(self)
  combat_fx=CombatFX.new();world.add_child(combat_fx)
@@ -416,9 +413,11 @@ func build_stage() -> void:
  rng.state=previous_state
  make_portal()
  portal_wind=PortalWind.new();world.add_child(portal_wind);portal_wind.setup(self)
+ if is_instance_valid(audio):audio.music_stage(stage)
  if map_debug:map_debug=false;toggle_map_debug()
  toast("Stage %d • Explore the forest. Activate the portal to challenge the stage guardian."%stage)
 func resume() -> void:
+ if is_instance_valid(audio):audio.emit("ui.close")
  if mode=="shrine" and not active_shrine_reward.is_empty():return
  if mode=="reward" and active_reward>=0:active_reward=-1
  if ShrineRewards.present_next(self):return
@@ -472,7 +471,10 @@ func _notification(what: int) -> void:
 func _physics_process(delta: float) -> void:
  if is_instance_valid(combat_fx):
   combat_fx.intensity=settings.visual_intensity;combat_fx.reduced=settings.reduced;combat_fx.tick(delta,mode=="run")
- if mode != "run": return
+ if mode != "run":
+  if is_instance_valid(audio):audio.stop_event("player.slide")
+  movement_audio.reset();return
+ movement_audio.tick(self,delta)
  if health<=0 and stats.get("revives",0)>0:
   stats.revives-=1;health=stats.max_health;invulnerability=3;combat_fx.burst("explosion_small",player.position,3);toast("PHOENIX REBIRTH")
  if health <= 0:
@@ -689,7 +691,7 @@ func update_enemies(delta: float) -> void:
   var facing = atan2(direction.x,direction.z)
   var transform = Transform3D(Basis(Vector3.UP,facing).scaled(Vector3.ONE*e.scale),e.pos-Vector3.UP*0.65*e.scale)
   mm.set_instance_transform(boss_count,transform)
-  mm.set_instance_color(boss_count,Color("ff0804") if e.get("hit_time",0)>0 else Color("91ddff") if e.slow>0 else (Color("b0ed72") if e.poison>0 else colors[e.kind]))
+  mm.set_instance_color(boss_count,Color.WHITE if e.get("hit_time",0)>0 else Color("91ddff") if e.slow>0 else (Color("b0ed72") if e.poison>0 else colors[e.kind]))
   boss_count+=1
  mm.visible_instance_count=boss_count
  enemy_view.end_frame()
@@ -736,8 +738,9 @@ func hit(e: Dictionary, base: float, weapon: int) -> void:
  if character == 10 and e.hp/e.max_hp>0.9: amount*=1.5
  if character == 16 and e.hp/e.max_hp<0.1: amount = e.hp+1
  if e.kind<8 and "shield" in e.variant.modules and e.hp/e.max_hp>0.5: amount*=0.5
- e["hit_time"]=0.15
+ e["hit_time"]=0.10
  if is_instance_valid(combat_fx):
+  combat_fx.burst("impact_concrete",e.pos,0.35,0.12)
   if weapon>=0:WeaponVFX.contact(self,weapon,e.pos)
   else:combat_fx.burst("impact_concrete",e.pos,0.5)
  var actual=minf(amount,maxf(0,e.hp))
@@ -785,7 +788,6 @@ func kill_enemy(index: int) -> void:
  if e.spore:
   area(e.pos,4*stats.size,12,33,"poison")
   flash(e.pos,Color("acff6a"),4)
- play_sound("death")
  kills += 1
  var source=int(e.get("last_weapon",-1))
  if source>=0:run_metrics["weapon:"+str(source)]=int(run_metrics.get("weapon:"+str(source),0))+1
@@ -846,11 +848,11 @@ func make_portal() -> void:
  assert(forest_navigation.reachable(map_layout.portal))
  portal=Node3D.new();world.add_child(portal)
  portal.position=map_layout.portal
- ArtResetWorld.portal(self)
+ GrimdarkObjects.portal(self)
  refresh_portal()
 func refresh_portal() -> void:
  if not is_instance_valid(portal):return
- ArtResetWorld.refresh_portal(self)
+ GrimdarkObjects.refresh_portal(self)
 func activate_portal() -> bool:
  if portal_state=="summoned":return false
  if portal_state=="exit":return advance_stage()
@@ -973,7 +975,7 @@ func update_weapons(delta: float) -> void:
      var spread = (i-(count-1)*0.5)*0.13
      if w[1]=="scatter": spread = rng.randf_range(-0.4,0.4)
      launch(origin,direction.rotated(Vector3.UP,spread),power,id,color,w[1],rank)
-  if not target.is_empty() or id==16:play_sound(WeaponVFX.sound(id),0.45 if id==16 else 1.0)
+  if not target.is_empty() or id==16:audio.emit(WeaponVFX.sound(id),origin,0.45 if id==16 else 1.0)
 func launch(pos: Vector3, direction: Vector3, damage: float, id: int, color: Color, kind: String, rank: int) -> void:
  if projectiles.size()>=220: return
  var node = pool.acquire("shot%d"%id,projectile_mesh(kind),color,pos)
@@ -1105,6 +1107,7 @@ func update_pickups(delta: float) -> void:
   if distance<1.2:
    if p.get("red",false):grant_red_level()
    else:xp+=p.value*stats.xp
+   audio.emit("pickup.xp",p.node.position,0.6)
    pool.release(p.node)
    pickups.remove_at(i)
  while xp>=Catalog.threshold(level):
@@ -1136,8 +1139,8 @@ func upgrade_pool() -> Array:
     var choice={"type":"weapon","id":id,"key":"w%d"%id}
     if weapons.has(id):choice.merge(WeaponUpgrades.proposal(id,rng));choice["expected_level"]=int(weapons[id].level)
     pool.append(choice)
- for name in Catalog.TOMES:
-  if (tomes.has(name) and tomes[name]<10) or (not tomes.has(name) and tomes.size()<tome_limit()):
+ for name in Catalog.ACTIVE_TOMES:
+  if (tomes.has(name) and tomes[name]<10) or (not tomes.has(name) and tomes.size()<tome_limit() and (sandbox or MetaProgress.enabled(progress.data,"tomes",name))):
    if not name in banished: pool.append({"type":"tome","id":name,"key":name})
  if pool.is_empty():
   for i in 3:pool.append({"type":"supply","id":str(i),"key":"supply"+str(i)})
@@ -1167,7 +1170,9 @@ func apply_upgrade(choice: Dictionary) -> void:
     weapons[id].level+=1;weapons[id]["rarity"]=choice.get("metadata",{}).get("rarity",weapons[id].get("rarity","common"))
   elif id in Catalog.ACTIVE_WEAPONS and (sandbox or MetaProgress.enabled(progress.data,"weapons",str(id))) and weapons.size()<weapon_limit():equip(id)
  else:
-  var name=choice.id
+  var name=str(choice.id)
+  if not Catalog.TOMES.has(name):return
+  if not tomes.has(name) and not sandbox and (name not in Catalog.ACTIVE_TOMES or not MetaProgress.enabled(progress.data,"tomes",name)):return
   if not tomes.has(name) and tomes.size()>=tome_limit():return
   if int(tomes.get(name,0))>=10:return
   tome_rarities[name]="common" if not tomes.has(name) else choice.get("metadata",{}).get("rarity",tome_rarities.get(name,"common"))
@@ -1281,7 +1286,7 @@ func sandbox_menu() -> void:
    for node in weapons[id].visuals: node.queue_free()
    for ally in weapons[id].summons: ally.node.queue_free()
   weapons.clear())
- button("Add random tome",col,func(): var names=Catalog.TOMES.keys(); var name=names[rng.randi_range(0,names.size()-1)]; apply_upgrade({"type":"tome","id":name}))
+ button("Add random tome",col,func(): var names=Catalog.ACTIVE_TOMES; var name=names[rng.randi_range(0,names.size()-1)]; apply_upgrade({"type":"tome","id":name}))
  button("Add item",col,award_item)
  title("Map seed: %s • F6 overlay • F7 repeat • F8 next"%stage_map_seed(),col,18)
  var seed_input=LineEdit.new();seed_input.text=str(stage_map_seed());seed_input.placeholder_text="Map seed";col.add_child(seed_input)
@@ -1293,6 +1298,7 @@ func sandbox_menu() -> void:
   if not is_instance_valid(combat_debug_label):
    combat_debug_label=Label.new();combat_debug_label.position=Vector2(20,180);combat_debug_label.add_theme_font_size_override("font_size",16);ui.add_child(combat_debug_label)
   combat_debug_label.visible=debug_combat;resume())
+ button("Audio diagnostics",col,func():toast(JSON.stringify(audio.diagnostics())))
  button("Spawn 100 enemies",col,func(): for i in 100: spawn_enemy())
  button("Spawn Warden",col,func(): spawn_enemy(8))
  button("Add XP +100 / gold +100",col,func(): xp+=100; gold+=100)
@@ -1304,72 +1310,25 @@ func settings_menu(back: Callable) -> void:
  frontend.settings(back)
 
 func apply_settings() -> void:
- AudioServer.set_bus_volume_db(0,linear_to_db(maxf(0.001,settings.master)))
+ if is_instance_valid(grimdark_renderer):grimdark_renderer.apply_settings()
+ if is_instance_valid(audio):audio.volumes(settings)
  get_viewport().scaling_3d_scale=float(settings.render_scale)
  get_viewport().msaa_3d=Viewport.MSAA_4X if int(settings.quality)==2 else Viewport.MSAA_DISABLED
  if is_instance_valid(world):
   for child in world.get_children():
    if child is DirectionalLight3D: child.shadow_enabled=int(settings.quality)>0
- music.volume_db=linear_to_db(maxf(0.001,settings.music))
  if is_instance_valid(player): player.sensitivity=settings.sensitivity; player.inverted=settings.invert
 func setup_audio() -> void:
- sound_bank["applause"]=preload("res://assets/audio/reward_applause.wav")
- sound_bank["legendary"]=preload("res://assets/audio/reward_legendary.wav")
- sound_bank["revolver"]=preload("res://assets/audio/revolver.wav")
- sound_bank["stone"]=preload("res://assets/vendor/audio/Running_stone___Boot__1_1766767186839.mp3")
- var manifest=load("res://assets/vendor/audio/manifest.json") as JSON
- var tokens={"lightning":"Lightning_cast","place":"Lever_pull","hit":"Sword_hit_flesh","death":"Enemy_death","purchase":"Coin_pickup","level":"Level_up","menu":"Inventory_open","explosion":"Fire_spell_impact","ready":"Buff_spell","cast":"Fire_spell_cast","shot":"Bow_and_arrow_shot","swing":"Sword_swing","ambient":"Forest_ambience"}
- for event in tokens:
-  for entry in manifest.data:
-   if tokens[event] in entry.original:sound_bank[event]=load(entry.path);break
- for i in 10:
-  var audio=AudioStreamPlayer.new()
-  add_child(audio)
-  sfx.append(audio)
- music=AudioStreamPlayer.new()
- add_child(music)
- var stream=AudioStreamWAV.new()
- stream.mix_rate=22050
- stream.format=AudioStreamWAV.FORMAT_16_BITS
- stream.loop_mode=AudioStreamWAV.LOOP_FORWARD
- stream.loop_end=22050*8
- var bytes=PackedByteArray()
- bytes.resize(22050*8*2)
- var notes=[130.81,164.81,196.0,146.83]
- for i in 22050*8:
-  var t=float(i)/22050
-  var f=notes[int(t/2)%4]
-  var sample=(sin(t*f*TAU)*0.07+sin(t*f*1.5*TAU)*0.035)*minf(1,fmod(t,2)*5)
-  bytes.encode_s16(i*2,int(sample*32767))
- stream.data=bytes
- music.stream=stream
- if sound_bank.has("ambient"):
-  music.stream=sound_bank.ambient;music.stream.loop=true
- if AudioServer.get_driver_name()!="Dummy": music.play()
- apply_settings()
+ audio=RetroAudio.new();add_child(audio);audio.music_menu();apply_settings()
+ sound_bank["hit"]=audio.streams[audio.events["player.damage"].files[0]];sound_bank["level"]=audio.streams[audio.events["reward.level_up"].files[0]]
+ sound_bank["applause"]=audio.streams[audio.events["reward.applause"].files[0]];sound_bank["legendary"]=audio.streams[audio.events["reward.chest.legendary"].files[0]]
 func play_sound(event: String,gain: float=1.0) -> void:
- if AudioServer.get_driver_name()=="Dummy" or not sound_bank.has(event):return
- var now=Time.get_ticks_msec()
- if event in ["hit","death","explosion","shot","swing","cast","stone"] and now-int(sound_last.get(event,-1000))<80:return
- sound_last[event]=now
- var audio=sfx[sfx_cursor%sfx.size()];sfx_cursor+=1;audio.stream=sound_bank[event];audio.volume_db=linear_to_db(maxf(0.001,float(settings.effects)*gain));audio.play()
-func tone(frequency: float, duration: float, loudness: float = 0.3) -> void:
- if AudioServer.get_driver_name()=="Dummy": return
- var stream=AudioStreamWAV.new()
- stream.mix_rate=22050
- stream.format=AudioStreamWAV.FORMAT_16_BITS
- var bytes=PackedByteArray()
- var length=int(duration*22050)
- bytes.resize(length*2)
- for i in length:
-  var t=float(i)/22050
-  var value=sin(t*frequency*TAU)*(1-float(i)/length)*loudness*settings.effects
-  bytes.encode_s16(i*2,int(value*32767))
- stream.data=bytes
- var audio=sfx[sfx_cursor%sfx.size()]
- sfx_cursor+=1
- audio.stream=stream
- audio.play()
+ if event in ["death","enemy.death","enemy.hit"]:return
+ var aliases={"hit":"player.damage","purchase":"ui.purchase","level":"reward.level_up","menu":"ui.confirm","explosion":"combat.explosion","ready":"boss.warning","cast":"weapon.firestaff.cast","shot":"weapon.bow.fire","swing":"weapon.sword.swing","stone":"weapon.chunkers.impact","lightning":"weapon.lightning.zap","place":"weapon.mines.place","revolver":"weapon.revolver.fire","applause":"reward.applause","legendary":"reward.chest.legendary"}
+ if is_instance_valid(audio):audio.emit(aliases.get(event,event),Vector3.INF,gain)
+func tone(_frequency: float,_duration: float,_loudness: float=0.3) -> void:
+ # Legacy UI/boss callsites now use cached events, never allocate PCM at runtime.
+ play_sound("boss.warning" if _frequency<200 else "ui.confirm")
 
 func update_special_visuals(delta: float) -> void:
  for id in weapons:
@@ -1674,7 +1633,6 @@ func update_blasts(delta: float) -> void:
   combat_fx.burst("explosion_small",blast.pos,clampf(blast.radius/2,1,4))
   flash(blast.pos,Color("ffaf67"),blast.radius)
   impact(blast.pos,Color("ffd49b"),8)
-  play_sound("explosion")
   apply_player_blast(blast.pos,blast.radius,blast.damage)
   area(blast.pos,blast.radius,blast.damage*0.6,-1)
   pending_blasts.remove_at(i)
@@ -1781,11 +1739,7 @@ func enemy_line_clear(pos: Vector3,target: Vector3) -> bool:
 
 func create_elite_statue(position: Vector3=Vector3.INF) -> void:
  var statue=Node3D.new();statue.name="EliteStatue";world.add_child(statue);statue.position=map_layout.elite if position==Vector3.INF else position
- mesh_node(cylinder(1.7,0.5),Color("54466c"),statue,Vector3.UP*0.25)
- var guardian=mesh_node(BestiaryFrames.mesh("Knight","enemy_idle",0),Color.WHITE,statue,Vector3.UP*0.5)
- guardian.material_override=null
- var jewel=mesh_node(ModelBuilder.cone(0.45,0.9),Color("f7c763"),statue,Vector3.UP*3,true)
- jewel.rotation.z=PI
+ GrimdarkObjects.populate(statue,"Elite Statue",stage)
  interactables.append({"node":statue,"kind":"Elite Statue","used":false,"charge":0.0})
 func activate_elite_statue(statue: Dictionary) -> bool:
  if statue.used or elite_active:return false
@@ -1856,12 +1810,7 @@ func orbit_position(id: int,index: int) -> Vector3:
 
 func create_boss_statue(position: Vector3) -> void:
  var statue=Node3D.new();statue.name="BossMultiplierStatue";world.add_child(statue);statue.position=position
- mesh_node(cylinder(1.35,0.45),Color("332c43"),statue,Vector3.UP*0.22)
- mesh_node(box(Vector3(0.8,1.8,0.7)),Color("242734"),statue,Vector3.UP*1.2)
- mesh_node(ModelBuilder.cone(0.7,0.8,0.35),Color("49455c"),statue,Vector3.UP*2.4)
- for side in [-1,1]:
-  var horn=mesh_node(ModelBuilder.cone(0.2,0.9),Color("bd618d"),statue,Vector3(side*0.5,3,0),true);horn.rotation.z=-side*0.4
-  mesh_node(box(Vector3(0.13,0.12,0.1)),Color("ff6685"),statue,Vector3(side*0.23,2.45,0.42),true)
+ GrimdarkObjects.populate(statue,"Boss Statue",stage)
  interactables.append({"node":statue,"kind":"Boss Statue","used":false,"charge":0.0})
 
 func activate_boss_statue(statue: Dictionary) -> bool:
@@ -1881,4 +1830,15 @@ func apply_player_blast(center: Vector3,radius: float,damage: float) -> bool:
  var direction=player.position-center;direction.y=0
  if direction.length_squared()<0.001:direction=Vector3.FORWARD
  player.launch(direction.normalized(),EnemyContact.SETTINGS.explosion_horizontal,EnemyContact.SETTINGS.explosion_upward,EnemyContact.SETTINGS.explosion_speed_cap,EnemyContact.SETTINGS.explosion_vertical_cap)
+ return true
+
+func hurt_contact(amount: float,attacker: Vector3) -> bool:
+ var before=health;hurt(amount)
+ if health>=before:return false
+ var direction=player.position-attacker;direction.y=0
+ if direction.length_squared()<0.001:direction=Vector3.FORWARD
+ var horizontal=Vector3(player.velocity.x,0,player.velocity.z)
+ var cap=maxf(horizontal.length(),12.0)
+ horizontal=(horizontal+direction.normalized()*3.2).limit_length(cap)
+ player.velocity.x=horizontal.x;player.velocity.z=horizontal.z
  return true

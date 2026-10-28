@@ -1,0 +1,10 @@
+Current15 playlist: exactly two tracks supplied by the project owner in the GitHub repository.
+main menu track.mp3 → current/menu_dusk.mp3 (203.976s)
+ingame music track.mp3 → current/hollow_dusk.mp3 (199.968s)
+Embedded artist metadata: alphalambenterprises_101. Original MP3 bytes retained.
+Both loop natively; the game track continues across stage transitions. Prior tracks below are historical and no longer in the playlist.
+
+Original music supplied by the project owner for MEGACLONK.
+Source: audio-assets-v1 release.
+Arcade Groove; Arcade Groove 1; Arcade Rush; Pixelad Akcio.
+Original MP3 bytes retained. No generated substitute soundtrack.

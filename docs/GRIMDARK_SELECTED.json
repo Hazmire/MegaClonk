@@ -1,0 +1,378 @@
+[
+  {
+    "source": "knight/knight/knight.glb",
+    "path": "assets/grimdark/knight/knight.glb"
+  },
+  {
+    "source": "knight/knight/knightlowres.png",
+    "path": "assets/grimdark/knight/knightlowres.png"
+  },
+  {
+    "source": "knight/knight/texture_source.txt",
+    "path": "assets/grimdark/knight/texture_source.txt"
+  },
+  {
+    "source": "Characters_psx_1.2/Characters_psx_1.2/Characters_psx_02/Models/Rig/Killer_M/Character_Monster.fbx",
+    "path": "assets/grimdark/characters/Character_Monster.fbx"
+  },
+  {
+    "source": "Characters_psx_1.2/Characters_psx_1.2/Characters_psx_02/Textures/Character_Monster.png",
+    "path": "assets/grimdark/characters/Character_Monster.png"
+  },
+  {
+    "source": "Characters_psx_1.2/Characters_psx_1.2/Characters_psx_02/Models/Rig/Killer_M/Character_Monster_01.fbx",
+    "path": "assets/grimdark/characters/Character_Monster_01.fbx"
+  },
+  {
+    "source": "Characters_psx_1.2/Characters_psx_1.2/Characters_psx_02/Textures/Character_Monster_01.png",
+    "path": "assets/grimdark/characters/Character_Monster_01.png"
+  },
+  {
+    "source": "Characters_psx_1.2/Characters_psx_1.2/Characters_psx_02/Models/Rig/Killer_M/Character_Monster_02.fbx",
+    "path": "assets/grimdark/characters/Character_Monster_02.fbx"
+  },
+  {
+    "source": "Characters_psx_1.2/Characters_psx_1.2/Characters_psx_02/Textures/Character_Monster_02.png",
+    "path": "assets/grimdark/characters/Character_Monster_02.png"
+  },
+  {
+    "source": "Characters_psx_1.2/Characters_psx_1.2/Characters_psx_02/Models/Rig/Killer_M/Character_Monster_03.fbx",
+    "path": "assets/grimdark/characters/Character_Monster_03.fbx"
+  },
+  {
+    "source": "Characters_psx_1.2/Characters_psx_1.2/Characters_psx_02/Textures/Character_Monster_03.png",
+    "path": "assets/grimdark/characters/Character_Monster_03.png"
+  },
+  {
+    "source": "Characters_psx_1.2/Characters_psx_1.2/Characters_psx_02/Models/Rig/Killer_M/Character_Monster_04.fbx",
+    "path": "assets/grimdark/characters/Character_Monster_04.fbx"
+  },
+  {
+    "source": "Characters_psx_1.2/Characters_psx_1.2/Characters_psx_02/Textures/Character_Monster_04.png",
+    "path": "assets/grimdark/characters/Character_Monster_04.png"
+  },
+  {
+    "source": "Characters_psx_1.2/Characters_psx_1.2/Characters_psx_02/Models/Rig/Killer_M/Character_Monster_05.fbx",
+    "path": "assets/grimdark/characters/Character_Monster_05.fbx"
+  },
+  {
+    "source": "Characters_psx_1.2/Characters_psx_1.2/Characters_psx_02/Textures/Character_Monster_05.png",
+    "path": "assets/grimdark/characters/Character_Monster_05.png"
+  },
+  {
+    "source": "Characters_psx_1.2/Characters_psx_1.2/Characters_psx_02/Models/Rig/Killer_M/Character_Monster_06.fbx",
+    "path": "assets/grimdark/characters/Character_Monster_06.fbx"
+  },
+  {
+    "source": "Characters_psx_1.2/Characters_psx_1.2/Characters_psx_02/Textures/Character_Monster_06.png",
+    "path": "assets/grimdark/characters/Character_Monster_06.png"
+  },
+  {
+    "source": "Characters_psx_1.2/Characters_psx_1.2/Characters_psx_02/Models/Rig/Killer_M/Character_Monster_07.fbx",
+    "path": "assets/grimdark/characters/Character_Monster_07.fbx"
+  },
+  {
+    "source": "Characters_psx_1.2/Characters_psx_1.2/Characters_psx_02/Textures/Character_Monster_07.png",
+    "path": "assets/grimdark/characters/Character_Monster_07.png"
+  },
+  {
+    "source": "Characters_psx_1.2/Characters_psx_1.2/Characters_psx_02/Models/Rig/Killer_M/Character_Monster_08.fbx",
+    "path": "assets/grimdark/characters/Character_Monster_08.fbx"
+  },
+  {
+    "source": "Characters_psx_1.2/Characters_psx_1.2/Characters_psx_02/Textures/Character_Monster_08.png",
+    "path": "assets/grimdark/characters/Character_Monster_08.png"
+  },
+  {
+    "source": "Characters_psx_1.2/Characters_psx_1.2/Characters_psx_02/Models/Rig/Killer_M/Character_Killer_05.fbx",
+    "path": "assets/grimdark/characters/Character_Killer_05.fbx"
+  },
+  {
+    "source": "Characters_psx_1.2/Characters_psx_1.2/Characters_psx_02/Textures/Character_Killer_05.png",
+    "path": "assets/grimdark/characters/Character_Killer_05.png"
+  },
+  {
+    "source": "Characters_psx_1.2/Characters_psx_1.2/Characters_psx_02/Models/Rig/Killer_M/Character_Killer_07.fbx",
+    "path": "assets/grimdark/characters/Character_Killer_07.fbx"
+  },
+  {
+    "source": "Characters_psx_1.2/Characters_psx_1.2/Characters_psx_02/Textures/Character_Killer_07.png",
+    "path": "assets/grimdark/characters/Character_Killer_07.png"
+  },
+  {
+    "source": "Characters_psx_1.2/Characters_psx_1.2/Characters_psx_02/Models/Rig/Killer_M/Character_Killer_10.fbx",
+    "path": "assets/grimdark/characters/Character_Killer_10.fbx"
+  },
+  {
+    "source": "Characters_psx_1.2/Characters_psx_1.2/Characters_psx_02/Textures/Character_Killer_10.png",
+    "path": "assets/grimdark/characters/Character_Killer_10.png"
+  },
+  {
+    "source": "Retro.Tree.Pack.v1.0/Retro Tree Pack/Models/Super Low Res/GLB/tree_rt_4.glb",
+    "path": "assets/grimdark/trees/tree_rt_4.glb"
+  },
+  {
+    "source": "Retro.Tree.Pack.v1.0/Retro Tree Pack/Models/Super Low Res/GLB/tree_rt_3.glb",
+    "path": "assets/grimdark/trees/tree_rt_3.glb"
+  },
+  {
+    "source": "Retro.Tree.Pack.v1.0/Retro Tree Pack/Models/Super Low Res/GLB/tree_rt_2_1.glb",
+    "path": "assets/grimdark/trees/tree_rt_2_1.glb"
+  },
+  {
+    "source": "Retro.Tree.Pack.v1.0/Retro Tree Pack/Models/Super Low Res/GLB/tree_rt_2.glb",
+    "path": "assets/grimdark/trees/tree_rt_2.glb"
+  },
+  {
+    "source": "Retro.Tree.Pack.v1.0/Retro Tree Pack/Models/Super Low Res/GLB/tree_rt_1.glb",
+    "path": "assets/grimdark/trees/tree_rt_1.glb"
+  },
+  {
+    "source": "Retro.Tree.Pack.v1.0/Retro Tree Pack/Models/Super Low Res/GLB/small_tree_rt_1.glb",
+    "path": "assets/grimdark/trees/small_tree_rt_1.glb"
+  },
+  {
+    "source": "Retro.Tree.Pack.v1.0/Retro Tree Pack/Models/Super Low Res/GLB/dead_tree_rt_2.glb",
+    "path": "assets/grimdark/trees/dead_tree_rt_2.glb"
+  },
+  {
+    "source": "Retro.Tree.Pack.v1.0/Retro Tree Pack/Models/Super Low Res/GLB/dead_tree_rt_1.glb",
+    "path": "assets/grimdark/trees/dead_tree_rt_1.glb"
+  },
+  {
+    "source": "PS1.Dark.Fantasy.Horror.Game.Assets.by.Stark.Crafts/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_ForestAsset/woodplank.JPG",
+    "path": "assets/grimdark/horror/PS1_ForestAsset/woodplank.JPG"
+  },
+  {
+    "source": "PS1.Dark.Fantasy.Horror.Game.Assets.by.Stark.Crafts/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_ForestAsset/wood.JPG",
+    "path": "assets/grimdark/horror/PS1_ForestAsset/wood.JPG"
+  },
+  {
+    "source": "PS1.Dark.Fantasy.Horror.Game.Assets.by.Stark.Crafts/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_ForestAsset/water.jpg",
+    "path": "assets/grimdark/horror/PS1_ForestAsset/water.jpg"
+  },
+  {
+    "source": "PS1.Dark.Fantasy.Horror.Game.Assets.by.Stark.Crafts/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_ForestAsset/treeleaf.jpg",
+    "path": "assets/grimdark/horror/PS1_ForestAsset/treeleaf.jpg"
+  },
+  {
+    "source": "PS1.Dark.Fantasy.Horror.Game.Assets.by.Stark.Crafts/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_ForestAsset/stonewall.JPG",
+    "path": "assets/grimdark/horror/PS1_ForestAsset/stonewall.JPG"
+  },
+  {
+    "source": "PS1.Dark.Fantasy.Horror.Game.Assets.by.Stark.Crafts/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_ForestAsset/stonebuild.JPG",
+    "path": "assets/grimdark/horror/PS1_ForestAsset/stonebuild.JPG"
+  },
+  {
+    "source": "PS1.Dark.Fantasy.Horror.Game.Assets.by.Stark.Crafts/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_ForestAsset/stone.JPG",
+    "path": "assets/grimdark/horror/PS1_ForestAsset/stone.JPG"
+  },
+  {
+    "source": "PS1.Dark.Fantasy.Horror.Game.Assets.by.Stark.Crafts/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_ForestAsset/sky.JPG",
+    "path": "assets/grimdark/horror/PS1_ForestAsset/sky.JPG"
+  },
+  {
+    "source": "PS1.Dark.Fantasy.Horror.Game.Assets.by.Stark.Crafts/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_ForestAsset/rock.jpg",
+    "path": "assets/grimdark/horror/PS1_ForestAsset/rock.jpg"
+  },
+  {
+    "source": "PS1.Dark.Fantasy.Horror.Game.Assets.by.Stark.Crafts/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_ForestAsset/PS1_NaturAssetCollection.fbx",
+    "path": "assets/grimdark/horror/PS1_ForestAsset/PS1_NaturAssetCollection.fbx"
+  },
+  {
+    "source": "PS1.Dark.Fantasy.Horror.Game.Assets.by.Stark.Crafts/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_ForestAsset/leaf.JPG",
+    "path": "assets/grimdark/horror/PS1_ForestAsset/leaf.JPG"
+  },
+  {
+    "source": "PS1.Dark.Fantasy.Horror.Game.Assets.by.Stark.Crafts/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_ForestAsset/ivy.JPG",
+    "path": "assets/grimdark/horror/PS1_ForestAsset/ivy.JPG"
+  },
+  {
+    "source": "PS1.Dark.Fantasy.Horror.Game.Assets.by.Stark.Crafts/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_ForestAsset/grass.jpg",
+    "path": "assets/grimdark/horror/PS1_ForestAsset/grass.jpg"
+  },
+  {
+    "source": "PS1.Dark.Fantasy.Horror.Game.Assets.by.Stark.Crafts/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_ForestAsset/dirt.JPG",
+    "path": "assets/grimdark/horror/PS1_ForestAsset/dirt.JPG"
+  },
+  {
+    "source": "PS1.Dark.Fantasy.Horror.Game.Assets.by.Stark.Crafts/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_Palast_Assets/SAM_9037.JPG",
+    "path": "assets/grimdark/horror/PS1_Palast_Assets/SAM_9037.JPG"
+  },
+  {
+    "source": "PS1.Dark.Fantasy.Horror.Game.Assets.by.Stark.Crafts/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_Palast_Assets/SAM_9036.JPG",
+    "path": "assets/grimdark/horror/PS1_Palast_Assets/SAM_9036.JPG"
+  },
+  {
+    "source": "PS1.Dark.Fantasy.Horror.Game.Assets.by.Stark.Crafts/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_Palast_Assets/SAM_9035.JPG",
+    "path": "assets/grimdark/horror/PS1_Palast_Assets/SAM_9035.JPG"
+  },
+  {
+    "source": "PS1.Dark.Fantasy.Horror.Game.Assets.by.Stark.Crafts/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_Palast_Assets/SAM_9034.JPG",
+    "path": "assets/grimdark/horror/PS1_Palast_Assets/SAM_9034.JPG"
+  },
+  {
+    "source": "PS1.Dark.Fantasy.Horror.Game.Assets.by.Stark.Crafts/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_Palast_Assets/SAM_9030.JPG",
+    "path": "assets/grimdark/horror/PS1_Palast_Assets/SAM_9030.JPG"
+  },
+  {
+    "source": "PS1.Dark.Fantasy.Horror.Game.Assets.by.Stark.Crafts/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_Palast_Assets/SAM_9024.JPG",
+    "path": "assets/grimdark/horror/PS1_Palast_Assets/SAM_9024.JPG"
+  },
+  {
+    "source": "PS1.Dark.Fantasy.Horror.Game.Assets.by.Stark.Crafts/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_Palast_Assets/SAM_9023.JPG",
+    "path": "assets/grimdark/horror/PS1_Palast_Assets/SAM_9023.JPG"
+  },
+  {
+    "source": "PS1.Dark.Fantasy.Horror.Game.Assets.by.Stark.Crafts/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_Palast_Assets/SAM_8970.JPG",
+    "path": "assets/grimdark/horror/PS1_Palast_Assets/SAM_8970.JPG"
+  },
+  {
+    "source": "PS1.Dark.Fantasy.Horror.Game.Assets.by.Stark.Crafts/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_Palast_Assets/SAM_8937.JPG",
+    "path": "assets/grimdark/horror/PS1_Palast_Assets/SAM_8937.JPG"
+  },
+  {
+    "source": "PS1.Dark.Fantasy.Horror.Game.Assets.by.Stark.Crafts/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_Palast_Assets/PS1_PalastAssetCollection.fbx",
+    "path": "assets/grimdark/horror/PS1_Palast_Assets/PS1_PalastAssetCollection.fbx"
+  },
+  {
+    "source": "PS1.Dark.Fantasy.Horror.Game.Assets.by.Stark.Crafts/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_Skull/ps1_sword_128x128.jpg",
+    "path": "assets/grimdark/horror/PS1_Skull/ps1_sword_128x128.jpg"
+  },
+  {
+    "source": "PS1.Dark.Fantasy.Horror.Game.Assets.by.Stark.Crafts/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_Skull/ps1_Sword.fbx",
+    "path": "assets/grimdark/horror/PS1_Skull/ps1_Sword.fbx"
+  },
+  {
+    "source": "PS1.Dark.Fantasy.Horror.Game.Assets.by.Stark.Crafts/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_Skull/ps1_skull_256x256.png",
+    "path": "assets/grimdark/horror/PS1_Skull/ps1_skull_256x256.png"
+  },
+  {
+    "source": "PS1.Dark.Fantasy.Horror.Game.Assets.by.Stark.Crafts/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_Skull/PS1_Skull.fbx",
+    "path": "assets/grimdark/horror/PS1_Skull/PS1_Skull.fbx"
+  },
+  {
+    "source": "PS1.Dark.Fantasy.Horror.Game.Assets.by.Stark.Crafts/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_Skull/ps1_skeleton_256x256_transp.png",
+    "path": "assets/grimdark/horror/PS1_Skull/ps1_skeleton_256x256_transp.png"
+  },
+  {
+    "source": "PS1.Dark.Fantasy.Horror.Game.Assets.by.Stark.Crafts/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_Skull/PS1_Skeleton.fbx",
+    "path": "assets/grimdark/horror/PS1_Skull/PS1_Skeleton.fbx"
+  },
+  {
+    "source": "PS1.Dark.Fantasy.Horror.Game.Assets.by.Stark.Crafts/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_Skull/MagicRunes_Emission.png",
+    "path": "assets/grimdark/horror/PS1_Skull/MagicRunes_Emission.png"
+  },
+  {
+    "source": "PSX_Modular_Medieval/Market/market_stall_round_red.glb",
+    "path": "assets/grimdark/medieval/market_stall_round_red.glb"
+  },
+  {
+    "source": "PSX_Modular_Medieval/Market/table.glb",
+    "path": "assets/grimdark/medieval/table.glb"
+  },
+  {
+    "source": "PSX_Modular_Medieval/Market/crate.glb",
+    "path": "assets/grimdark/medieval/crate.glb"
+  },
+  {
+    "source": "PSX_Modular_Medieval/Market/barrel.glb",
+    "path": "assets/grimdark/medieval/barrel.glb"
+  },
+  {
+    "source": "PSX_Modular_Medieval/Building blocks/stone_archway.glb",
+    "path": "assets/grimdark/medieval/stone_archway.glb"
+  },
+  {
+    "source": "PSX_Modular_Medieval/Decorations/door_wood.glb",
+    "path": "assets/grimdark/medieval/door_wood.glb"
+  },
+  {
+    "source": "TheWrapper.V2.1/MonsterPSX.fbx",
+    "path": "assets/grimdark/source_only/MonsterPSX.fbx"
+  },
+  {
+    "source": "TheWrapper.V2.1/MonsterPSX_Diffuse.png",
+    "path": "assets/grimdark/wrapper/MonsterPSX_Diffuse.png"
+  },
+  {
+    "source": "psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/addons/psx/plugin.cfg",
+    "path": "assets/grimdark/psx_addon_source/plugin.cfg"
+  },
+  {
+    "source": "psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/addons/psx/textures/shadow_32x32.png",
+    "path": "assets/grimdark/psx_addon_source/textures/shadow_32x32.png"
+  },
+  {
+    "source": "psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/addons/psx/shaders/psx_template.gdshader",
+    "path": "assets/grimdark/psx_addon_source/shaders/psx_template.gdshader"
+  },
+  {
+    "source": "psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/addons/psx/shaders/psx_postprocess.gdshader",
+    "path": "assets/grimdark/psx_addon_source/shaders/psx_postprocess.gdshader"
+  },
+  {
+    "source": "psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/addons/psx/shaders/psx.gdshaderinc",
+    "path": "assets/grimdark/psx_addon_source/shaders/psx.gdshaderinc"
+  },
+  {
+    "source": "psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/addons/psx/scripts/RayShadowCaster.gd",
+    "path": "assets/grimdark/psx_addon_source/scripts/RayShadowCaster.gd"
+  },
+  {
+    "source": "psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/addons/psx/scripts/PsxWorldEnvironment.gd",
+    "path": "assets/grimdark/psx_addon_source/scripts/PsxWorldEnvironment.gd"
+  },
+  {
+    "source": "psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/addons/psx/scripts/PsxPostProcessAutoload.gd",
+    "path": "assets/grimdark/psx_addon_source/scripts/PsxPostProcessAutoload.gd"
+  },
+  {
+    "source": "psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/addons/psx/scripts/PsxMaterial3D.gd",
+    "path": "assets/grimdark/psx_addon_source/scripts/PsxMaterial3D.gd"
+  },
+  {
+    "source": "psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/addons/psx/scripts/PsxFogLightFader.gd",
+    "path": "assets/grimdark/psx_addon_source/scripts/PsxFogLightFader.gd"
+  },
+  {
+    "source": "psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/addons/psx/scripts/Psx.gd",
+    "path": "assets/grimdark/psx_addon_source/scripts/Psx.gd"
+  },
+  {
+    "source": "psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/addons/psx/scripts/LineMesh.gd",
+    "path": "assets/grimdark/psx_addon_source/scripts/LineMesh.gd"
+  },
+  {
+    "source": "psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/addons/psx/scenes/PsxConversionDialogOption.tscn",
+    "path": "assets/grimdark/psx_addon_source/scenes/PsxConversionDialogOption.tscn"
+  },
+  {
+    "source": "psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/addons/psx/scenes/PsxConversionDialogOption.gd",
+    "path": "assets/grimdark/psx_addon_source/scenes/PsxConversionDialogOption.gd"
+  },
+  {
+    "source": "psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/addons/psx/scenes/PsxConversionDialog.tscn",
+    "path": "assets/grimdark/psx_addon_source/scenes/PsxConversionDialog.tscn"
+  },
+  {
+    "source": "psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/addons/psx/scenes/PsxConversionDialog.gd",
+    "path": "assets/grimdark/psx_addon_source/scenes/PsxConversionDialog.gd"
+  },
+  {
+    "source": "psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/addons/psx/materials/psx_post_process.tres",
+    "path": "assets/grimdark/psx_addon_source/materials/psx_post_process.tres"
+  },
+  {
+    "source": "psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/addons/psx/materials/psx_mat_shadow_32x32.tres",
+    "path": "assets/grimdark/psx_addon_source/materials/psx_mat_shadow_32x32.tres"
+  },
+  {
+    "source": "psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/addons/psx/materials/psx_mat_placeholder.tres",
+    "path": "assets/grimdark/psx_addon_source/materials/psx_mat_placeholder.tres"
+  },
+  {
+    "source": "psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/psx_visuals-7dbba0d2ac598dda82984d3d1185e12805500fd3/addons/psx/materials/psx_mat_default.tres",
+    "path": "assets/grimdark/psx_addon_source/materials/psx_mat_default.tres"
+  }
+]

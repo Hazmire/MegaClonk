@@ -14,7 +14,6 @@ static func detonate(game: Node, e: Dictionary) -> void:
  e.detonated=true
  game.flash(e.pos,Color("ffb05d"),e.variant.blast_radius)
  game.impact(e.pos,Color("ffab55"),10)
- game.play_sound("explosion")
  game.apply_player_blast(e.pos,e.variant.blast_radius,e.damage)
  game.combat_fx.supplied_burst("fire",e.pos,1.5)
  game.combat_fx.burst("explosion_small",e.pos,clampf(e.variant.blast_radius/2,1,4))

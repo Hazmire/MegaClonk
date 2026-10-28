@@ -37,26 +37,31 @@ static func build(game: Node) -> void:
   var scale_value=rng.randf_range(0.85,1.2)
   var type=i%3
   var tree=["CommonTree_1","CommonTree_3","CommonTree_5"][type]
-  var mesh=ImportedArt.mesh(NATURE+tree+".gltf",7.5,7)
-  var visual_scale=scale_value
-  if i%3!=0:mesh=[ArtResetWorld.TREE1,ArtResetWorld.TREE2,ArtResetWorld.TREE3][i%3];visual_scale*=7.5
-  game.prop_instance("mega_"+tree,StageThemes.decor(mesh,game.stage),Color.WHITE,position,Vector3.ONE*visual_scale,true,rng.randf()*TAU)
+  var season=StageThemes.index(game.stage)
+  var source=["tree_rt_1","tree_rt_2","tree_rt_3"][type]
+  if season==2 or (season==1 and i%3==0):source="dead_tree_rt_"+str(1+i%2)
+  var mesh=load("res://assets/grimdark/baked/props/"+source+".res")
+  game.prop_instance("mega_"+tree,StageThemes.decor(mesh,game.stage),Color.WHITE,position,Vector3.ONE*scale_value*7.5,true,rng.randf()*TAU)
+  game.prop_batches["mega_"+tree].set_meta("grimdark_source",source)
   game.prop_collider(position,0.45*scale_value,4*scale_value)
   if game.prop_batches["mega_"+tree].multimesh.visible_instance_count>=140:break
  for i in 600:
   var p=Vector2(rng.randf_range(-92,92),rng.randf_range(-92,92))
   if ForestMap.is_ramp(data,p,1) or p.distance_to(Vector2(data.spawn.x,data.spawn.z))<12:continue
-  var model=["Grass_Common_Short","Fern_1","Flower_3_Group","Bush_Common","Bush_Common_Flowers"][i%5]
-  var height=0.6 if i%5<3 else 1.0
-  game.prop_instance("mega_"+model,StageThemes.decor(ImportedArt.mesh(NATURE+model+".gltf",height,2),game.stage),Color.WHITE,Vector3(p.x,game.terrain_height(p.x,p.y),p.y),Vector3.ONE*rng.randf_range(0.8,1.2),true,rng.randf()*TAU)
+  if StageThemes.index(game.stage)==2:continue
+  var model=["Grass","Plant","Leaf","Bush","lilTree"][i%5]
+  var height=0.25 if i%5<3 else 0.8
+  var mesh=load("res://assets/grimdark/baked/props/forest_"+model+".res")
+  game.prop_instance("mega_"+model,StageThemes.decor(mesh,game.stage),Color.WHITE,Vector3(p.x,game.terrain_height(p.x,p.y),p.y),Vector3.ONE*height*rng.randf_range(0.8,1.2),true,rng.randf()*TAU)
+
  for i in 40:
   var p=Vector2(rng.randf_range(-90,90),rng.randf_range(-90,90))
   if ForestMap.protected(data,p,3):continue
-  var mesh=ImportedArt.mesh(NATURE+"Rock_Medium_1.gltf",2,4)
+  var mesh=preload("res://assets/grimdark/baked/props/forest_Rock.res")
   var position=Vector3(p.x,game.terrain_height(p.x,p.y),p.y)
   if not spaced(game,position,1.8):continue
-  game.prop_instance("mega_rock",StageThemes.decor(mesh,game.stage,true),Color.WHITE,position,Vector3.ONE,true);game.prop_collider(position,1.8,mesh.get_aabb().size.y)
- ArtResetWorld.boundary(game)
+  game.prop_instance("mega_rock",StageThemes.decor(mesh,game.stage,true),Color.WHITE,position,Vector3.ONE*2,true);game.prop_collider(position,1.8,mesh.get_aabb().size.y*2)
+ GrimdarkWorld.boundary(game)
  var props_done=Time.get_ticks_usec()
  ForestAtmosphere.add_grass(game,data,rng)
  var grass_done=Time.get_ticks_usec()

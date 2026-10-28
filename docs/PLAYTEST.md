@@ -1,3 +1,13 @@
+# Grimdark PSX13 playtest
+
+Extract the complete ZIP and launch BONK_INFINITY.exe (or Launch_Compatibility.bat). Read GRIMDARK.md for the current art update. Start a run to test the supplied Knight, horror enemy silhouettes, medieval shops/coffers, stone shrines and rune portal. Follow the red portal wind across the vertical terrain, then compare the living, withering and dead forest stages.
+
+Settings → Graphics exposes retro scale, texture warping, vertex snapping and dithering. UI should stay sharp. Verify crouch/slide/jump, red player flashes, white enemy flashes, silent enemy hits/deaths, separate weapon/tome rows and dark-red numbered HP bars. Supplemental animation poses remain simplified. Dense500-enemy CPU cost, gaming-GPU/native Windows performance and small cloud-renderer shutdown warnings are documented in GRIMDARK_PERFORMANCE.md. Older guides below are historical.
+
+# Retro Audio11 playtest
+
+Extract the entire ZIP and launch BONK_INFINITY.exe, or Launch_Compatibility.bat. In Settings → Audio, all five sliders apply immediately and persist. Listen to each weapon, grounded footsteps, slide/landing, XP cascades and chest reveals. Check that white enemy flashes restore, contact shunts remain restrained and explosions launch more strongly. Original supplied music loops and crossfades between menu/stages. Full inventory, attribution and test limits: RETRO_AUDIO.md. No auditioning/native Windows audio-device certification is claimed. Older guides below are historical.
+
 # Art reset 10 playtest
 
 Extract the entire Windows ZIP and launch BONK_INFINITY.exe, or Launch_Compatibility.bat. Start a new run for the focused ten-weapon roster. Old equipped archived weapons still work; new offers exclude them. Newly acquired weapons and tomes are Common; existing upgrades retain supported rarity tiers. Traits use neutral borders.

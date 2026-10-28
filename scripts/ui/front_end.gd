@@ -18,9 +18,16 @@ var minimap: RunMinimap
 var menu_camera: Camera3D
 var preview_mode="home"
 var orbit=0.0
+var menu_shop: Node3D
+var menu_focus=Vector3.ZERO
+var menu_player_position=Vector3.ZERO
+var menu_world_instance=0
 var map_tick=0.0
 var settings_back: Callable
 var in_run=false
+const HEALTH_COLOR=Color("801421")
+var health_text: Label
+var character_health: ProgressBar
 var loadout_icons: VBoxContainer
 var icon_fingerprint=""
 var active_tab="weapons"
@@ -62,10 +69,13 @@ func setup(owner_game: Node) -> void:
  hud_root=Control.new();hud_root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);hud_root.mouse_filter=Control.MOUSE_FILTER_IGNORE;root.add_child(hud_root)
  game.ui=self
  game.hud=text("",hud_root,18);game.hud.hide()
- game.health_bar=ProgressBar.new();game.health_bar.position=Vector2(28,162);game.health_bar.size=Vector2(270,15);game.health_bar.show_percentage=false;hud_root.add_child(game.health_bar)
+ game.health_bar=ProgressBar.new();game.health_bar.position=Vector2(28,220);game.health_bar.size=Vector2(270,22);game.health_bar.show_percentage=false;hud_root.add_child(game.health_bar)
  game.xp_bar=ProgressBar.new();game.xp_bar.position=Vector2(0,698);game.xp_bar.size=Vector2(1280,22);game.xp_bar.show_percentage=false;hud_root.add_child(game.xp_bar)
- for pair in [[game.health_bar,Color("e17f83")],[game.xp_bar,Color("75cdb2")]]:
+ for pair in [[game.health_bar,HEALTH_COLOR],[game.xp_bar,Color("75cdb2")]]:
   var fill=StyleBoxFlat.new();fill.bg_color=pair[1];pair[0].add_theme_stylebox_override("fill",fill)
+ var hp_background=StyleBoxFlat.new();hp_background.bg_color=Color("26090f");hp_background.border_color=Color("13070a");hp_background.set_border_width_all(1);game.health_bar.add_theme_stylebox_override("background",hp_background)
+ health_text=Label.new();health_text.name="HealthValue";health_text.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);health_text.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;health_text.vertical_alignment=VERTICAL_ALIGNMENT_CENTER;health_text.add_theme_font_size_override("font_size",15);health_text.mouse_filter=Control.MOUSE_FILTER_IGNORE;game.health_bar.add_child(health_text)
+ character_health=ProgressBar.new();character_health.name="CharacterHealth";character_health.size=Vector2(64,7);character_health.show_percentage=false;character_health.mouse_filter=Control.MOUSE_FILTER_IGNORE;character_health.add_theme_stylebox_override("background",hp_background.duplicate());var hp_fill=StyleBoxFlat.new();hp_fill.bg_color=HEALTH_COLOR;character_health.add_theme_stylebox_override("fill",hp_fill);character_health.add_theme_font_size_override("font_size",1);character_health.size=Vector2(64,7);hud_root.add_child(character_health)
  xp_label=text("",hud_root,14);xp_label.position=Vector2(450,698);xp_label.custom_minimum_size.x=380;xp_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
  loadout_label=text("",hud_root,14);loadout_label.position=Vector2(28,14)
  loadout_icons=VBoxContainer.new();loadout_icons.position=Vector2(28,38);loadout_icons.add_theme_constant_override("separation",5);hud_root.add_child(loadout_icons)
@@ -73,8 +83,8 @@ func setup(owner_game: Node) -> void:
  timer_label=text("",hud_root,30);timer_label.position=Vector2(525,24);timer_label.custom_minimum_size.x=230;timer_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
  event_label=text("",hud_root,16);event_label.position=Vector2(380,62);event_label.custom_minimum_size.x=520;event_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
  boss_panel=VBoxContainer.new();boss_panel.position=Vector2(415,95);boss_panel.custom_minimum_size.x=450;hud_root.add_child(boss_panel)
- status_label=text("",hud_root,16);status_label.position=Vector2(28,198)
- quest_tracker=text("",hud_root,13);quest_tracker.position=Vector2(28,320);quest_tracker.custom_minimum_size=Vector2(270,0);quest_tracker.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+ status_label=text("",hud_root,16);status_label.position=Vector2(28,252)
+ quest_tracker=text("",hud_root,13);quest_tracker.position=Vector2(28,375);quest_tracker.custom_minimum_size=Vector2(270,0);quest_tracker.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
  minimap=RunMinimap.new();minimap.game=game;minimap.position=Vector2(1040,450);minimap.size=Vector2(210,210);hud_root.add_child(minimap)
  var legend=text("YOU • PORTAL • TREASURE",hud_root,12);legend.position=Vector2(1040,670)
  game.notice=text("",root,18);game.notice.position=Vector2(350,646);game.notice.custom_minimum_size.x=590;game.notice.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
@@ -85,7 +95,8 @@ func heading(value: String, parent: Node, size_value: int = 28) -> Label:
  var label=text(value,parent,size_value);label.add_theme_font_override("font",headline_font);return label
 func action(value: String, parent: Node, callback: Callable) -> Button:
  var button=Button.new();button.text=value;button.custom_minimum_size.y=42;parent.add_child(button)
- button.pressed.connect(func(): game.play_sound("menu");callback.call())
+ button.mouse_entered.connect(func():game.play_sound("ui.hover"))
+ button.pressed.connect(func(): game.play_sound("ui.confirm");callback.call())
  return button
 func card(parent: Node, pos: Vector2, dimensions: Vector2) -> VBoxContainer:
  var panel=PanelContainer.new();panel.position=pos;panel.size=dimensions;panel.custom_minimum_size=dimensions
@@ -97,12 +108,14 @@ func card(parent: Node, pos: Vector2, dimensions: Vector2) -> VBoxContainer:
  game.panel=panel
  return column
 func stop_reward_animations() -> void:
+ if is_instance_valid(game.audio):game.audio.stop_event("reward.chest.tick")
  for tween in reward_tweens:
   if tween!=null and tween.is_valid():tween.kill()
  reward_tweens.clear()
 func _exit_tree() -> void:
  stop_reward_animations()
 func clear() -> void:
+ if is_instance_valid(game.audio):game.audio.emit("ui.open")
  if is_instance_valid(stage_banner):stage_banner.hide()
  fade_celebrations();chest_skip=Callable()
  stop_reward_animations()
@@ -135,15 +148,39 @@ func prepare_backdrop() -> void:
  game.mode="menu"
  if not is_instance_valid(game.player) or not is_instance_valid(game.enemy_view):
   game.variants.initialize(0);game.biome=0;game.run_seed=12;game.build_stage()
- if not is_instance_valid(menu_camera):
+ if not is_instance_valid(menu_camera) or menu_camera.get_parent()!=game.world:
   menu_camera=Camera3D.new();game.world.add_child(menu_camera)
+ if menu_world_instance!=game.world.get_instance_id() or not is_instance_valid(menu_shop) or not menu_shop.is_inside_tree():
+  # The protected spawn clearing keeps the close camera away from cliffs/trees.
+  # This is the native shop visual, not an interactive merchant added to the run.
+  menu_shop=Node3D.new();menu_shop.name="MenuShopBackdrop";game.world.add_child(menu_shop)
+  menu_shop.position=game.map_layout.spawn
+  GrimdarkObjects.populate(menu_shop,"Shop",game.stage)
+  menu_world_instance=game.world.get_instance_id();orbit=0.0
+  var forward=menu_shop.basis.z.normalized()
+  menu_player_position=menu_shop.position+forward*3.2
+  menu_player_position.y=game.terrain_height(menu_player_position.x,menu_player_position.z)+.1
+  menu_focus=menu_player_position+Vector3.UP*1.1
  menu_camera.current=true
- game.player.active=false
- game.player.position=Vector3(0,game.terrain_height(0,0),0)
+ game.player.active=false;game.player.position=menu_player_position
+ game.player.avatar.rotation.y=atan2(menu_shop.basis.z.x,menu_shop.basis.z.z)
+ game.player.avatar.set_damage_flash(false);game.player.avatar.animate("idle",0,.1)
+ game.enemy_view.hide();game.player.avatar.show()
  game.notice.text="";game.message_time=0
- game.player.avatar.show()
+ if is_instance_valid(game.audio):game.audio.music_menu()
+ update_menu_camera(0)
+func update_menu_camera(delta: float) -> void:
+ if not is_instance_valid(menu_camera) or not is_instance_valid(menu_shop):return
+ orbit+=delta*.12
+ # A bounded arc keeps the shop behind the adventurer and avoids terrain clipping.
+ var yaw=atan2(menu_shop.basis.z.x,menu_shop.basis.z.z)+sin(orbit)*.22
+ var radius=7.0 if preview_mode=="home" else 5.7
+ menu_camera.position=menu_focus+Vector3(sin(yaw)*radius,1.65,cos(yaw)*radius)
+ menu_camera.h_offset=-3.1 if preview_mode=="home" else -1.3
+ menu_camera.fov=55;menu_camera.look_at(menu_focus)
 func home() -> void:
  in_run=false;game.mode="menu";preview_mode="home";prepare_backdrop();clear()
+ if is_instance_valid(game.audio):game.audio.music_menu()
  var title=text("MEGACLONK",menu,54);title.add_theme_font_override("font",headline_font);title.position=Vector2(390,135);title.custom_minimum_size.x=500;title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
  var buttons=card(menu,Vector2(490,270),Vector2(300,295))
  action("PLAY",buttons,play_screen).grab_focus();action("UNLOCKS",buttons,unlocks);action("QUESTS",buttons,quests);action("SETTINGS",buttons,func(): settings(home))
@@ -194,7 +231,7 @@ func unlocks() -> void:
  game.mode="unlocks";preview_mode="home"
  var col=page("Unlocks & collection");paragraph(wallet(),col,800)
  var tabs=HBoxContainer.new();col.add_child(tabs)
- for category in ["weapons","traits","items","ultimates"]:
+ for category in ["weapons","tomes","traits","items","ultimates"]:
   action(category.capitalize(),tabs,func():active_tab=category;unlocks())
  var body=HBoxContainer.new();col.add_child(body)
  var grid=GridContainer.new();grid.columns=5;body.add_child(grid)
@@ -202,7 +239,9 @@ func unlocks() -> void:
  paragraph("Select an entry to inspect it. Enabled entries may appear during runs. Starting weapons ignore this toggle.",detail,370)
  for e in LoadoutCatalog.entries(active_tab):
   var open=MetaProgress.unlocked(game.progress.data,active_tab,e.id)
-  var button=Button.new();button.custom_minimum_size=Vector2(130,86);button.clip_text=true;button.text_overrun_behavior=TextServer.OVERRUN_TRIM_ELLIPSIS;button.icon_alignment=HORIZONTAL_ALIGNMENT_CENTER;button.vertical_icon_alignment=VERTICAL_ALIGNMENT_TOP;button.add_theme_font_size_override("font_size",14);button.tooltip_text=e.name;button.text=e.name+("\nON" if MetaProgress.enabled(game.progress.data,active_tab,e.id) else ("\nOFF" if open else "\nLOCKED"));button.icon=UIAssets.icon(active_tab,e.id);button.expand_icon=true;button.add_theme_constant_override("icon_max_width",30);grid.add_child(button)
+  var button=Button.new();button.custom_minimum_size=Vector2(130,86);button.clip_text=true;button.text_overrun_behavior=TextServer.OVERRUN_TRIM_ELLIPSIS;button.icon_alignment=HORIZONTAL_ALIGNMENT_CENTER;button.vertical_icon_alignment=VERTICAL_ALIGNMENT_TOP;button.add_theme_font_size_override("font_size",14);button.tooltip_text=e.name;button.text=(e.name.trim_suffix(" Tome")+"\nTome" if active_tab=="tomes" else e.name)+("\nON" if MetaProgress.enabled(game.progress.data,active_tab,e.id) else ("\nOFF" if open else "\nLOCKED"));button.icon=UIAssets.icon(active_tab,e.id);button.expand_icon=true;button.add_theme_constant_override("icon_max_width",40 if active_tab=="tomes" else 30)
+  if active_tab=="tomes":button.custom_minimum_size.y=108
+  grid.add_child(button)
   if not open:button.modulate=Color("82908b")
   button.pressed.connect(func():
    for child in detail.get_children():detail.remove_child(child);child.queue_free()
@@ -213,11 +252,13 @@ func unlocks() -> void:
     else:action("Disable from runs" if MetaProgress.enabled(game.progress.data,active_tab,e.id) else "Enable in runs",detail,func():MetaProgress.toggle(game.progress.data,active_tab,e.id);game.progress.save();unlocks())
    else:
     # Locked entries reveal their requirement, never their effect text.
-    paragraph("Unlock: %d silver"%e.cost if active_tab=="weapons" else "Unlock: %d lifetime kills"%e.goal,detail,370)
-    if active_tab=="weapons":
+    var requirement="Unlock: %d silver"%e.cost if active_tab=="weapons" else "Unlock: %d lifetime kills"%e.goal
+    if active_tab=="tomes":requirement="Unlock: %d lifetime kills and %d silver"%[e.goal,e.cost]
+    paragraph(requirement,detail,370)
+    if active_tab in ["weapons","tomes"]:
      action("Unlock for %d silver"%e.cost,detail,func():
       if MetaProgress.purchase(game.progress.data,active_tab,e.id):game.progress.save();unlocks()
-      else:game.toast("Not enough silver"))
+      else:game.toast("Meet the kill milestone and silver cost"))
    )
  heading("Account upgrades",col,21)
  for kind in ["weapon","tome"]:
@@ -253,7 +294,7 @@ func quests() -> void:
    var claimed=q.id in game.progress.data.claimed
    var claim=action("Claimed" if claimed else "Claim reward" if MetaProgress.quest_state(game.progress.data,q)=="completed" else "In progress",list,func():
     if MetaProgress.claim(game.progress.data,q.id):
-     game.progress.save();claim_quest_button(list,q.id);wallet_refresh(col))
+     game.play_sound("ui.purchase");game.progress.save();claim_quest_button(list,q.id);wallet_refresh(col))
    claim.set_meta("quest_id",q.id)
    claim.disabled=claimed or MetaProgress.quest_value(game.progress.data,q.metric)<q.target
 func claim_quest_button(list: Node,id: String) -> void:
@@ -283,11 +324,13 @@ func update_hud() -> void:
  if fingerprint!=icon_fingerprint:
   icon_fingerprint=fingerprint
   for child in loadout_icons.get_children():loadout_icons.remove_child(child);child.queue_free()
-  var weapon_row=HBoxContainer.new();weapon_row.name="EquippedItems";weapon_row.add_theme_constant_override("separation",4);loadout_icons.add_child(weapon_row)
+  var equipment_rows=VBoxContainer.new();equipment_rows.name="EquippedItems";equipment_rows.add_theme_constant_override("separation",4);loadout_icons.add_child(equipment_rows)
+  var weapon_row=HBoxContainer.new();weapon_row.name="Weapons";weapon_row.add_theme_constant_override("separation",4);equipment_rows.add_child(weapon_row)
   for id in game.weapons:
    var meta=game.equipment_meta("weapons",id,int(game.weapons[id].level));var tile=RewardScreens.icon(self,weapon_row,"weapons",str(id),"Lv. %d"%int(game.weapons[id].level),Rarity.definition(meta.rarity).color,40);tile.tooltip_text=meta.name;tile.set_meta("equipment_uid",meta.uid)
+  var tome_row=HBoxContainer.new();tome_row.name="Tomes";tome_row.add_theme_constant_override("separation",4);equipment_rows.add_child(tome_row)
   for id in game.tomes:
-   var meta=game.equipment_meta("tomes",id,int(game.tomes[id]));var tile=RewardScreens.icon(self,weapon_row,"tomes",str(id),"Lv. %d"%int(game.tomes[id]),Rarity.definition(meta.rarity).color,40);tile.tooltip_text=meta.name;tile.set_meta("equipment_uid",meta.uid)
+   var meta=game.equipment_meta("tomes",id,int(game.tomes[id]));var tile=RewardScreens.icon(self,tome_row,"tomes",str(id),"Lv. %d"%int(game.tomes[id]),Rarity.definition(meta.rarity).color,40);tile.tooltip_text=meta.name;tile.set_meta("equipment_uid",meta.uid)
   var ability_row=HBoxContainer.new();loadout_icons.add_child(ability_row)
   icon_tile(ability_row,"traits",game.loadout_runtime.trait_id,LoadoutCatalog.entry("traits",game.loadout_runtime.trait_id).get("name","Trait"),true)
   icon_tile(ability_row,"ultimates",game.loadout_runtime.ultimate_id,LoadoutCatalog.entry("ultimates",game.loadout_runtime.ultimate_id).get("name","Ultimate"),true)
@@ -296,17 +339,16 @@ func update_hud() -> void:
  timer_label.text="%02d:%02d"%[int(left)/60,int(left)%60] if left>0 else "00:00 • ENDLESS"
  timer_label.modulate=Color("f68c7a") if left<=0 else Color("f2e5c4")
  game.health_bar.max_value=game.stats.max_health;game.health_bar.value=game.health
+ health_text.text="%d / %d"%[ceili(maxf(0,game.health)),ceili(game.stats.max_health)]
+ character_health.max_value=game.stats.max_health;character_health.value=game.health
+ update_character_health()
  xp_label.text="LEVEL %d • %.0f / %.0f XP"%[game.level,game.xp,Catalog.threshold(game.level)]
  if is_instance_valid(ultimate_badge):ultimate_badge.text="READY" if game.loadout_runtime.cooldown<=0 else str(ceili(game.loadout_runtime.cooldown))+"s"
  game.xp_bar.max_value=Catalog.threshold(game.level);game.xp_bar.value=game.xp;game.xp_bar.tooltip_text="Level %d • %.0f / %.0f XP"%[game.level,game.xp,Catalog.threshold(game.level)]
  status_label.text="HP %d/%d  •  LV %d  •  KILLS %d\nTab • Build & stats"%[maxf(0,game.health),game.stats.max_health,game.level,game.kills]
  status_label.text+="\n[%s] %s • %s"%[OS.get_keycode_string(game.bindings.ultimate),LoadoutCatalog.entry("ultimates",game.loadout_runtime.ultimate_id).get("name","Ultimate"),"READY" if game.loadout_runtime.cooldown<=0 else "%ds"%ceili(game.loadout_runtime.cooldown)]
  if game.loadout_runtime.remaining>0:status_label.text+="\nULTIMATE ACTIVE • %.1fs"%game.loadout_runtime.remaining
- var tracked=[]
- for q in quest_definitions:
-  var value=MetaProgress.live_quest_value(game,q)
-  if MetaProgress.quest_state(game.progress.data,q,value)=="active" and tracked.size()<3:tracked.append("%s  %d/%d"%[q.name,value,q.target])
- quest_tracker.text="QUESTS IN PROGRESS\n"+"\n".join(tracked) if not tracked.is_empty() else ""
+ quest_tracker.text="";quest_tracker.hide()
  update_boss_bars()
  if game.settings.fps:status_label.text+="\n%d FPS"%Engine.get_frames_per_second()
 func pause() -> void:
@@ -335,17 +377,21 @@ func settings(back: Callable) -> void:
    for label in ["1280 × 720","1600 × 900","1920 × 1080"]:resolution.add_item(label)
    list.add_child(resolution);resolution.item_selected.connect(func(i):DisplayServer.window_set_size([Vector2i(1280,720),Vector2i(1600,900),Vector2i(1920,1080)][i]))
   var keys=[]
-  if group=="Graphics":keys=["render_scale","visual_intensity","reduced","numbers","shake","fps"]
-  if group=="Audio":keys=["master","music","effects"]
+  if group=="Graphics":keys=["render_scale","retro_scale","psx_warp","psx_snap","psx_dither","visual_intensity","reduced","numbers","shake","fps"]
+  if group=="Audio":keys=["master","music","effects","ui_volume","ambience"]
   if group=="Gameplay":keys=["sensitivity","invert","focus_pause"]
   for key in keys:
    if game.settings[key] is bool:
     var check=CheckButton.new();check.text=key.replace("_"," ").capitalize();check.button_pressed=game.settings[key];list.add_child(check)
     check.toggled.connect(func(value):game.settings[key]=value;game.apply_settings())
    else:
-    text(key.replace("_"," ").capitalize(),list,16)
-    var slider=HSlider.new();slider.min_value=0.0005 if key=="sensitivity" else (0.5 if key=="render_scale" else 0.0);slider.max_value=0.008 if key=="sensitivity" else 1.0;slider.step=0.0001 if key=="sensitivity" else 0.05;slider.value=game.settings[key];slider.custom_minimum_size.x=700;list.add_child(slider)
-    slider.value_changed.connect(func(value):game.settings[key]=value;game.apply_settings())
+    var caption=text(({"master":"Master volume","music":"Music volume","effects":"Sound effects volume","ui_volume":"UI volume","ambience":"Ambient volume"}).get(key,key.replace("_"," ").capitalize()),list,16)
+    if group=="Audio":caption.text+=" · %d%%"%roundi(float(game.settings[key])*100)
+    var slider=HSlider.new();slider.min_value=0.0005 if key=="sensitivity" else (0.5 if key=="render_scale" else (0.25 if key=="retro_scale" else 0.0));slider.max_value=0.008 if key=="sensitivity" else 1.0;slider.step=0.0001 if key=="sensitivity" else 0.05;slider.value=game.settings[key];slider.custom_minimum_size.x=700;list.add_child(slider)
+    slider.value_changed.connect(func(value):
+     game.settings[key]=value;game.apply_settings()
+     if group=="Audio":
+      caption.text=({"master":"Master volume","music":"Music volume","effects":"Sound effects volume","ui_volume":"UI volume","ambience":"Ambient volume"})[key]+" · %d%%"%roundi(value*100);game.progress.data.settings=game.settings.duplicate(true);game.progress.save())
   if group=="Graphics":
    var quality=OptionButton.new()
    for label in ["Low","Medium","High"]:quality.add_item(label)
@@ -356,16 +402,25 @@ func settings(back: Callable) -> void:
     action("%s: %s"%[key,OS.get_keycode_string(game.bindings[key])],keys_grid,func():game.pending_binding=key;game.toast("Press a key for "+key))
  action("Save & back",col,func():game.progress.data.settings=game.settings;game.progress.data.settings.bindings=game.bindings;game.progress.save();back.call())
  action("Quit game",col,func():get_tree().quit())
+func update_character_health() -> void:
+ if not is_instance_valid(game) or game.mode!="run" or not is_instance_valid(game.player) or not is_instance_valid(game.player.camera):character_health.hide();return
+ character_health.size=Vector2(64,7) # Apply after inherited theme minimum-size recalculation.
+ var point=game.player.global_position+Vector3.UP*0.05;var camera=game.player.camera
+ if (point-camera.global_position).dot(-camera.global_basis.z)<=0.05:character_health.hide();return
+ var screen=camera.unproject_position(point);character_health.position=screen+Vector2(-32,12)
+ character_health.visible=game.mode=="run" and not camera.is_position_behind(point) and Rect2(Vector2.ZERO,get_viewport().get_visible_rect().size).has_point(screen)
 func _process(delta: float) -> void:
+ update_character_health()
  if not is_instance_valid(game):return
  if game.mode!="run":
+  for object in game.interactables:
+   if ShrineCharging.is_shrine(object) and is_instance_valid(object.node):
+    var label=object.node.get_node_or_null("ChargeProgress")
+    if label:label.hide()
   game.message_time-=delta
   if game.message_time<=0:game.notice.text=""
  if menu.visible and is_instance_valid(menu_camera) and menu_camera.is_inside_tree() and game.mode in ["menu","play","unlocks","quests","settings"]:
-  if preview_mode=="home":
-   orbit+=delta*0.035;menu_camera.h_offset=0;menu_camera.position=Vector3(cos(orbit)*28,16,sin(orbit)*28);menu_camera.look_at(Vector3(0,0,0))
-  else:
-   menu_camera.h_offset=-1.6;menu_camera.position=Vector3(0,2.5,5.5);menu_camera.look_at(Vector3(0,1,0))
+  update_menu_camera(delta)
   if is_instance_valid(game.player):game.player.avatar.animate("idle",0,delta)
  if game.mode=="run":
   map_tick+=delta

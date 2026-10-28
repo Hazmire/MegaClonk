@@ -24,8 +24,7 @@ static func setup(game: Node) -> void:
 static func golden_visual(object: Dictionary) -> void:
  if not object.get("golden",false) or object.node.has_node("GoldenGlow"):return
  var gold=StandardMaterial3D.new();gold.albedo_color=Color("ffce55");gold.emission_enabled=true;gold.emission=Color("d49120");gold.emission_energy_multiplier=0.5
- for child in object.node.get_children():
-  if child is MeshInstance3D:child.material_override=gold
+ # Gold lights and particles preserve the supplied stone textures.
  var light=OmniLight3D.new();light.name="GoldenGlow";light.light_color=Color("ffcd55");light.light_energy=0.6;light.omni_range=6;light.distance_fade_enabled=true;light.distance_fade_begin=25;object.node.add_child(light)
  var sparks=GPUParticles3D.new();sparks.name="GoldenParticles";sparks.amount=24;sparks.lifetime=2;var material=ParticleProcessMaterial.new();material.direction=Vector3.UP;material.spread=70;material.initial_velocity_min=0.3;material.initial_velocity_max=1.5;material.gravity=Vector3.ZERO;material.emission_shape=ParticleProcessMaterial.EMISSION_SHAPE_SPHERE;material.emission_sphere_radius=1;material.color=Color("ffe897");material.scale_min=0.03;material.scale_max=0.08;sparks.process_material=material;var mesh=SphereMesh.new();mesh.radius=0.08;mesh.height=0.16;mesh.material=gold;sparks.draw_pass_1=mesh;sparks.position.y=1;object.node.add_child(sparks)
 static func visual(game: Node,object: Dictionary,inside: bool) -> void:
@@ -35,6 +34,7 @@ static func visual(game: Node,object: Dictionary,inside: bool) -> void:
  game.shrine_orbs.multimesh.set_instance_transform(int(object.shrine_index),transform)
  game.shrine_orbs.multimesh.set_instance_custom_data(int(object.shrine_index),Color(fraction,1 if inside else 0,1 if object.used else 0,1 if object.get("golden",false) else 0))
  var label=object.node.get_node("ChargeProgress") as Label3D
+ label.visible=(inside or fraction>0.0) and not object.used and game.mode=="run" and game.health>0
  var text="COMPLETE" if object.used else ("CHARGING %d%%"%int(fraction*100) if inside else "SHRINE · %d%%"%int(fraction*100))
  if object.get("golden",false):text="GOLDEN · "+text;label.modulate=Color("ffe08a")
  if object.used and object.node.has_node("GoldenParticles"):object.node.get_node("GoldenParticles").emitting=false

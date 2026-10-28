@@ -6,7 +6,10 @@ static func noise_texture() -> Texture2D:
  return preload("res://assets/config/forest_variation.png")
 static func floor_material() -> ShaderMaterial:
  if ground==null:
-  ground=ShaderMaterial.new();ground.shader=preload("res://shaders/forest_floor.gdshader");ground.set_shader_parameter("variation",noise_texture())
+  ground=ShaderMaterial.new();ground.shader=preload("res://shaders/grimdark_terrain.gdshader");ground.set_shader_parameter("variation",noise_texture())
+  ground.set_shader_parameter("earth_texture",preload("res://assets/grimdark/horror/PS1_ForestAsset/dirt.JPG"))
+  ground.set_shader_parameter("grass_texture",preload("res://assets/grimdark/horror/PS1_ForestAsset/grass.jpg"))
+  ground.set_shader_parameter("rock_texture",preload("res://assets/grimdark/horror/PS1_ForestAsset/rock.jpg"))
  return ground
 static func grass_material() -> ShaderMaterial:
  if grass==null:
@@ -27,13 +30,14 @@ static func apply_legacy_sky(environment: Environment) -> void:
  environment.ambient_light_source=Environment.AMBIENT_SOURCE_COLOR;environment.ambient_light_color=Color("a5bfd3");environment.ambient_light_energy=0.75
  environment.fog_enabled=true;environment.fog_light_color=Color("516078");environment.fog_density=0.0045;environment.fog_sun_scatter=0.15;environment.fog_sky_affect=0.25
 static func add_grass(game: Node,data: Dictionary,rng: RandomNumberGenerator) -> void:
- var mesh=QuadMesh.new();mesh.size=Vector2(0.75,0.65);mesh.center_offset=Vector3(0,0.325,0);mesh.material=grass_material()
+ if StageThemes.index(game.stage)==2:return
+ var mesh=GrimdarkMaterials.mesh(preload("res://assets/grimdark/baked/props/forest_Grass.res"),game.stage,true)
  for i in 650:
   var p=Vector2(rng.randf_range(-90,90),rng.randf_range(-90,90))
   if ForestMap.protected(data,p,0):continue
   var chunk=Vector2i(floori(p.x/32),floori(p.y/32));var key="wind_grass_%d_%d"%[chunk.x,chunk.y]
-  game.prop_instance(key,mesh,Color.WHITE,Vector3(p.x,game.terrain_height(p.x,p.y),p.y),Vector3.ONE*rng.randf_range(0.8,1.3),true,rng.randf()*TAU)
-  var batch=game.prop_batches[key];batch.visibility_range_end=55;batch.visibility_range_end_margin=10;batch.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+  game.prop_instance(key,mesh,Color.WHITE,Vector3(p.x,game.terrain_height(p.x,p.y),p.y),Vector3.ONE*rng.randf_range(0.2,0.4),true,rng.randf()*TAU)
+  var batch=game.prop_batches[key];batch.visibility_range_end=45;batch.visibility_range_end_margin=8;batch.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
 static func reset() -> void:
  if ground!=null:ground.set_shader_parameter("variation",null)

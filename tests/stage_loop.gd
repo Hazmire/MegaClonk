@@ -26,13 +26,13 @@ func run():
  game.mode="pause";game.player.active=false
  check(game.stage_time==0 and game.portal_state=="dormant","New run has dormant portal and fresh clock")
  check(game.portal.position.distance_to(game.player.position)>40 and abs(game.portal.position.x)<90 and abs(game.portal.position.z)<90,"Portal is away from spawn inside playable interior")
- check(game.player.avatar is RangerVisual and game.player.avatar.rig.get_bone_count()==65,"Supplied modular Ranger rig loads")
- check(game.player.avatar.playback.has_animation("idle"),"Supplied idle animation loads")
- var body=game.player.avatar.rig.get_node("Male_Ranger_Body")
- check(body.mesh.surface_get_material(0).albedo_texture!=null,"Supplied Ranger colour atlas is explicitly bound")
+ check(game.player.avatar is KnightVisual and game.player.avatar.rig.get_bone_count()==14,"Supplied fourteen-bone Knight rig loads")
+ check(game.player.avatar.playback.has_animation("k_idle"),"Supplied idle animation loads")
+ var body=game.player.avatar.surfaces[0]
+ check(body.get_surface_override_material(0).get_shader_parameter("u_albedo_texture")!=null,"Supplied Knight armour atlas is explicitly bound")
  for pose in ["idle","run","turn","jump","fall","crouch","slide","hit","death"]:
   game.player.avatar.animate(pose,8,0.1)
-  check(game.player.avatar.playback.is_playing(),"Ranger animation state "+pose)
+  check(game.player.avatar.playback.is_playing(),"Knight animation state "+pose)
  check(game.activate_portal() and game.boss_spawned and game.portal_state=="summoned","Dormant portal summons boss immediately")
  check(not game.activate_portal(),"Active boss blocks stage travel and duplicate summons")
  var boss={}

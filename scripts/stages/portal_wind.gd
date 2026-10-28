@@ -37,7 +37,7 @@ func setup(owner_game: Node) -> void:
  var theme=StageThemes.index(game.stage)
  ambient=GPUParticles3D.new();ambient.name="AmbientWind";ambient.position=game.player.position+Vector3.UP*3;add_child(ambient);ambient.amount=SETTINGS.ambient_count;ambient.lifetime=10;ambient.preprocess=3;ambient.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
  var process=ParticleProcessMaterial.new();process.direction=Vector3(1,0.025,0.35).normalized();process.spread=12;process.initial_velocity_min=0.6;process.initial_velocity_max=1.2;process.gravity=Vector3.ZERO;process.emission_shape=ParticleProcessMaterial.EMISSION_SHAPE_BOX;process.emission_box_extents=Vector3(16,4,16);process.color=Color(1,1,1,0.25);process.scale_min=0.4;process.scale_max=1.1;ambient.process_material=process
- var mesh=QuadMesh.new();mesh.orientation=PlaneMesh.FACE_Y;mesh.size=Vector2(1.2,0.18);mesh.material=material([Color("bcc9bc"),Color("b294d1"),Color("cfa094")][theme],Color("707a85"),0.7);ambient.draw_pass_1=mesh
+ var mesh=QuadMesh.new();mesh.orientation=PlaneMesh.FACE_Y;mesh.size=Vector2(1.2,0.18);mesh.material=material([Color("9fa99e"),Color("b0a58b"),Color("a0a3a0")][theme],Color("707a85"),0.7);ambient.draw_pass_1=mesh
  var red=material(Color("ff8296") if theme==2 else Color("ff1b39"),Color("7d0523"),2.6 if theme==2 else 2.0)
  stream=batch(SETTINGS.guidance_count,red,self);stream.name="DirectionalRedWisps"
  vortex=batch(SETTINGS.vortex_count,red,game.portal);vortex.name="RedPortalVortex"

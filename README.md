@@ -2,7 +2,7 @@
 
 A native Godot4.7.2 survival roguelike with ten-minute forest stages, player-triggered
 boss encounters, continued runs, configurable loadouts and permanent silver progression.
-The latest source adds a four-band vertical Forest, adaptive ramps, a layered cloud sky,
+The latest source adds a four-band vertical Forest, adaptive ramps, supplied HDR skies,
 and constrained world-object placement, following the shared five-tier rarity foundation.
 See [world guide and twelve previews](docs/VERTICAL_FOREST.md), [performance](docs/VERTICAL_PERFORMANCE.md),
 and [reward UI and XP guide](docs/REWARD_UI.md).
@@ -15,11 +15,23 @@ The latest source adds [stage themes, physical swarms, automatic shrines and mul
 
 The latest source increment adds [shrine rarity choices, persistent reward effects, continuous pursuit and HUD/bug fixes](docs/REWARDS_AI_V9.md). The v9 Windows release is published and its downloaded game pack passed all four compiled smoke gates.
 
+The art-reset update adds [ten active weapons, Common first acquisitions, supplied art, natural outer cliffs and route-aware red portal wind](docs/ART_RESET.md). [Rendered gallery and motion recording](docs/ART_RESET.md#rendered-gallery) · [asset inventory](docs/ART_RESET_ASSET_AUDIT.md) · [measured performance and limits](docs/ART_RESET_PERFORMANCE.md).
+
+The retro-audio update adds [four original tracks, curated weapon/movement/reward audio, five saved volume sliders and white enemy feedback](docs/RETRO_AUDIO.md). The full Pixel Combat library stays outside the project.
+
+The latest [dark-feedback update](docs/DARK_FEEDBACK.md) removes enemy hit/death sounds, darkens the effects and adds a separate tome row plus matching dark-red health bars with numbers.
+
+The [grimdark PSX update](docs/GRIMDARK.md) replaces the runtime player, enemies, vegetation and interactables with supplied dark assets. Three stages progress from living green through withering ochre to dead woodland. The world renders at retro resolution with snapping, affine textures, vertex lighting/fog and dithering; the HUD stays sharp. [Rendered evidence and limitations](docs/GRIMDARK_PERFORMANCE.md).
+
+The [visual fixes14 update](docs/VISUAL_FIXES.md) makes solid geometry opaque, limits shrine progress to active charging, adds the supplied walking Autopsy Zombie and crab, repairs retained elite walking/facing and prevents accumulated slide/crouch deformation. The published ZIP has passed29 CI suites, seven downloaded-pack smoke gates and rendered opacity checks.
+
+The [dusk update15](docs/DUSK_UPDATE.md) adds your two looping music tracks, ten unlockable/toggleable tomes with generated icons, residual shrine progress, a quest-free run HUD and a stable player/shop menu camera. The downloaded build passes30 CI suites and eight compiled smoke gates.
+
 ## Download and play
 
-- [Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/shrine-rewards-v9/BONK_INFINITY_Windows_x64.zip)
+- [Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/dusk-loadouts-v15/BONK_INFINITY_Windows_x64.zip)
 - [GitHub Actions builds](https://github.com/Hazmire/MegaClonk/actions/workflows/windows-build.yml)
-- [PR #4 — merge into Full-Release](https://github.com/Hazmire/MegaClonk/pull/4)
+- [PR #6 — merge into Full-Release](https://github.com/Hazmire/MegaClonk/pull/6)
 
 Start a **new run** to see the new terrain; older checkpoints retain their original maps.
 Extract and launch **BONK_INFINITY.exe**, or **Launch_Compatibility.bat** if Vulkan
@@ -30,7 +42,7 @@ recorded in [BUILD_INFO](releases/BUILD_INFO.md). Native Windows execution remai
 ## Play
 
 Choose one weapon, one trait and one ultimate. Explore the forest for treasure, shops,
-shrines and the purple boss portal. Rushes occur at08:00/04:00; minibosses at07:00/03:00.
+shrines and the red stone boss portal. Rushes occur at08:00/04:00; minibosses at07:00/03:00.
 At zero, endless ghosts and ordinary pressure escalate. Summon the boss whenever ready;
 Big Chunkus marks a delayed AOE; Rock Golem summons capped lesser golems. Activate gold-marked
 elite statues to fight three Sentinels for90 bonus gold. Defeat the boss, then enter the unlocked portal to generate a harder stage while retaining your build.

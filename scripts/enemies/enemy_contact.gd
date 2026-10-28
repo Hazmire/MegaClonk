@@ -13,5 +13,5 @@ static func step(game: Node,e: Dictionary,delta: float) -> void:
  if e.hp<=0 or "proximity" in e.get("variant",EMPTY).get("modules",EMPTY_MODULES) or e.contact_clock>0:return
  if not overlaps(game,e):return
  e.contact_clock=SETTINGS.contact_interval
- var previous=float(game.health);game.hurt(float(e.get("damage",8)))
+ var previous=float(game.health);game.hurt_contact(float(e.get("damage",8)),e.pos)
  if game.health<previous and game.stats.thorns>0:game.hit(e,game.stats.thorns,0)

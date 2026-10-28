@@ -5,7 +5,7 @@ static func migrate(data: Dictionary) -> void:
  var defaults={"silver":maxi(0,int(data.get("credits",data.get("currency",0)))+int(data.get("quest_gold",0))),"credits":int(data.get("currency",0)),"quest_gold":0,"account_level":1,"weapon_slots":2,"tome_slots":2,"entries":[],"disabled":[],"claimed":[],"quest_metrics":{},"leaderboard":[],"loadout":{"weapon":0,"trait":"climber","ultimate":"nova"}}
  for key in defaults:
   if not data.has(key): data[key]=defaults[key]
- for category in ["weapons","traits","items","ultimates"]:
+ for category in ["weapons","tomes","traits","items","ultimates"]:
   for e in LoadoutCatalog.entries(category):
    var key=category+":"+e.id
    if ((e.goal==0 and e.cost==0) or (category=="items" and int(data.get("kills",0))>=e.goal)) and not key in data.entries: data.entries.append(key)
@@ -21,14 +21,15 @@ static func unlocked(data: Dictionary, category: String, id: String) -> bool:
 static func enabled(data: Dictionary, category: String, id: String) -> bool:
  return unlocked(data,category,id) and not category+":"+id in data.disabled
 static func toggle(data: Dictionary, category: String, id: String) -> bool:
- if category not in ["weapons","items"] or not unlocked(data,category,id): return false
+ if category not in ["weapons","tomes","items"] or not unlocked(data,category,id): return false
  var key=category+":"+id
  if key in data.disabled: data.disabled.erase(key)
  else: data.disabled.append(key)
  return true
 static func purchase(data: Dictionary, category: String, id: String) -> bool:
  var e=LoadoutCatalog.entry(category,id)
- if category!="weapons" or e.is_empty() or unlocked(data,category,id) or int(data.silver)<int(e.cost): return false
+ if category not in ["weapons","tomes"] or e.is_empty() or unlocked(data,category,id) or int(data.silver)<int(e.cost): return false
+ if int(data.get("kills",0))<int(e.goal):return false
  data.silver-=int(e.cost)
  data.entries.append(category+":"+id)
  return true

@@ -1,0 +1,35 @@
+{
+  "release": "https://github.com/Hazmire/MegaClonk/releases/tag/grimdark-psx-v13.1",
+  "download": "https://github.com/Hazmire/MegaClonk/releases/download/grimdark-psx-v13.1/BONK_INFINITY_Windows_x64.zip",
+  "asset_id": 684613057,
+  "size": 134927445,
+  "sha256": "659ed35dbecbb256bbd68e32537f41d31183d0532c17798c94cb19b6ded59a74",
+  "source_commit": "c2209e6ea108119bd65f637d43155b75ffbd3c22",
+  "zip_crc": "all pass",
+  "build_info": "MEGACLONK v13.1 grimdark PSX forest, supplied Knight and horror roster\nGodot 4.7.2\nSource commit: c2209e6ea108119bd65f637d43155b75ffbd3c22\nUncommitted source at build time: False\nWindows execution requires native playtesting.\n",
+  "native_windows_executed": false,
+  "workflow": "https://github.com/Hazmire/MegaClonk/actions/runs/40670792426",
+  "pr_workflow": "https://github.com/Hazmire/MegaClonk/actions/runs/40670800363",
+  "artifact_id": 12808403283,
+  "local_suites": 28,
+  "world_frames": 180,
+  "downloaded_pack_smoke_gates": [
+    "reward_ui",
+    "stage_swarms",
+    "rewards_ai",
+    "art_reset",
+    "retro_audio",
+    "grimdark"
+  ],
+  "rendered_output": [
+    1280,
+    720
+  ],
+  "internal_world_resolution": [
+    640,
+    360
+  ],
+  "rendered_screenshot": "docs/images/grimdark/published_13_1.png",
+  "rendered_screenshot_sha256": "e3b4405b9a538f051e608b05cfced99a0e791f680d449ea0d8be240a9747c724",
+  "rendered_shutdown_diagnostics": "Two 5460-byte leaked-texture diagnostics under Mesa/Godot; documented and unresolved. No shader compilation or instance-buffer errors."
+}

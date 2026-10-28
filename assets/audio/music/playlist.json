@@ -1,0 +1,14 @@
+{
+  "tracks": [
+    {
+      "title": "Ingame music track",
+      "path": "res://assets/audio/music/current/hollow_dusk.mp3",
+      "gain_db": -8
+    }
+  ],
+  "menu": {
+    "title": "Main menu track",
+    "path": "res://assets/audio/music/current/menu_dusk.mp3",
+    "gain_db": -9
+  }
+}

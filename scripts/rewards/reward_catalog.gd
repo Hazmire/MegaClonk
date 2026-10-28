@@ -13,7 +13,7 @@ static func entry(category: String,id: Variant,level: int=0) -> Dictionary:
    for attribute in WeaponUpgrades.pool(int(id)):effects[attribute]=WeaponUpgrades.STEPS[attribute]
   "tomes":
    if not Catalog.TOMES.has(str(id)):return {}
-   var t=Catalog.TOMES[str(id)];name=str(id)+" Tome";description="%s %+.2f per level"%[str(t[0]).replace("_"," "),t[1]];rarity=TOME_RARITIES.get(str(id),"common");effects={t[0]:t[1]}
+   var t=Catalog.TOMES[str(id)];name=Catalog.tome_name(str(id));description=Catalog.tome_description(str(id));rarity=TOME_RARITIES.get(str(id),"common");effects={t[0]:t[1]}
   "items":
    if int(id)<0 or int(id)>=Catalog.ITEMS.size():return {}
    var item=Catalog.ITEMS[int(id)];name=item[0];description=Catalog.item_description(int(id));rarity=item[1];effects={item[2]:item[3]};maximum=0;cost=ShopSystem.price(int(id));unlock=LoadoutCatalog.entry(category,str(id))
@@ -22,6 +22,6 @@ static func entry(category: String,id: Variant,level: int=0) -> Dictionary:
 static func all_entries() -> Array:
  var result=[]
  for id in Catalog.ACTIVE_WEAPONS:result.append(entry("weapons",id))
- for id in Catalog.TOMES:result.append(entry("tomes",id))
+ for id in Catalog.ACTIVE_TOMES:result.append(entry("tomes",id))
  for id in Catalog.ITEMS.size():result.append(entry("items",id))
  return result

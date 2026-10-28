@@ -100,3 +100,31 @@ User-supplied archives were inspected from Full-Release df625e2. Inventory, exac
 | Mine model, panorama/portal shader adaptations / project originals | Original implementation using credited source textures where indicated | scripts/combat/weapon_art.gd and shaders/portal_asset.gdshader, supplied_panorama.gdshader. |
 
 The user supplied these archives for integration; missing publisher metadata is recorded transparently. No claim of a new blanket CC0 licence is made for archives without one. Original uploaded archives remain committed for provenance.
+
+## Retro audio 11
+
+- **Pixel Combat — Helton Yan**, https://heltonyan.itch.io/pixelcombat. **CC BY4.0**, https://creativecommons.org/licenses/by/4.0/. Licence identification supplied by the project owner from that page; cloud access returned403 and the source archive had no terms file. Supplied through audio-assets-v1 release, asset682885354. Runtime paths assets/audio/sfx; attribution shipped in ATTRIBUTION.txt. Modified by variation extraction, stereo-to-mono conversion,96→32kHz/24→16bit conversion, conservative peak adjustment and short fades. Exact original filenames, source offsets and changes: docs/audio/CURATION.json. No endorsement implied. The full source archive is outside the project and excluded from exports.
+- **Arcade Groove, Arcade Groove1, Arcade Rush, Pixelad Akcio** — original music supplied by the project owner through the same release. Paths assets/audio/music; original MP3 bytes retained. Menu/three-stage routing and crossfades added; no generated replacement soundtrack.
+- Six existing **Clutch Assets** death/forest ambience samples copied from assets/vendor/audio to assets/audio/sfx/legacy so unused vendor audio can be excluded from Windows exports. Existing source credits and terms remain applicable. The original project reward_applause.wav is retained as the reveal clap bed.
+
+## Dark feedback12
+
+Pixel Combat remains CC BY4.0 / Helton Yan, with the same source and licence links above. Selected fire/lightning/aura/pickup source takes were changed; all106 short effects received restrained5kHz low-pass filtering, soft saturation/10bit grain and lower runtime pitches. Source offsets and processed hashes were updated in docs/audio/CURATION.json. Existing original music was retained. Unused enemy-death audio is archived and excluded from exports.
+
+## Grimdark PSX supplied assets (integration in progress)
+
+- **Knight armour texture**, Petr Kratochvil, CC0 / public domain, confirmed by the user: https://www.publicdomainpictures.net/en/view-image.php?image=377696&picture=suit-of-armor . Source notice retained in `assets/grimdark/knight/texture_source.txt`. This credit applies to the texture, not a blanket licence claim for the mesh.
+- **Knight model and animations**, supplied `knight.zip` from https://github.com/Hazmire/MegaClonk/releases/tag/psx-assets . Geometry use authorized by the user for this personal game; no separate geometry licence found in the archive. Original Blender Mirror modifier applied to repair the half-mesh GLB, ground alignment/scale normalized, native idle/walk retained in `assets/grimdark/knight/Knight_ready.glb`. Supplemental visual movement states are original project code.
+- **Characters PSX 1.2, Retro Tree Pack, PSX Modular Medieval, Stark Crafts PS1 Dark Fantasy Horror, The Wrapper V2.1**: user-supplied release above, use authorized by the user. Individual pack authorship retained where provided; no unsupported CC0 assertion. Selected textures/models and derived animation frames under `assets/grimdark/`; inventory in `docs/GRIMDARK_SELECTED.json`. Monster poses are baked for shared instanced animation; Wrapper idle/walk frames are baked from supplied native clips.
+- **psx_visuals**, snotbane, https://github.com/snotbane/psx_visuals/tree/7dbba0d2ac598dda82984d3d1185e12805500fd3 , Unlicense verified at this commit; notice retained in `shaders/vendor_psx/LICENSE.txt`. Adapted shader entry-point includes, depth-dependent affine UV/fog, matte lighting and world-only Bayer compositing. Original supplied source retained under `assets/grimdark/psx_addon_source/`.
+
+## Visual corrections14
+
+- **Autopsy Zombie**, user-supplied AutopsyZombie.zip, uploaded in this repository. No separate creator/licence text is present; use follows the user's supplied-asset authorization for this personal game, without claiming CC0. Original90-bone mesh/texture retained, original skeletal idle/walk authored because the supplied animation is static. Derived GLB, diffuse and shared baked frames: assets/enemies_corrected/autopsy and assets/grimdark/baked/enemies/Autopsy_*; original FBX/normal retained in import-ignored source_only.
+- **PSX Sea Horror Monsters Free Sampler — crab**, bitkiln, https://bitkiln.itch.io . Supplied licence permits personal/commercial game use and modifications, prohibits standalone asset-product redistribution; full terms retained in assets/enemies_corrected/crab/LICENSE.txt. Native crab_bone model/texture and Walk/Idle clips, normalized and frame-baked with the non-rendered helper sphere removed. Art by bitkiln.
+- Existing masked/hooded monster meshes retain their prior supplied-pack credits; new original skeletal idle/walk cycles replace their earlier vertex-only poses, with facing corrected for runtime pursuit.
+
+## Dusk update15
+
+- Ten original grimdark tome illustrations generated for this project with OpenAI image generation, composed as a transparent5×2 atlas. `assets/ui/tomes/dusk_tomes.png`; used via distinct Godot AtlasTexture regions. No third-party icon pack is claimed as their source.
+- Current menu/game music: user uploads `main menu track.mp3` and `ingame music track.mp3`; embedded artist metadata `alphalambenterprises_101`. Exact MP3 copies under `assets/audio/music/current/`, configured as the only active playlist entries. Supplied for this personal game; no invented blanket CC0 claim. Earlier four-track credits remain historical.
