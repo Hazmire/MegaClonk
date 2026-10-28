@@ -16,8 +16,6 @@ func clear_case():
  game.effects.clear()
  for p in game.pickups:game.pool.release(p.node)
  game.pickups.clear()
- for field in game.fields:field.node.queue_free()
- game.fields.clear()
 func fill(count: int,near: bool=false):
  for i in count:
   var angle=float(i)*2.39996;var radius=3+float(i%10)*0.5 if near else 12+float(i%12)*0.4
@@ -49,7 +47,7 @@ func run():
   if name.begins_with("enemies"):fill(int(name.trim_prefix("enemies")))
   if name in ["continuous_weapons","repeated_hits","deaths100","aoe250"]:fill(250 if name=="aoe250" else 100,true)
   if name=="continuous_weapons":
-   for id in [1,4,7,33]:game.equip(id)
+   for id in [1,2,7,15]:game.equip(id)
   if name=="boss":game.spawn_enemy(8,center+Vector3(10,0,0))
   if name=="elite":
    for i in 3:game.spawn_enemy(13,center+Vector3(i*3,0,-8))
@@ -64,7 +62,7 @@ func run():
    var began=Time.get_ticks_usec();game.elapsed+=1.0/60
    if name=="moving":game.player.position.x=center.x+sin(float(step)*0.03)*3
    game.update_enemies(1.0/60);game.rebuild_grid()
-   if name=="continuous_weapons":game.update_weapons(1.0/60);game.update_projectiles(1.0/60);game.update_special_visuals(1.0/60)
+   if name=="continuous_weapons":game.update_weapons(1.0/60);game.update_projectiles(1.0/60);
    var hit_start=Time.get_ticks_usec()
    if name=="repeated_hits":
     for i in mini(20,game.enemies.size()):game.hit(game.enemies[i],1,7)

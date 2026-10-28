@@ -44,7 +44,7 @@ func activate(game: Node) -> bool:
  if definition.is_empty():return false
  cooldown=float(definition.cooldown);remaining=float(definition.duration);uses+=1
  if ultimate_id=="nova":
-  var base=float(Catalog.WEAPONS[game.selected_weapon][2])*RULES.nova_base_multiplier
+  var base=(float(Catalog.WEAPONS.get(game.selected_weapon,Catalog.WEAPONS[0])[2]))*RULES.nova_base_multiplier
   game.area(game.player.position,RULES.nova_radius,base,-2)
   for e in game.nearby(game.player.position,RULES.nova_radius):e.knock+=(e.pos-game.player.position).normalized()*8
   game.flash(game.player.position,Color("ffc77a"),15)

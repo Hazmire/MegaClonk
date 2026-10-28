@@ -18,7 +18,7 @@ func run() -> void:
  stats.damage=1.5
  verify(Catalog.damage(10,stats,true)==30,"Multipliers and critical damage")
  verify(Catalog.threshold(10)>Catalog.threshold(9),"Increasing XP thresholds")
- verify(Catalog.WEAPONS.size()==36 and Catalog.CHARACTERS.size()==21,"Content roster sizes")
+ verify(Catalog.WEAPONS.size()==8 and Catalog.ACTIVE_WEAPONS.size()==8 and Catalog.CHARACTERS.size()==21,"Content roster sizes")
  var save=Progress.new()
  save.data.kills=200
  save.data.currency=33
@@ -80,10 +80,10 @@ func run() -> void:
  game.stats.damage=1
  game.stats.crit=0
  var successful_weapons=0
- for id in Catalog.WEAPONS.size():
+ for id in Catalog.ACTIVE_WEAPONS:
   game.weapons.clear()
   game.projectiles.clear()
-  game.fields.clear()
+  game.wrt.clear()
   game.enemies.clear()
   game.player.position=Vector3(0,1,0)
   for i in 48:
@@ -97,13 +97,12 @@ func run() -> void:
   var damage_before=game.damage_total
   game.update_weapons(1)
   for i in 150:
+   game.update_weapons(1.0/60)
    game.update_projectiles(1.0/60)
-   game.update_fields(1.0/60)
    game.update_effects(1.0/60)
   if game.damage_total>damage_before: successful_weapons+=1
   else: failures.append("Weapon damage: "+Catalog.WEAPONS[id][0])
- verify(successful_weapons==36,"All 36 weapon patterns produce damage against nearby enemies (%d/36)"%successful_weapons)
- game.fields.clear()
+ verify(successful_weapons==8,"All 8 weapons produce damage against nearby enemies (%d/8)"%successful_weapons)
  game.projectiles.clear()
  game.enemies.clear()
  var poisoned=game.spawn_enemy(0,Vector3(3,0,0))
@@ -124,10 +123,6 @@ func run() -> void:
  game.on_level()
  verify(game.stats.luck>luck,"Character luck passive")
  game.weapons.clear()
- game.equip(31)
- game.equip(35)
- game.update_special_visuals(0.1)
- verify(game.weapons[31].visuals.size()>0 and game.weapons[35].summons.size()>0,"Chrono blades and Phantom allies exist as persistent 3D entities")
  var pause_start=game.elapsed
  game.pause_menu()
  await physics_frame
@@ -136,7 +131,7 @@ func run() -> void:
  game.update_pickups(0)
  verify(game.mode=="upgrade" and game.choices.size()==3,"Level up pauses for three choices")
  game.resume()
- for id in range(4): game.equip(id)
+ for id in [0,1,2,6]: game.equip(id)
  verify(game.weapons.size()==4,"Four-weapon slot limit")
  game.enemies.clear()
  game.stage_time=181

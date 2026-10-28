@@ -8,7 +8,7 @@ static func entry(category: String,id: Variant,level: int=0) -> Dictionary:
  var name="";var description="";var rarity="common";var effects={};var maximum=10;var cost=0;var unlock={}
  match category:
   "weapons":
-   if int(id)<0 or int(id)>=Catalog.WEAPONS.size():return {}
+   if not Catalog.weapon_exists(int(id)):return {}
    var w=Catalog.WEAPONS[int(id)];name=w[0];description="%s • %.0f base damage • %.2fs cooldown"%[w[1],w[2],w[3]];rarity=WEAPON_RARITIES[int(id)];unlock=LoadoutCatalog.entry(category,str(id))
    for attribute in WeaponUpgrades.pool(int(id)):effects[attribute]=WeaponUpgrades.STEPS[attribute]
   "tomes":

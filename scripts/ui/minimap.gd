@@ -41,6 +41,8 @@ func _draw() -> void:
    "Elite Statue":color=Color("ffac5e")
    "Boss Statue":color=Color("d78aff")
    "Free Chest":color=Color("ffe79b")
+   "Imbue Station":
+    var c=Color("ff8a3d");draw_colored_polygon(PackedVector2Array([p+Vector2(0,-4)*mark,p+Vector2(4,0)*mark,p+Vector2(0,4)*mark,p+Vector2(-4,0)*mark]),c);draw_circle(p,1.5*mark,Color("201410"));continue
   draw_colored_polygon(PackedVector2Array([p+Vector2(0,-3)*mark,p+Vector2(3,0)*mark,p+Vector2(0,3)*mark,p+Vector2(-3,0)*mark]),color)
  for chest in game.drop_chests:
   if visible_at(chest.node.position):draw_rect(Rect2(point(chest.node.position)-Vector2.ONE*3*mark,Vector2.ONE*6*mark),Color("ffe79b"))

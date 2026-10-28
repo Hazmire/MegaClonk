@@ -126,8 +126,8 @@ func run() -> void:
  game.frontend.unlocks();check(game.mode=="unlocks","Unlock browser opens")
  game.frontend.active_tab="weapons";game.frontend.unlocks()
  for button in widgets(game.frontend.menu,"Button"):
-  if button.text.begins_with(Catalog.WEAPONS[16][0]):button.pressed.emit();break
- check(screen_text().contains("Unlock:") and not screen_text().contains(LoadoutCatalog.entry("weapons","16").description),"Locked detail reveals requirements without revealing effect")
+  if button.text.begins_with(Catalog.WEAPONS[15][0]):button.pressed.emit();break
+ check(screen_text().contains("Unlock:") and not screen_text().contains(LoadoutCatalog.entry("weapons","15").description),"Locked detail reveals requirements without revealing effect")
  game.frontend.quests();check(game.mode=="quests","Categorized quest screen opens")
  game.frontend.settings(game.frontend.home);check(game.mode=="settings","Grouped settings open")
  game.frontend.inventory();check(game.mode=="build","Stats and item inventory open")

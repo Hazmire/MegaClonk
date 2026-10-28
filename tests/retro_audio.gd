@@ -22,7 +22,7 @@ func run():
  check(audio.voices.size()==24 and audio.music_players.size()==2,"Bounded 24 SFX/UI voices and two music crossfade players")
  for name in ["Master","Music","SFX","UI","Ambience"]:check(AudioServer.get_bus_index(name)>=0,"Independent native audio bus: "+name)
  check(audio.events.size()>=30 and audio.streams.size()>100,"Only curated/preloaded event resources registered")
- for event in ["weapon.revolver.fire","weapon.lightning.zap","weapon.chunkers.impact","weapon.aegis.impact","player.damage","player.footstep.grass","player.footstep.rock","player.slide","pickup.xp","combat.explosion"]:
+ for event in ["weapon.revolver.fire","weapon.lightning.strike","weapon.shotgun.fire","weapon.scythes.hit","player.damage","player.footstep.grass","player.footstep.rock","player.slide","pickup.xp","combat.explosion"]:
   var files=audio.events[event].files;var previous="";var varied=true
   for i in 200:
    var sample=audio.choose(event)
@@ -64,7 +64,7 @@ func run():
  check(e.hit_time>0 and e.hit_time<=.12 and game.combat_fx.bursts_created>burst,"Damage immediately sets brief flash and pooled impact particles")
  check(audio.accepted==accepted,"Enemy ordinary damage triggers no generic pain/hit audio")
  var shader=FileAccess.get_file_as_string("res://shaders/enemy_feedback.gdshader")
- check(shader.contains("vec3(1.0),damage_flash") and not shader.contains("vec3(1.0,0.025,0.015)"),"Shared textured enemy feedback mixes to white")
+ check(shader.contains("mix(vec3(1.0),vec3(0.45,1.0,0.35),flash_tint)") and not shader.contains("vec3(1.0,0.025,0.015)"),"Shared textured enemy feedback mixes to white (light green only for Aura hits)")
  e.hit_time=0;game.enemy_view.begin_frame();game.enemy_view.draw_enemy(e,game.player.position);game.enemy_view.end_frame()
  var restored_flash=true
  for batch in game.enemy_view.batches.values():
@@ -78,11 +78,11 @@ func run():
  check(game.player.velocity==velocity and game.health==health,"Invulnerability prevents repeated damage and shunt stacking")
  game.player.launch(Vector3.LEFT,18,13)
  check(game.player.velocity.y>=13 and absf(game.player.velocity.x)>12,"Explosion launch remains substantially stronger than contact shunt")
- check(WeaponVFX.sound(4)=="" and WeaponVFX.sound(8)=="","Orbiting stone/Aegis audio occurs on impact rather than duplicate activation")
- var identity=[]
- for id in Catalog.ACTIVE_WEAPONS:
-  var key="weapon.chunkers.impact" if id==4 else WeaponVFX.sound(id);identity.append(key)
- check(identity.size()==10 and identity.all(func(k):return audio.events.has(k)),"All ten active weapons map to appropriate registered identities")
+ var required=["weapon.sword.swing","weapon.sword.hit","weapon.sword.crit","weapon.firestaff.cast","weapon.firestaff.impact","weapon.firestaff.crit","weapon.lightning.strike","weapon.lightning.thunder","weapon.lightning.chain","weapon.lightning.crit","weapon.bow.fire","weapon.bow.hit","weapon.bow.crit","weapon.revolver.fire","weapon.revolver.hit","weapon.revolver.ricochet","weapon.revolver.crit","weapon.aura.hum","weapon.aura.pulse","weapon.aura.crit","weapon.scythes.throw","weapon.scythes.hit","weapon.scythes.catch","weapon.scythes.crit","weapon.shotgun.fire","weapon.shotgun.hit","weapon.shotgun.crit"]
+ check(required.all(func(k):return audio.events.has(k)),"Every Weapon Overhaul attack/hit/crit/special event is registered")
+ check(audio.events.keys().all(func(k):return not (k.begins_with("weapon.") and (k.contains("chunkers") or k.contains("bone") or k.contains("bananarang") or k.contains("mines") or k.contains("aegis")))),"No audio events remain for removed weapons")
+ check(audio.events["weapon.shotgun.fire"].base_pitch<audio.events["weapon.revolver.fire"].base_pitch and audio.events["weapon.shotgun.fire"].gain_db>audio.events["weapon.revolver.fire"].gain_db,"Shotgun report is lower and heavier than revolver")
+ check(audio.events["weapon.aura.hum"].max_voices==1 and audio.events["weapon.aura.hum"].cooldown>=1.5,"Aura hum is a single slow voice (no per-frame sound)")
  check(audio.tracks.size()==1 and not audio.menu_track.is_empty(),"Exactly one supplied looping menu and game track configured")
  var track=audio.current_track;var slot=audio.music_slot;audio.music_stage(game.stage)
  check(audio.current_track==track and audio.music_slot==slot,"Same-stage music does not restart")

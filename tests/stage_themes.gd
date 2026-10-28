@@ -36,6 +36,6 @@ func run():
  var file=FileAccess.open("user://legacy-world-content.json",FileAccess.WRITE);file.store_string(JSON.stringify(data));file.close()
  check(game.load_run("user://legacy-world-content.json") and game.world_content_version==0 and game.map_layout.pois.size()==12 and hash(str(game.map_layout.pois)+str(game.map_layout.elite))==digest,"Pre-update saves keep exact active-stage object layout")
  game.boss_dead=true;game.portal_state="exit"
- check(game.advance_stage() and game.world_content_version==1 and game.map_layout.poi_kinds.count("Chest")>=15,"Legacy runs adopt new object guarantees on the next stage")
+ check(game.advance_stage() and game.world_content_version==game.WORLD_CONTENT_VERSION and game.map_layout.poi_kinds.count("Chest")>=15,"Legacy runs adopt new object guarantees on the next stage")
  game.queue_free();await process_frame;await process_frame
  print("STAGE THEMES: %d checks, %d failures"%[checks,failures.size()]);quit(0 if failures.is_empty() else 1)

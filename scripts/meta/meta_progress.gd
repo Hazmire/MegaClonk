@@ -11,6 +11,10 @@ static func migrate(data: Dictionary) -> void:
    if ((e.goal==0 and e.cost==0) or (category=="items" and int(data.get("kills",0))>=e.goal)) and not key in data.entries: data.entries.append(key)
  for key in data.disabled.duplicate():
   if str(key).begins_with("traits:") or str(key).begins_with("ultimates:"):data.disabled.erase(key)
+ # Weapon Overhaul 2.0: deleted weapons vanish from unlocks and toggles.
+ for list in [data.entries,data.disabled]:
+  for key in list.duplicate():
+   if str(key).begins_with("weapons:") and not Catalog.weapon_exists(int(str(key).get_slice(":",1))):list.erase(key)
  data.weapon_slots=clampi(int(data.weapon_slots),2,4)
  data.tome_slots=clampi(int(data.tome_slots),2,4)
  data.credits=maxi(0,int(data.credits)); data.quest_gold=maxi(0,int(data.quest_gold))
