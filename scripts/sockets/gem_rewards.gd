@@ -26,7 +26,8 @@ static func buy(game: Node,object: Dictionary,element: String) -> Dictionary:
  object["gem_sold"].append(element)
  return {"ok":true,"element":element}
 # Called when a chest produces an item. Returns the element granted, or "".
-static func roll_chest(game: Node) -> String:
+static func roll_chest(game: Node,item_rarity: String="") -> String:
+ roll_amulet(game,item_rarity)
  var rng=RandomNumberGenerator.new()
  rng.seed=int(game.run_seed)*53+game.stage*1009+int(game.run_metrics.get("chests",0))*271+game.kills+int(TUNING.chest_seed_offset)
  if game.world_content_version<2 or rng.randf()>=float(TUNING.chest_chance):return ""
@@ -34,3 +35,23 @@ static func roll_chest(game: Node) -> String:
  game.gems.add(element);game.chest_gem=element
  game.toast("%s socket gem found in the chest"%Elements.display_name(element));game.play_sound("gem.pickup")
  return element
+
+# Imbued Amulet: only Epic or Legendary chest rewards can carry one, and only
+# Elements.TUNING.amulet.max_per_run can be found in a run, so it unlocks a second socket on one weapon.
+static func roll_amulet(game: Node,item_rarity: String) -> bool:
+ var t: Dictionary=Elements.TUNING.amulet
+ if game.world_content_version<2 or not item_rarity in ["epic","legendary"] or game.amulets_found>=int(t.max_per_run):return false
+ var rng=RandomNumberGenerator.new()
+ rng.seed=int(game.run_seed)*97+game.stage*1013+int(game.run_metrics.get("chests",0))*389+game.kills+int(TUNING.chest_seed_offset)+11
+ if rng.randf()>=float(t.chest_chance):return false
+ game.amulets+=1;game.amulets_found+=1;game.chest_amulet=true
+ game.toast("Imbued Amulet found: unlocks a second socket on one weapon");game.play_sound("gem.pickup")
+ return true
+# Spends one amulet to give `weapon_id` its second socket. Atomic: both change or neither.
+static func use_amulet(game: Node,weapon_id: int) -> Dictionary:
+ if int(game.amulets)<1:return {"ok":false,"reason":"no_amulet"}
+ if not game.weapons.has(weapon_id):return {"ok":false,"reason":"weapon_not_owned"}
+ if not WeaponSockets.can_unlock_second(game.weapons[weapon_id]):return {"ok":false,"reason":"already_unlocked"}
+ if not WeaponSockets.unlock_second(game.weapons[weapon_id]):return {"ok":false,"reason":"unlock_failed"}
+ game.amulets-=1
+ return {"ok":true,"reason":""}

@@ -59,13 +59,16 @@ const TUNING={
   "boss_max_stun":0.5,"boss_immunity":5.0                   # SPEC
  },
  "combos":{
+  # Every combo has a per-target cooldown and a damage cap. Global budget keeps crowds bounded.
+  "budget_per_second":24,                                                                                                 # GUESS
   "thermal_shock":{"damage_percent_max_hp":0.02,"chill_stacks_consumed":3,"cooldown":3.0,"damage_cap":200.0},            # GUESS
-  "toxic_conduction":{"damage_percent_max_hp":0.015,"targets":3,"radius":5.0,"damage_cap":100.0},                         # GUESS
-  "caustic_combustion":{"damage_percent_max_hp":0.03,"radius":3.5,"damage_cap":150.0},                                    # GUESS
+  "toxic_conduction":{"damage_percent_max_hp":0.015,"targets":3,"radius":5.0,"cooldown":2.0,"damage_cap":100.0},         # GUESS
+  "caustic_combustion":{"damage_percent_max_hp":0.03,"radius":3.5,"cooldown":3.0,"damage_cap":150.0},                    # GUESS
   "blightfrost":{"extra_chill_stacks":1},                                                                                 # SPEC
   "overcharge":{"damage_percent_max_hp":0.02,"cooldown":3.0,"damage_cap":200.0},                                          # GUESS
-  "cryoshock":{"damage_percent_max_hp":0.015,"radius":4.0,"chill_stacks":2,"damage_cap":120.0}                           # GUESS
- }
+  "cryoshock":{"damage_percent_max_hp":0.015,"radius":4.0,"chill_stacks":2,"cooldown":3.0,"damage_cap":120.0}            # GUESS
+ },
+ "amulet":{"chest_chance":0.30,"max_per_run":1}                                                                           # GUESS
 }
 
 static func valid(element: String) -> bool:

@@ -25,6 +25,8 @@ static func imbue_station(ui: FrontEnd,object: Dictionary) -> void:
  var center=RewardScreens.layout(ui,"Imbue Station · %d gold per gem"%cost)
  ui.paragraph("Fuse an elemental gem into a weapon socket. Installing is permanent, costs %d gold and consumes one gem."%cost,center,520)
  gem_inventory(ui,center)
+ var amulet_row=HBoxContainer.new();amulet_row.add_theme_constant_override("separation",8);center.add_child(amulet_row)
+ ui.text("Imbued Amulets: %d"%game.amulets,amulet_row,16).add_theme_color_override("font_color",Color("ffcf65"))
  var scroll=ScrollContainer.new();scroll.custom_minimum_size=Vector2(560,300);scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED;center.add_child(scroll)
  var list=VBoxContainer.new();list.add_theme_constant_override("separation",8);list.size_flags_horizontal=Control.SIZE_EXPAND_FILL;scroll.add_child(list)
  for id in game.weapons:
@@ -33,6 +35,14 @@ static func imbue_station(ui: FrontEnd,object: Dictionary) -> void:
   ui.heading("%s · Lv %d"%[Catalog.WEAPONS[id][0],state.level],head,18)
   head.add_child(SocketPips.new().setup(state))
   var detail=ui.text(tooltip(state).replace("\n","  "),list,13);detail.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+  if WeaponSockets.can_unlock_second(state):
+   var amulet=RewardScreens.button(ui,list,"Use Imbued Amulet · unlock 2nd socket",func():
+    var used=GemRewards.use_amulet(game,int(id))
+    if used.ok:game.play_sound("imbue.install");game.toast("%s gained a second socket"%Catalog.WEAPONS[id][0])
+    else:game.toast(ImbueRules.reason_text(str(used.reason)))
+    ui.reward_consumed=false;imbue_station(ui,object),Color("8a6a1f"))
+   amulet.custom_minimum_size=Vector2(360,36);amulet.disabled=game.amulets<1
+   amulet.tooltip_text="Permanently adds a second socket to this weapon. Two different elements form a combination."
   var buttons=HBoxContainer.new();buttons.add_theme_constant_override("separation",6);list.add_child(buttons)
   for element in Elements.IDS:
    var reason=ImbueRules.problem(game,int(id),element)

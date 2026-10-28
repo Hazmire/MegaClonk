@@ -78,6 +78,12 @@ static func apply_corrosive(game: Object, e: Dictionary, weapon: int) -> void:
  fx["poison"]={"left":float(t.duration),"clock":float(fx.poison.clock) if not started else float(t.interval),"weapon":weapon}
  if started and cooldown_ready(e,"fx_poison_sound"):
   start_cooldown(e,"fx_poison_sound",float(t.interval));game.play_sound("status.poison")
+static func consume_chill(e: Dictionary, stacks: int) -> void:
+ if not active(e) or not e.fx.has("chill"):return
+ e.fx.chill["stacks"]=maxi(0,int(e.fx.chill.stacks)-stacks)
+ if int(e.fx.chill.stacks)<=0:
+  restore_speed(e);e.fx.erase("chill")
+ else:apply_speed(e)
 static func apply_chill(game: Object, e: Dictionary, stacks: int=1) -> void:
  var t: Dictionary=Elements.TUNING.ice
  var fx=state(e)
@@ -180,11 +186,16 @@ static func modify_damage(game: Object, _e: Dictionary, amount: float, critical:
 static func on_hit(game: Object, e: Dictionary, weapon: int, _critical: bool, _dealt: float) -> void:
  var elements=weapon_elements(game,weapon)
  if elements.is_empty() or not enter():return
- if "ice" in elements:apply_chill(game,e)
+ if "ice" in elements:
+  # Blightfrost (ice + corrosive): poisoned targets gain extra chill per hit.
+  var extra=0
+  if "corrosive" in elements and poisoned(e):extra=int(Elements.TUNING.combos.blightfrost.extra_chill_stacks)
+  apply_chill(game,e,1+extra)
  if e.hp>0:
   if "corrosive" in elements:apply_corrosive(game,e,weapon)
   if "fire" in elements and game.rng.randf()<float(Elements.TUNING.fire.ignite_chance):apply_ignite(game,e,weapon)
   if "electricity" in elements and cooldown_ready(e,"stun_proc") and game.rng.randf()<float(Elements.TUNING.electricity.stun_chance):apply_stun(game,e,weapon)
+  if elements.size()>1:Combos.evaluate(game,e,weapon,Elements.combo(str(elements[0]),str(elements[1])))
  leave()
 # Ice Shatter: a chilled enemy that dies cracks, hurting its neighbours for a share of THEIR
 # max HP (capped). Victims carry a generation number so a chain of shatters stops at the

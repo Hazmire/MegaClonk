@@ -40,6 +40,8 @@ static func reason_text(reason: String) -> String:
   "no_gem":return "You have no gem of that element"
   "insufficient_gold":return "Not enough gold"
   "not_enough_gold":return "Not enough gold"
+  "no_amulet":return "You have no Imbued Amulet"
+  "already_unlocked":return "Second socket already unlocked"
   "sold":return "Sold out"
   "not_offered":return "Not for sale here"
  return reason.replace("_"," ").capitalize()

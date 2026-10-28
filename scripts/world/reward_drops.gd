@@ -40,7 +40,7 @@ static func queue_roll(game: Node) -> bool:
  var available=game.available_items()
  var selected=RewardSelector.choose(RewardSelector.items(available),game.rng,Rarity.reward_weights(game.stats.luck))
  if selected.is_empty():return false
- game.reward_queue.append(int(selected.id));GemRewards.roll_chest(game);return true
+ game.reward_queue.append(int(selected.id));GemRewards.roll_chest(game,str(Catalog.ITEMS[int(selected.id)][1]));return true
 static func present_next(game: Node) -> bool:
  if game.active_reward>=0 or game.reward_queue.is_empty():return false
  var id=int(game.reward_queue.pop_front());game.active_reward=id;game.apply_item(id);game.frontend.reward(Catalog.ITEMS[id]);return true
