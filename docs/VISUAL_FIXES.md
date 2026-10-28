@@ -8,3 +8,7 @@
 Focused checks hold slides/crouches for thousands of updates, freeze animation time to detect accumulated pose offsets, check walking mesh deformation and exercise shrine label visibility. A rendered regression checks that solid terrain/objects block a red background from both sides even when a supplied texture has zero alpha. Broader validation and Windows publication status are recorded separately in releases/BUILD_INFO.md. Native Windows execution remains untested.
 
 Asset source: user uploads AutopsyZombie.zip and PSX_SEA_HORROR_MONSTERS_Free_Sampler.zip, committed upstream on the current branch. Crab licence/credit retained under assets/enemies_corrected/crab/LICENSE.txt; original zombie FBX and normal texture retained behind a source-only import ignore, with the corrected rig/texture/frame assets in the project. Rebuild with Blender4.3.2 tools/prepare_corrected_enemies.py, then Godot tools/bake_corrected_enemies.gd. The older frame-bake scripts are historical and do not overwrite these new named frame sets.
+
+## Rendered checks
+
+[Animated roster](images/visual-corrections/animated_roster.png) · [player poses](images/visual-corrections/player_poses.png) · [opaque front faces](images/visual-corrections/opaque_front.png) · [opaque back faces](images/visual-corrections/opaque_back.png). These are actual Mesa-rendered captures. The occlusion test uses red behind the panels; panel centres must block it, including with zero texture alpha.

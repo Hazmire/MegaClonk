@@ -13,7 +13,7 @@ func run():
  await physics_frame;await physics_frame
  verify(game.player.position.distance_to(game.map_layout.spawn)<0.5,"Player starts at deterministic peripheral spawn")
  verify(OrdinaryRoster.variant(0,0).health==OrdinaryRoster.variant(0,1).health and OrdinaryRoster.variant(0,0).speed==OrdinaryRoster.variant(0,1).speed and OrdinaryRoster.variant(0,0).damage==OrdinaryRoster.variant(0,1).damage,"Goblin and Skeleton share identical gameplay stats")
- verify(OrdinaryRoster.variant(0,0).model!=OrdinaryRoster.variant(0,1).model,"Basic variants use different geometry")
+ verify(OrdinaryRoster.variant(0,0).model.ends_with("/Autopsy_enemy_idle_0.res") and OrdinaryRoster.variant(0,1).model==OrdinaryRoster.variant(0,0).model,"Both basic choices use the user-selected Autopsy Zombie")
  var random=RandomNumberGenerator.new();random.seed=123;var counts=[0,0,0]
  for i in 10000:counts[OrdinaryRoster.choose(random)]+=1
  verify(absf(counts[0]/10000.0-0.75)<0.02 and absf(counts[1]/10000.0-0.2)<0.02 and absf(counts[2]/10000.0-0.05)<0.01,"Seeded ordinary weighting is 75/20/5")
