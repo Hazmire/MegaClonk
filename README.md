@@ -21,6 +21,8 @@ The retro-audio update adds [four original tracks, curated weapon/movement/rewar
 
 The latest [dark-feedback update](docs/DARK_FEEDBACK.md) removes enemy hit/death sounds, darkens the effects and adds a separate tome row plus matching dark-red health bars with numbers.
 
+The [grimdark PSX update](docs/GRIMDARK.md) replaces the runtime player, enemies, vegetation and interactables with supplied dark assets. Three stages progress from living green through withering ochre to dead woodland. The world renders at retro resolution with snapping, affine textures, vertex lighting/fog and dithering; the HUD stays sharp. [Rendered evidence and limitations](docs/GRIMDARK_PERFORMANCE.md).
+
 ## Download and play
 
 - [Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/dark-feedback-v12.1/BONK_INFINITY_Windows_x64.zip)

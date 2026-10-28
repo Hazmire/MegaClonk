@@ -56,8 +56,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if gh release view grimdark-psx-v13 >/dev/null 2>&1; then
-            gh release upload grimdark-psx-v13 builds/BONK_INFINITY_Windows_x64.zip --clobber
+          if gh release view grimdark-psx-v13.1 >/dev/null 2>&1; then
+            gh release upload grimdark-psx-v13.1 builds/BONK_INFINITY_Windows_x64.zip --clobber
           else
-            gh release create grimdark-psx-v13 builds/BONK_INFINITY_Windows_x64.zip --target "$GITHUB_SHA" --prerelease --title "MEGACLONK — Grimdark PSX Forest Playtest 13" --notes-file docs/GRIMDARK_RELEASE.md
+            gh release create grimdark-psx-v13.1 builds/BONK_INFINITY_Windows_x64.zip --target "$GITHUB_SHA" --prerelease --title "MEGACLONK — Grimdark PSX Forest Playtest 13.1" --notes-file docs/GRIMDARK_RELEASE.md
           fi

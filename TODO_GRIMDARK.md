@@ -13,4 +13,6 @@ Baseline: verified12.1 gameplay/audio/HUD. Dedicated branch grimdark-psx-v13 pre
 
 No claim of completion or native Windows/GPU performance certification until evidence exists. Existing audio and enemy-silence rules must remain intact.
 
-Restored cloud workspace: all source survived. Dedicated20×3 seed test passed4089 checks before disconnect; full regression/export/publication still require completion. Source repair tools and actual captures are included.
+Restored cloud workspace: source survived and was committed/pushed. All28 local suites pass, including4089 dedicated20×3 checks. Clean import and six compiled export gates pass. Isolated50/100/250/500 profiles and actual rendered captures are recorded. GitHub build/publication verification remains pending.
+
+Known follow-up limits: fully authored supplemental animation clips would improve the simplified poses;500-enemy CPU cost remains above a60FPS budget on this host; small Mesa shutdown texture diagnostics remain unresolved. Native Windows and gaming-GPU playtesting are not certified.

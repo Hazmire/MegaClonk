@@ -1,7 +1,7 @@
 extends SceneTree
 func _initialize():call_deferred("run")
 func run():
- var paths=["res://assets/grimdark/knight/knight.glb","res://assets/grimdark/characters/Character_Monster.fbx","res://assets/grimdark/characters/Character_Monster_04.fbx","res://assets/grimdark/wrapper/MonsterPSX.fbx","res://assets/grimdark/horror/PS1_ForestAsset/PS1_NaturAssetCollection.fbx","res://assets/grimdark/horror/PS1_Palast_Assets/PS1_PalastAssetCollection.fbx","res://assets/grimdark/medieval/market_stall_round_red.glb","res://assets/grimdark/trees/dead_tree_rt_1.glb"]
+ var paths=["res://assets/grimdark/knight/knight.glb","res://assets/grimdark/characters/Character_Monster.fbx","res://assets/grimdark/characters/Character_Monster_04.fbx","res://assets/grimdark/wrapper/MonsterPSX.glb","res://assets/grimdark/horror/PS1_ForestAsset/PS1_NaturAssetCollection.fbx","res://assets/grimdark/horror/PS1_Palast_Assets/PS1_PalastAssetCollection.fbx","res://assets/grimdark/medieval/market_stall_round_red.glb","res://assets/grimdark/trees/dead_tree_rt_1.glb"]
  for path in paths:
   var scene=load(path).instantiate();root.add_child(scene);await process_frame;print("ASSET ",path)
   for node in scene.find_children("*","MeshInstance3D",true,false):

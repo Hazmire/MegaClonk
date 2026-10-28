@@ -13,3 +13,11 @@ Original source assets remain for rollback and historical credits. New selected/
 Actual rendered captures: docs/images/grimdark. The dedicated test builds20 seeds across all3 stages and checks objective access, supplied scenery, dead vegetation and portal guidance. Performance and delivery verification are reported separately; no native Windows or gaming-GPU certification is implied.
 
 Asset rebuild: extract source archives outside res://, set MEGACLONK_PSX_SOURCE, run Blender4.3.2 with tools/prepare_grimdark_rigs.py, then tools/bake_grimdark.gd and tools/bake_wrapper_frames.gd through Godot. Bake tools default to the documented /tmp/megaclonk-psx-source and /tmp/grimdark-wrapper-frames directories. Ordinary source builds need no Blender because generated GLB/RES files are committed.
+
+## Actual rendered gallery
+
+- [Blighted Forest](images/grimdark/stage_1.png), [Withering Forest](images/grimdark/stage_2.png), [Deadlands](images/grimdark/stage_3.png).
+- [Supplied interactables](images/grimdark/interactables.png), [enemy roster](images/grimdark/enemy_roster.png), [Knight armour repair](images/grimdark/knight_import_repair.png).
+- [Red player damage](images/grimdark/knight_damage_red.png), [sharp HUD over retro world](images/grimdark/hud.png).
+
+All screenshots were rendered and viewed under Mesa llvmpipe. Shutdown texture diagnostics and native-platform limits are disclosed in GRIMDARK_PERFORMANCE.md.
