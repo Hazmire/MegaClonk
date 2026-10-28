@@ -1,0 +1,21 @@
+{
+  "release": "https://github.com/Hazmire/MegaClonk/releases/tag/grimdark-fixes-v14",
+  "download": "https://github.com/Hazmire/MegaClonk/releases/download/grimdark-fixes-v14/BONK_INFINITY_Windows_x64.zip",
+  "asset_id": 684735558,
+  "size": 139651426,
+  "sha256": "f37074a6eb5c1eab7ba332f4c4e36d2b14c527085f12d9f7b024ef5585ed9a35",
+  "source_commit": "acebbd473afe1232e5ad968917518f48c354823f",
+  "zip_crc": "all pass",
+  "build_info": "MEGACLONK v14 opaque geometry, zombie/crab animation and stable slide\nGodot 4.7.2\nSource commit: acebbd473afe1232e5ad968917518f48c354823f\nUncommitted source at build time: False\nWindows execution requires native playtesting.\n",
+  "native_windows_executed": false,
+  "workflow": "https://github.com/Hazmire/MegaClonk/actions/runs/40677327163",
+  "pr_workflow": "https://github.com/Hazmire/MegaClonk/actions/runs/40677338967",
+  "artifact_id": 12811975464,
+  "ci_suites": 29,
+  "focused_checks": 79,
+  "compiled_smoke_gates": 7,
+  "world_frames": 180,
+  "rendered_occlusion": "four panel-centre samples pass, front and back, including zero-alpha source texture",
+  "published_render_gallery": "docs/images/visual-corrections/published_*.png",
+  "rendered_shutdown_diagnostics": "Two small5460-byte texture diagnostics remain under Mesa at shutdown, as documented in the prior performance report; no shader compilation or opacity-buffer error."
+}

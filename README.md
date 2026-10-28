@@ -23,9 +23,11 @@ The latest [dark-feedback update](docs/DARK_FEEDBACK.md) removes enemy hit/death
 
 The [grimdark PSX update](docs/GRIMDARK.md) replaces the runtime player, enemies, vegetation and interactables with supplied dark assets. Three stages progress from living green through withering ochre to dead woodland. The world renders at retro resolution with snapping, affine textures, vertex lighting/fog and dithering; the HUD stays sharp. [Rendered evidence and limitations](docs/GRIMDARK_PERFORMANCE.md).
 
+The [visual fixes14 update](docs/VISUAL_FIXES.md) makes solid geometry opaque, limits shrine progress to active charging, adds the supplied walking Autopsy Zombie and crab, repairs retained elite walking/facing and prevents accumulated slide/crouch deformation. The published ZIP has passed29 CI suites, seven downloaded-pack smoke gates and rendered opacity checks.
+
 ## Download and play
 
-- [Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/grimdark-psx-v13.1/BONK_INFINITY_Windows_x64.zip)
+- [Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/grimdark-fixes-v14/BONK_INFINITY_Windows_x64.zip)
 - [GitHub Actions builds](https://github.com/Hazmire/MegaClonk/actions/workflows/windows-build.yml)
 - [PR #6 — merge into Full-Release](https://github.com/Hazmire/MegaClonk/pull/6)
 

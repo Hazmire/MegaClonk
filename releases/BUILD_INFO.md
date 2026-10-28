@@ -1,3 +1,18 @@
+# Verified visual fixes14 publication
+
+[Download Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/grimdark-fixes-v14/BONK_INFINITY_Windows_x64.zip). Extract the entire ZIP and launch BONK_INFINITY.exe or Launch_Compatibility.bat.
+
+- Clean source: `acebbd473afe1232e5ad968917518f48c354823f`.
+- Successful29-suite publishing workflow: https://github.com/Hazmire/MegaClonk/actions/runs/40677327163
+- Successful PR validation: https://github.com/Hazmire/MegaClonk/actions/runs/40677338967
+- Release asset `684735558`; 139,651,426bytes.
+- SHA256: `f37074a6eb5c1eab7ba332f4c4e36d2b14c527085f12d9f7b024ef5585ed9a35`.
+- Actions artifact `12811975464`; verified not expired.
+
+Downloaded size/digest and every CRC pass. BUILD_INFO confirms the expected clean source. Linux Godot ran180 frames and all seven compiled smoke gates, including79 focused regression checks. The downloaded pack passed rendered front/back opaque-occlusion checks. Actual rendered captures confirm hidden outside-shrine text, visible active charging text, zombie/crab models and a stable slide after thousands of updates. Native Windows execution remains untested; prior software-renderer shutdown diagnostics remain documented.
+
+[Fix guide and screenshots](../docs/VISUAL_FIXES.md) · [Raw proof](VISUAL_FIXES_VALIDATION.json) · [PR#6](https://github.com/Hazmire/MegaClonk/pull/6). Runtime changes are on the PR branch until merged into Full-Release. The download works independently. Earlier builds below are historical and do not contain these corrections.
+
 # Verified Grimdark PSX13.1 publication
 
 [Download Windows ZIP](https://github.com/Hazmire/MegaClonk/releases/download/grimdark-psx-v13.1/BONK_INFINITY_Windows_x64.zip). Extract everything and launch BONK_INFINITY.exe, or Launch_Compatibility.bat.

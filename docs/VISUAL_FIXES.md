@@ -12,3 +12,9 @@ Asset source: user uploads AutopsyZombie.zip and PSX_SEA_HORROR_MONSTERS_Free_Sa
 ## Rendered checks
 
 [Animated roster](images/visual-corrections/animated_roster.png) · [player poses](images/visual-corrections/player_poses.png) · [opaque front faces](images/visual-corrections/opaque_front.png) · [opaque back faces](images/visual-corrections/opaque_back.png). These are actual Mesa-rendered captures. The occlusion test uses red behind the panels; panel centres must block it, including with zero texture alpha.
+
+## Verified Windows delivery
+
+[Download14 ZIP](https://github.com/Hazmire/MegaClonk/releases/download/grimdark-fixes-v14/BONK_INFINITY_Windows_x64.zip). Clean source, downloaded digest/CRC,180 frames, seven smoke gates and rendered occlusion checks pass. Native Windows execution remains untested. [Full proof](../releases/BUILD_INFO.md).
+
+Actual downloaded-pack captures: [outside shrine](images/visual-corrections/published_outside.png), [actively charging](images/visual-corrections/published_charging.png), [long-held slide and new enemies](images/visual-corrections/published_slide.png). The glowing shrine orb is an intentionally transparent effect; solid terrain and object meshes are opaque.
