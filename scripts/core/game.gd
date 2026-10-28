@@ -22,6 +22,7 @@ var pickups: Array[Dictionary] = []
 var interactables: Array[Dictionary] = []
 var landmarks: Array[Vector3]=[]
 var weapons: Dictionary = {}
+var gems=GemInventory.new()
 var tomes: Dictionary = {}
 var tome_rarities: Dictionary={}
 var items: Array = []
@@ -294,7 +295,7 @@ func begin_run() -> void:
  elapsed = 0
  damage_total = 0
  damage_by_weapon.clear();weapon_damage_windows.clear()
- weapons.clear()
+ weapons.clear();gems.reset()
  tomes.clear()
  items.clear()
  banished.clear()
@@ -309,7 +310,9 @@ func begin_run() -> void:
  resume();show_stage_intro()
 func equip(id: int) -> void:
  if weapons.has(id): weapons[id].level = mini(10, weapons[id].level + 1)
- elif weapons.size() < weapon_limit(): weapons[id] = {"level":1,"rarity":"common","clock":0.1,"visuals":[],"summons":[],"upgrades":{},"legacy_damage":1.0}
+ elif weapons.size() < weapon_limit():
+  weapons[id] = {"level":1,"rarity":"common","clock":0.1,"visuals":[],"summons":[],"upgrades":{},"legacy_damage":1.0}
+  WeaponSockets.ensure(weapons[id])
 func terrain_height(x: float, z: float) -> float:
  # Query the collision mesh's already-built planes, never regenerate or format
  # a layout-cache key for each agent probe during a horde tick.
@@ -611,6 +614,7 @@ func update_enemies(delta: float) -> void:
   if e.hp<=0:crowd.disable(e);continue
   if e.kind>=8:e["hit_time"]=maxf(0,float(e.get("hit_time",0))-delta)
   e.cooldown -= delta
+  if e.has("fx"):StatusManager.tick(self,e,delta)
   e.slow = maxf(0,e.slow-delta)
   e.frozen = maxf(0,e.frozen-delta)
   e.poison = maxf(0,e.poison-delta)
@@ -738,6 +742,7 @@ func hit(e: Dictionary, base: float, weapon: int) -> void:
  if character == 10 and e.hp/e.max_hp>0.9: amount*=1.5
  if character == 16 and e.hp/e.max_hp<0.1: amount = e.hp+1
  if e.kind<8 and "shield" in e.variant.modules and e.hp/e.max_hp>0.5: amount*=0.5
+ amount=StatusManager.modify_damage(self,e,amount,critical,weapon)
  e["hit_time"]=0.10
  if is_instance_valid(combat_fx):
   combat_fx.burst("impact_concrete",e.pos,0.35,0.12)
@@ -760,6 +765,7 @@ func hit(e: Dictionary, base: float, weapon: int) -> void:
  damage_by_weapon[weapon] = damage_by_weapon.get(weapon,0.0)+actual
  health = minf(stats.max_health,health+actual*stats.lifesteal)
  if critical and not settings.reduced: flash(e.pos,Color("fff3aa"),0.4)
+ StatusManager.on_hit(self,e,weapon,critical,actual)
 func area(pos: Vector3, radius: float, damage: float, weapon: int, status: String = "") -> void:
  for e in nearby(pos,radius):
   hit(e,damage,weapon)
@@ -770,6 +776,7 @@ func kill_enemy(index: int) -> void:
  var e = enemies[index]
  if e.get("death_handled",false):return
  e.death_handled=true;crowd.disable(e)
+ StatusManager.on_death(self,e)
  var stage_encounter_complete=BossEncounters.died(self,e)
  RewardDrops.from_enemy(self,e)
  if debug_combat:combat_counters.deaths+=1
@@ -1285,7 +1292,7 @@ func sandbox_menu() -> void:
   for id in weapons:
    for node in weapons[id].visuals: node.queue_free()
    for ally in weapons[id].summons: ally.node.queue_free()
-  weapons.clear())
+  weapons.clear();gems.reset())
  button("Add random tome",col,func(): var names=Catalog.ACTIVE_TOMES; var name=names[rng.randi_range(0,names.size()-1)]; apply_upgrade({"type":"tome","id":name}))
  button("Add item",col,award_item)
  title("Map seed: %s • F6 overlay • F7 repeat • F8 next"%stage_map_seed(),col,18)
@@ -1446,7 +1453,7 @@ func telegraph(pos: Vector3,radius: float,duration: float,color: Color) -> void:
  effects.append({"node":node,"life":duration,"telegraph":true})
 func save_run(path: String = "user://active-run.json") -> bool:
  var saved_weapons={}
- for id in weapons: saved_weapons[str(id)]={"level":weapons[id].level,"clock":weapons[id].clock,"rarity":weapons[id].get("rarity",RewardCatalog.entry("weapons",id).rarity),"upgrades":weapons[id].get("upgrades",{}),"legacy_damage":weapons[id].get("legacy_damage",1.0)}
+ for id in weapons: saved_weapons[str(id)]={"level":weapons[id].level,"clock":weapons[id].clock,"rarity":weapons[id].get("rarity",RewardCatalog.entry("weapons",id).rarity),"upgrades":weapons[id].get("upgrades",{}),"legacy_damage":weapons[id].get("legacy_damage",1.0),"sockets":WeaponSockets.serialize(weapons[id])}
  var saved_enemies=[]
  for e in enemies:
   var record=e.duplicate(true)
@@ -1458,7 +1465,7 @@ func save_run(path: String = "user://active-run.json") -> bool:
  for pickup in pickups: saved_pickups.append({"position":[pickup.node.position.x,pickup.node.position.y,pickup.node.position.z],"value":pickup.value,"age":pickup.age,"red":pickup.get("red",false),"attracted":pickup.get("attracted",false),"attraction_reason":pickup.get("attraction_reason","")})
  var used=[]
  for object in interactables: used.append({"kind":object.kind,"used":object.used,"charge":object.charge,"tier":object.get("tier","Common"),"offers":object.get("offers",null),"sold":object.get("sold",[]),"shrine_reward":object.get("shrine_reward",{}),"golden":object.get("golden",false),"shrine_choices":object.get("shrine_choices",[])})
- var data={"version":2,"next_enemy_id":crowd.next_id,"drop_chests":RewardDrops.serialize(self),"reward_queue":reward_queue,"active_reward":active_reward,"shrine_reward_queue":shrine_reward_queue,"active_shrine_reward":active_shrine_reward,"announced_stages":announced_stages,"gem_rng_state":str(gem_rng.state),"pending_upgrades":pending_upgrades+(1 if mode=="upgrade" else 0),"terrain_version":terrain_version,"world_content_version":world_content_version,"additional_boss_count":additional_boss_count,"boss_encounters":boss_encounters,"map_seed_override":map_seed_override,"stage_clock":stage_clock.serialize(),"boss_variant":boss_variant,"ghost_budget":ghost_budget,"portal_state":portal_state,"loadout":loadout_runtime.serialize(),"selected_weapon":selected_weapon,"run_metrics":run_metrics,"chests_opened":chests_opened,"legacy_weapon_slots":legacy_weapon_slots,"legacy_tome_slots":legacy_tome_slots,"minimap":serialize_minimap(),"variants":variants.serialize(),"spawn_rng_state":str(spawn_rng.state),"elite_active":elite_active,"elite_rewarded":elite_rewarded,"rng_state":str(rng.state),"character":character,"biome":biome,"selected_biome":selected_biome,"tier":tier,"stage":stage,"elapsed":elapsed,"stage_time":stage_time,"stats":stats,"health":health,"xp":xp,"level":level,"kills":kills,"gold":gold,"weapons":saved_weapons,"tomes":tomes,"tome_rarities":tome_rarities,"items":items,"sandbox":sandbox,"position":[player.position.x,player.position.y,player.position.z],"enemies":saved_enemies,"boss_spawned":boss_spawned,"boss_dead":boss_dead,"interactables":used,"damage_total":damage_total,"rerolls":rerolls,"banished":banished,"pickups":saved_pickups,"damage_by_weapon":damage_by_weapon,"gold_fraction":gold_fraction,"camera":[player.yaw,player.pitch,player.zoom]}
+ var data={"version":2,"next_enemy_id":crowd.next_id,"drop_chests":RewardDrops.serialize(self),"reward_queue":reward_queue,"active_reward":active_reward,"shrine_reward_queue":shrine_reward_queue,"active_shrine_reward":active_shrine_reward,"announced_stages":announced_stages,"gem_rng_state":str(gem_rng.state),"pending_upgrades":pending_upgrades+(1 if mode=="upgrade" else 0),"terrain_version":terrain_version,"world_content_version":world_content_version,"additional_boss_count":additional_boss_count,"boss_encounters":boss_encounters,"map_seed_override":map_seed_override,"stage_clock":stage_clock.serialize(),"boss_variant":boss_variant,"ghost_budget":ghost_budget,"portal_state":portal_state,"loadout":loadout_runtime.serialize(),"selected_weapon":selected_weapon,"run_metrics":run_metrics,"chests_opened":chests_opened,"legacy_weapon_slots":legacy_weapon_slots,"legacy_tome_slots":legacy_tome_slots,"minimap":serialize_minimap(),"variants":variants.serialize(),"spawn_rng_state":str(spawn_rng.state),"elite_active":elite_active,"elite_rewarded":elite_rewarded,"rng_state":str(rng.state),"character":character,"biome":biome,"selected_biome":selected_biome,"tier":tier,"stage":stage,"elapsed":elapsed,"stage_time":stage_time,"stats":stats,"health":health,"xp":xp,"level":level,"kills":kills,"gold":gold,"weapons":saved_weapons,"gems":gems.serialize(),"tomes":tomes,"tome_rarities":tome_rarities,"items":items,"sandbox":sandbox,"position":[player.position.x,player.position.y,player.position.z],"enemies":saved_enemies,"boss_spawned":boss_spawned,"boss_dead":boss_dead,"interactables":used,"damage_total":damage_total,"rerolls":rerolls,"banished":banished,"pickups":saved_pickups,"damage_by_weapon":damage_by_weapon,"gold_fraction":gold_fraction,"camera":[player.yaw,player.pitch,player.zoom]}
  var file=FileAccess.open(path+".tmp",FileAccess.WRITE)
  if not file: return false
  file.store_string(JSON.stringify(data)); file.close()
@@ -1496,6 +1503,8 @@ func load_run(path: String = "user://active-run.json") -> bool:
  weapons.clear()
  for id in data.weapons:
   equip(int(id)); weapons[int(id)]["rarity"]=data.weapons[id].get("rarity",RewardCatalog.entry("weapons",int(id)).rarity);weapons[int(id)].level=int(data.weapons[id].level); weapons[int(id)].clock=float(data.weapons[id].clock);weapons[int(id)].upgrades=data.weapons[id].get("upgrades",{});weapons[int(id)].legacy_damage=float(data.weapons[id].get("legacy_damage",1+(int(data.weapons[id].level)-1)*0.23))
+  WeaponSockets.restore(weapons[int(id)],data.weapons[id].get("sockets"))
+ gems.restore(data.get("gems"))
  tomes=data.tomes;tome_rarities=data.get("tome_rarities",{}); items=data.items; banished=data.banished; rerolls=int(data.rerolls)
  build_stage()
  elapsed=float(data.elapsed); stage_time=float(data.stage_time)
