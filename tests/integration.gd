@@ -31,7 +31,7 @@ func run() -> void:
  restored.finish(999,200,true,0,true)
  verify(restored.data==before,"Sandbox does not change progression")
  var unlocked=restored.finish(100,200,false,0,false)
- verify(unlocked.size()>0 and restored.data.runs==1,"Lifetime progression unlocks")
+ verify(unlocked is Array and restored.data.runs==1 and restored.data.kills==300,"Lifetime progression records the run (items are all unlocked from the start now)")
  # Isolate integration profile from the actual player's profile.
  game=load("res://scenes/main/main.tscn").instantiate()
  root.add_child(game)
