@@ -6,8 +6,16 @@ const WEAPON_ICONS=[15,20,35,29,30,18,12,7,31,18,33,25,13,37,26,9,38,12,24,28,43
 # remain for weapon/item/tome packs whose usage terms are not yet verified.
 # weapons.png keeps its original cell order; ids 0, 1 and 15 (Sword, Firestaff, Shotgun) use the vendor fallback until icons are supplied.
 const LEGACY_WEAPON_ICON={2:2,6:5,7:6,9:7,10:8}
+# Menu Overhaul: final 32x32 art for weapons, tomes, traits and ultimates lives in res://assets/icons/<category>/<id>.png
+# (weapons and tomes by game id, like items). The old vendor/atlas fallbacks below only serve ids with no final art.
+const FINAL_ICON_CATEGORIES=["weapons","tomes","traits","ultimates"]
+static func final_icon_path(category: String,id: String) -> String:return "res://assets/icons/%s/%s.png"%[category,id]
+static func has_final_icon(category: String,id: String) -> bool:return category in FINAL_ICON_CATEGORIES and ResourceLoader.exists(final_icon_path(category,id))
 static func icon(category: String, id: String) -> Texture2D:
  var key=category+":"+id
+ if category in FINAL_ICON_CATEGORIES and ResourceLoader.exists(final_icon_path(category,id)):
+  if not cache.has(key):cache[key]=load(final_icon_path(category,id))
+  return cache[key]
  if category=="weapons" and LEGACY_WEAPON_ICON.has(int(id)):
   if cache.has(key):return cache[key]
   var atlas=load("res://assets/art_reset/icons/weapons.png") as Texture2D
