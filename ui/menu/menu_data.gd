@@ -46,3 +46,55 @@ static func stage_name(biome: int) -> String:return STAGE_NAMES[clampi(biome,0,S
 static func stage_short(biome: int) -> String:return STAGE_SHORT[clampi(biome,0,STAGE_SHORT.size()-1)]
 static func biome_name(biome: int) -> String:return BIOME_NAMES[clampi(biome,0,BIOME_NAMES.size()-1)]
 static func weapon_tag(id: Variant) -> String:return WEAPON_TAGS.get(int(id),"All")
+# ---- Unlocks & collection -------------------------------------------------------------------------------------
+const TABS=[["weapons","Weapons"],["tomes","Tomes"],["traits","Traits"],["items","Items"],["ultimates","Ultimates"]]
+const TOGGLE_CATEGORIES=["weapons","tomes","items"]
+const NEW_ENTRIES=["weapons:15"] # entries the game marks NEW until the player has looked at them (profile key "seen")
+const STARTING_WEAPONS=[0,1,6,7] # ignore the Appears-in-runs toggle (LoadoutCatalog gives them cost 0)
+const GEM_ON_PAPER={"fire":Color("C4552A"),"ice":Color("3F86A6"),"corrosive":Color("4E8A36"),"electricity":Color("7A5CB8")} # darker than FogPalette.ELEMENT for contrast on memo paper
+const UNIQUE_INK=Color("8A5A0E")
+static var debug_locked: Array=[] # "category:id" keys shown as locked without touching the save (F9 on the Unlocks screen in debug builds)
+static func entry_unlocked(data: Dictionary,category: String,id: String) -> bool:
+ return MetaProgress.unlocked(data,category,id) and not (category+":"+id) in debug_locked
+# "on" / "off" for entries with an Appears-in-runs toggle, "plain" for traits and ultimates (always available), "locked".
+static func entry_state(data: Dictionary,category: String,id: String) -> String:
+ if not entry_unlocked(data,category,id):return "locked"
+ if category not in TOGGLE_CATEGORIES:return "plain"
+ return "on" if MetaProgress.enabled(data,category,id) else "off"
+static func unlock_requirement(category: String,e: Dictionary) -> String:
+ var silver=int(e.get("cost",0));var kills=int(e.get("goal",0))
+ if kills>0 and silver>0:return "%d lifetime kills and %d silver"%[kills,silver]
+ if kills>0:return "%d lifetime kills"%kills
+ if silver>0:return "%d silver"%silver
+ return ""
+static func is_new(data: Dictionary,category: String,id: String) -> bool:
+ return (category+":"+id) in NEW_ENTRIES and not (category+":"+id) in data.get("seen",[])
+static func mark_seen(data: Dictionary,category: String,id: String) -> bool:
+ var key=category+":"+id
+ if key in NEW_ENTRIES and not key in data.seen:data.seen.append(key);return true
+ return false
+static func weapon_blurb(id: Variant) -> String:return str(LoadoutCatalog.WEAPON_BLURBS.get(int(id),""))
+static func effect_text(category: String,e: Dictionary) -> String:
+ match category:
+  "weapons":return weapon_blurb(e.id)
+  "items":return str(Catalog.ITEMS[e.id].full)
+ return str(e.description)
+# Element id ("fire") of the socket gem an item needs, or "".
+static func item_gem(id: String) -> String:
+ var needs=Catalog.ITEMS.get(id,{}).get("needs")
+ return "" if needs==null else str(needs).trim_suffix(" GEM").to_lower()
+static func tier_counts() -> Dictionary:
+ var counts={"all":Catalog.ITEM_IDS.size()}
+ for t in Catalog.ITEM_TIERS:counts[t]=0
+ for id in Catalog.ITEM_IDS:counts[Catalog.item_tier(id)]+=1
+ return counts
+static func drop_percent(tier: String) -> String:return "%d%%"%roundi(float(ItemStats.TIER_WEIGHTS[tier])*100.0)
+static func found_items(data: Dictionary) -> int:
+ var n=0
+ for id in Catalog.ITEM_IDS:
+  if entry_unlocked(data,"items",id):n+=1
+ return n
+static func level_up_options(id: Variant) -> Array:
+ var result=[]
+ for key in WeaponUpgrades.pool(int(id)):result.append(WeaponUpgrades.label(int(id),key).to_upper())
+ return result

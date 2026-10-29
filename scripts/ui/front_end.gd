@@ -193,7 +193,7 @@ func home() -> void:
  if is_instance_valid(game.audio):game.audio.music_menu()
  show_screen("main_menu")
 # Out-of-run menus are Fog County MenuScreen scenes (res://ui/menu). They own their theme; in-run screens keep theirs.
-const SCREENS={"main_menu":"res://ui/menu/screens/main_menu.tscn","loadout":"res://ui/menu/screens/loadout_screen.tscn"}
+const SCREENS={"main_menu":"res://ui/menu/screens/main_menu.tscn","loadout":"res://ui/menu/screens/loadout_screen.tscn","unlocks":"res://ui/menu/screens/unlocks_screen.tscn"}
 func show_screen(kind: String) -> MenuScreen:
  MenuScreen.play_sound=func(sound_name: String):game.play_sound("ui."+sound_name)
  var screen=load(SCREENS[kind]).instantiate() as MenuScreen
@@ -204,45 +204,8 @@ func play_screen() -> void:
  game.mode="play";preview_mode="play";prepare_backdrop();game.mode="play";clear()
  show_screen("loadout")
 func unlocks() -> void:
- game.mode="unlocks";preview_mode="home"
- var col=page("Unlocks & collection");paragraph(wallet(),col,800)
- var tabs=HBoxContainer.new();col.add_child(tabs)
- for category in ["weapons","tomes","traits","items","ultimates"]:
-  action(category.capitalize(),tabs,func():active_tab=category;unlocks())
- var body=HBoxContainer.new();col.add_child(body)
- var grid=GridContainer.new();grid.columns=5;body.add_child(grid)
- var detail=VBoxContainer.new();detail.custom_minimum_size.x=390;body.add_child(detail)
- paragraph("Select an entry to inspect it. Enabled entries may appear during runs. Starting weapons ignore this toggle.",detail,370)
- for e in LoadoutCatalog.entries(active_tab):
-  var open=MetaProgress.unlocked(game.progress.data,active_tab,e.id)
-  var button=Button.new();button.custom_minimum_size=Vector2(130,86);button.clip_text=true;button.text_overrun_behavior=TextServer.OVERRUN_TRIM_ELLIPSIS;button.icon_alignment=HORIZONTAL_ALIGNMENT_CENTER;button.vertical_icon_alignment=VERTICAL_ALIGNMENT_TOP;button.add_theme_font_size_override("font_size",14);button.tooltip_text=e.name;button.text=(e.name.trim_suffix(" Tome")+"\nTome" if active_tab=="tomes" else e.name)+("\nON" if MetaProgress.enabled(game.progress.data,active_tab,e.id) else ("\nOFF" if open else "\nLOCKED"));button.icon=UIAssets.icon(active_tab,e.id);button.expand_icon=true;button.add_theme_constant_override("icon_max_width",40 if active_tab=="tomes" else 30)
-  if active_tab=="tomes":button.custom_minimum_size.y=108
-  grid.add_child(button)
-  if not open:button.modulate=Color("82908b")
-  button.pressed.connect(func():
-   for child in detail.get_children():detail.remove_child(child);child.queue_free()
-   heading(e.name,detail,22)
-   if open:
-    paragraph(e.description,detail,370)
-    if active_tab in ["traits","ultimates"]:paragraph("Always available for loadout selection.",detail,370)
-    else:action("Disable from runs" if MetaProgress.enabled(game.progress.data,active_tab,e.id) else "Enable in runs",detail,func():MetaProgress.toggle(game.progress.data,active_tab,e.id);game.progress.save();unlocks())
-   else:
-    # Locked entries reveal their requirement, never their effect text.
-    var requirement="Unlock: %d silver"%e.cost if active_tab=="weapons" else "Unlock: %d lifetime kills"%e.goal
-    if active_tab=="tomes":requirement="Unlock: %d lifetime kills and %d silver"%[e.goal,e.cost]
-    paragraph(requirement,detail,370)
-    if active_tab in ["weapons","tomes"]:
-     action("Unlock for %d silver"%e.cost,detail,func():
-      if MetaProgress.purchase(game.progress.data,active_tab,e.id):game.progress.save();unlocks()
-      else:game.toast("Meet the kill milestone and silver cost"))
-   )
- heading("Account upgrades",col,21)
- for kind in ["weapon","tome"]:
-  var slots=int(game.progress.data[kind+"_slots"])
-  var required=2 if slots==2 else 4
-  action("%s slots: %d/4  •  %s"%[kind.capitalize(),slots,"MAXIMUM" if slots>=4 else "%d silver"%MetaProgress.slot_cost(game.progress.data,kind)],col,func():
-   if MetaProgress.buy_slot(game.progress.data,kind):game.progress.save();unlocks()
-   else:game.toast("Complete quests and claim silver rewards"))
+ game.mode="unlocks";preview_mode="home";clear()
+ show_screen("unlocks")
 func quest_description(q: Dictionary) -> String:return MenuData.quest_description(q)
 func quests() -> void:
  game.mode="quests";var col=page("Quests");paragraph(wallet(),col,800)

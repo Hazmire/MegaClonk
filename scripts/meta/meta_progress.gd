@@ -2,7 +2,7 @@ class_name MetaProgress
 extends RefCounted
 # Profile v2 is additive; legacy character/currency/stat data is preserved.
 static func migrate(data: Dictionary) -> void:
- var defaults={"silver":maxi(0,int(data.get("credits",data.get("currency",0)))+int(data.get("quest_gold",0))),"credits":int(data.get("currency",0)),"quest_gold":0,"account_level":1,"weapon_slots":2,"tome_slots":2,"entries":[],"disabled":[],"claimed":[],"quest_metrics":{},"leaderboard":[],"loadout":{"weapon":0,"trait":"climber","ultimate":"nova"}}
+ var defaults={"silver":maxi(0,int(data.get("credits",data.get("currency",0)))+int(data.get("quest_gold",0))),"credits":int(data.get("currency",0)),"quest_gold":0,"account_level":1,"weapon_slots":2,"tome_slots":2,"entries":[],"disabled":[],"claimed":[],"seen":[],"quest_metrics":{},"leaderboard":[],"loadout":{"weapon":0,"trait":"climber","ultimate":"nova"}}
  for key in defaults:
   if not data.has(key): data[key]=defaults[key]
  for category in ["weapons","tomes","traits","items","ultimates"]:

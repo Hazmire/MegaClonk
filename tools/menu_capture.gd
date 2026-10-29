@@ -37,4 +37,7 @@ func run() -> void:
   fe.play_screen();await snap("loadout-closed",0.7)
   var screen=fe.menu.get_child(fe.menu.get_child_count()-1)
   screen.open_list("weapons");await snap("loadout-open",0.6)
+ if want("unlocks"):
+  for t in ["weapons","tomes","traits","items","ultimates"]:
+   fe.active_tab=t;fe.unlocks();await snap("unlocks-"+t,0.5)
  quit()

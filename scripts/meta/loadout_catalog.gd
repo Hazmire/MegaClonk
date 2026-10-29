@@ -1,5 +1,16 @@
 class_name LoadoutCatalog
 extends RefCounted
+# Menu Overhaul: one-line descriptions for the Unlocks > Weapons card (text taken from the UI handoff mockup; please review).
+const WEAPON_BLURBS={
+ 0:"Fast white slashes at the nearest enemy. More projectiles turn each swing into a flurry.",
+ 1:"Hurls a blazing fireball that knocks enemies back and showers them in flame.",
+ 2:"Calls bolts down from the sky onto enemies’ heads. Bolts can bounce to nearby foes.",
+ 6:"Dark, white-tipped arrows that pierce everything in their path. Extra arrows fan out.",
+ 7:"A silver bullet trailing smoke. Bounces ricochet it on to the next enemy.",
+ 9:"Spinning blades that fly out and return to you, cutting on the way out and back.",
+ 10:"An occult sigil turning beneath your feet. Everything inside takes damage with each pulse.",
+ 15:"A short-range blast of shrapnel that knocks back anything too close."
+}
 const TRAITS=[
  {"id":"climber","name":"Wall Climber","description":"Move forward against walls to climb.","goal":0,"cost":0},
  {"id":"momentum","name":"Momentum","description":"Movement builds damage, up to +40%. Stopping drains it.","goal":0,"cost":0},

@@ -12,6 +12,7 @@ var is_new=false
 var rarity=-1
 var mini=false
 var icon_px=96
+var frame_style="plain" # plain | patch (sewn patch, Traits) | iron (iron frame, Ultimates)
 var art: TextureRect
 func setup(cat: String,id: String,display_name: String,tile_state: String,tile_size: Vector2,icon_pixels: int,rarity_tier: int=-1,new_badge: bool=false,mini_style: bool=false) -> CollectionTile:
  category=cat;entry_id=id;entry_name=display_name;state=tile_state;rarity=rarity_tier;is_new=new_badge;mini=mini_style;icon_px=icon_pixels
@@ -36,13 +37,32 @@ func _notification(what: int) -> void:
  if what==NOTIFICATION_RESIZED:_place()
 func _draw() -> void:
  var r=Rect2(Vector2.ZERO,size);var selected=has_focus()
- draw_rect(r,Color("221616") if selected else FogPalette.NIGHT_TILE)
+ draw_rect(r,Color("221616") if selected else (Color(0.055,0.059,0.055,0.6) if state=="locked" else FogPalette.NIGHT_TILE))
  var border=FogPalette.RUST_BRIGHT if selected else FogPalette.BORDER
- if selected:draw_rect(r.grow(-1.0),border,false,2.0)
- elif state=="locked" and not mini:_dashed(r,border)
+ if mini and rarity==FogPalette.Rarity.LEGENDARY and state!="locked" and not selected:border=Color("8A5A0E")
+ if selected:
+  draw_rect(r.grow(-1.0),border,false,2.0)
+  if mini:draw_rect(r.grow(1.5),Color(0.702,0.212,0.247,0.35),false,3.0)
+ elif state=="locked":_dashed(r,border)
  else:draw_rect(r.grow(-0.5),border,false,1.0)
+ if frame_style=="patch":_draw_patch()
+ elif frame_style=="iron":_draw_iron()
  if mini:_draw_mini()
  else:_draw_card()
+func _draw_patch() -> void:
+ # sewn patch: round cloth with a ring of stitches behind the icon
+ var c=Vector2(size.x*0.5,14.0+icon_px*0.5);var radius=icon_px*0.5+10.0
+ draw_circle(c,radius,Color("2B2A22") if state!="locked" else Color("1F201D"))
+ var n=28
+ for i in n:
+  var a=TAU*float(i)/n
+  draw_line(c+Vector2(cos(a),sin(a))*(radius-4.0),c+Vector2(cos(a+0.12),sin(a+0.12))*(radius-4.0),Color("A9ADA4") if state!="locked" else Color("5A5D56"),2.0)
+func _draw_iron() -> void:
+ var iron=Color("5A5D56") if state!="locked" else Color("34362F")
+ draw_rect(Rect2(Vector2.ZERO,size).grow(-3.0),iron,false,4.0)
+ draw_rect(Rect2(Vector2.ZERO,size).grow(-7.0),Color("141513"),false,2.0)
+ for corner in [Vector2(9,9),Vector2(size.x-9,9),Vector2(9,size.y-9),Vector2(size.x-9,size.y-9)]:
+  draw_rect(Rect2(corner-Vector2(3,3),Vector2(6,6)),Color("8D9188") if state!="locked" else Color("4A4D47"))
 func _dashed(r: Rect2,color: Color) -> void:
  var dash=6.0
  var x=r.position.x
@@ -64,6 +84,7 @@ func _draw_card() -> void:
   "on":_chip("ON",Rect2(0,chip_y,0,20),FogPalette.RUST,FogPalette.BONE_BRIGHT,false)
   "off":_chip("OFF",Rect2(0,chip_y,0,20),Color(0,0,0,0),FogPalette.ASH,true)
   "locked":_locked_chip(chip_y)
+  "plain":pass
  if is_new:
   var f=MenuStyle.sans(800,0.18,11);var s=f.get_string_size("NEW",HORIZONTAL_ALIGNMENT_LEFT,-1,11)
   var box=Rect2(size.x-8-(s.x+12),8,s.x+12,s.y+4)

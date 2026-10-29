@@ -18,6 +18,9 @@ const SCENES={
  "dropdown_option":"res://ui/menu/widgets/dropdown_option.tscn",
  "slot_dropdown":"res://ui/menu/widgets/slot_dropdown.tscn",
  "loadout_slot":"res://ui/menu/widgets/loadout_slot.tscn",
+ "weapon_preview":"res://ui/menu/widgets/weapon_preview.tscn",
+ "filter_chip":"res://ui/menu/widgets/filter_chip.tscn",
+ "dashed_panel":"res://ui/menu/widgets/dashed_panel.tscn",
 }
 const SILVER_RUST=Color("8E1B22") # stamp red on paper
 const PAPER_LINE=Color("8F876F")

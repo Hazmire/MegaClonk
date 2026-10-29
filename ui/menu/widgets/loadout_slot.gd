@@ -31,7 +31,7 @@ func _draw() -> void:
  draw_rect(Rect2(Vector2.ONE,size-Vector2(2,2)),FogPalette.RUST if active else FogPalette.BORDER,false,2.0 if active else 1.0)
  if current.is_empty():return
  var box=Rect2(16,(size.y-76.0)*0.5,76,76)
- draw_texture_rect(UIAssets.icon(category,String(current.id)),Rect2(box.position+Vector2(2,2),Vector2(72,72)),false)
+ draw_texture_rect(UIAssets.icon(category,String(current.id)),Rect2(box.position+Vector2(6,6),Vector2(64,64)),false)
  draw_rect(box.grow(-1.0),FogPalette.BORDER,false,2.0)
  var serif=MenuStyle.serif();var title_px=36 if category=="weapons" else 34
  var x=112.0
