@@ -19,7 +19,7 @@ func _draw() -> void:
  if focused:draw_rect(Rect2(Vector2.ZERO,size),Color(0.494,0.094,0.125,0.45))
  draw_rect(Rect2(0,0,size.x,1),Color("222420"))
  var tex: Texture2D=UIAssets.icon(String(info.category),String(info.id))
- var box=Rect2(16,10,40,40)
+ var box=Rect2(20,14,32,32)
  draw_texture_rect(tex,box,false,Color(0.35,0.35,0.35,0.8) if locked else Color.WHITE)
  var serif=MenuStyle.serif()
  var name_color=Color("7A7D76") if locked else (FogPalette.BONE if (current or focused) else Color("D9D4C4"))
