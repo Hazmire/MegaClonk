@@ -191,19 +191,13 @@ func update_menu_camera(delta: float) -> void:
 func home() -> void:
  in_run=false;game.mode="menu";preview_mode="home";prepare_backdrop();clear()
  if is_instance_valid(game.audio):game.audio.music_menu()
- var title=text("MEGACLONK",menu,54);title.add_theme_font_override("font",headline_font);title.position=Vector2(390,135);title.custom_minimum_size.x=500;title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
- var buttons=card(menu,Vector2(490,270),Vector2(300,295))
- action("PLAY",buttons,play_screen).grab_focus();action("UNLOCKS",buttons,unlocks);action("QUESTS",buttons,quests);action("SETTINGS",buttons,func(): settings(home))
- var closest=card(menu,Vector2(24,28),Vector2(310,410));heading("Within reach",closest,19)
- var pending=[]
- for q in quest_definitions:
-  if MetaProgress.quest_state(game.progress.data,q)=="active":pending.append({"quest":q,"ratio":minf(1,MetaProgress.quest_value(game.progress.data,q.metric)/q.target)})
- pending.sort_custom(func(a,b):return a.ratio>b.ratio)
- for i in mini(4,pending.size()):
-  var q=pending[i].quest;paragraph(q.name,closest,260)
-  paragraph(quest_description(q),closest,260)
-  var bar=ProgressBar.new();bar.max_value=q.target;bar.value=MetaProgress.quest_value(game.progress.data,q.metric);bar.custom_minimum_size.y=10;bar.show_percentage=false;closest.add_child(bar)
- var currency=text(wallet(),menu,18);currency.position=Vector2(880,30)
+ show_screen("main_menu")
+# Out-of-run menus are Fog County MenuScreen scenes (res://ui/menu). They own their theme; in-run screens keep theirs.
+const SCREENS={"main_menu":"res://ui/menu/screens/main_menu.tscn"}
+func show_screen(kind: String) -> MenuScreen:
+ MenuScreen.play_sound=func(sound_name: String):game.play_sound("ui."+sound_name)
+ var screen=load(SCREENS[kind]).instantiate() as MenuScreen
+ screen.bind(self);menu.add_child(screen);return screen
 func wallet() -> String:
  return "SILVER %d"%game.progress.data.silver
 func play_screen() -> void:
@@ -277,20 +271,7 @@ func unlocks() -> void:
   action("%s slots: %d/4  •  %s"%[kind.capitalize(),slots,"MAXIMUM" if slots>=4 else "%d silver"%MetaProgress.slot_cost(game.progress.data,kind)],col,func():
    if MetaProgress.buy_slot(game.progress.data,kind):game.progress.save();unlocks()
    else:game.toast("Complete quests and claim silver rewards"))
-func quest_description(q: Dictionary) -> String:
- if q.metric.begins_with("weapon:"):return "%d kills using %s"%[q.target,Catalog.weapon_name(int(q.metric.get_slice(":",1)))]
- match q.metric:
-  "kills":return "Defeat %d enemies"%q.target
-  "survival":return "Survive %d seconds in one run"%q.target
-  "fast_clear":return "Clear the forest in under five minutes"
-  "bosses":return "Defeat a main boss"
-  "minibosses":return "Defeat a miniboss"
-  "stage":return "Reach stage 2"
-  "endless":return "Survive until endless mode"
-  "early_stage":return "Escape a stage before the timer reaches zero"
-  "legendary_shop":return "Purchase from a Legendary shop"
-  "chests":return "Open %d chests"%q.target
-  _:return "Use an ultimate %d times"%q.target
+func quest_description(q: Dictionary) -> String:return MenuData.quest_description(q)
 func quests() -> void:
  game.mode="quests";var col=page("Quests");paragraph(wallet(),col,800)
  var tabs=TabContainer.new();tabs.custom_minimum_size=Vector2(1130,440);col.add_child(tabs)

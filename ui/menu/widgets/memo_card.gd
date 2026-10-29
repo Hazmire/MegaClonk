@@ -6,6 +6,7 @@ extends Control
 #  complete - struck-through title, DONE stamp and a CLAIM button
 # "plain" leaves the body empty for screens that fill it themselves (detail memo, personal bests).
 signal claim_pressed
+var tilter: Control # everything visible hangs off this child, because containers reset the rotation of their direct children
 var paper: PanelContainer
 var body: VBoxContainer
 var tape: ColorRect
@@ -16,24 +17,27 @@ var tape_angle=-3.0
 var claim_button: Button
 func _init() -> void:
  mouse_filter=Control.MOUSE_FILTER_PASS
+ tilter=Control.new();tilter.name="Tilt";tilter.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);tilter.mouse_filter=Control.MOUSE_FILTER_IGNORE;add_child(tilter)
  paper=PanelContainer.new();paper.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);paper.mouse_filter=Control.MOUSE_FILTER_IGNORE
  var style=FogTheme.memo_style();style.shadow_color=Color(0,0,0,0.45);style.shadow_offset=Vector2(4,6)
  style.content_margin_left=22;style.content_margin_right=22;style.content_margin_top=20;style.content_margin_bottom=22
- paper.add_theme_stylebox_override("panel",style);add_child(paper)
+ paper.add_theme_stylebox_override("panel",style);tilter.add_child(paper)
  body=VBoxContainer.new();body.add_theme_constant_override("separation",8);body.mouse_filter=Control.MOUSE_FILTER_IGNORE;paper.add_child(body)
- tape=ColorRect.new();tape.color=Color(0.91,0.886,0.816,0.7);tape.mouse_filter=Control.MOUSE_FILTER_IGNORE;add_child(tape)
+ tape=ColorRect.new();tape.color=Color(0.91,0.886,0.816,0.7);tape.mouse_filter=Control.MOUSE_FILTER_IGNORE;tilter.add_child(tape)
  paper.minimum_size_changed.connect(_fit);resized.connect(_layout)
 func _ready() -> void:_fit();_layout()
 func _fit() -> void:custom_minimum_size.y=paper.get_combined_minimum_size().y
 func _layout() -> void:
- pivot_offset=size*0.5;rotation_degrees=tilt
+ tilter.pivot_offset=size*0.5;tilter.rotation_degrees=tilt
  tape.size=tape_size;tape.pivot_offset=tape_size*0.5;tape.rotation_degrees=tape_angle
  tape.position=Vector2((size.x-tape_size.x)*0.5,-tape_size.y*0.5)
 func set_look(rotation_deg: float,margins: Vector4=Vector4(22,20,22,22)) -> MemoCard:
- tilt=rotation_deg;rotation_degrees=rotation_deg
+ tilt=rotation_deg;tilter.rotation_degrees=rotation_deg
  var s: StyleBoxFlat=paper.get_theme_stylebox("panel")
  s.content_margin_left=margins.x;s.content_margin_top=margins.y;s.content_margin_right=margins.z;s.content_margin_bottom=margins.w
  return self
+func set_paper(color: Color) -> MemoCard:
+ (paper.get_theme_stylebox("panel") as StyleBoxFlat).bg_color=color;return self
 func memo_label(text: String,size: int,color: Color=FogPalette.MEMO_INK,parent: Node=null) -> Label:
  var l=Label.new();l.text=text;l.mouse_filter=Control.MOUSE_FILTER_IGNORE;l.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
  l.add_theme_font_override("font",MenuStyle.memo());l.add_theme_font_size_override("font_size",size);l.add_theme_color_override("font_color",color)

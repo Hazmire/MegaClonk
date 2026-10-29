@@ -20,6 +20,10 @@ var fade: ColorRect
 var hint_bar: HBoxContainer
 var hints: Array=[]
 var tween: Tween
+var frontend: Node # FrontEnd that owns screen switching (set by FrontEnd before the screen enters the tree)
+var game: Node
+func bind(owner_frontend: Node) -> MenuScreen:
+ frontend=owner_frontend;game=owner_frontend.game;return self
 static func sfx(name: String) -> void:
  if play_sound.is_valid():play_sound.call(name)
 func _init() -> void:
@@ -32,7 +36,7 @@ func _ready() -> void:
  add_child(backdrop);_build_backdrop()
  add_child(stage);stage.add_child(content);stage.add_child(hint_bar)
  overlay=ColorRect.new();overlay.name="FogOverlay";overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);overlay.mouse_filter=Control.MOUSE_FILTER_IGNORE;overlay.color=Color.WHITE
- overlay.material=MenuStyle.shader_material("res://ui/shaders/fog_overlay.gdshader");add_child(overlay)
+ overlay.material=MenuStyle.shader_material("res://ui/shaders/fog_overlay.gdshader",{"vignette_strength":0.42,"vignette_start":0.62}) # lighter than the token default: the overlay sits on top of text here, the mockup vignette sits under it;add_child(overlay)
  fade=ColorRect.new();fade.name="Fade";fade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);fade.mouse_filter=Control.MOUSE_FILTER_IGNORE;fade.color=FogPalette.NIGHT;add_child(fade)
  resized.connect(fit_stage);fit_stage();_place_hints()
  build()
@@ -55,6 +59,8 @@ func _build_backdrop() -> void:
  else:
   var left=TextureRect.new();left.texture=MenuStyle.gradient(Color(0.039,0.043,0.039,0.94),Color(0.039,0.043,0.039,0.0),false,0.0,1.0)
   left.stretch_mode=TextureRect.STRETCH_SCALE;left.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;left.anchor_right=0.56;left.anchor_bottom=1.0;left.mouse_filter=Control.MOUSE_FILTER_IGNORE;backdrop.add_child(left)
+  var top=TextureRect.new();top.texture=MenuStyle.gradient(Color(0.039,0.043,0.039,0.6),Color(0.039,0.043,0.039,0.0),true) # keeps the silver readable over a bright scene
+  top.stretch_mode=TextureRect.STRETCH_SCALE;top.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;top.anchor_right=1.0;top.anchor_bottom=0.24;top.mouse_filter=Control.MOUSE_FILTER_IGNORE;backdrop.add_child(top)
   var bottom=TextureRect.new();bottom.texture=MenuStyle.gradient(Color(0.039,0.043,0.039,0.0),Color(0.039,0.043,0.039,0.85),true)
   bottom.stretch_mode=TextureRect.STRETCH_SCALE;bottom.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;bottom.anchor_top=0.63;bottom.anchor_right=1.0;bottom.anchor_bottom=1.0;bottom.mouse_filter=Control.MOUSE_FILTER_IGNORE;backdrop.add_child(bottom)
 func _place_hints() -> void:
