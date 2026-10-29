@@ -194,8 +194,8 @@ static func on_hit(game: Object, e: Dictionary, weapon: int, _critical: bool, _d
   apply_chill(game,e,1+extra)
  if e.hp>0:
   if "corrosive" in elements:apply_corrosive(game,e,weapon)
-  if "fire" in elements and game.rng.randf()<float(Elements.TUNING.fire.ignite_chance):apply_ignite(game,e,weapon)
-  if "electricity" in elements and cooldown_ready(e,"stun_proc") and game.rng.randf()<float(Elements.TUNING.electricity.stun_chance):apply_stun(game,e,weapon)
+  if "fire" in elements and (game.rng.randf()<float(Elements.TUNING.fire.ignite_chance) or (game.irt.has("saints_finger") and game.rng.randf()<float(Elements.TUNING.fire.ignite_chance))):apply_ignite(game,e,weapon)
+  if "electricity" in elements and cooldown_ready(e,"stun_proc") and (game.rng.randf()<float(Elements.TUNING.electricity.stun_chance) or (game.irt.has("saints_finger") and game.rng.randf()<float(Elements.TUNING.electricity.stun_chance))):apply_stun(game,e,weapon)
   if elements.size()>1:Combos.evaluate(game,e,weapon,Elements.combo(str(elements[0]),str(elements[1])))
  leave()
 # Ice Shatter: a chilled enemy that dies cracks, hurting its neighbours for a share of THEIR

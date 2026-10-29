@@ -26,6 +26,9 @@ func activate(extra: float=0.0) -> bool:
  var started=not active()
  remaining=float(TUNING.duration)+maxf(0.0,extra);bonus=maxf(0.0,extra);scale=float(TUNING.world_speed)
  return started
+# Hourglass of the Damned: hostile time stops completely (scale 0) for `seconds`. Same system as the Stopwatch.
+func freeze(seconds: float) -> void:
+ remaining=seconds;scale=0.0;bonus=0.0
 # Real-time countdown. Called once per active physics tick.
 func tick(delta: float) -> void:
  if remaining<=0.0:
@@ -38,9 +41,9 @@ func reset() -> void:
 func fraction() -> float:
  return clampf(remaining/(float(TUNING.duration)+bonus),0.0,1.0)
 func serialize() -> Dictionary:
- return {"remaining":remaining}
+ return {"remaining":remaining,"scale":scale}
 func restore(data: Variant) -> void:
  reset()
  if not data is Dictionary:return
  var left=clampf(float(data.get("remaining",0.0)),0.0,float(TUNING.duration)+60.0)
- if left>0.0:remaining=left;scale=float(TUNING.world_speed)
+ if left>0.0:remaining=left;scale=clampf(float(data.get("scale",TUNING.world_speed)),0.0,1.0)

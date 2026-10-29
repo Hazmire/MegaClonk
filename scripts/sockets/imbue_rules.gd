@@ -29,6 +29,7 @@ static func install(game: Object, weapon_id: int, element: String) -> Dictionary
   WeaponSockets.restore(state,snapshot)
   return {"ok":false,"reason":"gem_remove_failed","cost":0}
  game.gold-=price
+ game.irt.anvil_bonus(weapon_id)
  return {"ok":true,"reason":"","cost":price}
 # Player-facing wording for a problem() / buy() reason code.
 static func reason_text(reason: String) -> String:

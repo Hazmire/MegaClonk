@@ -742,9 +742,14 @@ func nearest(pos: Vector3, radius: float, farthest: bool = false) -> Dictionary:
 func hurt(amount: float) -> void:
  if invulnerability>0 or loadout_runtime.immune() or (sandbox and settings.invincible): return
  amount*=loadout_runtime.incoming_multiplier()
- if rng.randf()<minf(0.75,stats.evasion): toast("DODGED"); return
+ if rng.randf()<minf(0.75,stats.evasion):
+  toast("DODGED")
+  if irt.any:irt.on_evade()
+  return
  if irt.hurt_hooks and irt.witch_bottle(): toast("WARDED"); return
- health -= maxf(1,amount*100/(100+stats.armor*5))
+ var final_damage=maxf(1,amount*100/(100+stats.armor*5))
+ if irt.hurt_hooks and irt.hourglass(final_damage):return
+ health -= final_damage
  if irt.hurt_hooks:irt.on_damage_taken(amount)
  invulnerability = 0.5
  if settings.shake: player.camera.h_offset=rng.randf_range(-0.15,0.15)
@@ -762,6 +767,7 @@ func hit(e: Dictionary, base: float, weapon: int, ctx: Dictionary = {}) -> void:
  var critical = false if item_hit else rng.randf()<minf(1,stats.crit+(WeaponUpgrades.value(weapons[weapon],"crit") if upgraded else 0))
  var crit_multiplier=stats.crit_damage+(WeaponUpgrades.value(weapons[weapon],"crit_damage") if upgraded else 0.0)
  var amount = base*stats.damage*(crit_multiplier if critical else 1.0)*loadout_runtime.damage_multiplier()
+ if critical and irt.crit_hooks:amount*=irt.on_crit()
  if item_hit:amount=base
  e["last_weapon"]=weapon;e["last_item"]=item_hit
  if character == 6: amount *= 1+(1-health/stats.max_health)*1.5
@@ -1054,6 +1060,7 @@ func apply_upgrade(choice: Dictionary) -> void:
    var proposal=choice if choice.has("attribute") else WeaponUpgrades.proposal(id,rng,weapons[id])
    if WeaponUpgrades.apply(id,weapons[id],proposal):
     weapons[id].level+=1;weapons[id]["rarity"]=choice.get("metadata",{}).get("rarity",weapons[id].get("rarity","common"))
+    irt.anvil_bonus(id)
   elif id in Catalog.ACTIVE_WEAPONS and (sandbox or MetaProgress.enabled(progress.data,"weapons",str(id))) and weapons.size()<weapon_limit():equip(id)
  else:
   var name=str(choice.id)

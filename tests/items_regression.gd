@@ -10,7 +10,7 @@ func check(ok: bool,label: String):
 func _initialize():call_deferred("run")
 func fresh():
  game.items.clear();game.irt.reset();game.stats=Catalog.base_stats();game.health=game.stats.max_health
- game.enemies.clear();game.wrt.clear();game.irt.clear_effects()
+ game.enemies.clear();game.wrt.clear();game.irt.clear_effects();game.player.position=Vector3(0,1,0);game.player.velocity=Vector3.ZERO
 func give(id: String,times: int=1):
  for i in times:game.grant_item(id,true)
 func run():
@@ -26,6 +26,7 @@ func run():
  await stat_tests()
  await proc_tests()
  gem_tests()
+ build_tests()
  await migration_tests()
  print("ITEMS_REGRESSION: %d checks, %d failures"%[checks,failures.size()])
  game.queue_free();await process_frame;await process_frame
@@ -435,4 +436,172 @@ func gem_tests():
  for e2 in game.enemies:e2["burn"]=0.0
  for i in 40:game.irt.tick(1.0/60.0)
  check(is_equal_approx(game.stats.armor,armor0) and is_equal_approx(game.stats.lifesteal,ls0),"Witch-Hunter's Brand: bonuses vanish when nothing burns")
+ fresh()
+
+# ---------------------------------------------------------------- batch 4: build-defining items
+func upgrade_total(id: int) -> float:
+ var t=0.0
+ for k in game.weapons[id].get("upgrades",{}):t+=float(game.weapons[id].upgrades[k])
+ return t
+func build_tests():
+ fresh();game.player.position=Vector3(0,1,0);game.enemies.clear();game.irt.rng.seed=41
+ # Saint's Finger
+ give("powder_keg_heart")
+ var base=rate("keg",8000,func():return game.irt.roll_hit("powder_keg_heart"))
+ give("saints_finger");game.irt.rng.seed=41
+ var fingered=rate("keg",8000,func():return game.irt.roll_hit("powder_keg_heart"))
+ check(near(base,0.25,0.02) and near(fingered,1.0-0.75*0.75,0.02),"Saint's Finger: weapon-hit procs roll twice (%.3f -> %.3f)"%[base,fingered])
+ fresh();give("rusted_key");give("saints_finger");game.irt.rng.seed=42
+ check(near(rate("key",8000,func():return game.irt.roll("rusted_key")),0.10,0.015),"Saint's Finger does not add rolls to non-hit procs (chests)")
+ fresh();equip_gems(0,["fire"]);game.rng.seed=5
+ var ig=0
+ for i in 8000:
+  var t={"pos":Vector3.ZERO,"hp":100.0,"max_hp":100.0,"kind":0,"burn":0.0,"frozen":0.0,"speed":1.0};StatusManager.on_hit(game,t,0,false,1.0);if float(t.burn)>0.0:ig+=1
+ var ig_plain=float(ig)/8000.0
+ give("saints_finger");game.rng.seed=5;ig=0
+ for i in 8000:
+  var t2={"pos":Vector3.ZERO,"hp":100.0,"max_hp":100.0,"kind":0,"burn":0.0,"frozen":0.0,"speed":1.0};StatusManager.on_hit(game,t2,0,false,1.0);if float(t2.burn)>0.0:ig+=1
+ check(near(ig_plain,0.05,0.01) and near(float(ig)/8000.0,0.0975,0.012),"Saint's Finger gives the Fire gem's ignite roll a second chance (%.3f -> %.3f)"%[ig_plain,float(ig)/8000.0])
+ game.weapons[0].erase("sockets")
+ # Butcher's Hook / Blood Chalice
+ fresh();give("butchers_hook");game.irt.rng.seed=43
+ var brutal=rate("hook",8000,func():return game.irt.on_crit()>1.5)
+ check(near(brutal,0.15,0.02),"Butcher's Hook: 15%% of crits are Brutal (%.3f)"%brutal)
+ fresh();give("blood_chalice");game.irt.rng.seed=44;game.health=1.0
+ var heals=0
+ for i in 4000:
+  var h=game.health;game.health=1.0;game.irt.on_crit()
+  if game.health>1.0:heals+=1;check(is_equal_approx(game.health,1.0+game.stats.max_health*0.02),"Blood Chalice heals 2%% max HP") if heals==1 else null
+ check(near(float(heals)/4000.0,0.20,0.02),"Blood Chalice: 20%% of crits heal (%.3f)"%(float(heals)/4000.0))
+ # on_crit is reached through the real Game.hit crit path and never from item hits
+ fresh();give("butchers_hook",99);game.enemies.clear();var ce=make_enemy(Vector3(2,0,0),1e9);game.rebuild_grid();game.stats.crit=1.0;game.irt.counters.clear()
+ for i in 50:game.hit(ce,1.0,0,{"source":"slash","pos":ce.pos,"dir":Vector3.FORWARD})
+ var crit_procs=int(game.irt.counters.get("brutal",0))
+ for i in 50:game.irt.deal(ce,1.0,"black_candle")
+ check(crit_procs>0 and int(game.irt.counters.get("brutal",0))==crit_procs,"Crit procs come from weapon crits only (item hits never crit or proc)")
+ # Shade Cloak
+ fresh();give("shade_cloak");game.enemies.clear();var se=make_enemy(Vector3(2,0,0),1e9);var sp0=game.stats.speed;var hs0=game.stats.haste
+ var normal=hit_damage(se)
+ game.irt.on_evade()
+ check(is_equal_approx(game.stats.speed-sp0,0.25) and is_equal_approx(game.stats.haste-hs0,0.25),"Shade Cloak: attack and move speed after an evade")
+ game.irt.deal(se,1.0,"black_candle")
+ check(absf(hit_damage(se)/normal-2.0)<0.001,"Shade Cloak: the next weapon hit deals x2 (item damage does not use it up)")
+ check(absf(hit_damage(se)/normal-1.0)<0.001,"Shade Cloak: only the next hit")
+ for i in 200:game.irt.tick(1.0/60.0)
+ check(is_equal_approx(game.stats.speed,sp0) and is_equal_approx(game.stats.haste,hs0),"Shade Cloak: bonuses end after 3 s")
+ fresh();game.stats.evasion=1.0;game.stats.evasion=0.75;give("shade_cloak");game.irt.rng.seed=1;var evaded=false
+ game.rng.seed=3
+ for i in 40:
+  game.invulnerability=0.0;game.hurt(1.0)
+  if int(game.irt.counters.get("shade_ready",0))==1:evaded=true;break
+ check(evaded,"Shade Cloak triggers from the real evasion roll in Game.hurt()")
+ # Martyr's Shroud
+ fresh();give("martyrs_shroud");game.enemies.clear();var me=make_enemy(Vector3(2,0,0),1e9);var mbase=hit_damage(me)
+ game.health=game.stats.max_health*0.5
+ check(absf(hit_damage(me)/mbase-1.30)<0.001,"Martyr's Shroud: +30%% at half health")
+ game.health=1.0;var low=hit_damage(me)/mbase
+ check(low>1.55 and low<=1.60001,"Martyr's Shroud: approaches +60%% near zero HP (%.3f)"%low)
+ game.health=game.stats.max_health;check(absf(hit_damage(me)/mbase-1.0)<0.001,"Martyr's Shroud: nothing at full health")
+ # Hangman's Noose
+ fresh();give("hangmans_noose");game.enemies.clear()
+ var boss=make_enemy(Vector3(2,0,0),10000.0);boss.kind=8
+ var victim=make_enemy(Vector3(6,0,0),1000.0);game.rebuild_grid()
+ for i in 125:game.irt.tick(1.0/60.0)
+ check(is_equal_approx(boss.hp,10000.0) and victim.hp<1000.0,"Hangman's Noose never curses a boss and picks a normal enemy")
+ check(near(1000.0-victim.hp,500.0,130.0),"Hangman's Noose: ~25%% of max HP per second (%.0f in ~2 s of curse)"%(1000.0-victim.hp))
+ var elite=make_enemy(Vector3(3,0,0),1000.0);elite["elite"]=true;victim.hp=0.0;game.rebuild_grid();game.irt.curse={}
+ for i in 125:game.irt.tick(1.0/60.0)
+ check(1000.0-elite.hp<=1000.0*0.06*2.5,"Hangman's Noose is scaled down on elites (%.0f)"%(1000.0-elite.hp))
+ # Grave Hound Whistle
+ fresh();give("hound_whistle");game.enemies.clear();var hv=make_enemy(Vector3(0,0,25),1000.0);game.rebuild_grid();game.player.position=Vector3(0,1,0)
+ game.irt.tick(0.016)
+ for i in 20:
+  game.player.position+=Vector3(0,0,0.8);game.irt.tick(0.016)
+ check(game.irt.hounds.size()==1,"Grave Hound Whistle: a hound after 15 m of travel")
+ for i in 120:game.irt.tick(1.0/60.0)
+ check(hv.hp<1000.0 and absf(1000.0-hv.hp-(ItemStats.v("hound_whistle","damage")+ItemStats.v("hound_whistle","damage_per_level")*game.level))<0.01,"The hound charges through enemies and hits each one once")
+ fresh();give("hound_whistle",99);game.player.position=Vector3.ZERO;game.irt.tick(0.016)
+ for i in 400:
+  game.player.position+=Vector3(0,0,1.0);game.irt.tick(0.016)
+ check(game.irt.hounds.size()<=int(ItemStats.v("hound_whistle","cap")) and int(game.irt.dropped.get("hounds",0))>0,"Hound pool is hard-capped and refusals are counted")
+ # Reaper's Sickle
+ fresh();give("reapers_sickle");game.enemies.clear()
+ var dying={"pos":Vector3(0,0,30),"last_item":false}
+ game.irt.on_kill(dying)
+ check(game.irt.souls.size()==2,"Reaper's Sickle: a kill releases 2 souls")
+ game.irt.souls.clear();game.irt.on_kill({"pos":Vector3(0,0,30),"last_item":true})
+ check(game.irt.souls.is_empty(),"No chain: item kills never release souls")
+ var tgt=make_enemy(Vector3(0,0,34),1000.0);game.rebuild_grid();game.irt.souls.clear();game.irt.on_kill(dying)
+ for i in 120:game.irt.tick(1.0/60.0)
+ check(tgt.hp<1000.0,"Souls home in and strike other enemies")
+ game.irt.souls.clear()
+ for i in 40:game.irt.on_kill(dying)
+ check(game.irt.souls.size()<=int(ItemStats.v("reapers_sickle","cap")) and int(game.irt.dropped.get("souls",0))>0,"Soul pool is hard-capped and refusals are counted")
+ # Shattered Codex
+ fresh();give("shattered_codex");game.enemies.clear();game.pickups.clear()
+ var cdx=make_enemy(Vector3(4,0,0),1000.0);game.rebuild_grid()
+ game.add_xp_drop(cdx.pos+Vector3(0.2,0,0),1.0);game.pickups.back()["attracted"]=false
+ game.irt.tick(0.016);check(is_equal_approx(cdx.hp,1000.0),"Shattered Codex: still gems do nothing")
+ game.pickups.back()["attracted"]=true;game.irt.tick(0.016)
+ check(cdx.hp<1000.0,"Shattered Codex: a gem flying to you slices enemies it passes through")
+ var after=cdx.hp;game.irt.tick(0.016)
+ check(is_equal_approx(cdx.hp,after),"Shattered Codex: per-enemy hit cooldown")
+ # Powder Keg Heart
+ fresh();give("powder_keg_heart");game.enemies.clear();game.irt.rng.seed=51
+ var core=make_enemy(Vector3(4,0,0),1e9);var next_to=make_enemy(Vector3(5,0,0),1e9);var distant=make_enemy(Vector3(14,0,0),1e9);game.rebuild_grid()
+ game.irt.stacks["powder_keg_heart"]=60;game.irt.counters.clear();game.irt.keg_window=-5.0;game.elapsed=100.0
+ game.irt.on_hit(core,100.0,100.0,false,0)
+ game.irt.stacks["powder_keg_heart"]=1
+ check(absf((1e9-next_to.hp)-65.0)<0.01 and is_equal_approx(distant.hp,1e9) and is_equal_approx(core.hp,1e9),"Powder Keg Heart: 65%% damage to enemies around the target, not the target, not far ones")
+ check(bool(next_to.get("last_item",false)),"Keg explosions are item damage (they cannot trigger other procs)")
+ game.irt.stacks["powder_keg_heart"]=99;game.irt.counters.clear();game.irt.dropped.clear()
+ for i in 100:game.irt.on_hit(core,100.0,100.0,false,0)
+ game.irt.stacks["powder_keg_heart"]=1
+ check(int(game.irt.counters.get("kegs",0))<=int(ItemStats.v("powder_keg_heart","per_second")) and int(game.irt.dropped.get("kegs",0))>0,"Explosions are limited per second and refusals counted")
+ # Headsman's Oath
+ fresh();give("headsmans_oath");game.enemies.clear();game.irt.rng.seed=61
+ var d0=game.stats.damage
+ var dummy=make_enemy(Vector3(0,0,15),10.0);game.rebuild_grid()
+ for i in 20000:
+  dummy.hp=10.0;dummy.max_hp=10.0;dummy.erase("death_handled");game.irt.on_hit(dummy,1.0,1.0,false,0)
+ var ex=int(game.irt.counters.get("executions",0))
+ check(near(float(ex)/20000.0,0.01,0.004),"Headsman's Oath: 1%% of hits execute (%d/20000)"%ex)
+ check(is_equal_approx(game.stats.damage-d0,0.01*ex),"Headsman's Oath: +1%% damage per execution for the rest of the run")
+ var bossy={"pos":Vector3(0,0,60),"hp":500.0,"max_hp":500.0,"kind":8};game.irt.stacks["headsmans_oath"]=1
+ for i in 5000:game.irt.execute(bossy)
+ check(is_equal_approx(float(bossy.hp),500.0),"Headsman's Oath never executes a boss")
+ var elite_t=make_enemy(Vector3(2,0,0),1000.0);elite_t["elite"]=true;game.irt.execute(elite_t)
+ check(is_equal_approx(elite_t.hp,750.0),"Headsman's Oath: elites lose 25%% max HP instead of dying")
+ # Hourglass of the Damned
+ fresh();give("hourglass_damned");game.invulnerability=0.0;game.health=5.0;game.world_time.reset()
+ game.hurt(500.0)
+ check(is_equal_approx(game.health,game.stats.max_health*0.5) and game.world_time.scale==0.0 and game.world_time.active(),"Hourglass: the first lethal hit freezes hostile time and heals to 50%")
+ check(Engine.time_scale==1.0 and game.item_stacks("hourglass_damned")==0 and not game.irt.has("hourglass_damned"),"Hourglass never touches Engine.time_scale and shatters after use")
+ check(is_equal_approx(game.world_time.hostile(1.0),0.0),"Frozen hostile time is zero")
+ game.world_time.tick(5.1)
+ check(not game.world_time.active() and is_equal_approx(game.world_time.hostile(1.0),1.0),"Hostile time resumes after 5 s")
+ game.invulnerability=0.0;game.health=5.0;game.hurt(500.0)
+ check(game.health<=0.0,"A second lethal hit kills (the Hourglass is gone)")
+ fresh();give("hourglass_damned");game.invulnerability=0.0;game.health=50.0;game.hurt(10.0)
+ check(game.item_stacks("hourglass_damned")==1,"Hourglass is not spent by non-lethal damage");game.world_time.reset()
+ # Anvil of the First Forge
+ fresh();give("anvil_first_forge")
+ game.weapons[0]={"level":1,"upgrades":{},"clock":0.0}
+ var before_total=upgrade_total(0)
+ game.apply_upgrade({"type":"weapon","id":0})
+ check(game.weapons[0].level==2 and upgrade_total(0)>before_total,"Anvil setup: a normal upgrade levels the weapon")
+ var with_anvil=upgrade_total(0)-before_total
+ fresh();game.weapons[0]={"level":1,"upgrades":{},"clock":0.0};game.apply_upgrade({"type":"weapon","id":0});var without=upgrade_total(0)
+ check(with_anvil>without,"Anvil of the First Forge: an upgrade also grants one extra stat (%.2f vs %.2f total)"%[with_anvil,without])
+ fresh();give("anvil_first_forge");game.weapons[0]={"level":1,"upgrades":{},"clock":0.0};game.gold=5000;game.gems.add("ice")
+ var imbued=ImbueRules.install(game,0,"ice")
+ check(imbued.ok and upgrade_total(0)>0.0,"Anvil: an Imbue also grants one extra stat")
+ fresh();game.weapons[0]={"level":1,"upgrades":{},"clock":0.0};game.gold=5000;game.gems.add("ice");ImbueRules.install(game,0,"ice")
+ check(is_equal_approx(upgrade_total(0),0.0),"Without the Anvil an Imbue grants no stat")
+ # Devil's Bargain
+ fresh();give("devils_bargain");var hp0=game.stats.max_health;var dm0=game.stats.damage
+ for i in 3:game.irt.on_level_up()
+ check(is_equal_approx(hp0-game.stats.max_health,15.0) and is_equal_approx(game.stats.damage-dm0,0.12),"Devil's Bargain: each level-up trades 5 max HP for +4%% damage")
+ for i in 200:game.irt.on_level_up()
+ check(game.stats.max_health>=float(ItemStats.T.max_health_floor) and game.health<=game.stats.max_health,"Devil's Bargain never takes max HP below the floor (%.0f)"%game.stats.max_health)
  fresh()
