@@ -135,9 +135,9 @@ static func collect(game: Node,p: Dictionary) -> void:
    game.gold+=int(p.value);game.play_sound("pickup.gold")
   "gem":
    game.gems.add(str(p.element));game.gem_discovered(str(p.element))
-  "heart":heal(game)
-  "magnet":magnet(game)
-  "stopwatch":stopwatch(game)
+  "heart":heal(game);game.irt.on_powerup("heart")
+  "magnet":magnet(game);game.irt.on_powerup("magnet")
+  "stopwatch":stopwatch(game);game.irt.on_powerup("stopwatch")
 # Heart Container: 25% of maximum HP at the moment of collection, never above maximum.
 static func heal(game: Node) -> float:
  var amount: float=float(game.stats.max_health)*float(TUNING.heal_fraction)
@@ -170,7 +170,7 @@ static func magnet(game: Node) -> int:
  return queue.size()
 # Stopwatch: starts or refreshes the world slowdown (see WorldTime).
 static func stopwatch(game: Node) -> void:
- game.world_time.activate()
+ game.world_time.activate(game.irt.stopwatch_bonus())
  game.play_sound("powerup.stopwatch")
  game.flash(game.player.position+Vector3.UP*0.2,Color("ffe27a"),2.6)
 # One step of a magnetised gem; returns the new position. Used by Game.update_pickups.

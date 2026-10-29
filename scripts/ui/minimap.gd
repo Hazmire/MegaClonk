@@ -30,8 +30,13 @@ func _draw() -> void:
     draw_rect(Rect2(offset+Vector2(x,y)*span/16,span/16+Vector2.ONE),terrain_colors[key])
  for pos in game.landmarks:
   if visible_at(pos):draw_circle(point(pos),2*mark,Color("9fa79d"))
+ var candle=game.irt.has("cartographers_candle")
+ if candle:
+  for v in game.vases:
+   if not v.broken:draw_circle(point(v.pos),1.6*mark,Color("c9a4ff"))
  for obj in game.interactables:
-  if obj.used or not visible_at(obj.node.position):continue
+  if obj.used:continue
+  if not visible_at(obj.node.position) and not (candle and (obj.kind=="Chest" or obj.kind=="Imbue Station")):continue
   var p=point(obj.node.position);var color=Color("70dcd7")
   match obj.kind:
    "Chest":

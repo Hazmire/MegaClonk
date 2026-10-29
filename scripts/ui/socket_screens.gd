@@ -21,7 +21,7 @@ static func gem_inventory(ui: FrontEnd,parent: Node) -> void:
   var label=ui.text("◆ %d"%ui.game.gems.count(element),cell,16);label.add_theme_color_override("font_color",Elements.color(element) if ui.game.gems.count(element)>0 else Color("6e7875"));label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;label.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 static func imbue_station(ui: FrontEnd,object: Dictionary) -> void:
  var game=ui.game;game.mode="imbue";ui.shop_object=object
- var cost=ImbueRules.cost(game.stage)
+ var cost=ImbueRules.cost(game.stage,game.irt.imbue_discount())
  var center=RewardScreens.layout(ui,"Imbue Station · %d gold per gem"%cost)
  ui.paragraph("Fuse an elemental gem into a weapon socket. Installing is permanent, costs %d gold and consumes one gem."%cost,center,520)
  gem_inventory(ui,center)

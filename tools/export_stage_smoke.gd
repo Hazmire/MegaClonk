@@ -30,10 +30,10 @@ func run():
  if not require(game.boss_dead and game.drop_chests.size()==2,"Compiled boss death/chest accounting failed"):return
  for drop in game.drop_chests:drop.node.position=game.player.position
  game.mode="run";RewardDrops.collect(game);await process_frame
- var granted=game.items.size()
+ var granted=game.item_total()
  game.save_run("user://export-stage-smoke.json");game.load_run("user://export-stage-smoke.json");await process_frame
- if not require(game.items.size()==granted and game.reward_queue.size()==1,"Compiled active reward duplicated or lost its queue on load"):return
+ if not require(game.item_total()==granted and game.reward_queue.size()==1,"Compiled active reward duplicated or lost its queue on load"):return
  game.resume();game.resume();await process_frame
- if not require(game.items.size()==granted+1 and game.active_reward==-1,"Compiled queued chest did not grant exactly once"):return
+ if not require(game.item_total()==granted+1 and game.active_reward=="","Compiled queued chest did not grant exactly once"):return
  game.queue_free();await process_frame;await process_frame
  print("EXPORTED STAGE SWARMS SMOKE COMPLETE");quit()

@@ -500,6 +500,7 @@ func _physics_process(delta: float) -> void:
   finish_run(false)
   return
  loadout_runtime.tick(self,delta)
+ if irt.ticking:irt.tick(delta)
  elapsed += delta
  world_time.tick(delta)
  var hostile_delta=world_time.hostile(delta)
@@ -742,7 +743,9 @@ func hurt(amount: float) -> void:
  if invulnerability>0 or loadout_runtime.immune() or (sandbox and settings.invincible): return
  amount*=loadout_runtime.incoming_multiplier()
  if rng.randf()<minf(0.75,stats.evasion): toast("DODGED"); return
+ if irt.hurt_hooks and irt.witch_bottle(): toast("WARDED"); return
  health -= maxf(1,amount*100/(100+stats.armor*5))
+ if irt.hurt_hooks:irt.on_damage_taken(amount)
  invulnerability = 0.5
  if settings.shake: player.camera.h_offset=rng.randf_range(-0.15,0.15)
  player.hurt_time=0.22
@@ -766,7 +769,7 @@ func hit(e: Dictionary, base: float, weapon: int, ctx: Dictionary = {}) -> void:
  if character == 10 and e.hp/e.max_hp>0.9: amount*=1.5
  if character == 16 and e.hp/e.max_hp<0.1: amount = e.hp+1
  if e.kind<8 and "shield" in e.variant.modules and e.hp/e.max_hp>0.5: amount*=0.5
- if irt.cond_damage:amount*=irt.damage_mult(e,item_hit)
+ if irt.cond_damage:amount*=irt.damage_mult(e,item_hit,amount)
  amount=StatusManager.modify_damage(self,e,amount,critical,weapon)
  e["hit_time"]=0.10;e["flash_tint"]=0.0
  if is_instance_valid(combat_fx):
@@ -852,6 +855,7 @@ func kill_enemy(index: int) -> void:
  var gained=int(gold_fraction)
  if gained>0:WorldPickups.spawn_gold(self,e.pos+Vector3.UP*0.5,gained)
  gold_fraction-=gained
+ if irt.kill_hooks:irt.on_kill(e)
  enemies.remove_at(index)
  if e.get("elite",false) and elite_active and not elite_rewarded:
   var remaining=false
@@ -1005,6 +1009,7 @@ func grant_red_level() -> void:
 func add_red_gem(pos: Vector3) -> void:
  pickups.append({"node":XPGems.acquire(self,pos,true),"value":0.0,"age":0.0,"red":true})
 func on_level() -> void:
+ if irt.any:irt.on_level_up()
  match character:
   0: stats.luck+=0.03
   1: stats.armor+=1.5
@@ -1077,7 +1082,7 @@ func update_interactions(delta: float) -> void:
   var d=obj.node.position.distance_to(player.position)
   if obj.kind=="Free Chest":
    if d<=RewardDrops.SETTINGS.drop_pickup_radius and RewardDrops.queue_roll(self):
-    obj.used=true;obj.node.hide();run_metrics["free_chests"]=int(run_metrics.get("free_chests",0))+1;run_metrics["chests"]=int(run_metrics.get("chests",0))+1;play_sound("level")
+    obj.used=true;obj.node.hide();irt.on_chest_opened();run_metrics["free_chests"]=int(run_metrics.get("free_chests",0))+1;run_metrics["chests"]=int(run_metrics.get("chests",0))+1;play_sound("level")
    continue
   if ShrineCharging.is_shrine(obj):
    ShrineCharging.tick(self,obj,d,delta)
@@ -1103,15 +1108,18 @@ func update_interactions(delta: float) -> void:
   notice.text="Press E to summon Elite Enemies"
   if Input.is_action_just_pressed("interact"):activate_elite_statue(closest)
   return
- notice.text="E  /  %s%s"%[closest.kind," · %d gold"%chest_cost() if closest.kind=="Chest" else (" · %d gold per gem"%ImbueRules.cost(stage) if closest.kind==ImbueStation.KIND else "")]
+ notice.text="E  /  %s%s"%[closest.kind," · %d gold"%chest_cost() if closest.kind=="Chest" else (" · %d gold per gem"%ImbueRules.cost(stage,irt.imbue_discount()) if closest.kind==ImbueStation.KIND else "")]
  if not Input.is_action_just_pressed("interact"): return
  match closest.kind:
   "Shop":frontend.shop(closest);return
   "Imbue Station":frontend.imbue_station(closest);return
   "Chest":
    if available_items().is_empty():toast("Enable items in Unlocks before opening chests");return
-   if gold<chest_cost():toast("Need %d gold"%chest_cost());return
-   gold-=chest_cost();chests_opened+=1;run_metrics["chests"]=int(run_metrics.get("chests",0))+1
+   var free_key=irt.any and irt.chest_is_free()
+   if not free_key and gold<chest_cost():toast("Need %d gold"%chest_cost());return
+   if free_key:toast("The Rusted Key opens it for free")
+   else:gold-=chest_cost()
+   chests_opened+=1;run_metrics["chests"]=int(run_metrics.get("chests",0))+1;irt.on_chest_opened()
    if RewardDrops.queue_roll(self):RewardDrops.present_next(self)
   "Heal": health=minf(stats.max_health,health+40); toast("Restored 40 health")
  closest.used=true
@@ -1494,6 +1502,10 @@ func tome_limit() -> int:
  return 4 if sandbox else maxi(legacy_tome_slots,int(progress.data.get("tome_slots",2)))
 func chest_cost() -> int:return 15+chests_opened*5
 func available_items() -> Array:return ItemDrops.available(self)
+func item_total() -> int:
+ var t=0
+ for entry in items:t+=int(entry.stacks)
+ return t
 func item_stacks(id: Variant) -> int:
  for entry in items:
   if str(entry.id)==str(id):return int(entry.stacks)

@@ -145,7 +145,7 @@ func shop_and_chests():
  for obj in game.interactables:
   if obj.kind=="Shop":shop=obj;break
  shop.erase("offers");shop.used=false;shop.erase("sold")
- shop["offers"]=[GemRewards.offer_code("ice"),0,1]
+ shop["offers"]=[GemRewards.offer_code("ice"),"whetstone","salted_pork"]
  game.mode="shop"
  var gold_before=game.gold
  var result=GemRewards.buy_offer(game,shop,GemRewards.offer_code("ice"))
@@ -187,15 +187,15 @@ func save_load():
  var shop=null
  for obj in game.interactables:
   if obj.kind=="Shop":shop=obj;break
- shop["offers"]=[GemRewards.offer_code("ice"),0,1];shop["sold"]=[GemRewards.offer_code("ice")]
+ shop["offers"]=[GemRewards.offer_code("ice"),"whetstone","salted_pork"];shop["sold"]=[GemRewards.offer_code("ice")]
  check(game.save_run("user://test-imbue-run.json"),"Run with a station and shop gems saves")
  rebuild(1,9)
  check(game.load_run("user://test-imbue-run.json"),"Run loads")
  var shop2=null
  for obj in game.interactables:
   if obj.kind=="Shop":shop2=obj;break
- var loaded_offers=shop2.get("offers",[]).map(func(v): return int(v))
+ var loaded_offers=shop2.get("offers",[]).map(func(v): return v if v is String else int(v))
  var loaded_sold=shop2.get("sold",[]).map(func(v): return int(v))
- check(loaded_offers==[GemRewards.offer_code("ice"),0,1] and loaded_sold==[GemRewards.offer_code("ice")],"Shop gem slots and sales survive save/load")
+ check(loaded_offers==[GemRewards.offer_code("ice"),"whetstone","salted_pork"] and loaded_sold==[GemRewards.offer_code("ice")],"Shop gem slots and sales survive save/load")
  check(GemRewards.is_gem_offer(shop2.offers[0]) and GemRewards.has_code(shop2.sold,GemRewards.offer_code("ice")),"Loaded (float) codes still read as gem slots and sales")
  check(ImbueStation.count(game)==1,"Station still exists after load")

@@ -24,6 +24,7 @@ func run():
  game.mode="run"
  await catalog_tests()
  await stat_tests()
+ await proc_tests()
  await migration_tests()
  print("ITEMS_REGRESSION: %d checks, %d failures"%[checks,failures.size()])
  game.queue_free();await process_frame;await process_frame
@@ -172,3 +173,149 @@ func migration_tests():
  check(not profile.entries.any(func(k):return str(k).begins_with("items:") and not Catalog.item_exists(str(k).get_slice(":",1))) and not profile.disabled.has("items:5"),"MetaProgress.migrate erases unlock/toggle entries for retired items")
  check(profile.entries.has("items:whetstone"),"New items are unlocked by migration")
  check(ItemMigration.clean_offers([3,9,-1])==null and ItemMigration.clean_offers(["whetstone",-2])==["whetstone",-2],"Old numeric shop offers are re-rolled; valid ones survive")
+
+# ---------------------------------------------------------------- batch 2: event procs
+func rate(id: String,times: int,fn: Callable) -> float:
+ var hits=0
+ for i in times:if fn.call():hits+=1
+ return float(hits)/float(times)
+func near(a: float,b: float,tol: float) -> bool:return absf(a-b)<=tol
+func make_enemy(offset: Vector3,hp: float=1000.0) -> Dictionary:
+ var e=game.spawn_enemy(0,game.player.position+offset);e.hp=hp;e.max_hp=hp;e.speed=0.0
+ return e
+func proc_tests():
+ fresh();game.player.position=Vector3(0,1,0);game.player.velocity=Vector3.ZERO
+ # Rusted Key
+ give("rusted_key");game.irt.rng.seed=1
+ var r1=rate("rusted_key",6000,func():return game.irt.chest_is_free())
+ check(near(r1,0.10,0.015),"Rusted Key: 10%% of chests are free over a seeded sample (%.3f)"%r1)
+ give("rusted_key",2);game.irt.rng.seed=2
+ var r3=rate("rusted_key",6000,func():return game.irt.chest_is_free())
+ check(near(r3,1.0-pow(0.9,3),0.02),"Rusted Key stacks as independent rolls (%.3f)"%r3)
+ # Witch Bottle
+ fresh();give("witch_bottle");game.irt.rng.seed=3
+ var w1=rate("witch",6000,func():return game.irt.witch_bottle())
+ check(near(w1,0.20,0.02),"Witch Bottle: 20%% of hits ignored (%.3f)"%w1)
+ give("witch_bottle",12);var wcap=rate("witch",4000,func():return game.irt.witch_bottle())
+ check(near(wcap,0.60,0.03) and wcap<0.99,"Witch Bottle never makes the player immune (capped near 60%%, got %.3f)"%wcap)
+ # Witch Bottle is a separate roll after evasion and goes through real hurt()
+ fresh();give("witch_bottle",12);game.invulnerability=0.0;game.stats.evasion=0.0;game.health=game.stats.max_health
+ var ignored=0;var total=400
+ game.irt.rng.seed=9
+ for i in total:
+  var h=game.health;game.invulnerability=0.0;game.hurt(5.0);game.health=minf(game.stats.max_health,game.health)
+  if is_equal_approx(game.health,h):ignored+=1
+  game.health=game.stats.max_health
+ check(ignored>total*0.45 and ignored<total*0.75,"Witch Bottle works inside Game.hurt() and still lets damage through (%d/%d ignored)"%[ignored,total])
+ # Spade
+ fresh();give("gravediggers_spade");game.irt.rng.seed=4
+ var sp=rate("spade",6000,func():return game.irt.roll("gravediggers_spade"))
+ check(near(sp,0.15,0.02),"Gravedigger's Spade: 15%% extra pickup chance (%.3f)"%sp)
+ # Soul Lantern / Pyre Ashes through kill_enemy
+ fresh();give("soul_lantern");game.irt.rng.seed=5
+ var sl=0
+ for i in 4000:
+  var fake={"pos":Vector3.ZERO,"variant":{"reward":1.0},"last_item":false}
+  var before=int(game.irt.counters.get("lantern",0));game.irt.on_kill(fake)
+  if int(game.irt.counters.get("lantern",0))>before:sl+=1
+ check(near(float(sl)/4000.0,0.12,0.02),"Soul Lantern: 12%% of kills drop an extra XP gem (%.3f)"%(float(sl)/4000.0))
+ fresh();give("pyre_ashes");game.irt.rng.seed=6
+ for i in 8000:game.irt.on_kill({"pos":Vector3(0,0,50),"last_item":false});game.irt.meat.clear()
+ var pyre=float(int(game.irt.counters.get("pyre_total",0)))
+ fresh();give("pyre_ashes");game.irt.rng.seed=6
+ var meat_made=0
+ for i in 8000:
+  game.irt.on_kill({"pos":Vector3(0,0,50),"last_item":false})
+  meat_made+=game.irt.meat.size();game.irt.meat.clear()
+ check(near(float(meat_made)/8000.0,0.03,0.008),"Pyre Ashes: 3%% of kills drop roast meat (%.3f)"%(float(meat_made)/8000.0))
+ game.irt.meat.append({"pos":game.player.position,"life":5.0});game.health=game.stats.max_health*0.5;var hp0=game.health
+ game.irt.tick(0.016)
+ check(is_equal_approx(game.health,hp0+game.stats.max_health*0.15) and game.irt.meat.is_empty(),"Roast meat heals 15%% max HP when walked over")
+ fresh();give("pyre_ashes",99);game.irt.rng.seed=7
+ for i in 400:game.irt.on_kill({"pos":Vector3(0,0,50),"last_item":false})
+ check(game.irt.meat.size()<=int(ItemStats.v("pyre_ashes","pickup_cap")) and int(game.irt.dropped.get("meat",0))>0,"Meat pool is hard-capped and refusals are counted")
+ # Ouija
+ fresh();give("ouija_planchette");game.irt.rng.seed=8
+ var plain=make_enemy(Vector3(2,0,0));var big=0
+ for i in 8000:if game.irt.damage_mult(plain,false,10.0)>5.0:big+=1
+ check(near(float(big)/8000.0,0.03,0.008),"Ouija Planchette: 3%% of hits deal x10 (%.3f)"%(float(big)/8000.0))
+ var boss=make_enemy(Vector3(3,0,0),10000.0);boss.kind=8
+ var worst=0.0
+ game.irt.rng.seed=8
+ for i in 8000:worst=maxf(worst,game.irt.damage_mult(boss,false,100.0)*100.0)
+ check(worst<=10000.0*ItemStats.v("ouija_planchette","boss_cap")+0.01,"Ouija hits are capped against bosses (max %.0f of %.0f HP)"%[worst,10000.0])
+ var chain_before=int(game.irt.counters.get("ouija",0));game.irt.damage_mult(plain,true,10.0)
+ check(int(game.irt.counters.get("ouija",0))==chain_before,"Item damage never rolls Ouija")
+ # Hermit's Ember (standing still)
+ fresh();give("hermits_ember");game.health=game.stats.max_health*0.5;var h0=game.health
+ for i in 55:game.irt.tick(1.0/60.0)
+ check(is_equal_approx(game.health,h0),"Hermit's Ember: nothing before 1 s of standing still")
+ for i in 120:game.irt.tick(1.0/60.0)
+ check(near(game.health-h0,game.stats.max_health*0.03*((55.0+120.0)/60.0-1.0),0.2),"Hermit's Ember heals 3%% max HP per second after 1 s still (%.2f)"%(game.health-h0))
+ game.player.velocity=Vector3(5,0,0);game.irt.tick(0.1);var moving_hp=game.health;game.irt.tick(1.0)
+ check(is_equal_approx(game.health,moving_hp) and game.irt.still_time==0.0,"Hermit's Ember resets when you move");game.player.velocity=Vector3.ZERO
+ # Mourner's Veil
+ fresh();give("mourners_veil");var sp0=game.stats.speed
+ game.irt.on_damage_taken(5.0)
+ check(is_equal_approx(game.stats.speed-sp0,0.25),"Mourner's Veil: +25%% more speed right after damage")
+ for i in 130:game.irt.tick(1.0/60.0)
+ check(is_equal_approx(game.stats.speed-sp0,0.0) and is_equal_approx(sp0,Catalog.base_stats().speed+0.05),"Mourner's Veil: speed falls back to +5%% after 2 s")
+ # Leaden Heart / Tax ledger / Cracked Hourglass / Forgemaster
+ fresh();give("leaden_heart");var d0=game.stats.damage
+ game.irt.on_powerup("heart")
+ check(is_equal_approx(game.stats.damage-d0,0.10),"Leaden Heart: +10%% damage after a Heart power-up")
+ game.irt.on_powerup("magnet");game.irt.on_powerup("stopwatch")
+ check(is_equal_approx(game.stats.damage-d0,0.10),"Leaden Heart ignores Magnet and Stopwatch")
+ for i in 15*60+5:game.irt.tick(1.0/60.0)
+ check(is_equal_approx(game.stats.damage,d0),"Leaden Heart expires after 15 s")
+ fresh();give("tax_ledger",2);var base_damage=game.stats.damage
+ for i in 4:game.irt.on_chest_opened()
+ check(is_equal_approx(game.stats.damage-base_damage,2*4*0.025),"Tax Collector's Ledger: +2.5%% damage per chest per stack, kept for the run")
+ fresh();give("cracked_hourglass",2);game.world_time.reset();game.world_time.activate(game.irt.stopwatch_bonus())
+ check(is_equal_approx(game.world_time.remaining,12.0),"Cracked Hourglass: Stopwatch lasts +2 s per stack");game.world_time.reset()
+ fresh()
+ check(ImbueRules.cost(1,game.irt.imbue_discount())==500,"Imbue cost unchanged without Forgemaster's Tongs")
+ give("forgemasters_tongs");check(ImbueRules.cost(1,game.irt.imbue_discount())==400,"Forgemaster's Tongs: Imbue costs 20%% less")
+ give("forgemasters_tongs",9);check(ImbueRules.cost(3,game.irt.imbue_discount())==300,"Forgemaster's Tongs discount is capped at 80%% (%d)"%ImbueRules.cost(3,game.irt.imbue_discount()))
+ # Thunderstruck Nail
+ fresh();give("thunderstruck_nail");game.enemies.clear()
+ var close=make_enemy(Vector3(3,0,0));var far_e=make_enemy(Vector3(20,0,0));game.rebuild_grid()
+ game.irt.on_damage_taken(5.0)
+ check(StatusManager.stunned(close) and not StatusManager.stunned(far_e),"Thunderstruck Nail stuns nearby enemies only")
+ StatusManager.clear(close);close.frozen=0.0;game.irt.on_damage_taken(5.0)
+ check(not StatusManager.stunned(close),"Thunderstruck Nail has a cooldown")
+ # Black Candle
+ fresh();give("black_candle");game.enemies.clear()
+ var burn=make_enemy(Vector3(2,0,0));var safe=make_enemy(Vector3(8,0,0));game.rebuild_grid();game.level=1
+ for i in 130:game.irt.tick(1.0/60.0)
+ check(near(1000.0-burn.hp,10.0,1.5) and is_equal_approx(safe.hp,1000.0),"Black Candle: 5 damage per second within 3 m only (%.1f in ~2 s)"%(1000.0-burn.hp))
+ # Restless Bones
+ fresh();give("restless_bones");game.enemies.clear()
+ var target=make_enemy(Vector3(5,0,0));game.rebuild_grid()
+ game.irt.on_chest_opened()
+ check(game.irt.wraiths.size()==2,"Restless Bones: opening a chest summons 2 wraiths")
+ for i in 120:game.irt.tick(1.0/60.0)
+ check(target.hp<1000.0,"Wraiths hunt and damage enemies (through Game.hit)")
+ for i in 600:game.irt.tick(1.0/60.0)
+ check(game.irt.wraiths.is_empty(),"Wraiths vanish after 8 s")
+ give("restless_bones",8)
+ for i in 10:game.irt.on_chest_opened()
+ check(game.irt.wraiths.size()<=int(ItemStats.v("restless_bones","cap")) and int(game.irt.dropped.get("wraiths",0))>0,"Wraith pool is hard-capped and refusals are counted")
+ # No chain: item damage and item kills never feed other item procs
+ fresh();give("soul_lantern",99);give("pyre_ashes",99);give("black_candle",3);give("restless_bones");game.enemies.clear();game.irt.rng.seed=12
+ var item_kills=0
+ for i in 60:
+  var e=make_enemy(Vector3(1.0+float(i%5)*0.1,0,float(i/5)*0.1),3.0);game.irt.deal(e,50.0,"black_candle")
+ for i in range(game.enemies.size()-1,-1,-1):
+  if game.enemies[i].hp<=0:item_kills+=1;game.kill_enemy(i)
+ check(item_kills==60 and int(game.irt.counters.get("lantern",0))==0 and game.irt.meat.is_empty(),"No chain: kills made by item damage never trigger kill procs (%d kills)"%item_kills)
+ game.irt.counters.clear()
+ for i in 60:
+  var e=make_enemy(Vector3(1.0+float(i%5)*0.1,0,float(i/5)*0.1),3.0);game.hit(e,500.0,0,{"source":"slash","pos":e.pos,"dir":Vector3.FORWARD})
+ for i in range(game.enemies.size()-1,-1,-1):
+  if game.enemies[i].hp<=0:game.kill_enemy(i)
+ check(int(game.irt.counters.get("lantern",0))>0 or not game.irt.meat.is_empty(),"Weapon kills do trigger the same procs (control for the no-chain test)")
+ fresh();give("ouija_planchette",30);game.irt.rng.seed=13;var counter0=int(game.irt.counters.get("ouija",0))
+ var e2=make_enemy(Vector3(2,0,0));for i in 200:game.irt.deal(e2,1.0,"black_candle");e2.hp=1000.0
+ check(int(game.irt.counters.get("ouija",0))==counter0,"No chain: 200 item hits never roll Ouija Planchette")
+ fresh()

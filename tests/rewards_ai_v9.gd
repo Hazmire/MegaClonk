@@ -132,7 +132,7 @@ func run():
  var count=celebration.particles.size();celebration._process(15)
  check(celebration.is_processing() and celebration.particles.size()==count and celebration.age>15,"Confetti remains active after fifteen seconds with a bounded particle pool")
  game.frontend.chest_skip.call();await process_frame
- check(reveal.get_meta("revealed",false) and icon.texture==UIAssets.icon("items","1") and game.items==items,"Fast-forward reveals the predetermined item without awarding again")
+ check(reveal.get_meta("revealed",false) and icon.texture==UIAssets.icon("items","salted_pork") and game.items==items,"Fast-forward reveals the predetermined item without awarding again")
  check(str(game.rng.state)==reward_rng,"Icon animation and skipping leave the gameplay reward RNG unchanged")
  check(game.sound_bank.has("applause") and game.sound_bank.has("legendary"),"Original applause and distinctive Legendary audio are loaded")
  game.resume();await create_timer(0.5).timeout

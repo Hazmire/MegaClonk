@@ -73,9 +73,9 @@ func run() -> void:
  verify(pool.size()>3,"Meaningful level-up choices")
  game.apply_upgrade({"type":"tome","id":"Might"})
  verify(game.stats.damage>1 and game.tomes.Might==1,"Tome applies stat modifier")
- var item_count=game.items.size()
+ var item_count=game.item_total()
  game.award_item()
- verify(game.items.size()==item_count+1,"Item reward applied")
+ verify(game.item_total()==item_count+1,"Item reward applied")
  game.stats.lifesteal=0
  game.stats.damage=1
  game.stats.crit=0

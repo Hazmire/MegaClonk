@@ -174,6 +174,7 @@ static func break_vase(game: Node,id: int,_weapon: int=-1) -> bool:
   game.combat_fx.supplied_burst("debris",center,1.1)
  game.play_sound("vase.break")
  WorldPickups.spawn_reward(game,v.pos+Vector3.UP*0.55,v.reward)
+ game.irt.on_vase_smashed(v.pos+Vector3.UP*0.55,v.reward)
  game.run_metrics["vases"]=int(game.run_metrics.get("vases",0))+1
  return true
 

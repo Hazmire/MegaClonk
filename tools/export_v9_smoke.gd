@@ -24,8 +24,8 @@ func run():
  if not require(image!=null and effect!=null,"Compiled cycling icon/continuous celebration missing"):return
  effect._process(15)
  if not require(effect.is_processing() and effect.particles.size()>0,"Compiled confetti ended before screen closed"):return
- var count=game.items.size();game.frontend.chest_skip.call()
- if not require(image.texture==UIAssets.icon("items","10") and game.items.size()==count,"Compiled reveal mismatched or granted another item"):return
+ var count=game.item_total();game.frontend.chest_skip.call()
+ if not require(image.texture==UIAssets.icon("items","hourglass_damned") and game.item_total()==count,"Compiled reveal mismatched or granted another item"):return
  game.resume();game.tomes={"Wind":2};game.update_hud();await process_frame
  var row=game.frontend.loadout_icons.get_node("EquippedItems")
  if not require(row.get_node("Weapons").get_child_count()==game.weapons.size() and row.get_node("Tomes").get_child_count()==game.tomes.size(),"Compiled HUD contains empty or missing equipment"):return

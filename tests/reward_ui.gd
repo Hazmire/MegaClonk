@@ -42,13 +42,13 @@ func run():
  for node in descendants(game.frontend.menu):
   if node is Label:labels.append(node.text)
  check("Inventory" in labels and "Stats" in labels and "Weapons" in labels and "Items" in labels,"Build screen uses inventory and real stats sidebars")
- var shop={"tier":"Common","offers":[1],"sold":[],"used":false};game.gold=0;game.frontend.shop(shop)
+ var shop={"tier":"Common","offers":["whetstone"],"sold":[],"used":false};game.gold=0;game.frontend.shop(shop)
  var disabled=false
  for node in descendants(game.frontend.menu):
   if node is Button and node.custom_minimum_size.y==122:disabled=node.disabled
  check(disabled,"Unaffordable shop card is disabled")
- game.gold=100;var count=game.items.size();game.grant_item("salted_pork");game.frontend.reward("salted_pork");game.frontend.reward("salted_pork")
- check(game.items.size()==count+1,"Showing or skipping a chest reveal never grants a duplicate")
+ game.gold=100;var count=game.item_total();game.grant_item("salted_pork");game.frontend.reward("salted_pork");game.frontend.reward("salted_pork")
+ check(game.item_total()==count+1,"Showing or skipping a chest reveal never grants a duplicate")
  var initial_items=game.items.duplicate();var skip: Button
  for node in descendants(game.frontend.menu):
   if node is Button and node.text=="SKIP REVEAL":skip=node;break

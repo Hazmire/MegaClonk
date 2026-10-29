@@ -124,8 +124,8 @@ func run():
  var seller={}
  for object in game.interactables:
   if object.kind=="Shop":seller=object;break
- seller.used=false;seller.offers=[1];seller.sold=[];game.gold=100;game.mode="shop"
- check(game.buy_shop(seller,1,15) and not seller.node.visible,"Actual seller disappears after purchase")
+ seller.used=false;seller.offers=["whetstone"];seller.sold=[];game.gold=100;game.mode="shop"
+ check(game.buy_shop(seller,"whetstone",15) and not seller.node.visible,"Actual seller disappears after purchase")
  game.mode="pause";game.player.active=false
  check(game.save_run("user://milestone-run.json") and game.load_run("user://milestone-run.json"),"New encounters, weapon attributes and shops serialize together")
  game.mode="pause";game.player.active=false
@@ -133,10 +133,7 @@ func run():
  for object in game.interactables:
   if object.kind=="Shop" and object.used:consumed=consumed or not object.node.visible
  check(consumed,"Consumed seller remains absent after save/load")
- game.mode="run";game.enemies.clear();game.stats.revives=1;game.health=0;game._physics_process(0)
- check(game.health==game.stats.max_health and game.stats.revives==0,"Phoenix Seal actually revives exactly once")
- game.loadout_runtime.cooldown=90;game.stats.ultimate_haste=0.25;game._physics_process(1)
- check(is_equal_approx(game.loadout_runtime.cooldown,88.75),"Timekeeper actually accelerates cooldown recovery")
+ check(not game.stats.has("revives") and not game.stats.has("ultimate_haste"),"Retired Phoenix Seal / Timekeeper stats no longer exist")
  game.mode="pause";game.player.active=false
  if FileAccess.file_exists("user://milestone-run.json"):DirAccess.remove_absolute("user://milestone-run.json")
  game.queue_free();await process_frame;await process_frame

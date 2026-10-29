@@ -6,22 +6,22 @@ extends RefCounted
 const COSTS=[500,1000,1500] # Stage 1, 2, 3. Later stages reuse the last entry.
 const SHOP_PRICE=250
 
-static func cost(stage: int) -> int:
- return int(COSTS[clampi(stage-1,0,COSTS.size()-1)])
+static func cost(stage: int,discount: float=0.0) -> int:
+ return maxi(1,int(round(float(COSTS[clampi(stage-1,0,COSTS.size()-1)])*(1.0-clampf(discount,0.0,0.9)))))
 # Returns "" when the installation is allowed, otherwise the first problem found.
 static func problem(game: Object, weapon_id: int, element: String) -> String:
  if not game.weapons.has(weapon_id):return "weapon_not_owned"
  var socket_problem=WeaponSockets.install_problem(game.weapons[weapon_id],element)
  if socket_problem!="":return socket_problem
  if game.gems.count(element)<1:return "no_gem"
- if game.gold<cost(game.stage):return "insufficient_gold"
+ if game.gold<cost(game.stage,game.irt.imbue_discount()):return "insufficient_gold"
  return ""
 # Atomic: either the gem is installed, one gem is consumed and the gold is deducted once,
 # or nothing changes at all.
 static func install(game: Object, weapon_id: int, element: String) -> Dictionary:
  var reason=problem(game,weapon_id,element)
  if reason!="":return {"ok":false,"reason":reason,"cost":0}
- var price=cost(game.stage)
+ var price=cost(game.stage,game.irt.imbue_discount())
  var state: Dictionary=game.weapons[weapon_id]
  var snapshot=WeaponSockets.serialize(state)
  if not WeaponSockets.install(state,element):return {"ok":false,"reason":"install_failed","cost":0}
