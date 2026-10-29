@@ -4,8 +4,12 @@ extends Button
 signal changed(on: bool)
 var on=true
 var enabled_look=true
-func setup(value: bool) -> OnOffToggle:
- on=value;toggle_mode=false;queue_redraw();return self
+var ink=FogPalette.MEMO_INK # frame and filled half
+var paper=FogPalette.MEMO # text on the filled half
+func setup(value: bool,on_dark: bool=false) -> OnOffToggle:
+ on=value;toggle_mode=false
+ if on_dark:ink=FogPalette.BONE;paper=FogPalette.NIGHT
+ queue_redraw();return self
 func _ready() -> void:
  focus_mode=Control.FOCUS_ALL;text="";flat=true;custom_minimum_size=Vector2(116,40)
  for state in ["normal","hover","pressed","focus","disabled","hover_pressed"]:add_theme_stylebox_override(state,StyleBoxEmpty.new())
@@ -18,10 +22,10 @@ func set_on(value: bool,emit: bool=true) -> void:
 func _draw() -> void:
  var font=MenuStyle.sans(800,0.2,14)
  var half=size.x*0.5
- draw_rect(Rect2(0,0,half,size.y),FogPalette.MEMO_INK if on else Color(0,0,0,0))
- draw_rect(Rect2(half,0,half,size.y),Color(0,0,0,0) if on else FogPalette.MEMO_INK)
+ draw_rect(Rect2(0,0,half,size.y),ink if on else Color(0,0,0,0))
+ draw_rect(Rect2(half,0,half,size.y),Color(0,0,0,0) if on else ink)
  for i in 2:
   var word="ON" if i==0 else "OFF";var active=(i==0)==on
   var s=font.get_string_size(word,HORIZONTAL_ALIGNMENT_LEFT,-1,14)
-  draw_string(font,Vector2(half*i+(half-s.x)*0.5,(size.y-font.get_height(14))*0.5+font.get_ascent(14)),word,HORIZONTAL_ALIGNMENT_LEFT,-1,14,FogPalette.MEMO if active else FogPalette.MEMO_INK)
- draw_rect(Rect2(Vector2.ONE,size-Vector2(2,2)),FogPalette.RUST_BRIGHT if has_focus() else FogPalette.MEMO_INK,false,2.0)
+  draw_string(font,Vector2(half*i+(half-s.x)*0.5,(size.y-font.get_height(14))*0.5+font.get_ascent(14)),word,HORIZONTAL_ALIGNMENT_LEFT,-1,14,paper if active else ink)
+ draw_rect(Rect2(Vector2.ONE,size-Vector2(2,2)),FogPalette.RUST_BRIGHT if has_focus() else ink,false,2.0)

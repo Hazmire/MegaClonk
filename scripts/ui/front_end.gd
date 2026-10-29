@@ -193,7 +193,7 @@ func home() -> void:
  if is_instance_valid(game.audio):game.audio.music_menu()
  show_screen("main_menu")
 # Out-of-run menus are Fog County MenuScreen scenes (res://ui/menu). They own their theme; in-run screens keep theirs.
-const SCREENS={"main_menu":"res://ui/menu/screens/main_menu.tscn","loadout":"res://ui/menu/screens/loadout_screen.tscn","unlocks":"res://ui/menu/screens/unlocks_screen.tscn","quests":"res://ui/menu/screens/quests_screen.tscn"}
+const SCREENS={"main_menu":"res://ui/menu/screens/main_menu.tscn","loadout":"res://ui/menu/screens/loadout_screen.tscn","unlocks":"res://ui/menu/screens/unlocks_screen.tscn","quests":"res://ui/menu/screens/quests_screen.tscn","settings":"res://ui/menu/screens/settings_screen.tscn"}
 func show_screen(kind: String) -> MenuScreen:
  MenuScreen.play_sound=func(sound_name: String):game.play_sound("ui."+sound_name)
  var screen=load(SCREENS[kind]).instantiate() as MenuScreen
@@ -308,43 +308,8 @@ func reward(id: String) -> void:
  RewardScreens.reward(self,id)
 func settings(back: Callable) -> void:
  settings_back=back
- game.mode="settings";var col=page("Settings")
- var tabs=TabContainer.new();tabs.custom_minimum_size=Vector2(1130,440);col.add_child(tabs)
- for group in ["Display","Graphics","Audio","Gameplay"]:
-  var scroll=ScrollContainer.new();scroll.name=group;tabs.add_child(scroll)
-  var list=VBoxContainer.new();list.custom_minimum_size.x=1000;list.add_theme_constant_override("separation",12);scroll.add_child(list)
-  if group=="Display":
-   var fullscreen=CheckButton.new();fullscreen.text="Fullscreen";fullscreen.button_pressed=DisplayServer.window_get_mode()==DisplayServer.WINDOW_MODE_FULLSCREEN;list.add_child(fullscreen)
-   fullscreen.toggled.connect(func(enabled):DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if enabled else DisplayServer.WINDOW_MODE_WINDOWED))
-   var resolution=OptionButton.new()
-   for label in ["1280 × 720","1600 × 900","1920 × 1080"]:resolution.add_item(label)
-   list.add_child(resolution);resolution.item_selected.connect(func(i):DisplayServer.window_set_size([Vector2i(1280,720),Vector2i(1600,900),Vector2i(1920,1080)][i]))
-  var keys=[]
-  if group=="Graphics":keys=["render_scale","retro_scale","psx_warp","psx_snap","psx_dither","visual_intensity","reduced","numbers","shake","fps"]
-  if group=="Audio":keys=["master","music","effects","ui_volume","ambience"]
-  if group=="Gameplay":keys=["sensitivity","invert","focus_pause"]
-  for key in keys:
-   if game.settings[key] is bool:
-    var check=CheckButton.new();check.text=key.replace("_"," ").capitalize();check.button_pressed=game.settings[key];list.add_child(check)
-    check.toggled.connect(func(value):game.settings[key]=value;game.apply_settings())
-   else:
-    var caption=text(({"master":"Master volume","music":"Music volume","effects":"Sound effects volume","ui_volume":"UI volume","ambience":"Ambient volume"}).get(key,key.replace("_"," ").capitalize()),list,16)
-    if group=="Audio":caption.text+=" · %d%%"%roundi(float(game.settings[key])*100)
-    var slider=HSlider.new();slider.min_value=0.0005 if key=="sensitivity" else (0.5 if key=="render_scale" else (0.25 if key=="retro_scale" else 0.0));slider.max_value=0.008 if key=="sensitivity" else 1.0;slider.step=0.0001 if key=="sensitivity" else 0.05;slider.value=game.settings[key];slider.custom_minimum_size.x=700;list.add_child(slider)
-    slider.value_changed.connect(func(value):
-     game.settings[key]=value;game.apply_settings()
-     if group=="Audio":
-      caption.text=({"master":"Master volume","music":"Music volume","effects":"Sound effects volume","ui_volume":"UI volume","ambience":"Ambient volume"})[key]+" · %d%%"%roundi(value*100);game.progress.data.settings=game.settings.duplicate(true);game.progress.save())
-  if group=="Graphics":
-   var quality=OptionButton.new()
-   for label in ["Low","Medium","High"]:quality.add_item(label)
-   quality.selected=int(game.settings.quality);list.add_child(quality);quality.item_selected.connect(func(i):game.settings.quality=i;game.apply_settings())
-  if group=="Gameplay":
-   var keys_grid=GridContainer.new();keys_grid.columns=3;list.add_child(keys_grid)
-   for key in game.bindings:
-    action("%s: %s"%[key,OS.get_keycode_string(game.bindings[key])],keys_grid,func():game.pending_binding=key;game.toast("Press a key for "+key))
- action("Save & back",col,func():game.progress.data.settings=game.settings;game.progress.data.settings.bindings=game.bindings;game.progress.save();back.call())
- action("Quit game",col,func():get_tree().quit())
+ game.mode="settings";clear()
+ show_screen("settings")
 func update_character_health() -> void:
  if not is_instance_valid(game) or game.mode!="run" or not is_instance_valid(game.player) or not is_instance_valid(game.player.camera):character_health.hide();return
  character_health.size=Vector2(64,7) # Apply after inherited theme minimum-size recalculation.

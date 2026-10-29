@@ -56,4 +56,9 @@ func run() -> void:
   game.progress.data.quest_metrics['kills']=0.0;game.progress.data.kills=140;game.progress.data.claimed=['first_hunt']
   fe.quests();await snap('quests',0.6)
   var qs=fe.menu.get_child(fe.menu.get_child_count()-1);qs.tab_bar.select('Arsenal');await snap('quests-arsenal',0.6)
+ if want('settings'):
+  fe.settings(fe.home);await snap('settings-display',0.5)
+  var ss=fe.menu.get_child(fe.menu.get_child_count()-1)
+  for t in ['Graphics','Audio','Gameplay']:
+   ss.tab_bar.select(t);await snap('settings-'+t.to_lower(),0.5)
  quit()

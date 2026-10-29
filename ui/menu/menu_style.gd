@@ -18,6 +18,7 @@ const SCENES={
  "dropdown_option":"res://ui/menu/widgets/dropdown_option.tscn",
  "slot_dropdown":"res://ui/menu/widgets/slot_dropdown.tscn",
  "loadout_slot":"res://ui/menu/widgets/loadout_slot.tscn",
+ "stepper":"res://ui/menu/widgets/stepper.tscn",
  "filter_chip":"res://ui/menu/widgets/filter_chip.tscn",
  "weapon_preview":"res://ui/menu/widgets/weapon_preview.tscn",
 }
@@ -90,3 +91,22 @@ static func rarity_for_tier(name: String) -> int:
   "epic":return FogPalette.Rarity.EPIC
   "legendary":return FogPalette.Rarity.LEGENDARY
  return FogPalette.Rarity.COMMON
+
+# Fog slider: 6px track, rust fill, a square bone grabber.
+static func slider(min_value: float,max_value: float,step: float,value: float,width: float=520.0) -> HSlider:
+ var s=HSlider.new();s.min_value=min_value;s.max_value=max_value;s.step=step;s.value=value;s.custom_minimum_size=Vector2(width,32);s.size_flags_vertical=Control.SIZE_SHRINK_CENTER
+ var track=FogTheme.flat(FogPalette.BORDER);track.content_margin_top=3;track.content_margin_bottom=3
+ var fill=FogTheme.flat(FogPalette.RUST);fill.content_margin_top=3;fill.content_margin_bottom=3
+ var lit=FogTheme.flat(FogPalette.RUST_BRIGHT);lit.content_margin_top=3;lit.content_margin_bottom=3
+ s.add_theme_stylebox_override("slider",track);s.add_theme_stylebox_override("grabber_area",fill);s.add_theme_stylebox_override("grabber_area_highlight",lit)
+ s.add_theme_icon_override("grabber",grabber(FogPalette.BONE));s.add_theme_icon_override("grabber_highlight",grabber(FogPalette.BONE_BRIGHT));s.add_theme_icon_override("grabber_disabled",grabber(FogPalette.ASH_FAINT))
+ return s
+static func grabber(color: Color) -> ImageTexture:
+ var key="grabber:"+color.to_html()
+ if not cache.has(key):
+  var img=Image.create(14,26,false,Image.FORMAT_RGBA8);img.fill(color)
+  for x in 14:
+   for y in 26:
+    if x<2 or x>11 or y<2 or y>23:img.set_pixel(x,y,FogPalette.INK)
+  cache[key]=ImageTexture.create_from_image(img)
+ return cache[key]
