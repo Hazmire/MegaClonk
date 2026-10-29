@@ -13,6 +13,7 @@ var flash=0.0
 var hint_text="" # right-aligned key chip ("ENTER", "ESC")
 var primary=false # always filled rust with the cursor (the call-to-action)
 var indent=56.0
+var outlined=false # 1px frame while not selected (Home / Back buttons on the Unlocks frame)
 var cursor_x=24.0
 func setup(value: String,normal_size: int=38,selected_size: int=48,is_locked: bool=false,row: Vector2=Vector2(64,76)) -> MenuItem:
  label_text=value;locked=is_locked;size_normal=normal_size;size_selected=selected_size;row_normal=int(row.x);row_selected=int(row.y)
@@ -42,6 +43,7 @@ func _draw() -> void:
  var px=size_selected if selected else size_normal
  var font=MenuStyle.serif()
  var color=FogPalette.ASH
+ if outlined and not selected:draw_rect(Rect2(Vector2.ZERO,size).grow(-0.5),MenuStyle.OUTLINE,false,1.0)
  if selected:
   var inverted=flash>0.0
   draw_rect(Rect2(Vector2.ZERO,size),FogPalette.BONE if inverted else FogPalette.RUST)

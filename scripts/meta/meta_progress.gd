@@ -17,6 +17,11 @@ static func migrate(data: Dictionary) -> void:
    if str(key).begins_with("weapons:") and not Catalog.weapon_exists(int(str(key).get_slice(":",1))):list.erase(key)
    # Item Overhaul: the 13 old numbered items are gone; only the 60 string ids survive in unlocks and toggles.
    if str(key).begins_with("items:") and not Catalog.item_exists(str(key).get_slice(":",1)):list.erase(key)
+ # Menu Overhaul: entries unlocked after this point show a NEW badge in Unlocks until they are looked at once.
+ # Profiles that predate the list start with everything they already own marked as seen.
+ if not data.has(MenuData.NEW_KEY):data[MenuData.NEW_KEY]=data.entries.duplicate()
+ for key in data[MenuData.NEW_KEY].duplicate():
+  if not key in data.entries:data[MenuData.NEW_KEY].erase(key)
  data.weapon_slots=clampi(int(data.weapon_slots),2,4)
  data.tome_slots=clampi(int(data.tome_slots),2,4)
  data.credits=maxi(0,int(data.credits)); data.quest_gold=maxi(0,int(data.quest_gold))

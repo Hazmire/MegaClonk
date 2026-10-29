@@ -46,3 +46,58 @@ static func stage_name(biome: int) -> String:return STAGE_NAMES[clampi(biome,0,S
 static func stage_short(biome: int) -> String:return STAGE_SHORT[clampi(biome,0,STAGE_SHORT.size()-1)]
 static func biome_name(biome: int) -> String:return BIOME_NAMES[clampi(biome,0,BIOME_NAMES.size()-1)]
 static func weapon_tag(id: Variant) -> String:return WEAPON_TAGS.get(int(id),"All")
+# ---- Unlocks & collection ----
+const UNLOCK_TABS=[{"id":"weapons","label":"Weapons"},{"id":"tomes","label":"Tomes"},{"id":"traits","label":"Traits"},{"id":"items","label":"Items"},{"id":"ultimates","label":"Ultimates"}]
+const TIER_LABELS={"common":"Common","uncommon":"Uncommon","rare":"Rare","epic":"Epic","legendary":"Legendary"}
+const ELEMENT_OF_GEM={"FIRE GEM":"fire","ICE GEM":"ice","CORROSIVE GEM":"corrosive","ELECTRICITY GEM":"electricity"}
+static var debug_locked_items: Array=[] # capture / test override: item ids drawn and described as locked (every item ships unlocked)
+static func key_of(category: String,id: String) -> String:return category+":"+id
+static func is_locked(data: Dictionary,category: String,id: String) -> bool:
+ if category=="items" and id in debug_locked_items:return true
+ return not MetaProgress.unlocked(data,category,id)
+# "locked" | "off" | "on" | "plain" (traits and ultimates have no toggle: they are always offered once unlocked)
+static func tile_state(data: Dictionary,category: String,id: String) -> String:
+ if is_locked(data,category,id):return "locked"
+ if category in ["traits","ultimates"]:return "plain"
+ return "on" if MetaProgress.enabled(data,category,id) else "off"
+static func is_new(data: Dictionary,category: String,id: String) -> bool:
+ var key=key_of(category,id)
+ return MetaProgress.unlocked(data,category,id) and not key in data.get(NEW_KEY,[])
+static func mark_seen(data: Dictionary,category: String,id: String) -> bool:
+ var key=key_of(category,id)
+ if not MetaProgress.unlocked(data,category,id) or key in data.get(NEW_KEY,[]):return false
+ if not data.has(NEW_KEY):data[NEW_KEY]=[]
+ data[NEW_KEY].append(key);return true
+static func unlock_text(category: String,entry: Dictionary) -> String:
+ match category:
+  "weapons":return "To unlock: %d silver"%int(entry.cost)
+  "tomes":return "To unlock: %d lifetime kills and %d silver"%[int(entry.goal),int(entry.cost)]
+ return "To unlock: conditions are not set yet" # items (and anything else) ship unlocked; the rule comes later
+static func can_buy(category: String) -> bool:return category in ["weapons","tomes"]
+static func tier_counts() -> Dictionary:
+ var counts={"all":Catalog.ITEM_IDS.size()}
+ for tier in Catalog.ITEM_TIERS:counts[tier]=0
+ for id in Catalog.ITEM_IDS:counts[Catalog.item_tier(id)]+=1
+ return counts
+static func drop_weight_text(tier: String) -> String:return "%d%%"%roundi(float(ItemStats.TIER_WEIGHTS[tier])*100.0)
+# Element of the socket gem an item needs ("fire", ...) or "" when it needs none.
+static func needs_element(id: String) -> String:
+ var needs: Variant=Catalog.ITEMS.get(id,{}).get("needs")
+ return "" if needs==null else String(ELEMENT_OF_GEM.get(String(needs),""))
+static func items_found(data: Dictionary) -> int:
+ var n=0
+ for id in Catalog.ITEM_IDS:
+  if not is_locked(data,"items",String(id)):n+=1
+ return n
+static func ultimate_chips(entry: Dictionary) -> Array:
+ var chips=["%ds COOLDOWN"%int(entry.cooldown)]
+ if float(entry.duration)>0.0:chips.append("%ds DURATION"%int(entry.duration))
+ return chips
+# Weapon facts straight from the stat resolver, so the numbers cannot drift from the game.
+static func weapon_sentence(id: int) -> String:
+ var r=WeaponStats.resolve(null,id,{})
+ return "%s · %d damage · one attack every %.2f seconds. %s weapon."%[String(r.kind).capitalize(),int(round(r.damage)),r.interval,weapon_tag(id)]
+static func weapon_pool_labels(id: int) -> Array:
+ var labels=[]
+ for key in WeaponUpgrades.pool(id):labels.append(WeaponUpgrades.label(id,String(key)).to_upper())
+ return labels
