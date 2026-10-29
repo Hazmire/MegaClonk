@@ -15,6 +15,7 @@ var tilt=0.0
 var tape_size=Vector2(90,28)
 var tape_angle=-3.0
 var claim_button: Button
+var min_height=0.0 # some memos keep a minimum height (the Items detail memo)
 func _init() -> void:
  mouse_filter=Control.MOUSE_FILTER_PASS
  tilter=Control.new();tilter.name="Tilt";tilter.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);tilter.mouse_filter=Control.MOUSE_FILTER_IGNORE;add_child(tilter)
@@ -26,7 +27,7 @@ func _init() -> void:
  tape=ColorRect.new();tape.color=Color(0.91,0.886,0.816,0.7);tape.mouse_filter=Control.MOUSE_FILTER_IGNORE;tilter.add_child(tape)
  paper.minimum_size_changed.connect(_fit);resized.connect(_layout)
 func _ready() -> void:_fit();_layout()
-func _fit() -> void:custom_minimum_size.y=paper.get_combined_minimum_size().y
+func _fit() -> void:custom_minimum_size.y=maxf(min_height,paper.get_combined_minimum_size().y)
 func _layout() -> void:
  tilter.pivot_offset=size*0.5;tilter.rotation_degrees=tilt
  tape.size=tape_size;tape.pivot_offset=tape_size*0.5;tape.rotation_degrees=tape_angle

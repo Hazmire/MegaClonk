@@ -101,3 +101,11 @@ static func weapon_pool_labels(id: int) -> Array:
  var labels=[]
  for key in WeaponUpgrades.pool(id):labels.append(WeaponUpgrades.label(id,String(key)).to_upper())
  return labels
+# Where an item can drop, read from ItemStats so the memo never promises a source the drop rules do not have.
+static func sources_text(id: String) -> String:
+ var tier=Catalog.item_tier(id)
+ var places=["chests"]
+ if tier in ItemStats.DROPS.shop_tiers:places.append("shops")
+ if tier in ItemStats.DROPS.vase_tiers:places.insert(0,"vases")
+ if places.size()==1:return "Appears in %s only"%places[0]
+ return "Appears in "+", ".join(places.slice(0,places.size()-1))+" and "+places[places.size()-1]

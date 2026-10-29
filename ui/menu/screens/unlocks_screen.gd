@@ -187,8 +187,100 @@ func pool_chip(label: String) -> Control:
  var panel=PanelContainer.new();panel.mouse_filter=Control.MOUSE_FILTER_IGNORE
  var st=FogTheme.flat(Color(0,0,0,0),Color("5A5446"),1);st.content_margin_left=7;st.content_margin_right=7;st.content_margin_top=4;st.content_margin_bottom=2;panel.add_theme_stylebox_override("panel",st)
  var l=MenuStyle.label(label,MenuStyle.sans(800,0.12,11),11,Color("2E2A22"));panel.add_child(l);return panel
+var filter="all"
+var chips: Dictionary={}
+var item_grid: GridContainer
 func build_items() -> void:
- build_cards("items")
+ chips.clear()
+ var counts=MenuData.tier_counts()
+ var row=HBoxContainer.new();row.name="Filters";row.position=Vector2(120,312);row.add_theme_constant_override("separation",8);row.mouse_filter=Control.MOUSE_FILTER_IGNORE;body.add_child(row)
+ var defs=[["all","All",FogPalette.BONE]]
+ for tier in Catalog.ITEM_TIERS:defs.append([tier,MenuData.TIER_LABELS[tier],MenuStyle.rarity_color(MenuStyle.rarity_for_tier(tier))])
+ for d in defs:
+  var chip=MenuStyle.spawn("filter_chip") as FilterChip;chip.setup(String(d[0]),String(d[1]),int(counts[d[0]]),d[2]);chip.chosen_filter.connect(set_filter);row.add_child(chip);chips[d[0]]=chip
+ item_grid=GridContainer.new();item_grid.name="Grid";item_grid.columns=10;item_grid.position=Vector2(120,368);item_grid.add_theme_constant_override("h_separation",12);item_grid.add_theme_constant_override("v_separation",12);item_grid.mouse_filter=Control.MOUSE_FILTER_IGNORE;body.add_child(item_grid)
+ var legend=HBoxContainer.new();legend.name="Legend";legend.position=Vector2(120,368+6*88+5*12+18);legend.add_theme_constant_override("separation",24);legend.mouse_filter=Control.MOUSE_FILTER_IGNORE;body.add_child(legend)
+ legend.add_child(SmallCapsLabel.new().setup("Locked",13,FogPalette.ASH_FAINT,600,0.16))
+ legend.add_child(SmallCapsLabel.new().setup("Bar colour = rarity",13,FogPalette.ASH_FAINT,600,0.16))
+ new_memo(Vector2(1180,320),630,0.7,Vector4(40,36,40,32))
+ memo.min_height=560.0;memo._fit()
+ for id in Catalog.ITEM_IDS:entry_data[String(id)]=LoadoutCatalog.entry("items",String(id))
+ fill_items()
+ select(String(Catalog.ITEM_IDS[0]))
+func visible_item_ids() -> Array:
+ var ids=[]
+ for id in Catalog.ITEM_IDS:
+  if filter=="all" or Catalog.item_tier(id)==filter:ids.append(String(id))
+ return ids
+func fill_items() -> void:
+ for c in item_grid.get_children():item_grid.remove_child(c);c.queue_free()
+ tiles.clear()
+ for id in visible_item_ids():make_tile(item_grid,"items",entry_data[id],Vector2(88,88),64,true)
+ for key in chips:chips[key].set_active(key==filter)
+ tab_bar.set_note("FOUND %d / %d"%[MenuData.items_found(progress()),Catalog.ITEM_IDS.size()])
+func set_filter(id: String) -> void:
+ filter=id;fill_items()
+ if not tiles.has(selected_id) and not tiles.is_empty():select(String(tiles.keys()[0]))
+func cycle_filter(direction: int=1) -> void:
+ var order=["all"]+Catalog.ITEM_TIERS
+ sfx("hover");set_filter(order[posmod(order.find(filter)+direction,order.size())])
+func _input(event: InputEvent) -> void:
+ super._input(event)
+ if category=="items" and is_visible_in_tree() and event is InputEventKey and event.pressed and not event.echo and event.keycode==KEY_TAB:
+  get_viewport().set_input_as_handled();cycle_filter(-1 if event.shift_pressed else 1)
+ elif category=="items" and is_visible_in_tree() and event is InputEventJoypadButton and event.pressed and event.button_index==JOY_BUTTON_Y:
+  get_viewport().set_input_as_handled();cycle_filter()
+func fill_item_memo(id: String) -> void:
+ var e: Dictionary=entry_data[id]
+ var item: Dictionary=Catalog.ITEMS[id]
+ var tier=Catalog.item_tier(id);var rarity=MenuStyle.rarity_for_tier(tier);var info=FogPalette.RARITY[rarity]
+ var locked=MenuData.is_locked(progress(),"items",id)
+ var head=HBoxContainer.new();head.add_theme_constant_override("separation",24);head.mouse_filter=Control.MOUSE_FILTER_IGNORE;memo.body.add_child(head)
+ var box=PanelContainer.new();box.name="IconBox";box.custom_minimum_size=Vector2(152,152);box.mouse_filter=Control.MOUSE_FILTER_IGNORE
+ var st=FogTheme.flat(FogPalette.NIGHT,info["color"],4);st.set_content_margin_all(4)
+ if rarity==FogPalette.Rarity.LEGENDARY:st.shadow_color=Color(0.949,0.757,0.306,0.55);st.shadow_size=22
+ box.add_theme_stylebox_override("panel",st);head.add_child(box)
+ var center=CenterContainer.new();center.mouse_filter=Control.MOUSE_FILTER_IGNORE;box.add_child(center);center.add_child(MenuStyle.icon_rect("items",id,128,locked))
+ var titles=VBoxContainer.new();titles.add_theme_constant_override("separation",10);titles.size_flags_horizontal=Control.SIZE_EXPAND_FILL;titles.size_flags_vertical=Control.SIZE_SHRINK_CENTER;titles.mouse_filter=Control.MOUSE_FILTER_IGNORE;head.add_child(titles)
+ var chip_row=HBoxContainer.new();chip_row.mouse_filter=Control.MOUSE_FILTER_IGNORE;titles.add_child(chip_row)
+ var tier_stamp=MenuStyle.spawn("stamp") as Stamp;tier_stamp.name="TierChip";tier_stamp.setup(MenuData.TIER_LABELS[tier],info["on"],12,0.24,0,0.0,info["color"],Vector2(8,4));chip_row.add_child(tier_stamp)
+ var title=memo.memo_label(String(item.name),36,FogPalette.MEMO_INK,titles);title.name="Name"
+ var weight=caps_on_paper("%s drop weight"%MenuData.drop_weight_text(tier),13,titles,0.18);weight.name="DropWeight"
+ var effect=memo.memo_label(String(item.full),20,Color("2E2A22"));effect.name="Effect"
+ var element=MenuData.needs_element(id)
+ if element!="":
+  var need=PanelContainer.new();need.name="NeedsBox";need.mouse_filter=Control.MOUSE_FILTER_IGNORE
+  var ns=FogTheme.flat(Color(0,0,0,0));ns.content_margin_left=12;ns.content_margin_right=12;ns.content_margin_top=10;ns.content_margin_bottom=10;need.add_theme_stylebox_override("panel",ns)
+  var dashed=DashedFrame.new();dashed.color=Elements.color(element);dashed.show_behind_parent=true;dashed.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);need.add_child(dashed)
+  var nrow=HBoxContainer.new();nrow.add_theme_constant_override("separation",10);nrow.mouse_filter=Control.MOUSE_FILTER_IGNORE;need.add_child(nrow)
+  var diamond=Diamond.new();diamond.color=Elements.color(element);diamond.custom_minimum_size=Vector2(18,18);diamond.size_flags_vertical=Control.SIZE_SHRINK_CENTER;nrow.add_child(diamond)
+  memo.memo_label("Does nothing until you own the %s socket gem."%Elements.display_name(element),16,Color("2E2A22"),nrow).name="NeedsText"
+  memo.body.add_child(need)
+ if bool(item.unique):
+  var row=HBoxContainer.new();row.mouse_filter=Control.MOUSE_FILTER_IGNORE;memo.body.add_child(row)
+  var u=MenuStyle.spawn("stamp") as Stamp;u.name="UniqueStamp";u.setup("Unique · once per run",Color("8A5A0E"),16,0.24,3,-3.0,Color(0,0,0,0),Vector2(12,5));row.add_child(u)
+ memo_rule()
+ var spacer=Control.new();spacer.size_flags_vertical=Control.SIZE_EXPAND_FILL;memo.body.add_child(spacer)
+ if locked:
+  locked_stamp("Locked",18,memo.body)
+  var req=memo.memo_label(MenuData.unlock_text("items",e),17,FogPalette.MEMO_INK_SOFT);req.name="Requirement"
+ else:toggle_row(MenuData.sources_text(id),18)
+class DashedFrame extends Control:
+ var color=Color.BLACK
+ func _init() -> void:mouse_filter=Control.MOUSE_FILTER_IGNORE
+ func _draw() -> void:
+  var r=Rect2(Vector2.ZERO,size);var dash=6.0
+  var x=0.0
+  while x<r.size.x:
+   var w=minf(dash,r.size.x-x);draw_rect(Rect2(x,0,w,2),color);draw_rect(Rect2(x,r.size.y-2,w,2),color);x+=dash*2.0
+  var y=0.0
+  while y<r.size.y:
+   var h=minf(dash,r.size.y-y);draw_rect(Rect2(0,y,2,h),color);draw_rect(Rect2(r.size.x-2,y,2,h),color);y+=dash*2.0
+class Diamond extends Control:
+ var color=Color.BLACK
+ func _init() -> void:mouse_filter=Control.MOUSE_FILTER_IGNORE
+ func _draw() -> void:
+  var c=size*0.5;draw_colored_polygon(PackedVector2Array([Vector2(c.x,0),Vector2(size.x,c.y),Vector2(c.x,size.y),Vector2(0,c.y)]),color)
 func build_slots(kind: String,at: Vector2,width: float) -> void:
  slots_block=VBoxContainer.new();slots_block.name="AccountUpgrades";slots_block.position=at;slots_block.custom_minimum_size.x=width;slots_block.size.x=width;(slots_block as VBoxContainer).add_theme_constant_override("separation",14);slots_block.mouse_filter=Control.MOUSE_FILTER_IGNORE
  body.add_child(slots_block);slots_block.set_meta("kind",kind)
@@ -229,6 +321,7 @@ func fill_memo(id: String) -> void:
  for c in memo.body.get_children():memo.body.remove_child(c);c.queue_free()
  toggle=null;buy_button=null
  if category=="weapons":fill_weapon_memo(id);return
+ if category=="items":fill_item_memo(id);return
  var e: Dictionary=entry_data[id]
  var locked=MenuData.is_locked(progress(),category,id)
  var head=HBoxContainer.new();head.add_theme_constant_override("separation",24);head.mouse_filter=Control.MOUSE_FILTER_IGNORE;memo.body.add_child(head)

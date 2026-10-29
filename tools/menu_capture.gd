@@ -39,7 +39,15 @@ func run() -> void:
   screen.open_list("weapons");await snap("loadout-open",0.6)
  if want('unlocks'):
   for tab in ['weapons','tomes','traits','ultimates','items']:
+   if tab=='items':
+    for key in ['items:bitter_wine','items:mourners_veil']:MetaProgress.toggle(game.progress.data,'items',key.get_slice(':',1))
+    MenuData.debug_locked_items=['hex_penny','witch_bottle','coven_sigil','devils_bargain','anvil_first_forge','saints_finger','gem_loupe']
    fe.active_tab=tab;fe.unlocks();await snap('unlocks-'+tab,0.6)
+   if tab=='items':
+    var s2=fe.menu.get_child(fe.menu.get_child_count()-1)
+    s2.tiles['tinder_pouch'].grab_focus();await snap('unlocks-items-gem',0.5)
+    s2.set_filter('legendary');s2.tiles['headsmans_oath'].grab_focus();await snap('unlocks-items-legendary',0.5)
+    s2.set_filter('all');s2.tiles['hex_penny'].grab_focus();await snap('unlocks-items-locked',0.5)
    if tab=='weapons':
     var screen=fe.menu.get_child(fe.menu.get_child_count()-1)
     screen.tiles['9'].grab_focus();await snap('unlocks-weapons-scythes',2.2)

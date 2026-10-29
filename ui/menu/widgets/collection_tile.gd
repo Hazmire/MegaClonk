@@ -31,7 +31,7 @@ func _apply_state() -> void:
  if state=="locked":art.material=MenuStyle.shader_material("res://ui/shaders/grayscale.gdshader");art.modulate=Color.WHITE
  else:art.material=null;art.modulate=Color(1,1,1,0.4) if state=="off" else Color.WHITE
 func _place() -> void:
- if art!=null:art.position=Vector2(floorf((size.x-icon_px)*0.5),8.0 if mini else 14.0)
+ if art!=null:art.position=Vector2(floorf((size.x-icon_px)*0.5),floorf((size.y-4.0-icon_px)*0.5) if mini else 14.0)
 func _notification(what: int) -> void:
  if what==NOTIFICATION_RESIZED:_place()
 func _draw() -> void:
@@ -39,7 +39,8 @@ func _draw() -> void:
  draw_rect(r,Color("221616") if selected else FogPalette.NIGHT_TILE)
  var border=FogPalette.RUST_BRIGHT if selected else FogPalette.BORDER
  if selected:draw_rect(r.grow(-1.0),border,false,2.0)
- elif state=="locked" and not mini:_dashed(r,border)
+ elif state=="locked":_dashed(r,border)
+ elif mini and rarity==FogPalette.Rarity.LEGENDARY:draw_rect(r.grow(-0.5),Color("8A5A0E"),false,1.0)
  else:draw_rect(r.grow(-0.5),border,false,1.0)
  if mini:_draw_mini()
  else:_draw_card()
