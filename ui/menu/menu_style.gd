@@ -15,6 +15,9 @@ const SCENES={
  "tab_bar":"res://ui/menu/widgets/tab_bar.tscn",
  "caps_label":"res://ui/menu/widgets/caps_label.tscn",
  "hud_number":"res://ui/menu/widgets/hud_number.tscn",
+ "dropdown_option":"res://ui/menu/widgets/dropdown_option.tscn",
+ "slot_dropdown":"res://ui/menu/widgets/slot_dropdown.tscn",
+ "loadout_slot":"res://ui/menu/widgets/loadout_slot.tscn",
 }
 const SILVER_RUST=Color("8E1B22") # stamp red on paper
 const PAPER_LINE=Color("8F876F")

@@ -33,4 +33,8 @@ func run() -> void:
  var fe=game.frontend
  if want("main"):
   fe.home();await snap("main-menu",0.6)
+ if want("loadout"):
+  fe.play_screen();await snap("loadout-closed",0.7)
+  var screen=fe.menu.get_child(fe.menu.get_child_count()-1)
+  screen.open_list("weapons");await snap("loadout-open",0.6)
  quit()

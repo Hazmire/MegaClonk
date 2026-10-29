@@ -193,7 +193,7 @@ func home() -> void:
  if is_instance_valid(game.audio):game.audio.music_menu()
  show_screen("main_menu")
 # Out-of-run menus are Fog County MenuScreen scenes (res://ui/menu). They own their theme; in-run screens keep theirs.
-const SCREENS={"main_menu":"res://ui/menu/screens/main_menu.tscn"}
+const SCREENS={"main_menu":"res://ui/menu/screens/main_menu.tscn","loadout":"res://ui/menu/screens/loadout_screen.tscn"}
 func show_screen(kind: String) -> MenuScreen:
  MenuScreen.play_sound=func(sound_name: String):game.play_sound("ui."+sound_name)
  var screen=load(SCREENS[kind]).instantiate() as MenuScreen
@@ -202,35 +202,7 @@ func wallet() -> String:
  return "SILVER %d"%game.progress.data.silver
 func play_screen() -> void:
  game.mode="play";preview_mode="play";prepare_backdrop();game.mode="play";clear()
- var left=card(menu,Vector2(28,25),Vector2(460,645));left.add_theme_constant_override("separation",6);heading("Prepare your run",left,23)
- text("ONE ADVENTURER • ONE LOADOUT",left,14)
- for category in ["weapons","traits","ultimates"]:
-  heading(category.capitalize(),left,18)
-  var select=OptionButton.new();select.custom_minimum_size.y=40
-  var ids=[]
-  for e in LoadoutCatalog.entries(category):
-   if MetaProgress.unlocked(game.progress.data,category,e.id):
-    ids.append(e.id);select.add_item(e.name)
-  var selected=str(game.selected_weapon) if category=="weapons" else (game.selected_trait if category=="traits" else game.selected_ultimate)
-  select.selected=maxi(0,ids.find(selected));left.add_child(select)
-  var entry=LoadoutCatalog.entry(category,selected)
-  if not entry.is_empty():icon_row(left,category,selected,entry.description,category!="weapons")
-  select.item_selected.connect(func(index):
-   if category=="weapons":game.selected_weapon=int(ids[index])
-   elif category=="traits":game.selected_trait=ids[index]
-   else:game.selected_ultimate=ids[index]
-   game.progress.data.loadout={"weapon":game.selected_weapon,"trait":game.selected_trait,"ultimate":game.selected_ultimate};game.progress.save();play_screen())
- heading("Destination",left,18);text("THE VERDANT HOLLOW • Forest",left,16)
- action("ENTER THE HOLLOW",left,func():game.selected_biome=0;game.selected_tier=1;game.sandbox=false;game.begin_run())
- if FileAccess.file_exists("user://active-run.json"):
-  action("Resume saved run",left,func():
-   if not game.load_run():game.toast("Saved run could not be read"))
- action("Back",left,home)
- var right=card(menu,Vector2(990,25),Vector2(264,535));heading("Personal bests",right,19)
- if game.progress.data.leaderboard.is_empty():paragraph("Your greatest runs will be recorded here.",right,214)
- for i in mini(5,game.progress.data.leaderboard.size()):
-  var record=game.progress.data.leaderboard[i]
-  paragraph("#%d • %d kills • %02d:%02d\n%s\n%s / %s"%[i+1,record.kills,int(record.time)/60,int(record.time)%60,Catalog.weapon_name(int(record.weapon)),LoadoutCatalog.entry("traits",str(record.trait)).get("name",record.trait),LoadoutCatalog.entry("ultimates",str(record.ultimate)).get("name",record.ultimate)],right,210)
+ show_screen("loadout")
 func unlocks() -> void:
  game.mode="unlocks";preview_mode="home"
  var col=page("Unlocks & collection");paragraph(wallet(),col,800)

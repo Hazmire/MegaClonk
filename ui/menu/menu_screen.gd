@@ -9,6 +9,8 @@ static var instant=false # tests switch fades off
 static var play_sound: Callable
 const FADE=0.075
 const PAD_WORDS={"ENTER":"A","ESC":"B","Q / E":"LB / RB","TAB":"Y","↑↓":"D-PAD","↑ ↓":"D-PAD"}
+var right_dark=false # "world" backdrop only: also darken the right edge (the loadout memo sits there)
+var left_stop=0.56
 var backdrop_kind="fog" # "fog" = checker fog + 86% dim; "world" = live scene behind, darkened at the left and bottom
 var hint_side="right"
 var allow_back=true
@@ -58,7 +60,10 @@ func _build_backdrop() -> void:
   var dim=ColorRect.new();dim.color=Color(0.039,0.043,0.039,0.86);dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);dim.mouse_filter=Control.MOUSE_FILTER_IGNORE;backdrop.add_child(dim)
  else:
   var left=TextureRect.new();left.texture=MenuStyle.gradient(Color(0.039,0.043,0.039,0.94),Color(0.039,0.043,0.039,0.0),false,0.0,1.0)
-  left.stretch_mode=TextureRect.STRETCH_SCALE;left.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;left.anchor_right=0.56;left.anchor_bottom=1.0;left.mouse_filter=Control.MOUSE_FILTER_IGNORE;backdrop.add_child(left)
+  left.stretch_mode=TextureRect.STRETCH_SCALE;left.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;left.anchor_right=left_stop;left.anchor_bottom=1.0;left.mouse_filter=Control.MOUSE_FILTER_IGNORE;backdrop.add_child(left)
+  if right_dark:
+   var right=TextureRect.new();right.texture=MenuStyle.gradient(Color(0.039,0.043,0.039,0.0),Color(0.039,0.043,0.039,0.7),false)
+   right.stretch_mode=TextureRect.STRETCH_SCALE;right.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;right.anchor_left=0.64;right.anchor_right=1.0;right.anchor_bottom=1.0;right.mouse_filter=Control.MOUSE_FILTER_IGNORE;backdrop.add_child(right)
   var top=TextureRect.new();top.texture=MenuStyle.gradient(Color(0.039,0.043,0.039,0.6),Color(0.039,0.043,0.039,0.0),true) # keeps the silver readable over a bright scene
   top.stretch_mode=TextureRect.STRETCH_SCALE;top.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;top.anchor_right=1.0;top.anchor_bottom=0.24;top.mouse_filter=Control.MOUSE_FILTER_IGNORE;backdrop.add_child(top)
   var bottom=TextureRect.new();bottom.texture=MenuStyle.gradient(Color(0.039,0.043,0.039,0.0),Color(0.039,0.043,0.039,0.85),true)
@@ -75,7 +80,8 @@ func refresh_hints() -> void:
  for c in hint_bar.get_children():hint_bar.remove_child(c);c.queue_free()
  for e in hints:
   var pair=HBoxContainer.new();pair.add_theme_constant_override("separation",10);pair.mouse_filter=Control.MOUSE_FILTER_IGNORE
-  var key=String(e[0]);if using_pad:key=PAD_WORDS.get(key,key)
+  var key=String(e[0])
+  if using_pad:key=String(e[2]) if e.size()>2 else PAD_WORDS.get(key,key)
   var font_key=MenuStyle.sans(800,0.18,15);var font_act=MenuStyle.sans(600,0.18,15)
   MenuStyle.label(key,font_key,15,FogPalette.BONE,0,pair);MenuStyle.label(String(e[1]).to_upper(),font_act,15,FogPalette.ASH_DIM,0,pair)
   hint_bar.add_child(pair)

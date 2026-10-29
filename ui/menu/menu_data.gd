@@ -4,6 +4,7 @@ extends RefCounted
 # regression test can check it without building a screen.
 const MENU_TAGLINE="" # placeholder from the design ("[TAGLINE OR COUNTY NAME]"): empty hides the line
 const STAGE_NAMES=["The Verdant Hollow"]
+const STAGE_SHORT=["Hollow"] # "Enter the Hollow"
 const BIOME_NAMES=["Forest"]
 const WEAPON_TAGS={0:"Melee",9:"Melee",10:"Melee",1:"Staff",2:"Staff",6:"Ranged",7:"Ranged",15:"Ranged"} # no category exists in Catalog; this is the only place it is defined
 const TAG_ORDER=["All","Staff","Ranged","Melee"]
@@ -42,5 +43,6 @@ static func personal_bests(data: Dictionary,count: int=5) -> Array:
  return records.slice(0,count)
 static func clock(seconds: float) -> String:return "%02d:%02d"%[int(seconds)/60,int(seconds)%60]
 static func stage_name(biome: int) -> String:return STAGE_NAMES[clampi(biome,0,STAGE_NAMES.size()-1)]
+static func stage_short(biome: int) -> String:return STAGE_SHORT[clampi(biome,0,STAGE_SHORT.size()-1)]
 static func biome_name(biome: int) -> String:return BIOME_NAMES[clampi(biome,0,BIOME_NAMES.size()-1)]
 static func weapon_tag(id: Variant) -> String:return WEAPON_TAGS.get(int(id),"All")
