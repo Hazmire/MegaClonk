@@ -17,7 +17,7 @@ func run():
  if not require(JSON.stringify(game.active_shrine_reward)==fixed,"Compiled shrine choices rerolled on load"):return
  var choice=game.active_shrine_reward.choices[0];var before=float(game.stats[choice.stat]);ShrineRewards.select(game,0)
  if not require(is_equal_approx(float(game.stats[choice.stat])-before,float(choice.amount)),"Compiled stat card applied a different amount"):return
- game.frontend.reward(Catalog.ITEMS[10]);await process_frame;var image: TextureRect;var effect: RewardCelebration
+ game.frontend.reward("hourglass_damned");await process_frame;var image: TextureRect;var effect: RewardCelebration
  for node in RewardScreens.descendants(game.frontend.menu):
   if node.name=="CyclingIcon":image=node
   if node is RewardCelebration and node.confetti:effect=node

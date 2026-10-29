@@ -55,9 +55,9 @@ static func entries(category: String) -> Array:
   "traits": result=TRAITS.duplicate(true)
   "ultimates": result=ULTIMATES.duplicate(true)
   "items":
-   for i in Catalog.ITEMS.size():
-    var item=Catalog.ITEMS[i]
-    result.append({"id":str(i),"name":item[0],"description":Catalog.item_description(i),"goal":0 if i<5 or i>=10 else i*50,"cost":0 if i<5 else i*10})
+   for id in Catalog.ITEM_IDS:
+    var item=Catalog.ITEMS[id]
+    result.append({"id":str(id),"name":str(item.name),"description":Catalog.item_description(id),"goal":0,"cost":0}) # every item starts unlocked; unlock conditions come later
  return result
 static func entry(category: String, id: String) -> Dictionary:
  for definition in entries(category):

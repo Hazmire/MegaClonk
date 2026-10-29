@@ -1,0 +1,604 @@
+{
+ "items": [
+  {
+   "id": "whetstone",
+   "name": "Whetstone",
+   "tier": "common",
+   "short": "+10% damage",
+   "full": "+10% damage.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/whetstone.png"
+  },
+  {
+   "id": "pilgrims_sandals",
+   "name": "Pilgrim's Sandals",
+   "tier": "common",
+   "short": "+8% movement speed",
+   "full": "+8% movement speed.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/pilgrims_sandals.png"
+  },
+  {
+   "id": "knucklebone",
+   "name": "Gambler's Knucklebone",
+   "tier": "common",
+   "short": "+5% crit chance",
+   "full": "+5% crit chance.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/knucklebone.png"
+  },
+  {
+   "id": "salted_pork",
+   "name": "Salted Pork",
+   "tier": "common",
+   "short": "+20 max HP",
+   "full": "+20 max HP.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/salted_pork.png"
+  },
+  {
+   "id": "tallow_candle",
+   "name": "Tallow Candle",
+   "tier": "common",
+   "short": "+2 HP regen per second",
+   "full": "+2 HP regen per second.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/tallow_candle.png"
+  },
+  {
+   "id": "flagellants_cord",
+   "name": "Flagellant's Cord",
+   "tier": "common",
+   "short": "+10% attack speed",
+   "full": "+10% attack speed.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/flagellants_cord.png"
+  },
+  {
+   "id": "tithe_purse",
+   "name": "Tithe Purse",
+   "tier": "common",
+   "short": "+15% gold from kills",
+   "full": "+15% gold from kills.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/tithe_purse.png"
+  },
+  {
+   "id": "bone_reliquary",
+   "name": "Bone Reliquary",
+   "tier": "common",
+   "short": "+8% XP gain",
+   "full": "+8% XP gain.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/bone_reliquary.png"
+  },
+  {
+   "id": "crowsfoot_charm",
+   "name": "Crowsfoot Charm",
+   "tier": "common",
+   "short": "+12% evasion (diminishing)",
+   "full": "+12% evasion, with diminishing returns.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/crowsfoot_charm.png"
+  },
+  {
+   "id": "executioners_hood",
+   "name": "Executioner's Hood",
+   "tier": "common",
+   "short": "+20% damage to enemies above 90% HP",
+   "full": "+20% damage to enemies above 90% HP.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/executioners_hood.png"
+  },
+  {
+   "id": "bounty_writ",
+   "name": "Bounty Writ",
+   "tier": "common",
+   "short": "+15% damage to elites and bosses",
+   "full": "+15% damage to elites and bosses.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/bounty_writ.png"
+  },
+  {
+   "id": "rusted_key",
+   "name": "Rusted Key",
+   "tier": "common",
+   "short": "10% chance to open a chest for free",
+   "full": "10% chance to open a chest for free.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/rusted_key.png"
+  },
+  {
+   "id": "hermits_ember",
+   "name": "Hermit's Ember",
+   "tier": "common",
+   "short": "Stand still 1 s: heal 3% max HP/s",
+   "full": "Standing still for 1 s heals 3% max HP per second.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/hermits_ember.png"
+  },
+  {
+   "id": "mourners_veil",
+   "name": "Mourner's Veil",
+   "tier": "common",
+   "short": "+5% move speed; +25% for 2 s after a hit",
+   "full": "+5% movement speed; +25% more for 2 s after taking damage.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/mourners_veil.png"
+  },
+  {
+   "id": "gravediggers_spade",
+   "name": "Gravedigger's Spade",
+   "tier": "common",
+   "short": "Vases: 15% chance of an extra pickup",
+   "full": "Smashing a vase has a 15% chance to drop an extra pickup.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/gravediggers_spade.png"
+  },
+  {
+   "id": "cracked_hourglass",
+   "name": "Cracked Hourglass",
+   "tier": "common",
+   "short": "Stopwatch lasts +2 s",
+   "full": "Stopwatch power-up lasts +2 s.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/cracked_hourglass.png"
+  },
+  {
+   "id": "tinder_pouch",
+   "name": "Tinder Pouch",
+   "tier": "uncommon",
+   "short": "Burning enemies take +15% damage",
+   "full": "Burning enemies take +15% damage from all sources.",
+   "needs": "FIRE GEM",
+   "unique": false,
+   "icon": "icons/items/tinder_pouch.png"
+  },
+  {
+   "id": "rime_shard",
+   "name": "Rime Shard",
+   "tier": "uncommon",
+   "short": "Chill +50% duration; Shatter radius +1 m",
+   "full": "Chill lasts 50% longer and Shatter radius +1 m.",
+   "needs": "ICE GEM",
+   "unique": false,
+   "icon": "icons/items/rime_shard.png"
+  },
+  {
+   "id": "lepers_bell",
+   "name": "Leper's Bell",
+   "tier": "uncommon",
+   "short": "Corrosion stacks deal +20% damage",
+   "full": "Corrosion stacks deal +20% damage.",
+   "needs": "CORROSIVE GEM",
+   "unique": false,
+   "icon": "icons/items/lepers_bell.png"
+  },
+  {
+   "id": "lodestone",
+   "name": "Lodestone",
+   "tier": "uncommon",
+   "short": "Stunned enemies take +25% damage",
+   "full": "Stunned enemies take +25% damage.",
+   "needs": "ELECTRICITY GEM",
+   "unique": false,
+   "icon": "icons/items/lodestone.png"
+  },
+  {
+   "id": "plague_mask",
+   "name": "Plague Doctor's Mask",
+   "tier": "uncommon",
+   "short": "+20% damage to enemies with any status",
+   "full": "+20% damage to enemies suffering any status.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/plague_mask.png"
+  },
+  {
+   "id": "brutes_gauntlet",
+   "name": "Brute's Gauntlet",
+   "tier": "uncommon",
+   "short": "+20% damage at close range",
+   "full": "+20% damage to enemies within close range.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/brutes_gauntlet.png"
+  },
+  {
+   "id": "tax_ledger",
+   "name": "Tax Collector's Ledger",
+   "tier": "uncommon",
+   "short": "+2.5% damage per chest opened (run)",
+   "full": "+2.5% damage for the rest of the run each time you open a chest.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/tax_ledger.png"
+  },
+  {
+   "id": "bitter_wine",
+   "name": "Skin of Bitter Wine",
+   "tier": "uncommon",
+   "short": "+20% damage, −10% max HP",
+   "full": "+20% damage, −10% max HP.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/bitter_wine.png"
+  },
+  {
+   "id": "hangmans_noose",
+   "name": "Hangman's Noose",
+   "tier": "uncommon",
+   "short": "Curses one enemy: 25% max HP/s",
+   "full": "Curses one non-boss enemy at a time, dealing 25% of its max HP per second.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/hangmans_noose.png"
+  },
+  {
+   "id": "pyre_ashes",
+   "name": "Pyre Ashes",
+   "tier": "uncommon",
+   "short": "Kills: 3% chance of roast meat (15% HP)",
+   "full": "Kills have a 3% chance to drop roast meat that heals 15% HP.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/pyre_ashes.png"
+  },
+  {
+   "id": "thunderstruck_nail",
+   "name": "Thunderstruck Nail",
+   "tier": "uncommon",
+   "short": "Taking damage stuns nearby enemies",
+   "full": "Taking damage releases a shock that stuns nearby enemies.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/thunderstruck_nail.png"
+  },
+  {
+   "id": "restless_bones",
+   "name": "Restless Bones",
+   "tier": "uncommon",
+   "short": "Chest or vase summons 2 wraiths for 8 s",
+   "full": "Opening a chest or smashing a vase summons 2 wraiths that hunt enemies for 8 s.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/restless_bones.png"
+  },
+  {
+   "id": "forgemasters_tongs",
+   "name": "Forgemaster's Tongs",
+   "tier": "uncommon",
+   "short": "Imbue Station costs 20% less",
+   "full": "Imbue Station costs 20% less gold.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/forgemasters_tongs.png"
+  },
+  {
+   "id": "leaden_heart",
+   "name": "Leaden Heart",
+   "tier": "uncommon",
+   "short": "Heart power-up: +10% damage for 15 s",
+   "full": "Heart power-up also grants +10% damage for 15 s.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/leaden_heart.png"
+  },
+  {
+   "id": "pilgrims_pack",
+   "name": "Pilgrim's Pack",
+   "tier": "rare",
+   "short": "+1 projectile for all weapons",
+   "full": "+1 projectile for all weapons.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/pilgrims_pack.png"
+  },
+  {
+   "id": "saints_finger",
+   "name": "Saint's Finger",
+   "tier": "rare",
+   "short": "Every on-hit effect rolls one extra time",
+   "full": "Every on-hit effect rolls one extra time.",
+   "needs": null,
+   "unique": true,
+   "icon": "icons/items/saints_finger.png"
+  },
+  {
+   "id": "butchers_hook",
+   "name": "Butcher's Hook",
+   "tier": "rare",
+   "short": "Crits: 15% chance of a Brutal Crit (×2)",
+   "full": "Crits have a 15% chance to become Brutal Crits (a further ×2).",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/butchers_hook.png"
+  },
+  {
+   "id": "blood_chalice",
+   "name": "Blood Chalice",
+   "tier": "rare",
+   "short": "Crits: 20% chance to heal 2% max HP",
+   "full": "Crits have a 20% chance to heal 2% max HP.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/blood_chalice.png"
+  },
+  {
+   "id": "shade_cloak",
+   "name": "Shade Cloak",
+   "tier": "rare",
+   "short": "After evading: next hit ×2, speed for 3 s",
+   "full": "After evading, your next hit deals ×2 damage and you gain attack and move speed for 3 s.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/shade_cloak.png"
+  },
+  {
+   "id": "soul_lantern",
+   "name": "Soul Lantern",
+   "tier": "rare",
+   "short": "Kills: 12% chance of an extra XP gem",
+   "full": "12% chance for a kill to drop an extra XP gem.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/soul_lantern.png"
+  },
+  {
+   "id": "mire_flask",
+   "name": "Mire Flask",
+   "tier": "rare",
+   "short": "Hits on Corroded: 15% chance of a puddle",
+   "full": "Hits on Corroded enemies have a 15% chance to leave a corrosive puddle.",
+   "needs": "CORROSIVE GEM",
+   "unique": false,
+   "icon": "icons/items/mire_flask.png"
+  },
+  {
+   "id": "hound_whistle",
+   "name": "Grave Hound Whistle",
+   "tier": "rare",
+   "short": "Every 15 m, a skeletal hound charges",
+   "full": "Every 15 m you travel, a skeletal hound charges forward through enemies.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/hound_whistle.png"
+  },
+  {
+   "id": "gem_loupe",
+   "name": "Gem Cutter's Loupe",
+   "tier": "rare",
+   "short": "Gem statuses +30% duration and damage",
+   "full": "Statuses from socketed gems last 30% longer and hit 30% harder.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/gem_loupe.png"
+  },
+  {
+   "id": "alchemist_retort",
+   "name": "Alchemist's Retort",
+   "tier": "rare",
+   "short": "Combos +30% radius, −25% cooldown",
+   "full": "Elemental combos get +30% radius and 25% shorter cooldowns.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/alchemist_retort.png"
+  },
+  {
+   "id": "cartographers_candle",
+   "name": "Cartographer's Candle",
+   "tier": "rare",
+   "short": "Vases, chests and Imbue on the minimap",
+   "full": "Reveals every vase, chest and the Imbue Station on the minimap.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/cartographers_candle.png"
+  },
+  {
+   "id": "witch_hunters_brand",
+   "name": "Witch-Hunter's Brand",
+   "tier": "epic",
+   "short": "Armour + lifesteal per burning enemy",
+   "full": "Gain armour and lifesteal for every enemy currently burning.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/witch_hunters_brand.png"
+  },
+  {
+   "id": "martyrs_shroud",
+   "name": "Martyr's Shroud",
+   "tier": "epic",
+   "short": "Damage rises as HP falls, up to +60%",
+   "full": "Damage rises as your HP falls, up to +60%.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/martyrs_shroud.png"
+  },
+  {
+   "id": "shattered_codex",
+   "name": "Shattered Codex",
+   "tier": "epic",
+   "short": "XP gems slice enemies as they fly to you",
+   "full": "XP gems slice through enemies as they fly to you; pairs with the Magnet power-up.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/shattered_codex.png"
+  },
+  {
+   "id": "reapers_sickle",
+   "name": "Reaper's Sickle",
+   "tier": "epic",
+   "short": "Kills release 2 homing souls",
+   "full": "Kills release 2 homing souls that strike other enemies.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/reapers_sickle.png"
+  },
+  {
+   "id": "powder_keg_heart",
+   "name": "Powder Keg Heart",
+   "tier": "epic",
+   "short": "Hits: 25% chance to explode for 65%",
+   "full": "Hits have a 25% chance to explode for 65% damage around the target.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/powder_keg_heart.png"
+  },
+  {
+   "id": "heretics_prism",
+   "name": "Heretic's Prism",
+   "tier": "epic",
+   "short": "Combos +50% damage and heal 1 HP each",
+   "full": "Combos deal +50% damage and heal you 1 HP each.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/heretics_prism.png"
+  },
+  {
+   "id": "headsmans_oath",
+   "name": "Headsman's Oath",
+   "tier": "legendary",
+   "short": "1% execute on hit; each adds +1% damage",
+   "full": "Hits have a 1% chance to execute a non-boss enemy; each execution adds +1% damage for the rest of the run.",
+   "needs": null,
+   "unique": true,
+   "icon": "icons/items/headsmans_oath.png"
+  },
+  {
+   "id": "hourglass_damned",
+   "name": "Hourglass of the Damned",
+   "tier": "legendary",
+   "short": "First lethal hit: freeze time 5 s, heal to 50%",
+   "full": "The first lethal hit freezes hostile time for 5 s and heals you to 50%; the hourglass then shatters.",
+   "needs": null,
+   "unique": true,
+   "icon": "icons/items/hourglass_damned.png"
+  },
+  {
+   "id": "anvil_first_forge",
+   "name": "Anvil of the First Forge",
+   "tier": "legendary",
+   "short": "Every upgrade and Imbue gains +1 stat",
+   "full": "Every weapon upgrade and Imbue gains +1 extra stat.",
+   "needs": null,
+   "unique": true,
+   "icon": "icons/items/anvil_first_forge.png"
+  },
+  {
+   "id": "rosary_teeth",
+   "name": "Rosary of Teeth",
+   "tier": "common",
+   "short": "+5% crit chance, +10% crit damage",
+   "full": "+5% crit chance, +10% crit damage.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/rosary_teeth.png"
+  },
+  {
+   "id": "grave_salt",
+   "name": "Grave Salt",
+   "tier": "common",
+   "short": "+15 max HP, +5% armour",
+   "full": "+15 max HP, +5% armour.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/grave_salt.png"
+  },
+  {
+   "id": "hex_penny",
+   "name": "Hex Penny",
+   "tier": "common",
+   "short": "+20% gold from smashed vases",
+   "full": "+20% gold from smashed vases.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/hex_penny.png"
+  },
+  {
+   "id": "ouija_planchette",
+   "name": "Ouija Planchette",
+   "tier": "uncommon",
+   "short": "3% chance a hit deals 10× damage",
+   "full": "3% chance a hit deals 10× damage.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/ouija_planchette.png"
+  },
+  {
+   "id": "black_candle",
+   "name": "Black Candle",
+   "tier": "uncommon",
+   "short": "Enemies within 3 m take 5 damage/s",
+   "full": "Enemies within 3 m take 5 damage per second.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/black_candle.png"
+  },
+  {
+   "id": "bloodletting_knife",
+   "name": "Bloodletting Knife",
+   "tier": "uncommon",
+   "short": "+25% damage, −15 max HP",
+   "full": "+25% damage, −15 max HP.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/bloodletting_knife.png"
+  },
+  {
+   "id": "witch_bottle",
+   "name": "Witch Bottle",
+   "tier": "rare",
+   "short": "20% chance to ignore incoming damage",
+   "full": "20% chance to ignore incoming damage entirely.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/witch_bottle.png"
+  },
+  {
+   "id": "goat_skull",
+   "name": "Goat Skull",
+   "tier": "rare",
+   "short": "Burning kill: 10% to Ignite all within 3 m",
+   "full": "Killing a burning enemy has a 10% chance to Ignite every enemy within 3 m.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/goat_skull.png"
+  },
+  {
+   "id": "coven_sigil",
+   "name": "Coven Sigil",
+   "tier": "epic",
+   "short": "+15% damage per status on the enemy (max +60%)",
+   "full": "+15% damage to an enemy for each different status it carries, up to +60%.",
+   "needs": null,
+   "unique": false,
+   "icon": "icons/items/coven_sigil.png"
+  },
+  {
+   "id": "devils_bargain",
+   "name": "Devil's Bargain",
+   "tier": "legendary",
+   "short": "Each level-up: −5 max HP, +4% damage",
+   "full": "Each level-up permanently trades 5 max HP for +4% damage.",
+   "needs": null,
+   "unique": true,
+   "icon": "icons/items/devils_bargain.png"
+  }
+ ]
+}

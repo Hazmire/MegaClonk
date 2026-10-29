@@ -69,14 +69,14 @@ func run():
  var snapshot=[game.weapons[0].level,game.tomes.Might,game.stats.damage,game.items.duplicate()]
  check(game.save_run("user://rarity-run.json") and game.load_run("user://rarity-run.json"),"Unchanged version-2 run save round trip")
  check(int(snapshot[0])==int(game.weapons[0].level) and int(snapshot[1])==int(game.tomes.Might) and is_equal_approx(snapshot[2],game.stats.damage) and snapshot[3]==game.items,"Saved levels/stats/items preserved; rarity derived")
- var old_prices=[40,15,40,15,40,15,65,65,40,15,150,150,150];var price_ok=true
- for id in old_prices.size():price_ok=price_ok and ShopSystem.price(id)==old_prices[id]
- check(price_ok,"All existing shop prices unchanged")
+ var price_ok=true
+ for id in Catalog.ITEM_IDS:price_ok=price_ok and ShopSystem.price(id)==int(ItemStats.DROPS.shop_price[Catalog.item_tier(id)])
+ check(price_ok,"Shop prices come from the ItemStats tier table")
  for tier in ["Common","Rare","Legendary"]:
-  var offers=ShopSystem.offers(tier,range(Catalog.ITEMS.size()),rng);var seen={};var valid=true
+  var offers=ShopSystem.offers(tier,Catalog.ITEM_IDS,rng);var seen={};var valid=true
   for id in offers:
    valid=valid and not seen.has(id);seen[id]=true
-   valid=valid and (Catalog.ITEMS[id][1] in (["common","uncommon"] if tier=="Common" else ["rare","epic"] if tier=="Rare" else ["legendary"]))
+   valid=valid and (Catalog.item_tier(id) in (["common","uncommon"] if tier=="Common" else ["rare","epic"] if tier=="Rare" else ["epic"]))
   check(valid and not offers.is_empty(),"Seller tier eligibility and unique offers: "+tier)
  game.queue_free();await process_frame;await process_frame
  print("RARITY: %d checks, %d failures"%[checks,failures.size()]);quit(0 if failures.is_empty() else 1)

@@ -1,0 +1,275 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Fog-Kit.dc.html": {
+      "h": 1080,
+      "title": "B · UI kit",
+      "w": 1440,
+      "x": 2000,
+      "y": 1500
+    },
+    "Fog-Loadout.dc.html": {
+      "h": 1080,
+      "title": "B · Prepare your run",
+      "w": 1920,
+      "x": 3520,
+      "y": 1500
+    },
+    "Fog-Menu.dc.html": {
+      "h": 1080,
+      "title": "B · Main menu — Fog County",
+      "w": 1920,
+      "x": 0,
+      "y": 1500
+    },
+    "Fog-Rarity.dc.html": {
+      "h": 820,
+      "title": "B · Rarity tiers",
+      "w": 1440,
+      "x": 7520,
+      "y": 1500
+    },
+    "Fog-Unlocks-Items.dc.html": {
+      "h": 1080,
+      "is_interactive": true,
+      "title": "B · Unlocks — items (60 relics)",
+      "w": 1920,
+      "x": 15040,
+      "y": 1500
+    },
+    "Fog-Unlocks-Weapons.dc.html": {
+      "h": 1080,
+      "is_interactive": true,
+      "title": "B · Unlocks — weapons (live previews)",
+      "w": 1920,
+      "x": 9040,
+      "y": 1500
+    },
+    "Fog-Unlocks.dc.html": {
+      "h": 1080,
+      "is_interactive": true,
+      "title": "B · Unlocks & collection",
+      "w": 1920,
+      "x": 5520,
+      "y": 1500
+    },
+    "RunChest.dc.html": {
+      "h": 1080,
+      "is_interactive": true,
+      "title": "C · Treasure chest — legendary",
+      "w": 1920,
+      "x": 9000,
+      "y": 3000
+    },
+    "RunHUD.dc.html": {
+      "h": 1080,
+      "title": "C · In-run HUD",
+      "w": 1920,
+      "x": 11000,
+      "y": 3000
+    },
+    "RunImbue.dc.html": {
+      "h": 1080,
+      "is_interactive": true,
+      "title": "C · Imbue Station",
+      "w": 1920,
+      "x": 0,
+      "y": 3000
+    },
+    "RunInventory.dc.html": {
+      "h": 870,
+      "title": "Shared · Inventory panel",
+      "w": 420,
+      "x": 8000,
+      "y": 3000
+    },
+    "RunLevelUp.dc.html": {
+      "h": 1080,
+      "is_interactive": true,
+      "title": "C · Level up",
+      "w": 1920,
+      "x": 2000,
+      "y": 3000
+    },
+    "RunPause.dc.html": {
+      "h": 1080,
+      "is_interactive": true,
+      "title": "C · Pause",
+      "w": 1920,
+      "x": 13000,
+      "y": 3000
+    },
+    "RunShop.dc.html": {
+      "h": 1080,
+      "title": "C · Common shop",
+      "w": 1920,
+      "x": 6000,
+      "y": 3000
+    },
+    "RunShrine.dc.html": {
+      "h": 1080,
+      "title": "C · Shrine",
+      "w": 1920,
+      "x": 4000,
+      "y": 3000
+    },
+    "RunStats.dc.html": {
+      "h": 870,
+      "title": "Shared · Stats panel",
+      "w": 420,
+      "x": 8500,
+      "y": 3000
+    },
+    "Unlock-Icons.dc.html": {
+      "h": 560,
+      "title": "B · Traits & ultimates icons",
+      "w": 1920,
+      "x": 11040,
+      "y": 1500
+    },
+    "Unlock-Items.dc.html": {
+      "h": 2280,
+      "title": "B · Items — 60 relics",
+      "w": 1920,
+      "x": 13040,
+      "y": 1500
+    },
+    "W-Aura.dc.html": {
+      "h": 720,
+      "title": "D · Aura",
+      "w": 1200,
+      "x": 5120,
+      "y": 4500
+    },
+    "W-Bow.dc.html": {
+      "h": 720,
+      "title": "D · Bow",
+      "w": 1200,
+      "x": 2560,
+      "y": 4500
+    },
+    "W-Firestaff.dc.html": {
+      "h": 720,
+      "title": "D · Firestaff",
+      "w": 1200,
+      "x": 5120,
+      "y": 5340
+    },
+    "W-Godot.dc.html": {
+      "h": 860,
+      "title": "D · Recorded in Godot 4.7.2",
+      "w": 1920,
+      "x": 0,
+      "y": 6180
+    },
+    "W-Icons.dc.html": {
+      "h": 720,
+      "title": "D · Weapon icons (draft)",
+      "w": 1200,
+      "x": 0,
+      "y": 4500
+    },
+    "W-Lightning.dc.html": {
+      "h": 720,
+      "title": "D · Lightning Staff",
+      "w": 1200,
+      "x": 1280,
+      "y": 4500
+    },
+    "W-Revolver.dc.html": {
+      "h": 720,
+      "title": "D · Revolver",
+      "w": 1200,
+      "x": 3840,
+      "y": 4500
+    },
+    "W-Scythes.dc.html": {
+      "h": 720,
+      "title": "D · Scythes",
+      "w": 1200,
+      "x": 1280,
+      "y": 5340
+    },
+    "W-Shotgun.dc.html": {
+      "h": 720,
+      "title": "D · Shotgun (new)",
+      "w": 1200,
+      "x": 2560,
+      "y": 5340
+    },
+    "W-Sword.dc.html": {
+      "h": 720,
+      "title": "D · Sword",
+      "w": 1200,
+      "x": 3840,
+      "y": 5340
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-10-28T17:40:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "rowB": {
+      "kind": "title1",
+      "maxW": 8000,
+      "text": "B — Fog County (PSX · Silent Hill · Dusk)",
+      "w": 240,
+      "x": 0,
+      "y": 1200
+    },
+    "rowC": {
+      "kind": "title1",
+      "maxW": 8000,
+      "text": "C — In-run screens (Fog County)",
+      "w": 240,
+      "x": 0,
+      "y": 2700
+    },
+    "rowD": {
+      "kind": "title1",
+      "maxW": 6320,
+      "text": "D — Weapons: icons, effects & level-up pools",
+      "w": 240,
+      "x": 0,
+      "y": 4200
+    }
+  },
+  "order": [
+    "Fog-Menu.dc.html",
+    "Fog-Kit.dc.html",
+    "Fog-Loadout.dc.html",
+    "Fog-Unlocks.dc.html",
+    "Fog-Rarity.dc.html",
+    "Fog-Unlocks-Weapons.dc.html",
+    "Fog-Unlocks-Items.dc.html",
+    "Unlock-Items.dc.html",
+    "Unlock-Icons.dc.html",
+    "RunInventory.dc.html",
+    "RunStats.dc.html",
+    "RunImbue.dc.html",
+    "RunLevelUp.dc.html",
+    "RunShrine.dc.html",
+    "RunShop.dc.html",
+    "RunChest.dc.html",
+    "RunHUD.dc.html",
+    "RunPause.dc.html",
+    "W-Icons.dc.html",
+    "W-Lightning.dc.html",
+    "W-Bow.dc.html",
+    "W-Revolver.dc.html",
+    "W-Aura.dc.html",
+    "W-Scythes.dc.html",
+    "W-Shotgun.dc.html",
+    "W-Sword.dc.html",
+    "W-Firestaff.dc.html",
+    "W-Godot.dc.html"
+  ],
+  "pages": [],
+  "title": "Megaclonk Main Menu Redesign"
+}

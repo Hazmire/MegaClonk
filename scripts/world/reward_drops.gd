@@ -37,13 +37,12 @@ static func from_enemy(game: Node,e: Dictionary) -> bool:
  spawn_at(game,e.pos,str(game.run_seed)+":"+str(game.stage)+":"+str(e.get("crowd_id",game.kills)))
  return true
 static func queue_roll(game: Node) -> bool:
- var available=game.available_items()
- var selected=RewardSelector.choose(RewardSelector.items(available),game.rng,Rarity.reward_weights(game.stats.luck))
- if selected.is_empty():return false
- game.reward_queue.append(int(selected.id));GemRewards.roll_chest(game,str(Catalog.ITEMS[int(selected.id)][1]));return true
+ var id=ItemDrops.roll_chest(game)
+ if id=="":return false
+ game.reward_queue.append(id);GemRewards.roll_chest(game,Catalog.item_tier(id));return true
 static func present_next(game: Node) -> bool:
- if game.active_reward>=0 or game.reward_queue.is_empty():return false
- var id=int(game.reward_queue.pop_front());game.active_reward=id;game.apply_item(id);game.frontend.reward(Catalog.ITEMS[id]);return true
+ if game.active_reward!="" or game.reward_queue.is_empty():return false
+ var id=str(game.reward_queue.pop_front());game.active_reward=id;game.grant_item(id,true);game.frontend.reward(id);return true
 static func collect(game: Node) -> void:
  if game.mode!="run":return
  for i in range(game.drop_chests.size()-1,-1,-1):

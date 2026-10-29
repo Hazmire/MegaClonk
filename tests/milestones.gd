@@ -36,7 +36,7 @@ func run():
  game.progress=Progress.new();game.progress.storage_path="user://milestone-profile.json";game.selected_weapon=7;game.next_run_seed=453;game.selected_trait="momentum";game.map_seed_override=9;game.begin_run();game.terrain_version=3;game.build_stage();game.resume();game.mode="pause";game.player.active=false;game.enemies.clear();game.stats.crit=0
  check(ImportedArt.mesh("res://assets/quaternius/nature/CommonTree_1.gltf",7).get_surface_count()>0,"Supplied forest model loads and batches")
  check(UIAssets.icon("weapons","0").resource_path.contains("vendor/weapons"),"Undead skill icon is used")
- check(UIAssets.icon("items","0").resource_path.contains("vendor/items"),"Undead loot icon is used")
+ check(UIAssets.icon("items","whetstone").resource_path=="res://assets/icons/items/whetstone.png","Final item art is used")
  check(game.sound_bank.has("hit") and game.sound_bank.has("level"),"Supplied sound events load")
  for id in ["blood_burst","impact_concrete","explosion_small","smoke_puff","sparks_shower","fire_torch","muzzle_front"]:
   check(CombatFX.sprite_frames(id).get_frame_count("default")>1,"PSX flipbook imports: "+id)
@@ -86,13 +86,12 @@ func run():
  var ghost=game.spawn_enemy(11,game.player.position+Vector3(20,0,0));game.stage_time=720;Encounters.step(game,ghost,0.1)
  check(ghost.speed>5.5 and ghost.speed<=10,"Endless ghost speed escalates within bounds")
  game.gold=1000;game.mode="shop"
- var shop={"tier":"Legendary","offers":[10,11,12],"sold":[],"used":false}
- check(game.buy_shop(shop,10,150) and shop.used and game.mode=="run","Shop consumes itself and closes only after a valid purchase")
+ var shop={"tier":"Common","offers":["whetstone","salted_pork","knucklebone"],"sold":[],"used":false}
+ check(game.buy_shop(shop,"whetstone",ShopSystem.price("whetstone")) and shop.used and game.mode=="run" and game.item_stacks("whetstone")==1,"Shop consumes itself and closes only after a valid purchase")
  game.mode="shop"
- check(not game.buy_shop(shop,11,150) and game.gold==850,"One-purchase rule covers all items at seller")
- check(game.stats.revives==1,"Legendary Phoenix grants functional revival charge")
+ check(not game.buy_shop(shop,"salted_pork",ShopSystem.price("salted_pork")) and game.gold==1000-ShopSystem.price("whetstone"),"One-purchase rule covers all items at seller")
  var offer=ShopSystem.offers("Common",game.available_items(),random);var valid=true
- for id in offer:valid=valid and Catalog.ITEMS[id][1]=="common"
+ for id in offer:valid=valid and Catalog.item_tier(id) in ["common","uncommon"]
  check(valid and not offer.is_empty(),"Common shop stock obeys tier")
  game.mode="pause";game.player.active=false
  check(BuildStats.value("damage",1.35)=="+35%" and not BuildStats.help("armor").is_empty(),"Stat percentages and explanatory tooltips")

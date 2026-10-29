@@ -104,7 +104,7 @@ static func spawn_reward(game: Node,pos: Vector3,reward: Dictionary) -> void:
   "gold":
    for i in count:
     var offset=Vector3.RIGHT.rotated(Vector3.UP,TAU*float(i)/float(count)+0.6)*0.7
-    spawn_gold(game,pos+offset,int(reward.get("value",5)))
+    spawn_gold(game,pos+offset,maxi(1,int(round(float(reward.get("value",5))*game.irt.vase_gold_mult()))))
   "gem":
    if spawn(game,"gem",pos,0,str(reward.get("element",""))):game.world_pickups.back()["attracted"]=true
   "heart","magnet","stopwatch":spawn(game,str(reward.kind),near_player(game,pos))

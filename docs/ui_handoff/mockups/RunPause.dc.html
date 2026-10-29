@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Megaclonk — Paused</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&amp;family=IM+Fell+English&amp;family=Overpass:wght@400;600;800&amp;family=Special+Elite&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1920px; height: 1080px; position: relative; overflow: hidden; font-family: 'Overpass', sans-serif; color: #E8E2D0; background: #0E0F0E">
+<img src="../reference/hud_background.jpg" alt="" aria-hidden="true" style="position: absolute; inset: -20px; width: 1960px; height: 1120px; filter: blur(6px) saturate(0.6) brightness(0.8)">
+<div aria-hidden="true" style="position: absolute; inset: 0; background: rgba(10,11,10,0.72)"></div>
+<div aria-hidden="true" style="position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.65) 100%); height: 1082px"></div>
+
+<div style="position: absolute; left: 72px; top: 150px"><dc-import name="RunInventory" weapons="1" hint-size="420px,870px"></dc-import></div>
+<div style="position: absolute; left: 1428px; top: 150px"><dc-import name="RunStats" hint-size="420px,870px"></dc-import></div>
+
+<div style="position: absolute; left: 532px; top: 64px; width: 856px; display: flex; flex-direction: column; align-items: center; gap: 0">
+<h1 style="margin: 0; font-family: 'IM Fell English', serif; font-weight: 400; font-size: 104px; line-height: 1; color: #F4EFE2; text-shadow: 4px 4px 0 #050505">Paused</h1>
+<div style="display: flex; align-items: center; gap: 16px; margin-top: 14px">
+<div aria-hidden="true" style="width: 48px; height: 5px; background: #7E1820"></div>
+<span style="font-weight: 600; font-size: 16px; letter-spacing: 0.32em; color: #A9ADA4">FOREST · STAGE 1 · THE VERDANT HOLLOW</span>
+<div aria-hidden="true" style="width: 48px; height: 5px; background: #7E1820"></div>
+</div>
+
+<div role="group" aria-label="Run so far" style="display: flex; gap: 0; margin-top: 30px; border: 1px solid #3A3D38; background: rgba(14,15,14,0.85)">
+<sc-for list="{{run}}" as="r" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 4px; width: 132px; padding: 12px 0 10px; border-left: {{r.sep}}"><span style="font-weight: 600; font-size: 11px; letter-spacing: 0.3em; color: {{r.labelColor}}">{{r.label}}</span><span style="font-weight: 800; font-size: 28px; line-height: 1; font-variant-numeric: tabular-nums; color: {{r.color}}">{{r.value}}</span></div>
+</sc-for>
+</div>
+
+<nav aria-label="Pause menu" style="margin-top: 40px; width: 480px; display: flex; flex-direction: column; gap: 6px">
+<sc-for list="{{menu}}" as="m" hint-placeholder-count="6">
+<button type="button" onClick="{{m.pick}}" aria-current="{{m.current}}" style="display: flex; align-items: center; justify-content: space-between; height: {{m.h}}; padding: {{m.pad}}; border: none; cursor: pointer; text-align: left; font-family: 'IM Fell English', serif; font-size: {{m.size}}; color: {{m.color}}; background: {{m.bg}}">
+<span style="display: flex; align-items: center; gap: 18px"><sc-if value="{{m.on}}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="width: 14px; height: 14px; background: #F4EFE2"></span></sc-if>{{m.label}}</span>
+<span style="font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 14px; letter-spacing: 0.2em; color: {{m.keyColor}}">{{m.key}}</span>
+</button>
+</sc-for>
+<div aria-hidden="true" style="height: 0; border-top: 1px dashed #3A3D38; margin: 14px 0 8px"></div>
+<button type="button" onClick="{{abandon.pick}}" style="display: flex; align-items: center; justify-content: space-between; height: 60px; padding: 0 24px 0 56px; border: {{abandon.border}}; cursor: pointer; text-align: left; font-family: 'IM Fell English', serif; font-size: 34px; color: {{abandon.color}}; background: {{abandon.bg}}">
+<span>Abandon run</span><span style="font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 12px; letter-spacing: 0.2em; color: {{abandon.keyColor}}">{{abandon.hint}}</span>
+</button>
+</nav>
+</div>
+
+<div style="position: absolute; left: 532px; width: 856px; bottom: 32px; display: flex; justify-content: center; gap: 32px; font-weight: 600; font-size: 15px; letter-spacing: 0.18em; color: #8D9188">
+<span><b style="color: #E8E2D0">↑↓</b>  SELECT</span>
+<span><b style="color: #E8E2D0">ENTER</b>  CONFIRM</span>
+<span><b style="color: #E8E2D0">ESC</b>  RESUME</span>
+</div>
+
+<div aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.16) 0px, rgba(0,0,0,0.16) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px); top: 1121px"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1920,"height":1080}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { sel: 'resume' }; }
+  renderVals() {
+    var self = this, sel = this.state.sel;
+    var items = [
+      { id: 'resume', label: 'Resume', key: 'ESC' },
+      { id: 'map', label: 'Map', key: 'M' },
+      { id: 'build', label: 'Inspect build', key: 'TAB' },
+      { id: 'settings', label: 'Settings', key: '' },
+      { id: 'save', label: 'Save & quit', key: '' },
+      { id: 'restart', label: 'Restart run', key: '' }
+    ];
+    var menu = items.map(function (m) {
+      var on = sel === m.id;
+      return { label: m.label, key: m.key, on: on, current: on ? 'true' : 'false',
+        h: on ? '76px' : '60px', pad: on ? '0 24px' : '0 24px 0 56px', size: on ? '46px' : '34px',
+        color: on ? '#F4EFE2' : '#B9BAB1', bg: on ? '#7E1820' : 'transparent', keyColor: on ? '#F4C9CB' : '#6E726A',
+        pick: function () { self.setState({ sel: m.id }); } };
+    });
+    var ab = sel === 'abandon';
+    var run = [
+      { label: 'LEVEL', value: '1' }, { label: 'TIME', value: '09:30' }, { label: 'KILLS', value: '22' }, { label: 'GOLD', value: '22', gold: true }
+    ].map(function (r, i) { return { label: r.label, value: r.value, sep: i ? '1px solid #2E302C' : 'none', labelColor: r.gold ? '#F2C14E' : '#8D9188', color: r.gold ? '#FFF1C2' : '#F4EFE2' }; });
+    return {
+      menu: menu, run: run,
+      abandon: { border: ab ? '2px solid #E07B83' : '1px dashed #5A1418', color: ab ? '#F4EFE2' : '#E07B83', bg: ab ? '#5A1418' : 'transparent',
+        keyColor: ab ? '#F4C9CB' : '#8E4A50', hint: ab ? 'HOLD ENTER · RUN IS LOST' : 'HOLD TO CONFIRM',
+        pick: function () { self.setState({ sel: 'abandon' }); } }
+    };
+  }
+}
+</script>
+</body>
+</html>

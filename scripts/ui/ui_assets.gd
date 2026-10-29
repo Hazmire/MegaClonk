@@ -2,7 +2,6 @@ class_name UIAssets
 extends RefCounted
 static var cache: Dictionary={}
 const WEAPON_ICONS=[15,20,35,29,30,18,12,7,31,18,33,25,13,37,26,9,38,12,24,28,43,14,2,5,15,10,30,25,48,25,27,24,35,22,25,36]
-const ITEM_ICONS=[12,46,5,20,34,28,9,13,19,26,42,25,43]
 # Licensed supplied ability demo icons take precedence; original temporary glyphs
 # remain for weapon/item/tome packs whose usage terms are not yet verified.
 # weapons.png keeps its original cell order; ids 0, 1 and 15 (Sword, Firestaff, Shotgun) use the vendor fallback until icons are supplied.
@@ -23,8 +22,11 @@ static func icon(category: String, id: String) -> Texture2D:
   var path="res://assets/vendor/items/Icon"+("35" if posmod(id.hash(),2)==0 else "43")+".png"
   return load(path)
  if cache.has(key): return cache[key]
- if category in ["weapons","items"]:
-  var vendor="res://assets/vendor/"+category+"/Icon"+str(WEAPON_ICONS[posmod(int(id),WEAPON_ICONS.size())] if category=="weapons" else ITEM_ICONS[posmod(int(id),ITEM_ICONS.size())])+".png"
+ if category=="items" and Catalog.item_exists(id):
+  # Item Overhaul: the final 32x32 art, one file per item id. No placeholders.
+  cache[key]=load("res://assets/icons/items/%s.png"%id);return cache[key]
+ if category=="weapons":
+  var vendor="res://assets/vendor/weapons/Icon"+str(WEAPON_ICONS[posmod(int(id),WEAPON_ICONS.size())])+".png"
   if ResourceLoader.exists(vendor):cache[key]=load(vendor);return cache[key]
  var imported_path="res://assets/ui/icons/"+category+"/"+id+".png"
  if ResourceLoader.exists(imported_path):

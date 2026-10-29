@@ -138,7 +138,7 @@ func shop_and_chests():
       mixed_slots+=1
       if GemRewards.offer_element(int(code)) in seen:all_valid=false
       seen.append(GemRewards.offer_element(int(code)))
-     elif int(code)<0 or int(code)>=Catalog.ITEMS.size():all_valid=false
+     elif not (code is String and Catalog.item_exists(code)):all_valid=false
  check(shops>=10 and mixed_slots>0 and mixed_slots<shops*3,"Some, but not all, shop slots become gems (%d of %d slots)"%[mixed_slots,shops*3])
  check(all_valid,"Gem slots are valid and distinct within a shop")
  rebuild(1,9)

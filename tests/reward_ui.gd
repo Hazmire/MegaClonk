@@ -47,7 +47,7 @@ func run():
  for node in descendants(game.frontend.menu):
   if node is Button and node.custom_minimum_size.y==122:disabled=node.disabled
  check(disabled,"Unaffordable shop card is disabled")
- game.gold=100;var count=game.items.size();game.apply_item(1);game.frontend.reward(Catalog.ITEMS[1]);game.frontend.reward(Catalog.ITEMS[1])
+ game.gold=100;var count=game.items.size();game.grant_item("salted_pork");game.frontend.reward("salted_pork");game.frontend.reward("salted_pork")
  check(game.items.size()==count+1,"Showing or skipping a chest reveal never grants a duplicate")
  var initial_items=game.items.duplicate();var skip: Button
  for node in descendants(game.frontend.menu):

@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Megaclonk — Prepare your run</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&amp;family=IM+Fell+English&amp;family=Overpass:wght@400;600;800&amp;family=Special+Elite&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#E8E2D0}a:hover{color:#FFFFFF}
+</style>
+</helmet>
+<div style="width: 1920px; height: 1080px; position: relative; overflow: hidden; font-family: 'Overpass', sans-serif; color: #E8E2D0; background-color: #8C978F; background-image: repeating-conic-gradient(#8F9A92 0 25%, #87928A 0 50%); background-size: 16px 16px">
+
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; bottom: 0; height: 560px; background-color: #1F2620; background-image: repeating-conic-gradient(#212821 0 25%, #1C221D 0 50%); background-size: 16px 16px"></div>
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 400px; height: 260px; background: linear-gradient(180deg, rgba(140,151,143,0) 0%, rgba(140,151,143,0.85) 45%, rgba(140,151,143,0) 100%)"></div>
+<div aria-hidden="true" style="position: absolute; left: 960px; top: 300px; width: 240px; height: 420px; border: 2px dashed rgba(14,15,14,0.35); display: flex; align-items: center; justify-content: center; text-align: center; font-size: 16px; letter-spacing: 0.08em; color: rgba(14,15,14,0.55)">CHARACTER<br>PREVIEW</div>
+<div aria-hidden="true" style="position: absolute; inset: 0; background: linear-gradient(90deg, rgba(10,11,10,0.95) 0%, rgba(10,11,10,0.85) 36%, rgba(10,11,10,0) 52%, rgba(10,11,10,0) 64%, rgba(10,11,10,0.7) 100%)"></div>
+<div aria-hidden="true" style="position: absolute; inset: 0; background: radial-gradient(ellipse at 55% 45%, rgba(0,0,0,0) 45%, rgba(0,0,0,0.55) 100%)"></div>
+
+<div style="position: absolute; left: 120px; top: 80px; width: 660px; display: flex; flex-direction: column; gap: 28px">
+
+<header style="display: flex; flex-direction: column; gap: 12px">
+<h1 style="margin: 0; font-family: 'IM Fell English', serif; font-weight: 400; font-size: 76px; line-height: 1; color: #E8E2D0; text-shadow: 3px 3px 0 #050505">Prepare your run</h1>
+<div style="display: flex; align-items: center; gap: 16px">
+<div aria-hidden="true" style="width: 48px; height: 6px; background: #7E1820"></div>
+<span style="font-weight: 600; font-size: 17px; letter-spacing: 0.3em; color: #A9ADA4">ONE ADVENTURER · ONE LOADOUT</span>
+</div>
+</header>
+
+<div style="display: flex; flex-direction: column; gap: 18px">
+
+<div style="position: relative; z-index: 2; display: flex; flex-direction: column; gap: 8px">
+<span style="font-weight: 800; font-size: 15px; letter-spacing: 0.3em; color: #E8E2D0">WEAPON</span>
+<div style="display: flex; align-items: center; gap: 20px; height: 104px; box-sizing: border-box; padding: 0 16px; background: rgba(14,15,14,0.88); border: 2px solid #7E1820">
+<img src="../icons_4x/weapons/firestaff.png" alt="Firestaff icon" style="width: 72px; height: 72px; image-rendering: pixelated; border: 2px solid #3A3D38">
+<div style="flex: 1; display: flex; flex-direction: column; gap: 8px">
+<span style="font-family: 'IM Fell English', serif; font-size: 36px; line-height: 1">Firestaff</span>
+<div style="display: flex; gap: 8px">
+<span style="font-weight: 600; font-size: 14px; letter-spacing: 0.14em; padding: 3px 8px 1px; background: #2A2C28; color: #D9D4C4">FIREBALL</span>
+<span style="font-weight: 600; font-size: 14px; letter-spacing: 0.14em; padding: 3px 8px 1px; background: #2A2C28; color: #D9D4C4">18 DMG</span>
+<span style="font-weight: 600; font-size: 14px; letter-spacing: 0.14em; padding: 3px 8px 1px; background: #2A2C28; color: #D9D4C4">1.00s CD</span>
+</div>
+</div>
+<button type="button" aria-label="Choose weapon" aria-expanded="true" style="display: flex; align-items: center; justify-content: center; width: 52px; height: 52px; border: 1px solid #B3363F; background: #7E1820; color: #F4EFE2; cursor: pointer"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square"><path d="M6 15l6-6 6 6"></path></svg></button>
+</div>
+<div role="listbox" aria-label="Weapons" style="position: absolute; left: 0; right: 0; top: 136px; display: flex; flex-direction: column; background: #121311; border: 2px solid #7E1820; border-top: none; box-shadow: 0 18px 40px rgba(0,0,0,0.7)">
+<div style="display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid #2E302C">
+<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8D9188" stroke-width="2.5"><circle cx="10" cy="10" r="7"></circle><path d="M15 15l6 6"></path></svg>
+<label for="wf" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Filter weapons</label>
+<input id="wf" type="text" placeholder="Type to filter weapons…" style="flex: 1; border: none; outline: none; background: transparent; font-family: 'Overpass', sans-serif; font-size: 18px; color: #E8E2D0">
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.2em; color: #6E726A">ALL · STAFF · RANGED · MELEE</span>
+</div>
+<div role="option" aria-selected="true" style="display: flex; align-items: center; gap: 14px; height: 60px; padding: 0 16px; background: #2A1416">
+<img src="../icons_4x/weapons/firestaff.png" alt="" style="width: 40px; height: 40px; image-rendering: pixelated">
+<span style="flex: 1; font-family: 'IM Fell English', serif; font-size: 26px">Firestaff</span>
+<span style="font-size: 15px; color: #B9BAB1">Fireball · 18 dmg · 1.00s</span>
+<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E07B83" stroke-width="3" stroke-linecap="square"><path d="M4 12l5 5L20 6"></path></svg>
+</div>
+<div role="option" aria-selected="false" style="display: flex; align-items: center; gap: 14px; height: 60px; padding: 0 16px; border-top: 1px solid #222420">
+<img src="../icons_4x/weapons/lightning.png" alt="" style="width: 40px; height: 40px; image-rendering: pixelated; object-fit: contain">
+<span style="flex: 1; font-family: 'IM Fell English', serif; font-size: 26px; color: #D9D4C4">Lightning Staff</span>
+<span style="font-size: 15px; color: #8D9188">[STATS]</span>
+<span style="width: 18px"></span>
+</div>
+<div role="option" aria-selected="false" style="display: flex; align-items: center; gap: 14px; height: 60px; padding: 0 16px; border-top: 1px solid #222420">
+<img src="../icons_4x/weapons/bow.png" alt="" style="width: 40px; height: 40px; image-rendering: pixelated; object-fit: contain">
+<span style="flex: 1; font-family: 'IM Fell English', serif; font-size: 26px; color: #D9D4C4">Bow</span>
+<span style="font-size: 15px; color: #8D9188">Pierce · 22 dmg · 0.90s</span>
+<span style="width: 18px"></span>
+</div>
+<div role="option" aria-selected="false" style="display: flex; align-items: center; gap: 14px; height: 60px; padding: 0 16px; border-top: 1px solid #222420">
+<img src="../icons_4x/weapons/sword.png" alt="" style="width: 40px; height: 40px; image-rendering: pixelated; object-fit: contain">
+<span style="flex: 1; font-family: 'IM Fell English', serif; font-size: 26px; color: #D9D4C4">Sword</span>
+<span style="font-size: 15px; color: #8D9188">[STATS]</span>
+<span style="width: 18px"></span>
+</div>
+<div style="display: flex; justify-content: space-between; padding: 10px 16px; border-top: 1px solid #2E302C; font-weight: 600; font-size: 13px; letter-spacing: 0.16em; color: #6E726A">
+<span>4 OF [N] UNLOCKED · SCROLLS</span><span>↑↓ MOVE · ENTER PICK</span>
+</div>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-weight: 800; font-size: 15px; letter-spacing: 0.3em; color: #8D9188">TRAIT</span>
+<div style="display: flex; align-items: center; gap: 20px; height: 104px; box-sizing: border-box; padding: 0 16px; background: rgba(14,15,14,0.78); border: 1px solid #3A3D38">
+<img src="../icons_4x/traits/cartographer.png" alt="Cartographer icon" style="width: 72px; height: 72px; image-rendering: pixelated; border: 2px solid #3A3D38">
+<div style="flex: 1; display: flex; flex-direction: column; gap: 6px">
+<span style="font-family: 'IM Fell English', serif; font-size: 34px; line-height: 1; color: #D9D4C4">Cartographer</span>
+<span style="font-size: 17px; color: #A9ADA4">Begin with the entire minimap revealed.</span>
+</div>
+<button type="button" aria-label="Choose trait" aria-expanded="false" style="display: flex; align-items: center; justify-content: center; width: 52px; height: 52px; border: 1px solid #4A4D47; background: transparent; color: #A9ADA4; cursor: pointer"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square"><path d="M6 9l6 6 6-6"></path></svg></button>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-weight: 800; font-size: 15px; letter-spacing: 0.3em; color: #8D9188">ULTIMATE</span>
+<div style="display: flex; align-items: center; gap: 20px; height: 104px; box-sizing: border-box; padding: 0 16px; background: rgba(14,15,14,0.78); border: 1px solid #3A3D38">
+<img src="../icons_4x/ultimates/cataclysm.png" alt="Cataclysm icon" style="width: 72px; height: 72px; image-rendering: pixelated; border: 2px solid #3A3D38">
+<div style="flex: 1; display: flex; flex-direction: column; gap: 6px">
+<span style="font-family: 'IM Fell English', serif; font-size: 34px; line-height: 1; color: #D9D4C4">Cataclysm</span>
+<span style="font-size: 17px; color: #A9ADA4">A devastating 15m explosion. 90s cooldown.</span>
+</div>
+<button type="button" aria-label="Choose ultimate" aria-expanded="false" style="display: flex; align-items: center; justify-content: center; width: 52px; height: 52px; border: 1px solid #4A4D47; background: transparent; color: #A9ADA4; cursor: pointer"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square"><path d="M6 9l6 6 6-6"></path></svg></button>
+</div>
+</div>
+
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-weight: 800; font-size: 15px; letter-spacing: 0.3em; color: #8D9188">DESTINATION</span>
+<div style="align-self: flex-start; padding: 6px; background: #1D5536; border-radius: 10px; box-shadow: 4px 6px 0 rgba(0,0,0,0.5)">
+<div style="display: flex; align-items: center; gap: 22px; padding: 14px 26px 12px 20px; border: 3px solid #F4F1E8; border-radius: 6px">
+<svg aria-hidden="true" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#F4F1E8" stroke-width="3" stroke-linecap="square"><path d="M12 21V4M5 11l7-7 7 7"/></svg>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-weight: 800; font-size: 32px; line-height: 1; letter-spacing: 0.04em; color: #F4F1E8">The Verdant Hollow</span>
+<span style="font-weight: 600; font-size: 16px; letter-spacing: 0.3em; color: #CFE0D3">FOREST</span>
+</div>
+</div>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<button type="button" style="display: flex; align-items: center; justify-content: space-between; height: 80px; padding: 0 28px; border: none; cursor: pointer; font-family: 'IM Fell English', serif; font-size: 42px; color: #F4EFE2; background: #7E1820; text-align: left">
+<span style="display: flex; align-items: center; gap: 18px"><span aria-hidden="true" style="width: 14px; height: 14px; background: #F4EFE2"></span>Enter the Hollow</span>
+<span style="font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 15px; letter-spacing: 0.2em; color: #F4C9CB">ENTER</span>
+</button>
+<button type="button" style="display: flex; align-items: center; justify-content: space-between; height: 56px; padding: 0 28px 0 60px; border: none; cursor: pointer; font-family: 'IM Fell English', serif; font-size: 32px; color: #B9BAB1; background: transparent; text-align: left">
+<span>Back</span>
+<span style="font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 15px; letter-spacing: 0.2em; color: #8D9188">ESC</span>
+</button>
+</div>
+
+</div>
+
+<section aria-labelledby="pb-h" style="position: absolute; right: 110px; top: 96px; width: 540px; box-sizing: border-box; padding: 34px 36px 30px; background: #D3CBB2; color: #1C1A15; font-family: 'Special Elite', monospace; transform: rotate(1.2deg); box-shadow: 6px 8px 0 rgba(0,0,0,0.5)">
+<div aria-hidden="true" style="position: absolute; top: -14px; left: 50%; width: 90px; height: 28px; margin-left: -45px; background: rgba(232,226,208,0.7); transform: rotate(-3deg)"></div>
+<h2 id="pb-h" style="margin: 0 0 6px; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 20px; letter-spacing: 0.3em">PERSONAL BESTS</h2>
+<p style="margin: 0 0 18px; font-size: 15px; color: #5A5446">Ranked by kills.</p>
+<div style="display: grid; grid-template-columns: 44px 1fr 72px; column-gap: 12px; padding-bottom: 8px; border-bottom: 2px solid #1C1A15; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 13px; letter-spacing: 0.2em; color: #4A453A">
+<span>#</span><span>KILLS · LOADOUT</span><span style="text-align: right">TIME</span>
+</div>
+
+<div style="display: grid; grid-template-columns: 44px 1fr 72px; column-gap: 12px; padding: 14px 0; border-bottom: 1px dashed #8F876F; align-items: start">
+<span style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border: 2px solid #8E1B22; border-radius: 50%; color: #8E1B22; font-size: 18px; margin-top: -4px">1</span>
+<div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 22px">2058 kills</span><span style="font-size: 15px; color: #4A453A">Firestaff — Cartographer / Cataclysm</span></div>
+<span style="font-size: 20px; text-align: right">11:02</span>
+</div>
+<div style="display: grid; grid-template-columns: 44px 1fr 72px; column-gap: 12px; padding: 14px 0; border-bottom: 1px dashed #8F876F; align-items: start">
+<span style="font-size: 18px; padding-left: 11px">2</span>
+<div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 22px">1766 kills</span><span style="font-size: 15px; color: #4A453A">Sword — Momentum / Cataclysm</span></div>
+<span style="font-size: 20px; text-align: right">08:35</span>
+</div>
+<div style="display: grid; grid-template-columns: 44px 1fr 72px; column-gap: 12px; padding: 14px 0; border-bottom: 1px dashed #8F876F; align-items: start">
+<span style="font-size: 18px; padding-left: 11px">3</span>
+<div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 22px">250 kills</span><span style="font-size: 15px; color: #4A453A">Sword — Momentum / Cataclysm</span></div>
+<span style="font-size: 20px; text-align: right">02:32</span>
+</div>
+<div style="display: grid; grid-template-columns: 44px 1fr 72px; column-gap: 12px; padding: 14px 0; border-bottom: 1px dashed #8F876F; align-items: start">
+<span style="font-size: 18px; padding-left: 11px">4</span>
+<div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 22px">198 kills</span><span style="font-size: 15px; color: #4A453A">Bow — Momentum / Cataclysm</span></div>
+<span style="font-size: 20px; text-align: right">02:16</span>
+</div>
+<div style="display: grid; grid-template-columns: 44px 1fr 72px; column-gap: 12px; padding: 14px 0 0; align-items: start">
+<span style="font-size: 18px; padding-left: 11px">5</span>
+<div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 22px">171 kills</span><span style="font-size: 15px; color: #4A453A">Firestaff — Cartographer / Cataclysm</span></div>
+<span style="font-size: 20px; text-align: right">01:59</span>
+</div>
+</section>
+
+<div style="position: absolute; right: 110px; bottom: 32px; display: flex; gap: 32px; font-weight: 600; font-size: 15px; letter-spacing: 0.18em; color: #8D9188">
+<span><b style="color: #E8E2D0">↑↓</b>  SLOT</span>
+<span><b style="color: #E8E2D0">SPACE</b>  OPEN LIST</span>
+<span><b style="color: #E8E2D0">ENTER</b>  START</span>
+</div>
+
+<div aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.16) 0px, rgba(0,0,0,0.16) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px)"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1920,"height":1080}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

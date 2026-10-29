@@ -110,7 +110,7 @@ func run():
  for n in RewardScreens.descendants(game.frontend.menu):
   if n is HSlider:sliders+=1
  check(sliders>=7,"Settings retain graphics/gameplay controls and all five audio sliders")
- game.frontend.reward(Catalog.ITEMS[10]);await process_frame;audio.clock+=2;audio.last_events.clear();accepted=audio.accepted;var skip=game.frontend.chest_skip;skip.call();var after=audio.accepted
+ game.frontend.reward("hourglass_damned");await process_frame;audio.clock+=2;audio.last_events.clear();accepted=audio.accepted;var skip=game.frontend.chest_skip;skip.call();var after=audio.accepted
  check(after>accepted and not audio.voices.any(func(v):return v.event=="reward.chest.tick" and v.until>audio.clock),"Chest skip stops cycling and plays predetermined reveal celebration")
  skip.call();check(audio.accepted==after,"Repeated reveal callback cannot play another celebration")
  check(not game.frontend.chest_skip.is_valid(),"Reveal closure clears skip action to prevent duplicate celebration")

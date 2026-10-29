@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Megaclonk — Treasure chest</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&amp;family=IM+Fell+English&amp;family=Overpass:wght@400;600;800&amp;family=Special+Elite&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+@keyframes mcJump{0%{transform:translateY(0) scale(1)}30%{transform:translateY(-36px) scale(1.08,.94)}55%{transform:translateY(0) scale(.94,1.08)}75%{transform:translateY(-8px)}100%{transform:translateY(0) scale(1)}}
+@keyframes mcIdle{0%,100%{transform:rotate(0deg)}25%{transform:rotate(-1.5deg)}75%{transform:rotate(1.5deg)}}
+@keyframes mcBeam{0%{opacity:0;transform:scaleY(.2)}40%{opacity:1;transform:scaleY(1)}100%{opacity:.5;transform:scaleY(1)}}
+@keyframes mcFadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes mcBlur{0%{filter:blur(3px)}60%{filter:blur(1px)}85%{filter:blur(0)}100%{filter:blur(0)}}
+@keyframes mcWin{0%,100%{transform:scale(1.06);box-shadow:0 0 30px 8px rgba(242,193,78,.7)}50%{transform:scale(1.12);box-shadow:0 0 60px 20px rgba(242,193,78,.95)}}
+@keyframes mcMarker{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes mcFlash{0%{opacity:.95}100%{opacity:0}}
+@keyframes mcRing{0%{transform:translate(-50%,-50%) scale(.15);opacity:1}100%{transform:translate(-50%,-50%) scale(3.6);opacity:0}}
+@keyframes mcRays{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes mcCardIn{0%{transform:scale(.35) rotate(-8deg);opacity:0}55%{transform:scale(1.08) rotate(1deg);opacity:1}75%{transform:scale(.97) rotate(-.5deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+@keyframes mcStamp{0%{transform:scale(2.4) rotate(-20deg);opacity:0}60%{transform:scale(.9) rotate(-8deg);opacity:1}100%{transform:scale(1) rotate(-8deg);opacity:1}}
+@keyframes mcFloatUp{0%{transform:translateY(0);opacity:0}20%{opacity:1}100%{transform:translateY(-260px);opacity:0}}
+@keyframes mcShake{0%,100%{transform:translate(0,0)}15%{transform:translate(-10px,6px)}30%{transform:translate(8px,-6px)}45%{transform:translate(-5px,4px)}60%{transform:translate(4px,-3px)}80%{transform:translate(-2px,1px)}}
+</style>
+</helmet>
+<div style="width: 1920px; height: 1080px; position: relative; overflow: hidden; font-family: 'Overpass', sans-serif; color: #E8E2D0; background-color: #8C978F; background-image: repeating-conic-gradient(#8F9A92 0 25%, #87928A 0 50%); background-size: 16px 16px">
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; bottom: 0; height: 560px; background-color: #1F2620; background-image: repeating-conic-gradient(#212821 0 25%, #1C221D 0 50%); background-size: 16px 16px"></div>
+<div aria-hidden="true" style="position: absolute; inset: 0; background: rgba(8,9,8,0.84)"></div>
+<div aria-hidden="true" style="position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 42%, rgba(242,193,78,0.10) 0%, rgba(0,0,0,0) 35%, rgba(0,0,0,0.65) 100%)"></div>
+
+<div style="position: absolute; inset: 0; animation: {{shake}}">
+
+<div role="status" aria-label="Run status" style="position: absolute; left: 72px; top: 36px; display: flex; align-items: flex-end; gap: 48px">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 600; font-size: 13px; letter-spacing: 0.3em; color: #A9ADA4">LVL</span><span style="font-weight: 800; font-size: 32px; line-height: 1; text-shadow: 3px 3px 0 #050505">4</span></div>
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 600; font-size: 13px; letter-spacing: 0.3em; color: #A9ADA4">GOLD</span><span style="font-weight: 800; font-size: 32px; line-height: 1; font-variant-numeric: tabular-nums; text-shadow: 3px 3px 0 #050505">113</span></div>
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 600; font-size: 13px; letter-spacing: 0.3em; color: #A9ADA4">CHESTS</span><span style="font-weight: 800; font-size: 32px; line-height: 1; font-variant-numeric: tabular-nums; text-shadow: 3px 3px 0 #050505">{{chests}}</span></div>
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 600; font-size: 13px; letter-spacing: 0.3em; color: #A9ADA4">TIME</span><span style="font-weight: 800; font-size: 32px; line-height: 1; font-variant-numeric: tabular-nums; text-shadow: 3px 3px 0 #050505">01:44 · PAUSED</span></div>
+</div>
+
+<div style="position: absolute; left: 0; right: 0; top: 112px; display: flex; flex-direction: column; align-items: center; gap: 10px">
+<span style="font-weight: 800; font-size: 15px; letter-spacing: 0.4em; color: #A9ADA4">TREASURE CHEST</span>
+<h1 style="margin: 0; font-family: 'IM Fell English', serif; font-weight: 400; font-size: 56px; line-height: 1; text-shadow: 3px 3px 0 #050505">{{headline}}</h1>
+</div>
+
+<div aria-hidden="true" style="position: absolute; left: 860px; top: 150px; width: 200px; height: 330px; transform-origin: 50% 100%; background: linear-gradient(0deg, rgba(242,193,78,0.55) 0%, rgba(242,193,78,0.12) 60%, rgba(242,193,78,0) 100%); opacity: {{beamOpacity}}; animation: {{beamAnim}}"></div>
+<div style="position: absolute; left: 832px; top: 236px; width: 256px; height: 256px; transform-origin: 50% 100%; animation: {{chestAnim}}">
+<img src="{{chestSrc}}" alt="{{chestAlt}}" style="width: 256px; height: 256px; image-rendering: pixelated; filter: drop-shadow(0 12px 0 rgba(0,0,0,0.55))">
+</div>
+
+<sc-if value="{{phClosed}}" hint-placeholder-val="{{ true }}">
+<div style="position: absolute; left: 0; right: 0; top: 560px; display: flex; flex-direction: column; align-items: center; gap: 16px; animation: mcFadeUp 0.4s ease-out both">
+<button type="button" onClick="{{open}}" style="display: flex; align-items: center; gap: 22px; height: 84px; padding: 0 36px; border: none; background: #7E1820; cursor: pointer; font-family: 'IM Fell English', serif; font-size: 44px; color: #F4EFE2; box-shadow: 0 0 30px 4px rgba(242,193,78,0.25)"><span aria-hidden="true" style="width: 14px; height: 14px; background: #F2C14E"></span>Open chest<span style="font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 15px; letter-spacing: 0.2em; color: #F4C9CB">ENTER</span></button>
+<span style="font-size: 17px; color: #8D9188">One item inside. Rarer items are rarer for a reason.</span>
+</div>
+</sc-if>
+
+<div style="position: absolute; left: 0; right: 0; top: 548px; height: 300px; opacity: {{reelOpacity}}; transition: opacity 0.4s ease-out">
+<div style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; background: rgba(14,15,14,0.88); border-top: 1px solid #3A3D38; border-bottom: 1px solid #3A3D38"></div>
+<div style="position: absolute; left: 0; top: 30px; height: 240px; width: 1920px; overflow: hidden">
+<div style="position: absolute; left: 0; top: 8px; display: flex; gap: 12px; transform: translateX({{tx}}px); transition: {{trans}}; animation: {{blur}}">
+<sc-for list="{{strip}}" as="c" hint-placeholder-count="12">
+<div style="flex: 0 0 auto; display: flex; flex-direction: column; width: 180px; height: 224px; box-sizing: border-box; background: {{c.bg}}; border: 3px solid {{c.color}}; box-shadow: {{c.glow}}; animation: {{c.anim}}">
+<div style="display: flex; align-items: center; justify-content: center; gap: 5px; height: 28px; background: {{c.color}}; color: {{c.onColor}}; font-weight: 800; font-size: 11px; letter-spacing: 0.22em">{{c.rarity}}</div>
+<div style="flex: 1; display: flex; align-items: center; justify-content: center"><img src="{{c.src}}" alt="" style="width: 104px; height: 104px; image-rendering: pixelated; object-fit: contain"></div>
+<div style="height: 52px; display: flex; align-items: center; justify-content: center; padding: 0 8px; text-align: center; font-family: 'IM Fell English', serif; font-size: 20px; line-height: 1.05; color: {{c.nameColor}}">{{c.name}}</div>
+</div>
+</sc-for>
+</div>
+</div>
+<div aria-hidden="true" style="position: absolute; left: 0; top: 0; bottom: 0; width: 520px; background: linear-gradient(90deg, rgba(14,15,14,1) 0%, rgba(14,15,14,0.85) 40%, rgba(14,15,14,0) 100%)"></div>
+<div aria-hidden="true" style="position: absolute; right: 0; top: 0; bottom: 0; width: 520px; background: linear-gradient(270deg, rgba(14,15,14,1) 0%, rgba(14,15,14,0.85) 40%, rgba(14,15,14,0) 100%)"></div>
+<div aria-hidden="true" style="position: absolute; left: 959px; top: 0; bottom: 0; width: 3px; background: #F2C14E; box-shadow: 0 0 14px 2px rgba(242,193,78,0.8); animation: {{markerAnim}}"></div>
+<svg aria-hidden="true" style="position: absolute; left: 946px; top: -2px" width="30" height="22" viewBox="0 0 30 22"><path d="M0 0h30L15 22z" fill="#F2C14E" stroke="#0E0F0E" stroke-width="2"></path></svg>
+<svg aria-hidden="true" style="position: absolute; left: 946px; bottom: -2px" width="30" height="22" viewBox="0 0 30 22"><path d="M0 22h30L15 0z" fill="#F2C14E" stroke="#0E0F0E" stroke-width="2"></path></svg>
+</div>
+
+<sc-if value="{{phSpinning}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; left: 0; right: 0; top: 880px; display: flex; justify-content: center; gap: 32px; font-weight: 600; font-size: 15px; letter-spacing: 0.24em; color: #8D9188; animation: mcFadeUp 0.4s ease-out 0.3s both">
+<span>THE REEL IS TURNING…</span><span><b style="color: #E8E2D0">SPACE</b>  SKIP</span>
+</div>
+</sc-if>
+
+</div>
+
+<sc-if value="{{phReveal}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: 0">
+<div aria-hidden="true" style="position: absolute; inset: 0; background: rgba(5,6,5,0.78); animation: mcFadeUp 0.2s ease-out both"></div>
+<div aria-hidden="true" style="position: absolute; left: 960px; top: 500px; width: 2400px; height: 2400px; border-radius: 50%; background: repeating-conic-gradient(rgba(242,193,78,0.22) 0deg 6deg, rgba(242,193,78,0) 6deg 18deg); animation: mcRays 24s linear infinite"></div>
+<div aria-hidden="true" style="position: absolute; inset: 0; background: radial-gradient(circle at 50% 46%, rgba(5,6,5,0) 0%, rgba(5,6,5,0) 16%, rgba(5,6,5,0.92) 58%)"></div>
+<div aria-hidden="true" style="position: absolute; left: 960px; top: 500px; width: 460px; height: 460px; border-radius: 50%; border: 10px solid #F2C14E; animation: mcRing 1s ease-out both"></div>
+<div aria-hidden="true" style="position: absolute; left: 960px; top: 500px; width: 460px; height: 460px; border-radius: 50%; border: 5px solid #FFF1C2; animation: mcRing 1.1s ease-out 0.18s both"></div>
+<div aria-hidden="true" style="position: absolute; left: 960px; top: 500px; width: 460px; height: 460px; border-radius: 50%; border: 3px solid #C9861A; animation: mcRing 1.2s ease-out 0.36s both"></div>
+<sc-for list="{{embers}}" as="e" hint-placeholder-count="10">
+<span aria-hidden="true" style="position: absolute; left: {{e.x}}px; top: {{e.y}}px; width: {{e.s}}px; height: {{e.s}}px; background: {{e.c}}; animation: mcFloatUp {{e.d}}s ease-out {{e.delay}}s infinite"></span>
+</sc-for>
+
+<div style="position: absolute; left: 0; right: 0; top: 120px; display: flex; flex-direction: column; align-items: center; gap: 28px">
+<span style="font-weight: 800; font-size: 22px; letter-spacing: 0.6em; color: #F2C14E; animation: mcFadeUp 0.4s ease-out 0.5s both">A LEGENDARY FIND</span>
+
+<div style="position: relative; animation: mcCardIn 0.7s cubic-bezier(.2,1.2,.4,1) 0.1s both">
+<div style="display: flex; flex-direction: column; width: 400px; height: 520px; box-sizing: border-box; background-color: #2A2010; background-image: repeating-linear-gradient(115deg, rgba(255,241,194,0) 0px, rgba(255,241,194,0) 60px, rgba(255,241,194,0.08) 60px, rgba(255,241,194,0.08) 76px, rgba(255,241,194,0) 76px, rgba(255,241,194,0) 150px); border: 5px solid #E0A33A; box-shadow: 0 0 0 4px #3A2600, 0 0 70px 24px rgba(242,193,78,0.6)">
+<div style="display: flex; align-items: center; justify-content: center; gap: 10px; height: 46px; background: #C9861A; color: #1C1A15; font-weight: 800; font-size: 16px; letter-spacing: 0.3em"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="#1C1A15"><path d="M12 1l3 8 8 3-8 3-3 8-3-8-8-3 8-3z"></path></svg>LEGENDARY<svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="#1C1A15"><path d="M12 1l3 8 8 3-8 3-3 8-3-8-8-3 8-3z"></path></svg></div>
+<div style="flex: 1; display: flex; align-items: center; justify-content: center"><img src="../icons_4x/items/hourglass_damned.png" alt="Hourglass of the Damned" style="width: 210px; height: 210px; image-rendering: pixelated; filter: drop-shadow(0 0 22px rgba(242,193,78,0.8))"></div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 0 24px 28px; text-align: center">
+<span style="font-family: 'IM Fell English SC', serif; font-size: 38px; line-height: 1; color: #FFF1C2; text-shadow: 0 0 18px rgba(242,193,78,0.7)">Hourglass of the Damned</span>
+<span style="font-weight: 800; font-size: 13px; letter-spacing: 0.3em; color: #E0A33A">ITEM · UNIQUE</span>
+<span style="font-family: 'Special Elite', monospace; font-size: 18px; color: #E8DFC8">The first lethal hit freezes hostile time for 5 s and heals you to 50%. Then it shatters.</span>
+</div>
+</div>
+<span aria-hidden="true" style="position: absolute; right: -70px; top: 60px; font-weight: 800; font-size: 22px; letter-spacing: 0.24em; color: #1C1A15; background: #F2C14E; padding: 10px 16px 7px; box-shadow: 0 0 0 3px #3A2600, 4px 4px 0 #050505; animation: mcStamp 0.45s ease-out 0.75s both">★ LEGENDARY</span>
+</div>
+
+<div style="display: flex; gap: 14px; animation: mcFadeUp 0.4s ease-out 1.1s both">
+<button type="button" style="display: flex; align-items: center; gap: 18px; height: 72px; padding: 0 32px; border: none; background: #7E1820; cursor: pointer; font-family: 'IM Fell English', serif; font-size: 36px; color: #F4EFE2"><span aria-hidden="true" style="width: 12px; height: 12px; background: #F2C14E"></span>Take it<span style="font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 14px; letter-spacing: 0.2em; color: #F4C9CB">ENTER</span></button>
+</div>
+</div>
+<div aria-hidden="true" style="position: absolute; inset: 0; background: #FFEDC2; animation: mcFlash 0.45s ease-out both"></div>
+</div>
+</sc-if>
+
+<button type="button" onClick="{{replay}}" style="position: absolute; right: 72px; bottom: 32px; height: 40px; padding: 0 16px; border: 1px dashed #5A5D56; background: rgba(14,15,14,0.85); cursor: pointer; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 12px; letter-spacing: 0.2em; color: #A9ADA4">↺ RESET CHEST</button>
+
+<div aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.14) 0px, rgba(0,0,0,0.14) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px)"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"autoplay":{"editor":"boolean","default":true},"$preview":{"width":1920,"height":1080}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { phase: 'closed' };
+    this.timers = [];
+  }
+  componentWillUnmount() { this.mcClear(); }
+  mcClear() { (this.timers || []).forEach(function (t) { clearTimeout(t); }); this.timers = []; }
+  mcLater(fn, ms) { if (!this.timers) this.timers = []; this.timers.push(setTimeout(fn, ms)); }
+  renderVals() {
+    var self = this;
+    var ph = this.state.phase;
+    var B = '';
+    var R = {
+      common: { label: 'COMMON', color: '#6E726A', on: '#F4EFE2', bg: '#1A1C19', name: '#D9D4C4' },
+      uncommon: { label: 'UNCOMMON', color: '#33772F', on: '#F1F7EE', bg: '#18201A', name: '#D9D4C4' },
+      rare: { label: '★ RARE', color: '#2B6CB5', on: '#F2F6FB', bg: '#141E29', name: '#E8E2D0' },
+      epic: { label: '★ EPIC', color: '#7B3FB3', on: '#F7F1FC', bg: '#1E1528', name: '#E8E2D0' },
+      legendary: { label: '★ LEGENDARY ★', color: '#C9861A', on: '#1C1A15', bg: '#2A2010', name: '#FFF1C2' }
+    };
+    var P = {
+      knot: { name: "Pilgrim's Sandals", src: '../icons_4x/items/pilgrims_sandals.png', r: 'common' },
+      petal: { name: 'Whetstone', src: '../icons_4x/items/whetstone.png', r: 'common' },
+      bow: { name: 'Bow', src: '../icons_4x/weapons/bow.png', r: 'common' },
+      aura: { name: 'Aura', src: '../icons_4x/weapons/aura.png', r: 'uncommon' },
+      xp: { name: 'XP Tome', src: '../icons_4x/tomes/xp.png', r: 'uncommon' },
+      crit: { name: 'Crit Tome', src: '../icons_4x/tomes/crit.png', r: 'uncommon' },
+      gem: { name: 'Corrosive Socket Gem', src: '../icons_4x/misc/gem_corrosive.png', r: 'rare' },
+      staff: { name: 'Lightning Staff', src: '../icons_4x/weapons/lightning.png', r: 'rare' },
+      life: { name: 'Lifesteal Tome', src: '../icons_4x/tomes/lifesteal.png', r: 'epic' },
+      goldt: { name: 'Gold Tome', src: '../icons_4x/tomes/gold.png', r: 'epic' },
+      bell: { name: 'Hourglass of the Damned', src: '../icons_4x/items/hourglass_damned.png', r: 'legendary' }
+    };
+    var seq = ['knot','petal','aura','bow','gem','knot','xp','petal','crit','bow','knot','staff','petal','aura','knot','life','bow','petal','xp','knot','gem','petal','bow','crit','knot','aura','petal','staff','knot','xp','bow','gem','petal','goldt','bell','life','knot','petal','aura','bow'];
+    var WIN = 34;
+    var landed = ph === 'landed' || ph === 'reveal';
+    var strip = seq.map(function (k, i) {
+      var it = P[k], r = R[it.r];
+      var win = i === WIN && landed;
+      var leg = it.r === 'legendary';
+      return {
+        name: it.name, src: it.src, rarity: r.label, color: r.color, onColor: r.on, bg: r.bg, nameColor: r.name,
+        glow: leg ? '0 0 26px 6px rgba(242,193,78,0.55)' : (it.r === 'epic' ? '0 0 16px 3px rgba(160,100,230,0.45)' : (it.r === 'rare' ? '0 0 12px 2px rgba(70,140,220,0.35)' : 'none')),
+        anim: win ? 'mcWin 0.9s ease-in-out infinite' : 'none'
+      };
+    });
+    var STEP = 192, CENTER = 870;
+    var tx0 = CENTER - 2 * STEP;
+    var tx1 = CENTER - WIN * STEP + 34;
+    var spinning = ph === 'spinning';
+    var moved = spinning || landed;
+    var embers = [];
+    for (var i = 0; i < 18; i++) {
+      embers.push({ x: 420 + ((i * 397) % 1080), y: 640 + ((i * 131) % 300), s: 4 + (i % 3) * 3, c: i % 3 === 0 ? '#FFF1C2' : '#F2C14E', d: (2.2 + (i % 5) * 0.4).toFixed(1), delay: ((i % 6) * 0.35).toFixed(2) });
+    }
+    return {
+      chests: ph === 'closed' ? 15 : 14,
+      headline: ph === 'closed' ? 'A chest, half-buried in the mud' : (ph === 'reveal' ? 'The bells toll' : 'Something stirs inside…'),
+      chestSrc: ph === 'closed' ? '../icons_4x/misc/chest_closed.png' : '../icons_4x/misc/chest_open.png',
+      chestAlt: ph === 'closed' ? 'Closed treasure chest' : 'Open treasure chest',
+      chestAnim: ph === 'closed' ? 'mcIdle 2.4s ease-in-out infinite' : (ph === 'opening' ? 'mcJump 0.6s ease-out both' : 'none'),
+      beamOpacity: ph === 'closed' ? 0 : 1,
+      beamAnim: ph === 'closed' ? 'none' : 'mcBeam 0.6s ease-out both',
+      phClosed: ph === 'closed', phSpinning: spinning, phReveal: ph === 'reveal',
+      reelOpacity: ph === 'closed' ? 0 : 1,
+      tx: moved ? tx1 : tx0,
+      trans: moved ? 'transform 6s cubic-bezier(0.06, 0.72, 0.12, 1)' : 'none',
+      blur: spinning ? 'mcBlur 6s ease-out both' : 'none',
+      markerAnim: ph === 'landed' ? 'mcMarker 0.25s steps(2) infinite' : 'none',
+      shake: ph === 'landed' ? 'mcShake 0.4s ease-out both' : 'none',
+      strip: strip,
+      embers: embers,
+      open: function () { self.mcRun(); },
+      replay: function () {
+        self.mcClear();
+        self.setState({ phase: 'closed' });
+        if (self.props.autoplay !== false) self.mcLater(function () { self.mcRun(); }, 1200);
+      }
+    };
+  }
+  componentDidMount() {
+    var self = this;
+    if (this.props.autoplay !== false) this.mcLater(function () { self.mcRun(); }, 1200);
+  }
+  mcRun() {
+    var self = this;
+    if (this.state.phase !== 'closed') return;
+    this.mcClear();
+    this.setState({ phase: 'opening' });
+    var t = 650;
+    this.mcLater(function () { self.setState({ phase: 'spinning' }); }, t);
+    t += 6100;
+    this.mcLater(function () { self.setState({ phase: 'landed' }); }, t);
+    t += 1000;
+    this.mcLater(function () { self.setState({ phase: 'reveal' }); }, t);
+    if (this.props.autoplay !== false) {
+      t += 4500;
+      this.mcLater(function () { self.setState({ phase: 'closed' }); }, t);
+      t += 1500;
+      this.mcLater(function () { self.mcRun(); }, t);
+    }
+  }
+}
+</script>
+</body>
+</html>

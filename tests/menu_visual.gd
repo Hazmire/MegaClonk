@@ -19,8 +19,8 @@ func run() -> void:
  await create_timer(0.5).timeout
  game.update_hud();await capture("hud")
  game.show_upgrades();await capture("levelup")
- game.apply_item(0);game.apply_item(1);game.frontend.inventory();await capture("inventory")
+ game.grant_item("whetstone");game.grant_item("salted_pork");game.frontend.inventory();await capture("inventory")
  var shop={"offers":[0,1,2],"sold":[]};game.gold=100;game.frontend.shop(shop);await capture("shop")
- game.frontend.reward(Catalog.ITEMS[0]);await capture("reward")
+ game.frontend.reward("whetstone");await capture("reward")
  game.queue_free();await create_timer(0.15).timeout
  quit()

@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Megaclonk — Imbue Station</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English&amp;family=Overpass:wght@400;600;800&amp;family=Special+Elite&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+@keyframes mcPulse{0%,100%{transform:scale(1);opacity:.45}50%{transform:scale(1.16);opacity:1}}
+@keyframes mcBurst{0%{transform:scale(.6);opacity:1}100%{transform:scale(2.6);opacity:0}}
+@keyframes mcFill{from{width:0%}to{width:100%}}
+@keyframes mcFloat{0%{transform:translateY(0);opacity:1}100%{transform:translateY(-42px);opacity:0}}
+@keyframes mcPop{0%{transform:scale(1.8) rotate(-14deg);opacity:0}60%{transform:scale(.92) rotate(-5deg);opacity:1}100%{transform:scale(1) rotate(-5deg);opacity:1}}
+@keyframes mcBob{0%,100%{transform:translateY(-10px)}50%{transform:translateY(-16px)}}
+</style>
+</helmet>
+<div style="width: 1920px; height: 1080px; position: relative; overflow: hidden; font-family: 'Overpass', sans-serif; color: #E8E2D0; background-color: #8C978F; background-image: repeating-conic-gradient(#8F9A92 0 25%, #87928A 0 50%); background-size: 16px 16px">
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; bottom: 0; height: 560px; background-color: #1F2620; background-image: repeating-conic-gradient(#212821 0 25%, #1C221D 0 50%); background-size: 16px 16px"></div>
+<div aria-hidden="true" style="position: absolute; inset: 0; background: rgba(10,11,10,0.72)"></div>
+<div aria-hidden="true" style="position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 45%, rgba(0,0,0,0.6) 100%)"></div>
+
+<div role="status" aria-label="Run status" style="position: absolute; left: 72px; top: 36px; display: flex; align-items: flex-end; gap: 48px">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 600; font-size: 13px; letter-spacing: 0.3em; color: #A9ADA4">LVL</span><span style="font-weight: 800; font-size: 32px; line-height: 1; text-shadow: 3px 3px 0 #050505">3</span></div>
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 600; font-size: 13px; letter-spacing: 0.3em; color: #A9ADA4">STAGE</span><span style="font-weight: 800; font-size: 32px; line-height: 1; text-shadow: 3px 3px 0 #050505">1</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px; width: 240px"><span style="font-weight: 600; font-size: 13px; letter-spacing: 0.3em; color: #A9ADA4">HP</span><div style="height: 24px; background: #2A1416; border: 2px solid #050505"><div style="width: 62%; height: 100%; background: #7E1820; display: flex; align-items: center; padding-left: 8px; box-sizing: border-box; font-weight: 800; font-size: 14px; color: #F4EFE2; white-space: nowrap">62 / 100</div></div></div>
+<div style="position: relative; display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 600; font-size: 13px; letter-spacing: 0.3em; color: #A9ADA4">GOLD</span><span style="font-weight: 800; font-size: 32px; line-height: 1; font-variant-numeric: tabular-nums; text-shadow: 3px 3px 0 #050505">{{gold}}</span>
+<sc-if value="{{showSpent}}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="position: absolute; left: 0; top: 46px; font-weight: 800; font-size: 22px; color: #E07B83; animation: mcFloat 1.4s ease-out forwards">−500</span></sc-if>
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 600; font-size: 13px; letter-spacing: 0.3em; color: #A9ADA4">TIME</span><span style="font-weight: 800; font-size: 32px; line-height: 1; font-variant-numeric: tabular-nums; text-shadow: 3px 3px 0 #050505">01:20</span></div>
+</div>
+
+<div style="position: absolute; left: 72px; top: 150px"><dc-import name="RunInventory" weapons="2" corrosive="{{inv.cor}}" ice="{{inv.ice}}" fire="{{inv.fire}}" electric="{{inv.elec}}" hint-size="420px,870px"></dc-import></div>
+<div style="position: absolute; left: 1428px; top: 150px"><dc-import name="RunStats" damage="+0%" hint-size="420px,870px"></dc-import></div>
+
+<section aria-labelledby="imbue-h" style="position: absolute; left: 532px; top: 150px; width: 856px; height: 870px; box-sizing: border-box; padding: 32px 40px; background: rgba(14,15,14,0.94); border: 1px solid #4A4D47; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-weight: 800; font-size: 14px; letter-spacing: 0.3em; color: #A9ADA4">IMBUE STATION</span>
+<h1 id="imbue-h" style="margin: 0; font-family: 'IM Fell English', serif; font-weight: 400; font-size: 52px; line-height: 1">Socket a gem</h1>
+<div aria-hidden="true" style="width: 48px; height: 5px; background: #7E1820; margin-top: 4px"></div>
+</div>
+<div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px; padding: 12px 16px; border: 1px solid #4A4D47">
+<span style="font-weight: 600; font-size: 12px; letter-spacing: 0.26em; color: #A9ADA4">500 GOLD PER GEM · PERMANENT</span>
+<span style="font-weight: 800; font-size: 15px; letter-spacing: 0.12em; color: {{goldColor}}">YOU HAVE {{gold}}</span>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 12px">
+<span style="font-weight: 800; font-size: 13px; letter-spacing: 0.28em; color: {{step1Color}}">1 · PICK UP A GEM</span>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px">
+<sc-for list="{{tray}}" as="g" hint-placeholder-count="4">
+<button type="button" onClick="{{g.pick}}" aria-pressed="{{g.isHeld}}" aria-label="{{g.label}}" style="position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; height: 112px; border: {{g.border}}; background: {{g.bg}}; cursor: {{g.cursor}}; opacity: {{g.opacity}}; box-shadow: {{g.shadow}}; animation: {{g.anim}}; font-family: 'Overpass', sans-serif">
+<svg aria-hidden="true" width="40" height="40" viewBox="0 0 16 16"><path d="M8 1 15 8 8 15 1 8z" fill="{{g.fill}}" stroke="{{g.color}}" stroke-width="1.5"></path><path d="M8 1 11 8 8 15" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="0.8"></path></svg>
+<span style="font-weight: 800; font-size: 13px; letter-spacing: 0.18em; color: {{g.color}}">{{g.name}}</span>
+<span style="font-weight: 800; font-size: 15px; color: {{g.countColor}}">×{{g.count}}</span>
+<sc-if value="{{g.isHeld}}" hint-placeholder-val="{{ false }}"><span style="position: absolute; top: -12px; padding: 2px 8px 0; background: {{g.color}}; color: #0E0F0E; font-weight: 800; font-size: 11px; letter-spacing: 0.2em">HELD</span></sc-if>
+</button>
+</sc-for>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 12px">
+<span style="font-weight: 800; font-size: 13px; letter-spacing: 0.28em; color: {{step2Color}}">2 · CLICK A GLOWING SOCKET</span>
+<sc-for list="{{weapons}}" as="w" hint-placeholder-count="2">
+<div style="position: relative; display: flex; align-items: center; gap: 20px; height: 116px; box-sizing: border-box; padding: 0 22px; background: {{w.cardBg}}; border: {{w.cardBorder}}">
+<img src="{{w.src}}" alt="" style="width: 64px; height: 64px; image-rendering: pixelated; object-fit: contain; border: 2px solid #3A3D38; background: #232521">
+<div style="flex: 1; display: flex; flex-direction: column; gap: 6px">
+<span style="font-family: 'IM Fell English', serif; font-size: 30px; line-height: 1">{{w.name}} <span style="font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 14px; letter-spacing: 0.16em; color: #A9ADA4">{{w.lv}}</span></span>
+<span style="font-size: 15px; color: {{w.subColor}}">{{w.sub}}</span>
+</div>
+<div style="position: relative; display: flex; align-items: center; gap: 10px">
+<sc-if value="{{w.filled}}" hint-placeholder-val="{{ false }}">
+<div style="position: relative; display: flex; align-items: center; justify-content: center; width: 76px; height: 76px; box-sizing: border-box; background: {{w.gemDark}}; border: 3px solid {{w.gemColor}}; box-shadow: 0 0 22px 4px {{w.gemGlow}}">
+<svg aria-hidden="true" width="40" height="40" viewBox="0 0 16 16"><path d="M8 1 15 8 8 15 1 8z" fill="{{w.gemColor}}" stroke="#F4EFE2" stroke-width="0.8"></path><path d="M8 1 11 8 8 15" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="0.8"></path></svg>
+<sc-if value="{{w.justFused}}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="position: absolute; inset: -6px; border: 4px solid {{w.gemColor}}; animation: mcBurst 0.8s ease-out forwards"></span></sc-if>
+</div>
+</sc-if>
+<sc-if value="{{w.ready}}" hint-placeholder-val="{{ false }}">
+<button type="button" onClick="{{w.pick}}" aria-label="{{w.socketLabel}}" style="position: relative; display: flex; align-items: center; justify-content: center; width: 76px; height: 76px; box-sizing: border-box; border: {{w.readyBorder}}; background: {{w.readyBg}}; cursor: pointer; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 10px; letter-spacing: 0.16em; color: {{w.heldColor}}">
+<span aria-hidden="true" style="position: absolute; inset: -8px; border: 2px solid {{w.heldColor}}; animation: mcPulse 1.1s ease-in-out infinite"></span>
+{{w.readyText}}
+</button>
+</sc-if>
+<sc-if value="{{w.idle}}" hint-placeholder-val="{{ true }}">
+<span title="Empty socket" style="display: flex; align-items: center; justify-content: center; width: 76px; height: 76px; box-sizing: border-box; border: 2px dashed #6E726A"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 16 16"><path d="M8 1 15 8 8 15 1 8z" fill="none" stroke="#6E726A" stroke-width="1.5"></path></svg></span>
+</sc-if>
+<span title="Second socket — needs an imbued amulet" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; width: 76px; height: 76px; box-sizing: border-box; border: 1px solid #2E302C; color: #5A5D56; font-weight: 800; font-size: 9px; letter-spacing: 0.14em"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="11" width="14" height="10"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>AMULET</span>
+</div>
+<sc-if value="{{w.justFused}}" hint-placeholder-val="{{ false }}"><span style="position: absolute; right: 200px; top: 14px; font-weight: 800; font-size: 15px; letter-spacing: 0.22em; padding: 5px 10px 3px; background: {{w.gemColor}}; color: #0E0F0E; box-shadow: 2px 2px 0 #050505; animation: mcPop 0.5s ease-out forwards">FUSED · {{w.gemShort}}</span></sc-if>
+</div>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 12px">
+<span style="font-weight: 800; font-size: 13px; letter-spacing: 0.28em; color: {{step3Color}}">3 · FUSE</span>
+<div style="display: flex; align-items: center; gap: 18px; height: 92px; box-sizing: border-box; padding: 0 22px; background: #1A1C19; border: {{actionBorder}}">
+<sc-if value="{{phIdle}}" hint-placeholder-val="{{ true }}"><span style="font-size: 17px; color: #A9ADA4">{{idleText}}</span></sc-if>
+<sc-if value="{{phPoor}}" hint-placeholder-val="{{ false }}"><span style="font-size: 17px; color: #E07B83">Not enough gold — fusing costs 500 and you have {{gold}}.</span></sc-if>
+<sc-if value="{{phConfirm}}" hint-placeholder-val="{{ false }}">
+<div style="flex: 1; display: flex; flex-direction: column; gap: 4px"><span style="font-family: 'IM Fell English', serif; font-size: 26px; line-height: 1">Fuse <span style="color: {{heldColor}}">{{heldName}}</span> into {{targetName}}?</span><span style="font-size: 14px; color: #A9ADA4">−500 gold · −1 gem · can't be undone</span></div>
+<button type="button" onClick="{{cancel}}" style="height: 56px; padding: 0 18px; border: 1px solid #5A5D56; background: transparent; cursor: pointer; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 13px; letter-spacing: 0.2em; color: #D9D4C4">CANCEL</button>
+<button type="button" onClick="{{fuse}}" style="display: flex; align-items: center; gap: 12px; height: 56px; padding: 0 24px; border: none; background: #7E1820; cursor: pointer; font-family: 'IM Fell English', serif; font-size: 28px; color: #F4EFE2; box-shadow: 0 0 18px 2px {{heldGlow}}"><span aria-hidden="true" style="width: 10px; height: 10px; background: {{heldColor}}"></span>Fuse<span style="font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 12px; letter-spacing: 0.2em; color: #F4C9CB">ENTER</span></button>
+</sc-if>
+<sc-if value="{{phFusing}}" hint-placeholder-val="{{ false }}">
+<div style="flex: 1; display: flex; flex-direction: column; gap: 10px"><span style="font-weight: 800; font-size: 14px; letter-spacing: 0.26em; color: {{heldColor}}">FUSING {{heldNameCaps}} INTO {{targetNameCaps}}…</span><div style="height: 14px; background: #0E0F0E; border: 1px solid #3A3D38"><div style="height: 100%; background: {{heldColor}}; box-shadow: 0 0 14px {{heldGlow}}; animation: mcFill 0.9s ease-in forwards"></div></div></div>
+</sc-if>
+<sc-if value="{{phDone}}" hint-placeholder-val="{{ false }}"><span style="font-family: 'IM Fell English', serif; font-size: 26px"><span style="color: {{doneColor}}">{{doneGem}}</span> now runs through your {{doneWeapon}}.</span></sc-if>
+</div>
+</div>
+
+<div style="margin-top: auto; display: flex; gap: 12px">
+<button type="button" style="flex: 1; display: flex; align-items: center; justify-content: space-between; height: 64px; padding: 0 26px; border: 1px solid #5A5D56; background: transparent; cursor: pointer; font-family: 'IM Fell English', serif; font-size: 32px; color: #E8E2D0">Leave<span style="font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 14px; letter-spacing: 0.2em; color: #8D9188">ESC</span></button>
+<button type="button" onClick="{{reset}}" style="width: 170px; height: 64px; border: 1px dashed #4A4D47; background: transparent; cursor: pointer; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 12px; letter-spacing: 0.2em; color: #8D9188">↺ RESET DEMO</button>
+</div>
+</section>
+
+<div aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.14) 0px, rgba(0,0,0,0.14) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px)"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1920,"height":1080}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = this.fresh();
+  }
+  fresh() {
+    return { gold: 1240, counts: { cor: 1, ice: 1, fire: 0, elec: 1 }, held: null, target: null, phase: 'idle', sockets: { fs: null, ls: null }, justFused: null, done: null, spentKey: 0 };
+  }
+  componentWillUnmount() {
+    if (this.timer) clearTimeout(this.timer);
+  }
+  renderVals() {
+    var self = this;
+    var st = this.state;
+    var GEMS = [
+      { id: 'cor', name: 'Corrosive', color: '#79B35F', glow: 'rgba(121,179,95,0.7)', dark: '#1C2A17' },
+      { id: 'ice', name: 'Ice', color: '#7FB8CF', glow: 'rgba(127,184,207,0.7)', dark: '#15252C' },
+      { id: 'fire', name: 'Fire', color: '#D9763E', glow: 'rgba(217,118,62,0.7)', dark: '#2C1A10' },
+      { id: 'elec', name: 'Electric', color: '#A487DA', glow: 'rgba(164,135,218,0.7)', dark: '#201A2D' }
+    ];
+    var byId = {};
+    GEMS.forEach(function (g) { byId[g.id] = g; });
+    var WEAPONS = [
+      { id: 'fs', name: 'Firestaff', lv: 'LV 2', src: '../icons_4x/weapons/firestaff.png' },
+      { id: 'ls', name: 'Lightning Staff', lv: 'LV 1', src: '../icons_4x/weapons/lightning.png' }
+    ];
+    var wById = {};
+    WEAPONS.forEach(function (w) { wById[w.id] = w; });
+    var held = st.held ? byId[st.held] : null;
+    var fusing = st.phase === 'fusing';
+
+    var tray = GEMS.map(function (g) {
+      var c = st.counts[g.id];
+      var isHeld = st.held === g.id;
+      var empty = c <= 0;
+      return {
+        name: g.name.toUpperCase(), color: g.color, count: c, isHeld: isHeld,
+        label: 'Pick up ' + g.name + ' gem, ' + c + ' left',
+        fill: empty ? 'none' : g.color,
+        countColor: empty ? '#6A6D66' : '#F4EFE2',
+        border: isHeld ? '3px solid ' + g.color : (empty ? '1px dashed #3A3D38' : '1px solid ' + g.color),
+        bg: isHeld ? g.dark : '#1A1C19',
+        shadow: isHeld ? '0 0 26px 6px ' + g.glow + ', 0 12px 0 rgba(0,0,0,0.5)' : 'none',
+        anim: isHeld ? 'mcBob 1.2s ease-in-out infinite' : 'none',
+        cursor: empty ? 'not-allowed' : 'pointer',
+        opacity: empty ? 0.45 : (st.held && !isHeld ? 0.6 : 1),
+        pick: function () {
+          if (fusing || empty) return;
+          self.setState({ held: isHeld ? null : g.id, target: null, phase: 'idle', justFused: null });
+        }
+      };
+    });
+
+    var weapons = WEAPONS.map(function (w) {
+      var gemId = st.sockets[w.id];
+      var gem = gemId ? byId[gemId] : null;
+      var isTarget = st.target === w.id;
+      var ready = !gem && !!held;
+      return {
+        name: w.name, lv: w.lv, src: w.src,
+        filled: !!gem, ready: ready, idle: !gem && !held,
+        justFused: st.justFused === w.id,
+        gemColor: gem ? gem.color : '#6E726A', gemGlow: gem ? gem.glow : 'transparent', gemDark: gem ? gem.dark : '#1A1C19',
+        gemShort: gem ? gem.name.toUpperCase() : '',
+        sub: gem ? 'Socketed: ' + gem.name + ' · 2nd socket needs an imbued amulet (0)' : 'Sockets 0 / 1 · 2nd socket needs an imbued amulet (0)',
+        subColor: gem ? gem.color : '#A9ADA4',
+        cardBg: isTarget ? '#1E1A1A' : (gem ? '#191C1A' : '#1A1C19'),
+        cardBorder: isTarget ? '2px solid #B3363F' : (ready ? '1px solid #5A5D56' : '1px solid #3A3D38'),
+        heldColor: held ? held.color : '#6E726A',
+        readyBorder: isTarget ? '3px solid ' + (held ? held.color : '#6E726A') : '3px dashed ' + (held ? held.color : '#6E726A'),
+        readyBg: isTarget && held ? held.dark : '#121311',
+        readyText: isTarget ? 'READY' : 'SOCKET',
+        socketLabel: 'Socket ' + (held ? held.name : '') + ' gem into ' + w.name,
+        pick: function () {
+          if (!st.held || gem || fusing) return;
+          if (st.gold < 500) { self.setState({ phase: 'poor', target: null }); return; }
+          self.setState({ target: w.id, phase: 'confirm', justFused: null });
+        }
+      };
+    });
+
+    var target = st.target ? wById[st.target] : null;
+    var anyEmpty = WEAPONS.some(function (w) { return !st.sockets[w.id]; });
+    var anyGems = GEMS.some(function (g) { return st.counts[g.id] > 0; });
+    var idleText = !anyEmpty ? 'Every open socket is filled. Find an imbued amulet to open a second one.'
+      : (!anyGems ? 'No gems left. Buy socket gems from shops.'
+      : (held ? held.name + ' gem in hand — click a glowing socket.' : 'Pick up a gem to see where it can go.'));
+    var done = st.done;
+    var on = '#E8E2D0', off = '#6E726A';
+    var step = !st.held ? 1 : (st.phase === 'confirm' || fusing ? 3 : 2);
+
+    return {
+      gold: st.gold,
+      goldColor: st.gold >= 500 ? '#9BC48A' : '#E07B83',
+      showSpent: st.phase === 'done',
+      inv: { cor: st.counts.cor, ice: st.counts.ice, fire: st.counts.fire, elec: st.counts.elec },
+      tray: tray,
+      weapons: weapons,
+      step1Color: step === 1 ? on : off,
+      step2Color: step === 2 ? on : off,
+      step3Color: step === 3 ? on : off,
+      actionBorder: st.phase === 'confirm' ? '2px solid #B3363F' : (fusing && held ? '2px solid ' + held.color : '1px solid #3A3D38'),
+      phIdle: st.phase === 'idle', phPoor: st.phase === 'poor', phConfirm: st.phase === 'confirm', phFusing: fusing, phDone: st.phase === 'done',
+      idleText: idleText,
+      heldName: held ? held.name : '', heldNameCaps: held ? held.name.toUpperCase() : '',
+      heldColor: held ? held.color : '#E8E2D0', heldGlow: held ? held.glow : 'transparent',
+      targetName: target ? target.name : '', targetNameCaps: target ? target.name.toUpperCase() : '',
+      doneGem: done ? byId[done.gem].name : '', doneColor: done ? byId[done.gem].color : '#E8E2D0', doneWeapon: done ? wById[done.w].name : '',
+      cancel: function () { self.setState({ target: null, phase: 'idle' }); },
+      fuse: function () {
+        if (!st.held || !st.target) return;
+        var g = st.held, t = st.target;
+        self.setState({ phase: 'fusing' });
+        if (self.timer) clearTimeout(self.timer);
+        self.timer = setTimeout(function () {
+          var s = self.state;
+          var counts = Object.assign({}, s.counts); counts[g] = counts[g] - 1;
+          var sockets = Object.assign({}, s.sockets); sockets[t] = g;
+          self.setState({ gold: s.gold - 500, counts: counts, sockets: sockets, held: null, target: null, phase: 'done', justFused: t, done: { gem: g, w: t } });
+        }, 900);
+      },
+      reset: function () { if (self.timer) clearTimeout(self.timer); self.setState(self.fresh()); }
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bow — effect draft</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English&amp;family=Overpass:wght@400;600;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+@keyframes bwFly{0%{transform:translateX(0);opacity:1}39%{transform:translateX(620px);opacity:1}40%{opacity:0}100%{transform:translateX(620px);opacity:0}}
+@keyframes bwA{0%,12.6%{filter:none;transform:none}13.2%{filter:brightness(0) invert(1);transform:translateX(6px)}17%{filter:none;transform:none}100%{filter:none}}
+@keyframes bwB{0%,20.1%{filter:none;transform:none}20.7%{filter:brightness(0) invert(1);transform:translateX(6px)}24.5%{filter:none;transform:none}100%{filter:none}}
+@keyframes bwC{0%,27.6%{filter:none;transform:none}28.2%{filter:brightness(0) invert(1);transform:translateX(6px)}32%{filter:none;transform:none}100%{filter:none}}
+@keyframes bwRelease{0%{opacity:1;transform:scale(.6)}6%{opacity:0;transform:scale(1.8)}100%{opacity:0}}
+</style>
+</helmet>
+<div style="width: {{rootW}}px; height: {{rootH}}px; box-sizing: border-box; padding: {{pad}}px; background: #0E0F0E; color: #E8E2D0; font-family: 'Overpass', sans-serif; display: flex; gap: 36px">
+
+<div style="position: relative; flex: 0 0 auto; width: 720px; height: 640px; overflow: hidden; background-color: #7E8982; background-image: repeating-conic-gradient(#818C85 0 25%, #7A857E 0 50%); background-size: 16px 16px; border: 1px solid #3A3D38">
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; bottom: 0; height: 340px; background-color: #1F2620; background-image: repeating-conic-gradient(#222922 0 25%, #1C221D 0 50%); background-size: 16px 16px"></div>
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 250px; height: 120px; background: linear-gradient(180deg, rgba(126,137,130,0) 0%, rgba(126,137,130,0.9) 50%, rgba(126,137,130,0) 100%)"></div>
+
+<img src="../reference/vfx_player_stand_in.png" alt="Player" style="position: absolute; left: 100px; top: 370px; width: 60px; height: 100px; image-rendering: pixelated">
+<img src="../reference/vfx_enemy_stand_in.png" alt="Enemy" style="position: absolute; left: 340px; top: 380px; width: 60px; height: 85px; image-rendering: pixelated; animation: bwA 1.8s linear infinite">
+<img src="../reference/vfx_enemy_stand_in.png" alt="Enemy" style="position: absolute; left: 460px; top: 380px; width: 60px; height: 85px; image-rendering: pixelated; animation: bwB 1.8s linear infinite">
+<img src="../reference/vfx_enemy_stand_in.png" alt="Enemy" style="position: absolute; left: 580px; top: 380px; width: 60px; height: 85px; image-rendering: pixelated; animation: bwC 1.8s linear infinite">
+
+<div aria-hidden="true" style="position: absolute; left: 160px; top: 418px; width: 1px; height: 1px; transform: rotate(-11deg); transform-origin: 0 0">
+<div style="position: absolute; left: -70px; top: -3px; width: 90px; height: 6px; animation: bwFly 1.8s linear infinite">
+<span style="position: absolute; left: 0; top: 1px; width: 40px; height: 4px; background: linear-gradient(90deg, rgba(232,226,208,0) 0%, rgba(232,226,208,0.35) 100%)"></span>
+<span style="position: absolute; left: 8px; top: -1px; width: 10px; height: 8px; background: #7E1820"></span>
+<span style="position: absolute; left: 10px; top: 1px; width: 66px; height: 4px; background: #1A1C19"></span>
+<span style="position: absolute; left: 74px; top: -1px; width: 14px; height: 8px; background: #F4F6F2; box-shadow: 0 0 10px 3px rgba(221,241,255,0.95)"></span>
+</div>
+</div>
+<div aria-hidden="true" style="position: absolute; left: 160px; top: 418px; width: 1px; height: 1px">
+<div style="position: absolute; left: -70px; top: -3px; width: 90px; height: 6px; animation: bwFly 1.8s linear infinite">
+<span style="position: absolute; left: 0; top: 1px; width: 40px; height: 4px; background: linear-gradient(90deg, rgba(232,226,208,0) 0%, rgba(232,226,208,0.35) 100%)"></span>
+<span style="position: absolute; left: 8px; top: -1px; width: 10px; height: 8px; background: #7E1820"></span>
+<span style="position: absolute; left: 10px; top: 1px; width: 66px; height: 4px; background: #1A1C19"></span>
+<span style="position: absolute; left: 74px; top: -1px; width: 14px; height: 8px; background: #F4F6F2; box-shadow: 0 0 10px 3px rgba(221,241,255,0.95)"></span>
+</div>
+</div>
+<div aria-hidden="true" style="position: absolute; left: 160px; top: 418px; width: 1px; height: 1px; transform: rotate(11deg); transform-origin: 0 0">
+<div style="position: absolute; left: -70px; top: -3px; width: 90px; height: 6px; animation: bwFly 1.8s linear infinite">
+<span style="position: absolute; left: 0; top: 1px; width: 40px; height: 4px; background: linear-gradient(90deg, rgba(232,226,208,0) 0%, rgba(232,226,208,0.35) 100%)"></span>
+<span style="position: absolute; left: 8px; top: -1px; width: 10px; height: 8px; background: #7E1820"></span>
+<span style="position: absolute; left: 10px; top: 1px; width: 66px; height: 4px; background: #1A1C19"></span>
+<span style="position: absolute; left: 74px; top: -1px; width: 14px; height: 8px; background: #F4F6F2; box-shadow: 0 0 10px 3px rgba(221,241,255,0.95)"></span>
+</div>
+</div>
+<span aria-hidden="true" style="position: absolute; left: 150px; top: 404px; width: 28px; height: 28px; border-radius: 50%; background: radial-gradient(circle, rgba(244,246,242,0.95) 0%, rgba(221,241,255,0) 70%); animation: bwRelease 1.8s ease-out infinite"></span>
+
+<span style="position: absolute; left: 380px; top: 486px; display: {{noteDisplay}}; font-weight: 800; font-size: 11px; letter-spacing: 0.18em; color: #E8E2D0; background: rgba(14,15,14,0.7); padding: 3px 6px 1px">PIERCES ALL THREE · 3-ARROW FAN</span>
+
+<div aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 50% 55%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.55) 100%)"></div>
+<div aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.14) 0px, rgba(0,0,0,0.14) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px)"></div>
+<span style="position: absolute; left: 16px; top: 14px; display: {{noteDisplay}}; font-weight: 800; font-size: 12px; letter-spacing: 0.26em; color: #0E0F0E; background: rgba(232,226,208,0.85); padding: 4px 8px 2px">EFFECT PREVIEW · LOOP</span>
+</div>
+
+<sc-if value="{{full}}" hint-placeholder-val="{{ true }}">
+<div style="flex: 1; display: flex; flex-direction: column; gap: 22px">
+<div style="display: flex; align-items: center; gap: 18px">
+<div style="display: flex; align-items: center; justify-content: center; width: 112px; height: 112px; background: #1A1C19; border: 1px solid #5A5D56"><img src="../icons_4x/weapons/bow.png" alt="Bow icon" style="width: 96px; height: 96px; image-rendering: pixelated"></div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.28em; color: #8D9188">WEAPON · DRAFT</span>
+<h1 style="margin: 0; font-family: 'IM Fell English', serif; font-weight: 400; font-size: 40px; line-height: 1">Bow</h1>
+</div>
+</div>
+<section style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-weight: 800; font-size: 13px; letter-spacing: 0.28em; color: #8D9188">LOOK</h2>
+<ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 16px; line-height: 1.4; color: #B9BAB1">
+<li>Dark, near-black arrow with a glowing white tip, so it reads clearly against both fog and dark ground.</li>
+<li>Faint pale streak behind each arrow and a small white flash at release.</li>
+<li>Each enemy it passes through flashes white and gets nudged back.</li>
+</ul>
+</section>
+<section style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-weight: 800; font-size: 13px; letter-spacing: 0.28em; color: #8D9188">BEHAVIOUR</h2>
+<ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 16px; line-height: 1.4; color: #B9BAB1">
+<li>Pierces enemies by default.</li>
+<li>Extra projectiles fire all at once in a fan aimed at the closest enemy.</li>
+</ul>
+</section>
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-weight: 800; font-size: 13px; letter-spacing: 0.28em; color: #8D9188">LEVEL-UP POOL</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">DAMAGE</span>
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">ATTACK SPEED</span>
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">CRIT CHANCE</span>
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">CRIT DAMAGE</span>
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">PROJECTILE COUNT</span>
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">PROJECTILE SPEED</span>
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">SIZE</span>
+</div>
+</section>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"stageOnly":{"editor":"boolean","default":false},"$preview":{"width":1200,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var so = !!this.props.stageOnly;
+    return { full: !so, rootW: so ? 720 : 1200, rootH: so ? 640 : 720, pad: so ? 0 : 40, noteDisplay: so ? 'none' : 'block' };
+  }
+}
+</script>
+</body>
+</html>

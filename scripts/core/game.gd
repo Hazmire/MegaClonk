@@ -22,6 +22,7 @@ var enemies: Array[Dictionary] = []
 var projectiles: Array[Dictionary] = []
 var psx: PsxFx
 var wrt: WeaponRuntime
+var irt: ItemRuntime
 var pending_blasts: Array[Dictionary] = []
 var pickups: Array[Dictionary] = []
 var interactables: Array[Dictionary] = []
@@ -94,7 +95,7 @@ var pending_upgrades=0
 var announced_stages: Array=[]
 var drop_chests: Array=[]
 var reward_queue: Array=[]
-var active_reward=-1
+var active_reward=""
 var shrine_reward_queue: Array=[]
 var active_shrine_reward: Dictionary={}
 var portal_wind: PortalWind
@@ -286,7 +287,7 @@ func begin_run() -> void:
  run_seed=next_run_seed if next_run_seed>=0 else rng.randi()
  variants.initialize(run_seed)
  world_content_version=WORLD_CONTENT_VERSION;additional_boss_count=0
- gem_rng.seed=run_seed+719477;pending_upgrades=0;announced_stages.clear();reward_queue.clear();active_reward=-1;shrine_reward_queue.clear();active_shrine_reward={};crowd.next_id=1
+ gem_rng.seed=run_seed+719477;pending_upgrades=0;announced_stages.clear();reward_queue.clear();active_reward="";shrine_reward_queue.clear();active_shrine_reward={};crowd.next_id=1
  rng.seed=run_seed
  stats = Catalog.base_stats()
  match character:
@@ -309,7 +310,7 @@ func begin_run() -> void:
  damage_by_weapon.clear();weapon_damage_windows.clear()
  weapons.clear();gems.reset();amulets=0;amulets_found=0;chest_amulet=false
  tomes.clear()
- items.clear()
+ items.clear();irt.reset()
  banished.clear()
  rerolls = 3
  passive_clock = 0
@@ -348,7 +349,7 @@ func build_stage() -> void:
  grid.clear()
  prop_batches.clear();decoration_checksum=0
  obstacles.clear()
- if wrt!=null:wrt.clear()
+ if wrt!=null:wrt.clear();irt.clear_effects()
  stage_time = 0
  announcement="";announcement_time=0
  stage_clock.reset()
@@ -393,7 +394,7 @@ func build_stage() -> void:
  ImbueStation.setup(self)
  Vases.build(self)
  combat_fx=CombatFX.new();world.add_child(combat_fx)
- psx=PsxFx.new();world.add_child(psx);wrt=WeaponRuntime.new(self,psx)
+ psx=PsxFx.new();world.add_child(psx);wrt=WeaponRuntime.new(self,psx);irt=ItemRuntime.new(self)
  pool = MeshPool.new()
  world.add_child(pool)
  numbers=CombatNumbers.new();world.add_child(numbers);numbers.prewarm()
@@ -435,7 +436,7 @@ func build_stage() -> void:
 func resume() -> void:
  if is_instance_valid(audio):audio.emit("ui.close")
  if mode=="shrine" and not active_shrine_reward.is_empty():return
- if mode=="reward" and active_reward>=0:active_reward=-1
+ if mode=="reward" and active_reward!="":active_reward=""
  if ShrineRewards.present_next(self):return
  if RewardDrops.present_next(self):return
  if pending_upgrades>0:
@@ -495,13 +496,10 @@ func _physics_process(delta: float) -> void:
   if is_instance_valid(audio):audio.stop_event("player.slide")
   movement_audio.reset();return
  movement_audio.tick(self,delta)
- if health<=0 and stats.get("revives",0)>0:
-  stats.revives-=1;health=stats.max_health;invulnerability=3;combat_fx.burst("explosion_small",player.position,3);toast("PHOENIX REBIRTH")
  if health <= 0:
   finish_run(false)
   return
  loadout_runtime.tick(self,delta)
- loadout_runtime.cooldown=maxf(0,loadout_runtime.cooldown-delta*stats.get("ultimate_haste",0))
  elapsed += delta
  world_time.tick(delta)
  var hostile_delta=world_time.hostile(delta)
@@ -525,9 +523,6 @@ func _physics_process(delta: float) -> void:
  if player.velocity.length() > 3: moving_time += delta
  else: moving_time = maxf(0,moving_time-delta*2)
  if passive_clock >= 1:
-  if stats.get("storm",0)>0:
-   var storm_target=nearest(player.position,20)
-   if not storm_target.is_empty():hit(storm_target,45*stats.storm,-3);lightning_arc(player.position+Vector3.UP,storm_target.pos,Color.CYAN)
   tick_passive()
   passive_clock -= 1
  spawn_clock -= hostile_delta
@@ -759,20 +754,24 @@ func hurt(amount: float) -> void:
 func hit(e: Dictionary, base: float, weapon: int, ctx: Dictionary = {}) -> void:
  if e.is_empty() or e.hp<=0: return
  if debug_combat:combat_counters.hits+=1
+ var item_hit=ctx.has("item") # damage dealt by an item: no crit, no player damage stat, never feeds item procs
  var upgraded=weapons.has(weapon)
- var critical = rng.randf()<minf(1,stats.crit+(WeaponUpgrades.value(weapons[weapon],"crit") if upgraded else 0))
+ var critical = false if item_hit else rng.randf()<minf(1,stats.crit+(WeaponUpgrades.value(weapons[weapon],"crit") if upgraded else 0))
  var crit_multiplier=stats.crit_damage+(WeaponUpgrades.value(weapons[weapon],"crit_damage") if upgraded else 0.0)
  var amount = base*stats.damage*(crit_multiplier if critical else 1.0)*loadout_runtime.damage_multiplier()
- e["last_weapon"]=weapon
+ if item_hit:amount=base
+ e["last_weapon"]=weapon;e["last_item"]=item_hit
  if character == 6: amount *= 1+(1-health/stats.max_health)*1.5
  if character == 7: amount *= 1+gold*0.001
  if character == 10 and e.hp/e.max_hp>0.9: amount*=1.5
  if character == 16 and e.hp/e.max_hp<0.1: amount = e.hp+1
  if e.kind<8 and "shield" in e.variant.modules and e.hp/e.max_hp>0.5: amount*=0.5
+ if irt.cond_damage:amount*=irt.damage_mult(e,item_hit)
  amount=StatusManager.modify_damage(self,e,amount,critical,weapon)
  e["hit_time"]=0.10;e["flash_tint"]=0.0
  if is_instance_valid(combat_fx):
-  if weapon>=0 and ctx.has("source"):wrt.on_hit(e,weapon,ctx,critical)
+  if item_hit:psx.burst(e.pos+Vector3.UP*0.8,2,[Color("d9d2b8"),Color("8f876f")],4.0,0.1,0.18,6.0,1.5)
+  elif weapon>=0 and ctx.has("source"):wrt.on_hit(e,weapon,ctx,critical)
   else:combat_fx.burst("impact_concrete",e.pos,0.5)
  var actual=minf(amount,maxf(0,e.hp))
  e.hp -= amount
@@ -789,9 +788,10 @@ func hit(e: Dictionary, base: float, weapon: int, ctx: Dictionary = {}) -> void:
   numbers.show_damage(e.pos+Vector3.UP,amount,critical,color,elapsed)
  damage_total += actual
  damage_by_weapon[weapon] = damage_by_weapon.get(weapon,0.0)+actual
- health = minf(stats.max_health,health+actual*stats.lifesteal)
+ if not item_hit:health = minf(stats.max_health,health+actual*stats.lifesteal)
  if critical and not settings.reduced and not ctx.has("source"): flash(e.pos,Color("fff3aa"),0.4)
  StatusManager.on_hit(self,e,weapon,critical,actual)
+ if irt.hit_hooks and not item_hit and ctx.has("source"):irt.on_hit(e,amount,actual,critical,weapon)
 func area(pos: Vector3, radius: float, damage: float, weapon: int, status: String = "") -> void:
  if weapon>=0:Vases.strike_sphere(self,pos,radius,weapon)
  for e in nearby(pos,radius):
@@ -1062,14 +1062,10 @@ func apply_upgrade(choice: Dictionary) -> void:
   stats[stat]+=Catalog.TOMES[name][1]
   if stat=="slide_friction":stats[stat]=maxf(0.15,stats[stat])
   if stat=="max_health": health+=Catalog.TOMES[name][1]
-func award_item() -> Array:
- var available=available_items()
- if available.is_empty():return []
- var selected=RewardSelector.choose(RewardSelector.items(available),rng,Rarity.reward_weights(stats.luck))
- if selected.is_empty():return []
- var id=int(selected.id)
- apply_item(id)
- return Catalog.ITEMS[id]
+func award_item() -> String:
+ var id=ItemDrops.roll_chest(self)
+ if id!="":grant_item(id)
+ return id
 func update_interactions(delta: float) -> void:
  RewardDrops.collect(self)
  if mode=="reward":return
@@ -1151,6 +1147,7 @@ func finish_run(victory: bool) -> void:
  var col=clear_panel("VICTORY / INFINITY BROKEN" if victory else "THE WILD CLAIMS ANOTHER")
  var best=-1
  for id in damage_by_weapon:
+  if id<0:continue
   if best==-1 or damage_by_weapon[id]>damage_by_weapon[best]: best=id
  title("Survived %02d:%02d · Stage %d · Level %d\n%d kills · %.0f damage · %d gold\nHighest damage: %s\n%s"%[int(elapsed)/60,int(elapsed)%60,stage,level,kills,damage_total,gold,Catalog.weapon_name(best) if best>=0 else "None","Sandbox: no progression written" if sandbox else "Quest progress saved • claim silver in Quests"],col,20)
  if unlocked.size()>0: title("Requirements met: "+", ".join(unlocked),col,18)
@@ -1303,7 +1300,7 @@ func save_run(path: String = "user://active-run.json") -> bool:
  for pickup in pickups: saved_pickups.append({"position":[pickup.node.position.x,pickup.node.position.y,pickup.node.position.z],"value":pickup.value,"age":pickup.age,"red":pickup.get("red",false),"attracted":pickup.get("attracted",false),"attraction_reason":pickup.get("attraction_reason","")})
  var used=[]
  for object in interactables: used.append({"kind":object.kind,"used":object.used,"charge":object.charge,"tier":object.get("tier","Common"),"offers":object.get("offers",null),"sold":object.get("sold",[]),"shrine_reward":object.get("shrine_reward",{}),"golden":object.get("golden",false),"shrine_choices":object.get("shrine_choices",[])})
- var data={"version":2,"next_enemy_id":crowd.next_id,"drop_chests":RewardDrops.serialize(self),"vases_broken":Vases.serialize(self),"world_pickups":WorldPickups.serialize(self),"stopwatch":world_time.serialize(),"reward_queue":reward_queue,"active_reward":active_reward,"shrine_reward_queue":shrine_reward_queue,"active_shrine_reward":active_shrine_reward,"announced_stages":announced_stages,"gem_rng_state":str(gem_rng.state),"pending_upgrades":pending_upgrades+(1 if mode=="upgrade" else 0),"terrain_version":terrain_version,"world_content_version":world_content_version,"additional_boss_count":additional_boss_count,"boss_encounters":boss_encounters,"map_seed_override":map_seed_override,"stage_clock":stage_clock.serialize(),"boss_variant":boss_variant,"ghost_budget":ghost_budget,"portal_state":portal_state,"loadout":loadout_runtime.serialize(),"selected_weapon":selected_weapon,"run_metrics":run_metrics,"chests_opened":chests_opened,"legacy_weapon_slots":legacy_weapon_slots,"legacy_tome_slots":legacy_tome_slots,"minimap":serialize_minimap(),"variants":variants.serialize(),"spawn_rng_state":str(spawn_rng.state),"elite_active":elite_active,"elite_rewarded":elite_rewarded,"rng_state":str(rng.state),"character":character,"biome":biome,"selected_biome":selected_biome,"tier":tier,"stage":stage,"elapsed":elapsed,"stage_time":stage_time,"stats":stats,"health":health,"xp":xp,"level":level,"kills":kills,"gold":gold,"weapons":saved_weapons,"amulets":amulets,"amulets_found":amulets_found,"gems":gems.serialize(),"tomes":tomes,"tome_rarities":tome_rarities,"items":items,"sandbox":sandbox,"position":[player.position.x,player.position.y,player.position.z],"enemies":saved_enemies,"boss_spawned":boss_spawned,"boss_dead":boss_dead,"interactables":used,"damage_total":damage_total,"rerolls":rerolls,"banished":banished,"pickups":saved_pickups,"damage_by_weapon":damage_by_weapon,"gold_fraction":gold_fraction,"camera":[player.yaw,player.pitch,player.zoom]}
+ var data={"version":2,"next_enemy_id":crowd.next_id,"drop_chests":RewardDrops.serialize(self),"vases_broken":Vases.serialize(self),"world_pickups":WorldPickups.serialize(self),"stopwatch":world_time.serialize(),"reward_queue":reward_queue,"active_reward":active_reward,"item_state":irt.serialize(),"shrine_reward_queue":shrine_reward_queue,"active_shrine_reward":active_shrine_reward,"announced_stages":announced_stages,"gem_rng_state":str(gem_rng.state),"pending_upgrades":pending_upgrades+(1 if mode=="upgrade" else 0),"terrain_version":terrain_version,"world_content_version":world_content_version,"additional_boss_count":additional_boss_count,"boss_encounters":boss_encounters,"map_seed_override":map_seed_override,"stage_clock":stage_clock.serialize(),"boss_variant":boss_variant,"ghost_budget":ghost_budget,"portal_state":portal_state,"loadout":loadout_runtime.serialize(),"selected_weapon":selected_weapon,"run_metrics":run_metrics,"chests_opened":chests_opened,"legacy_weapon_slots":legacy_weapon_slots,"legacy_tome_slots":legacy_tome_slots,"minimap":serialize_minimap(),"variants":variants.serialize(),"spawn_rng_state":str(spawn_rng.state),"elite_active":elite_active,"elite_rewarded":elite_rewarded,"rng_state":str(rng.state),"character":character,"biome":biome,"selected_biome":selected_biome,"tier":tier,"stage":stage,"elapsed":elapsed,"stage_time":stage_time,"stats":stats,"health":health,"xp":xp,"level":level,"kills":kills,"gold":gold,"weapons":saved_weapons,"amulets":amulets,"amulets_found":amulets_found,"gems":gems.serialize(),"tomes":tomes,"tome_rarities":tome_rarities,"items":items,"sandbox":sandbox,"position":[player.position.x,player.position.y,player.position.z],"enemies":saved_enemies,"boss_spawned":boss_spawned,"boss_dead":boss_dead,"interactables":used,"damage_total":damage_total,"rerolls":rerolls,"banished":banished,"pickups":saved_pickups,"damage_by_weapon":damage_by_weapon,"gold_fraction":gold_fraction,"camera":[player.yaw,player.pitch,player.zoom]}
  var file=FileAccess.open(path+".tmp",FileAccess.WRITE)
  if not file: return false
  file.store_string(JSON.stringify(data)); file.close()
@@ -1351,7 +1348,7 @@ func load_run(path: String = "user://active-run.json") -> bool:
  for element in refunds:gems.add(str(element),1)
  if weapons.is_empty():equip(0)
  amulets=maxi(0,int(data.get("amulets",0)));amulets_found=maxi(0,int(data.get("amulets_found",0)))
- tomes=data.tomes;tome_rarities=data.get("tome_rarities",{}); items=data.items; banished=data.banished; rerolls=int(data.rerolls)
+ tomes=data.tomes;tome_rarities=data.get("tome_rarities",{}); items=ItemMigration.sanitize(data.items,stats); irt.restore(data.get("item_state",{})); banished=data.banished; rerolls=int(data.rerolls)
  build_stage()
  elapsed=float(data.elapsed); stage_time=float(data.stage_time)
  boss_variant=str(data.get("boss_variant",boss_variant))
@@ -1396,7 +1393,9 @@ func load_run(path: String = "user://active-run.json") -> bool:
   interactables[i].used=data.interactables[saved_index].used
   interactables[i].charge=data.interactables[saved_index].charge
   if world_content_version==0 and interactables[i].kind=="Charge Shrine":interactables[i].charge=minf(8,interactables[i].charge*8.0/12)
-  if data.interactables[saved_index].get("offers") is Array:interactables[i]["offers"]=data.interactables[saved_index].offers
+  if data.interactables[saved_index].get("offers") is Array:
+   var cleaned=ItemMigration.clean_offers(data.interactables[saved_index].offers) # old numbered offers are re-rolled
+   if cleaned is Array:interactables[i]["offers"]=cleaned
   interactables[i]["sold"]=data.interactables[saved_index].get("sold",[])
   interactables[i]["shrine_reward"]=data.interactables[saved_index].get("shrine_reward",{})
   interactables[i]["golden"]=data.interactables[saved_index].get("golden",interactables[i].get("golden",false))
@@ -1416,13 +1415,13 @@ func load_run(path: String = "user://active-run.json") -> bool:
  world_time.restore(data.get("stopwatch",{}))
  reward_queue=[]
  for id in data.get("reward_queue",[]):
-  if int(id)>=0 and int(id)<Catalog.ITEMS.size():reward_queue.append(int(id))
- active_reward=int(data.get("active_reward",-1))
- if active_reward>=Catalog.ITEMS.size():active_reward=-1
+  if id is String and Catalog.item_exists(id):reward_queue.append(id) # old numbered rewards are dropped
+ active_reward=str(data.get("active_reward","")) if data.get("active_reward","") is String else ""
+ if not Catalog.item_exists(active_reward):active_reward=""
  crowd.next_id=maxi(crowd.next_id,int(data.get("next_enemy_id",1)))
  rebuild_grid();crowd.rebuild(enemies)
  shrine_reward_queue=data.get("shrine_reward_queue",[]);active_shrine_reward=data.get("active_shrine_reward",{});mode="loading"
- if active_reward>=0:frontend.reward(Catalog.ITEMS[active_reward])
+ if active_reward!="":frontend.reward(active_reward)
  else:resume()
  return true
 
@@ -1494,20 +1493,32 @@ func weapon_limit() -> int:
 func tome_limit() -> int:
  return 4 if sandbox else maxi(legacy_tome_slots,int(progress.data.get("tome_slots",2)))
 func chest_cost() -> int:return 15+chests_opened*5
-func available_items() -> Array:
- var result=[]
- for i in Catalog.ITEMS.size():
-  if sandbox or MetaProgress.enabled(progress.data,"items",str(i)):result.append(i)
- return result
-func apply_item(id: int) -> void:
- var item=Catalog.ITEMS[id];items.append(item[0]);stats[item[2]]=float(stats.get(item[2],0))+item[3]
- if item[2]=="max_health":health+=item[3]
- toast("%s • +%s %s"%[item[0],item[3],item[2]])
- tone(720,0.15)
-func buy_shop(object: Dictionary, id: int, price: int) -> bool:
+func available_items() -> Array:return ItemDrops.available(self)
+func item_stacks(id: Variant) -> int:
+ for entry in items:
+  if str(entry.id)==str(id):return int(entry.stacks)
+ return 0
+# The one way an item enters the inventory. Uniques can be held once and never stack.
+func grant_item(id: Variant,quiet: bool=false) -> bool:
+ id=str(id)
+ if not Catalog.item_exists(id):return false
+ var owned=item_stacks(id)
+ if Catalog.item_unique(id) and owned>0:return false
+ if owned>=int(ItemStats.T.bounds.max_stacks):return false
+ if owned>0:
+  for entry in items:
+   if str(entry.id)==id:entry.stacks=int(entry.stacks)+1
+ else:items.append({"id":id,"stacks":1})
+ irt.on_acquire(id)
+ if not quiet:
+  toast("%s • %s"%[Catalog.item_name(id),Catalog.item_description(id,false)])
+  tone(720,0.15)
+ return true
+func buy_shop(object: Dictionary, id: Variant, price: int) -> bool:
+ id=str(id)
  if mode!="shop" or object.get("used",false) or not id in object.get("offers",[]) or id in object.get("sold",[]) or gold<price or not id in available_items():return false
  if price!=ShopSystem.price(id):return false
- gold-=price;apply_item(id);object.used=true
+ gold-=price;grant_item(id);object.used=true
  if not object.has("sold"):object.sold=[]
  object.sold.append(id)
  if object.get("tier","")=="Legendary":run_metrics["legendary_shop"]=int(run_metrics.get("legendary_shop",0))+1

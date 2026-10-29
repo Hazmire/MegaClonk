@@ -407,8 +407,8 @@ func shop(object: Dictionary) -> void:
  RewardScreens.shop(self,object)
 func imbue_station(object: Dictionary) -> void:
  RewardScreens.imbue_station(self,object)
-func reward(item: Array) -> void:
- RewardScreens.reward(self,item)
+func reward(id: String) -> void:
+ RewardScreens.reward(self,id)
 func settings(back: Callable) -> void:
  settings_back=back
  game.mode="settings";var col=page("Settings")

@@ -69,21 +69,33 @@ const TOMES = {
  "Thermal": ["glide",0.15], "Gecko": ["climb",0.15], "Air Step": ["air_jumps",1.0], "Skater": ["slide_speed",0.15], "Wax": ["slide_friction",-0.08],
  "Greed": ["gold_gain", 0.2], "Curse": ["difficulty", 0.15]
 }
-const ITEMS = [
- ["Ember Heart", "rare", "max_health", 25.0],
- ["Runner's Knot", "common", "speed", 0.12],
- ["Lucky Claw", "rare", "crit", 0.07],
- ["Copper Crown", "common", "gold_gain", 0.25],
- ["Soul Lantern", "rare", "xp", 0.2],
- ["Iron Petal", "common", "armor", 3.0],
- ["Vampire Fang", "epic", "lifesteal", 0.02],
- ["Storm Lens", "epic", "count", 1.0],
- ["Giant's Ring", "rare", "size", 0.2],
- ["Briar Halo", "common", "thorns", 5.0],
- ["Phoenix Seal", "legendary", "revives",1.0],
- ["Thunder Covenant", "legendary", "storm",1.0],
- ["Timekeeper", "legendary", "ultimate_haste",0.25]
-]
+# Item Overhaul: the 60 relics live in res://data/items.json (copied from the UI handoff) and nowhere else.
+# Ids are stable strings. Every name, tier, effect text, unique flag and gem requirement is read from here;
+# numbers that drive behaviour live in ItemStats.
+const ITEMS_PATH="res://data/items.json"
+const ITEM_TIERS=["common","uncommon","rare","epic","legendary"]
+static var ITEMS: Dictionary=_load_items()
+static var ITEM_IDS: Array=ITEMS.keys()
+static func _load_items() -> Dictionary:
+ var parsed=JSON.parse_string(FileAccess.get_file_as_string(ITEMS_PATH))
+ var result={}
+ if parsed is Dictionary and parsed.get("items") is Array:
+  for item in parsed.items:
+   var entry: Dictionary=item.duplicate(true)
+   entry["icon_path"]="res://assets/icons/items/%s.png"%str(item.id)
+   result[str(item.id)]=entry
+ return result
+static func item_exists(id: Variant) -> bool:return ITEMS.has(str(id))
+static func item_name(id: Variant) -> String:return str(ITEMS.get(str(id),{}).get("name","Lost relic"))
+static func item_tier(id: Variant) -> String:return str(ITEMS.get(str(id),{}).get("tier","common"))
+static func item_unique(id: Variant) -> bool:return bool(ITEMS.get(str(id),{}).get("unique",false))
+# Tooltip/description text: the full effect, plus the gem requirement when there is one.
+static func item_description(id: Variant,full: bool=true) -> String:
+ var item: Dictionary=ITEMS.get(str(id),{})
+ if item.is_empty():return ""
+ var text=str(item.full if full else item.short)
+ if item.get("needs")!=null:text+="\nNeeds a %s socket gem"%str(item.needs).trim_suffix(" GEM").capitalize()
+ return text
 static func base_stats() -> Dictionary:
  return {"damage":1.0,"haste":1.0,"crit":0.05,"crit_damage":2.0,
  "max_health":100.0,"regen":0.2,"armor":0.0,"evasion":0.0,
@@ -95,11 +107,4 @@ static func threshold(level: int) -> float:
 static func damage(base: float, stats: Dictionary, critical: bool) -> float:
  return base * stats.damage * (stats.crit_damage if critical else 1.0)
 
-static func item_description(id: int) -> String:
- match id:
-  10:return "Revive once at full health after a fatal hit, with 3 seconds of protection."
-  11:return "Automatically strike a nearby enemy with lightning each second. Stacks increase damage."
-  12:return "Recover ultimate cooldown 25% faster during active gameplay."
- var item=ITEMS[id];var stat=str(item[2]).replace("_"," ")
- if item[2] in ["max_health","armor","count","thorns"]:return "+%.0f %s"%[item[3],stat]
- return "+%.0f%% %s"%[item[3]*100,stat]
+

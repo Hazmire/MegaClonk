@@ -120,7 +120,7 @@ func run():
   check(is_instance_valid(tabs) and tabs.current_tab==3 and scroll.scroll_vertical==scroll_before,"Claim preserves the existing tab container, selected category and scroll")
   check(id in game.progress.data.claimed and claim.disabled and claim.text=="Claimed","Claim state updates in place and remains visible")
  game.progress.data=profile;game.progress.save();game.shrine_reward_queue.clear();game.active_shrine_reward={};game.frontend.in_run=true
- game.active_reward=-1;game.reward_queue.clear();game.mode="run";var items=game.items.duplicate();var reward_rng=str(game.rng.state);game.frontend.reward(Catalog.ITEMS[1]);await process_frame
+ game.active_reward="";game.reward_queue.clear();game.mode="run";var items=game.items.duplicate();var reward_rng=str(game.rng.state);game.frontend.reward("salted_pork");await process_frame
  var icon: TextureRect;var reveal: Control;var celebration: RewardCelebration
  for n in nodes(game.frontend.menu):
   if n.name=="CyclingIcon":icon=n
@@ -136,7 +136,7 @@ func run():
  check(str(game.rng.state)==reward_rng,"Icon animation and skipping leave the gameplay reward RNG unchanged")
  check(game.sound_bank.has("applause") and game.sound_bank.has("legendary"),"Original applause and distinctive Legendary audio are loaded")
  game.resume();await create_timer(0.5).timeout
- game.frontend.reward(Catalog.ITEMS[1]);await process_frame
+ game.frontend.reward("salted_pork");await process_frame
  var natural: Control
  for n in nodes(game.frontend.menu):
   if n.name=="ChestReveal":natural=n

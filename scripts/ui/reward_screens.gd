@@ -56,7 +56,9 @@ static func icon(ui: FrontEnd,parent: Node,category: String,id: String,rank: Str
   var padding=slot.get_theme_stylebox("panel").duplicate();padding.content_margin_left=4;padding.content_margin_right=4;padding.content_margin_top=4;padding.content_margin_bottom=4;slot.add_theme_stylebox_override("panel",padding)
  var body=VBoxContainer.new();body.add_theme_constant_override("separation",1);slot.add_child(body)
  var image=TextureRect.new();image.texture=UIAssets.icon(category,id);image.texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST;image.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;image.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED;body.add_child(image)
- image.custom_minimum_size=Vector2(size-12,size-12);image.size_flags_vertical=Control.SIZE_EXPAND_FILL;image.mouse_filter=Control.MOUSE_FILTER_IGNORE
+ var inner=size-12
+ if category=="items":inner=32*maxi(1,int((size-12)/32)) # 32x32 pixel art is only ever shown at whole-number scales
+ image.custom_minimum_size=Vector2(inner,inner);image.size_flags_vertical=Control.SIZE_EXPAND_FILL;image.mouse_filter=Control.MOUSE_FILTER_IGNORE
  if rank!="":
   var label=ui.text(rank,body,12);label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;label.mouse_filter=Control.MOUSE_FILTER_IGNORE
  return slot
@@ -78,10 +80,9 @@ static func equipment(ui: FrontEnd,parent: Node) -> void:
  SocketScreens.gem_inventory(ui,parent)
  ui.heading("Items",parent,20)
  var items_grid=GridContainer.new();items_grid.columns=5;parent.add_child(items_grid)
- for id in Catalog.ITEMS.size():
-  var count=game.items.count(Catalog.ITEMS[id][0])
-  if count==0:continue
-  var meta=RewardCatalog.entry("items",id,count);var tile=icon(ui,items_grid,"items",str(id),"×%d"%count,Rarity.definition(meta.rarity).color,46);tile.tooltip_text=meta.name+"\n"+meta.description
+ for entry in game.items:
+  var id=str(entry.id);var count=int(entry.stacks)
+  var meta=RewardCatalog.entry("items",id,count);var tile=icon(ui,items_grid,"items",id,"×%d"%count,Rarity.definition(meta.rarity).color,46);tile.tooltip_text="%s · %s\n%s"%[meta.name,Rarity.definition(meta.rarity).name,meta.description]
  if game.items.is_empty():ui.text("No items collected",parent,14)
  ui.heading("Trait & ultimate",parent,18)
  var abilities=HBoxContainer.new();abilities.add_theme_constant_override("separation",10);parent.add_child(abilities)
@@ -204,18 +205,21 @@ static func shop(ui: FrontEnd,object: Dictionary) -> void:
  var center=layout(ui,object.get("tier","Common")+" shop · Gold %d"%game.gold)
  ui.text("One purchase per seller",center,15)
  for id_value in object.offers:
-  var id=int(id_value)
-  if GemRewards.is_gem_offer(id):
-   gem_offer(ui,center,object,id);continue
+  if not id_value is String:
+   var code=int(id_value)
+   if GemRewards.is_gem_offer(code):gem_offer(ui,center,object,code)
+   continue
+  var id=str(id_value)
   var price=ShopSystem.price(id);var sold=id in object.get("sold",[])
-  var button=offer(ui,center,"items",id,game.items.count(Catalog.ITEMS[id][0]),Catalog.item_description(id),func():
+  var button=offer(ui,center,"items",id,game.item_stacks(id),Catalog.item_description(id,false),func():
    if not game.buy_shop(object,id,price):ui.reward_consumed=false;game.toast("Purchase unavailable"),"SOLD" if sold or object.get("used",false) else "NEED %d gold"%price if game.gold<price else "BUY · %d gold"%price)
+  button.tooltip_text=Catalog.item_description(id)
   button.disabled=sold or game.gold<price or object.get("used",false) or not id in game.available_items()
  if object.offers.is_empty():ui.paragraph("No enabled items available",center,520)
  button(ui,center,"LEAVE SHOP",game.resume).grab_focus()
-static func reward(ui: FrontEnd,item: Array) -> void:
+static func reward(ui: FrontEnd,id: String) -> void:
  var game=ui.game;game.mode="reward";var center=layout(ui,"Treasure discovered")
- var id=Catalog.ITEMS.find(item);var tier=Rarity.definition(item[1])
+ var tier=Rarity.definition(Catalog.item_tier(id))
  var effect=celebration(ui,tier.color,float(tier.celebration))
  var rarity=ui.heading("OPENING…",center,25);rarity.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;rarity.add_theme_color_override("font_color",tier.color)
  var name=ui.heading("Unsealing treasure",center,28);name.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
@@ -225,7 +229,7 @@ static func reward(ui: FrontEnd,item: Array) -> void:
  for child in descendants(tile):
   if child is TextureRect:image=child;break
  image.name="CyclingIcon"
- var description=ui.paragraph(Catalog.item_description(id),center,520);description.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;description.hide()
+ var description=ui.paragraph(Catalog.item_description(id,false),center,520);description.tooltip_text=Catalog.item_description(id);description.mouse_filter=Control.MOUSE_FILTER_PASS;description.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;description.hide()
  ui.text("Reward added to your build",center,14)
  var gem_found=game.chest_gem;game.chest_gem=""
  var gem_line=ui.text("",center,16);gem_line.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;gem_line.hide()
@@ -237,11 +241,12 @@ static func reward(ui: FrontEnd,item: Array) -> void:
  var generation=ui.reward_generation
  var reveal=func():
   if ui.reward_generation!=generation or not is_instance_valid(tile) or tile.get_meta("revealed",false):return
-  game.audio.stop_event("reward.chest.tick");tile.set_meta("revealed",true);image.texture=UIAssets.icon("items",str(id));rarity.text=tier.name.to_upper();name.text=item[0];description.show();gem_line.visible=gem_found!="" or amulet_found;proceed.disabled=false;proceed.grab_focus();ui.chest_skip=Callable()
+  game.audio.stop_event("reward.chest.tick");tile.set_meta("revealed",true);image.texture=UIAssets.icon("items",str(id));rarity.text=tier.name.to_upper();name.text=Catalog.item_name(id);description.show();gem_line.visible=gem_found!="" or amulet_found;proceed.disabled=false;proceed.grab_focus();ui.chest_skip=Callable()
   if tier.id=="legendary" and effect.has_meta("global_celebration"):effect.get_meta("global_celebration").burst(tier.color,2.0*game.settings.visual_intensity)
   effect.burst(tier.color,float(tier.celebration)*game.settings.visual_intensity);game.play_sound("applause",0.25+0.75*float(tier.celebration));game.play_sound("reward.chest.legendary" if tier.id=="legendary" else "reward.chest.reveal",0.4+0.6*float(tier.celebration))
  var eligible=game.available_items()
  if eligible.is_empty():eligible=[id]
+ tile.tooltip_text=Catalog.item_description(id)
  var tween=tile.create_tween();ui.reward_tweens.append(tween);tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
  tween.tween_method(func(progress):
   if ui.reward_generation!=generation or not is_instance_valid(image):return

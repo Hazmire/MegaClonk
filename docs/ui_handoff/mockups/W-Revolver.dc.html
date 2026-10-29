@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Revolver — effect draft</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English&amp;family=Overpass:wght@400;600;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+@keyframes rvFly{0%{transform:translate(0,0);opacity:1}13.75%{transform:translate(375px,0);opacity:1}19%{transform:translate(455px,52px);opacity:1}19.5%{opacity:0}100%{transform:translate(455px,52px);opacity:0}}
+@keyframes rvPuff{0%{opacity:0;transform:scale(.4)}1%{opacity:.85;transform:scale(.7)}50%{opacity:0;transform:translate(6px,-30px) scale(3.2)}100%{opacity:0;transform:translate(6px,-30px) scale(3.2)}}
+@keyframes rvMuzzle{0%{opacity:1;transform:scale(1)}5%{opacity:0;transform:scale(1.6)}100%{opacity:0}}
+@keyframes rvHitA{0%,13.4%{filter:none;transform:none}13.75%{filter:brightness(0) invert(1);transform:translateX(8px)}18%{filter:none;transform:none}100%{filter:none}}
+@keyframes rvHitB{0%,18.7%{filter:none;transform:none}19%{filter:brightness(0) invert(1);transform:translate(6px,4px)}23%{filter:none;transform:none}100%{filter:none}}
+@keyframes rvSpark{0%,13.4%{opacity:0;transform:scale(.3)}13.75%{opacity:1;transform:scale(1)}18%{opacity:0;transform:scale(2)}100%{opacity:0}}
+</style>
+</helmet>
+<div style="width: {{rootW}}px; height: {{rootH}}px; box-sizing: border-box; padding: {{pad}}px; background: #0E0F0E; color: #E8E2D0; font-family: 'Overpass', sans-serif; display: flex; gap: 36px">
+
+<div style="position: relative; flex: 0 0 auto; width: 720px; height: 640px; overflow: hidden; background-color: #7E8982; background-image: repeating-conic-gradient(#818C85 0 25%, #7A857E 0 50%); background-size: 16px 16px; border: 1px solid #3A3D38">
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; bottom: 0; height: 340px; background-color: #1F2620; background-image: repeating-conic-gradient(#222922 0 25%, #1C221D 0 50%); background-size: 16px 16px"></div>
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 250px; height: 120px; background: linear-gradient(180deg, rgba(126,137,130,0) 0%, rgba(126,137,130,0.9) 50%, rgba(126,137,130,0) 100%)"></div>
+
+<img src="../reference/vfx_player_stand_in.png" alt="Player" style="position: absolute; left: 100px; top: 370px; width: 60px; height: 100px; image-rendering: pixelated">
+<img src="../reference/vfx_enemy_stand_in.png" alt="Enemy" style="position: absolute; left: 520px; top: 380px; width: 60px; height: 85px; image-rendering: pixelated; animation: rvHitA 1.6s linear infinite">
+<img src="../reference/vfx_enemy_stand_in.png" alt="Enemy" style="position: absolute; left: 600px; top: 440px; width: 60px; height: 85px; image-rendering: pixelated; animation: rvHitB 1.6s linear infinite">
+
+<span aria-hidden="true" style="position: absolute; left: 175px; top: 400px; width: 24px; height: 24px; border-radius: 50%; background: rgba(176,182,176,0.75); animation: rvPuff 1.6s ease-out 0.012s infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 240px; top: 401px; width: 22px; height: 22px; border-radius: 50%; background: rgba(176,182,176,0.7); animation: rvPuff 1.6s ease-out 0.05s infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 305px; top: 402px; width: 20px; height: 20px; border-radius: 50%; background: rgba(176,182,176,0.65); animation: rvPuff 1.6s ease-out 0.088s infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 370px; top: 403px; width: 18px; height: 18px; border-radius: 50%; background: rgba(176,182,176,0.6); animation: rvPuff 1.6s ease-out 0.126s infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 435px; top: 404px; width: 16px; height: 16px; border-radius: 50%; background: rgba(176,182,176,0.55); animation: rvPuff 1.6s ease-out 0.164s infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 495px; top: 405px; width: 14px; height: 14px; border-radius: 50%; background: rgba(176,182,176,0.5); animation: rvPuff 1.6s ease-out 0.2s infinite"></span>
+
+<div aria-hidden="true" style="position: absolute; left: 165px; top: 409px; width: 24px; height: 8px; animation: rvFly 1.6s linear infinite">
+<span style="position: absolute; left: 0; top: 0; width: 24px; height: 8px; border-radius: 0 5px 5px 0; background: linear-gradient(180deg, #F4F6F2 0%, #C9CEC8 55%, #8D9188 100%); box-shadow: 0 0 10px 2px rgba(244,246,242,0.85)"></span>
+</div>
+
+<svg aria-hidden="true" style="position: absolute; left: 150px; top: 392px; animation: rvMuzzle 1.6s ease-out infinite" width="46" height="46" viewBox="0 0 46 46"><polygon points="23,0 28,17 46,23 28,29 23,46 18,29 0,23 18,17" fill="#FFE08A"></polygon><polygon points="23,10 26,20 36,23 26,26 23,36 20,26 10,23 20,20" fill="#FFF1C2"></polygon></svg>
+<svg aria-hidden="true" style="position: absolute; left: 524px; top: 396px; animation: rvSpark 1.6s linear infinite" width="34" height="34" viewBox="0 0 34 34"><g stroke="#F4F6F2" stroke-width="3"><line x1="17" y1="0" x2="17" y2="10"></line><line x1="17" y1="24" x2="17" y2="34"></line><line x1="0" y1="17" x2="10" y2="17"></line><line x1="24" y1="17" x2="34" y2="17"></line><line x1="5" y1="5" x2="11" y2="11"></line><line x1="23" y1="23" x2="29" y2="29"></line></g></svg>
+
+<span style="position: absolute; left: 470px; top: 540px; display: {{noteDisplay}}; font-weight: 800; font-size: 11px; letter-spacing: 0.18em; color: #E8E2D0; background: rgba(14,15,14,0.7); padding: 3px 6px 1px">RICOCHET (BOUNCES)</span>
+
+<div aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 50% 55%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.55) 100%)"></div>
+<div aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.14) 0px, rgba(0,0,0,0.14) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px)"></div>
+<span style="position: absolute; left: 16px; top: 14px; display: {{noteDisplay}}; font-weight: 800; font-size: 12px; letter-spacing: 0.26em; color: #0E0F0E; background: rgba(232,226,208,0.85); padding: 4px 8px 2px">EFFECT PREVIEW · LOOP</span>
+</div>
+
+<sc-if value="{{full}}" hint-placeholder-val="{{ true }}">
+<div style="flex: 1; display: flex; flex-direction: column; gap: 22px">
+<div style="display: flex; align-items: center; gap: 18px">
+<div style="display: flex; align-items: center; justify-content: center; width: 112px; height: 112px; background: #1A1C19; border: 1px solid #5A5D56"><img src="../icons_4x/weapons/revolver.png" alt="Revolver icon" style="width: 96px; height: 96px; image-rendering: pixelated"></div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.28em; color: #8D9188">WEAPON · DRAFT</span>
+<h1 style="margin: 0; font-family: 'IM Fell English', serif; font-weight: 400; font-size: 40px; line-height: 1">Revolver</h1>
+</div>
+</div>
+<section style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-weight: 800; font-size: 13px; letter-spacing: 0.28em; color: #8D9188">LOOK</h2>
+<ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 16px; line-height: 1.4; color: #B9BAB1">
+<li>A small, bright silver bullet with a cool glow.</li>
+<li>A trail of grey smoke puffs that spawn as it passes, then swell, rise and fade — the oldest puffs disappear first.</li>
+<li>Star-shaped muzzle flash; a white spark burst where it hits or ricochets.</li>
+</ul>
+</section>
+<section style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-weight: 800; font-size: 13px; letter-spacing: 0.28em; color: #8D9188">BEHAVIOUR</h2>
+<ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 16px; line-height: 1.4; color: #B9BAB1">
+<li>Fires at the nearest enemy and stops at the first hit.</li>
+<li>Bounces ricochet the bullet to the next closest enemy, still trailing smoke.</li>
+</ul>
+</section>
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-weight: 800; font-size: 13px; letter-spacing: 0.28em; color: #8D9188">LEVEL-UP POOL</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">DAMAGE</span>
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">ATTACK SPEED</span>
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">CRIT CHANCE</span>
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">CRIT DAMAGE</span>
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">PROJECTILE COUNT</span>
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">PROJECTILE SPEED</span>
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">BOUNCES</span>
+</div>
+</section>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"stageOnly":{"editor":"boolean","default":false},"$preview":{"width":1200,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var so = !!this.props.stageOnly;
+    return { full: !so, rootW: so ? 720 : 1200, rootH: so ? 640 : 720, pad: so ? 0 : 40, noteDisplay: so ? 'none' : 'block' };
+  }
+}
+</script>
+</body>
+</html>

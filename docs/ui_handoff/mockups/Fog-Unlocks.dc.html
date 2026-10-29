@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Megaclonk — Unlocks and collection</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&amp;family=IM+Fell+English&amp;family=Overpass:wght@400;600;800&amp;family=Special+Elite&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#E8E2D0}a:hover{color:#FFFFFF}
+</style>
+</helmet>
+<div style="width: 1920px; height: 1080px; position: relative; overflow: hidden; font-family: 'Overpass', sans-serif; color: #E8E2D0; background-color: #8C978F; background-image: repeating-conic-gradient(#8F9A92 0 25%, #87928A 0 50%); background-size: 16px 16px">
+
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; bottom: 0; height: 520px; background-color: #1F2620; background-image: repeating-conic-gradient(#212821 0 25%, #1C221D 0 50%); background-size: 16px 16px"></div>
+<div aria-hidden="true" style="position: absolute; inset: 0; background: rgba(10,11,10,0.86)"></div>
+<div aria-hidden="true" style="position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.6) 100%)"></div>
+
+<header style="position: absolute; left: 120px; right: 110px; top: 72px; display: flex; align-items: flex-end; justify-content: space-between">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<h1 style="margin: 0; font-family: 'IM Fell English', serif; font-weight: 400; font-size: 72px; line-height: 1; text-shadow: 3px 3px 0 #050505">Unlocks &amp; collection</h1>
+<div style="display: flex; align-items: center; gap: 16px">
+<div aria-hidden="true" style="width: 48px; height: 6px; background: #7E1820"></div>
+<span style="font-weight: 600; font-size: 17px; letter-spacing: 0.3em; color: #A9ADA4">ENABLED ENTRIES CAN APPEAR IN RUNS</span>
+</div>
+</div>
+<div style="display: flex; align-items: center; gap: 40px">
+<div style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px">
+<span style="font-weight: 600; font-size: 15px; letter-spacing: 0.3em; color: #8D9188">SILVER</span>
+<span style="font-weight: 800; font-size: 42px; line-height: 1; font-variant-numeric: tabular-nums; color: #F4EFE2">452</span>
+</div>
+<button type="button" style="display: flex; align-items: center; gap: 16px; height: 60px; padding: 0 22px; border: 1px solid #4A4D47; background: transparent; cursor: pointer; font-family: 'IM Fell English', serif; font-size: 30px; color: #D9D4C4">Home<span style="font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 14px; letter-spacing: 0.2em; color: #8D9188">ESC</span></button>
+</div>
+</header>
+
+<nav aria-label="Collection categories" style="position: absolute; left: 120px; top: 232px; display: flex; gap: 40px; border-bottom: 1px solid #3A3D38; width: 1690px">
+<a href="Fog-Unlocks-Weapons.dc.html" style="display: flex; align-items: center; height: 52px; box-sizing: border-box; border-bottom: 4px solid transparent; text-decoration: none; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 18px; letter-spacing: 0.26em; color: #8D9188">WEAPONS</a>
+<button type="button" aria-current="page" style="height: 52px; padding: 0; border: none; border-bottom: 4px solid #7E1820; background: transparent; cursor: pointer; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 18px; letter-spacing: 0.26em; color: #F4EFE2">TOMES</button>
+<button type="button" style="height: 52px; padding: 0; border: none; border-bottom: 4px solid transparent; background: transparent; cursor: pointer; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 18px; letter-spacing: 0.26em; color: #8D9188">TRAITS</button>
+<a href="Fog-Unlocks-Items.dc.html" style="display: flex; align-items: center; height: 52px; box-sizing: border-box; border-bottom: 4px solid transparent; text-decoration: none; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 18px; letter-spacing: 0.26em; color: #8D9188">ITEMS</a>
+<button type="button" style="height: 52px; padding: 0; border: none; border-bottom: 4px solid transparent; background: transparent; cursor: pointer; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 18px; letter-spacing: 0.26em; color: #8D9188">ULTIMATES</button>
+</nav>
+
+<div style="position: absolute; left: 120px; top: 322px; width: 980px; display: flex; flex-direction: column; gap: 44px">
+
+<div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px">
+<sc-for list="{{tomes}}" as="t" hint-placeholder-count="10">
+<button type="button" onClick="{{t.pick}}" aria-pressed="{{t.selected}}" style="display: flex; flex-direction: column; align-items: center; gap: 10px; height: 196px; box-sizing: border-box; padding: 18px 10px 14px; cursor: pointer; background: {{t.bg}}; border: {{t.border}}; font-family: 'IM Fell English', serif">
+<img src="{{t.src}}" alt="" style="width: 76px; height: 76px; image-rendering: pixelated; filter: {{t.filter}}">
+<span style="font-size: 22px; line-height: 1.05; text-align: center; color: {{t.nameColor}}">{{t.name}}</span>
+<sc-if value="{{t.isOn}}" hint-placeholder-val="{{ true }}"><span style="font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 13px; letter-spacing: 0.22em; padding: 3px 9px 1px; background: #7E1820; color: #F4EFE2">ON</span></sc-if>
+<sc-if value="{{t.isOff}}" hint-placeholder-val="{{ false }}"><span style="font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 13px; letter-spacing: 0.22em; padding: 2px 8px 0; border: 1px solid #6A6D66; color: #A9ADA4">OFF</span></sc-if>
+<sc-if value="{{t.locked}}" hint-placeholder-val="{{ false }}"><span style="display: flex; align-items: center; gap: 6px; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 13px; letter-spacing: 0.22em; color: #8D9188"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="11" width="14" height="10"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>LOCKED</span></sc-if>
+</button>
+</sc-for>
+</div>
+
+<section aria-labelledby="acct-h" style="display: flex; flex-direction: column; gap: 14px">
+<h2 id="acct-h" style="margin: 0; font-weight: 800; font-size: 16px; letter-spacing: 0.3em; color: #8D9188">ACCOUNT UPGRADES</h2>
+<div style="display: flex; align-items: center; gap: 28px; height: 76px; padding: 0 24px; background: rgba(14,15,14,0.85); border: 1px solid #3A3D38">
+<span style="flex: 1; font-family: 'IM Fell English', serif; font-size: 30px">Tome slots</span>
+<div aria-hidden="true" style="display: flex; gap: 6px"><span style="width: 22px; height: 22px; background: #7E1820"></span><span style="width: 22px; height: 22px; background: #7E1820"></span><span style="width: 22px; height: 22px; background: #7E1820"></span><span style="width: 22px; height: 22px; background: #7E1820"></span></div>
+<span style="font-weight: 800; font-size: 22px; font-variant-numeric: tabular-nums; width: 56px">4/4</span>
+<span style="font-weight: 800; font-size: 14px; letter-spacing: 0.24em; color: #E8E2D0; border: 2px solid #E8E2D0; padding: 4px 10px 2px; transform: rotate(2deg)">MAXIMUM</span>
+</div>
+</section>
+
+</div>
+
+<section aria-live="polite" aria-label="Selected entry" style="position: absolute; left: 1160px; top: 330px; width: 640px; box-sizing: border-box; padding: 40px 44px 36px; background: #D3CBB2; color: #1C1A15; font-family: 'Special Elite', monospace; transform: rotate(0.8deg); box-shadow: 6px 8px 0 rgba(0,0,0,0.55); display: flex; flex-direction: column; gap: 20px">
+<div aria-hidden="true" style="position: absolute; top: -14px; left: 50%; width: 96px; height: 28px; margin-left: -48px; background: rgba(232,226,208,0.7); transform: rotate(-3deg)"></div>
+<div style="display: flex; align-items: center; gap: 24px">
+<img src="{{sel.src}}" alt="" style="width: 128px; height: 128px; image-rendering: pixelated; border: 3px solid #1C1A15; filter: {{sel.filter}}">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 14px; letter-spacing: 0.3em; color: #5A5446">TOME</span>
+<h2 style="margin: 0; font-weight: 400; font-size: 38px; line-height: 1">{{sel.name}}</h2>
+</div>
+</div>
+<p style="margin: 0; font-size: 20px; line-height: 1.45; color: #2E2A22">[TOME EFFECT — e.g. what one level of this tome adds]</p>
+<div style="height: 0; border-top: 1px dashed #8F876F"></div>
+<sc-if value="{{sel.locked}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 14px">
+<span style="align-self: flex-start; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 18px; letter-spacing: 0.24em; color: #8E1B22; border: 3px solid #8E1B22; padding: 5px 14px 3px; transform: rotate(-4deg)">LOCKED</span>
+<p style="margin: 0; font-size: 18px; color: #4A453A">To unlock: [UNLOCK CONDITION OR SILVER COST]</p>
+</div>
+</sc-if>
+<sc-if value="{{sel.unlocked}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 20px">
+<span style="font-size: 18px; color: #4A453A">Appears in runs</span>
+<button type="button" onClick="{{toggle}}" aria-pressed="{{sel.isOn}}" style="display: flex; align-items: center; gap: 0; padding: 0; border: 2px solid #1C1A15; background: transparent; cursor: pointer; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 15px; letter-spacing: 0.22em">
+<span style="padding: 10px 16px 8px; background: {{sel.onBg}}; color: {{sel.onColor}}">ON</span>
+<span style="padding: 10px 16px 8px; background: {{sel.offBg}}; color: {{sel.offColor}}">OFF</span>
+</button>
+</div>
+</sc-if></section>
+
+<div style="position: absolute; right: 110px; bottom: 32px; display: flex; gap: 32px; font-weight: 600; font-size: 15px; letter-spacing: 0.18em; color: #8D9188">
+<span><b style="color: #E8E2D0">Q / E</b>  CATEGORY</span>
+<span><b style="color: #E8E2D0">ENTER</b>  TOGGLE</span>
+<span><b style="color: #E8E2D0">ESC</b>  HOME</span>
+</div>
+
+<div aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.16) 0px, rgba(0,0,0,0.16) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px)"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1920,"height":1080}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { sel: 'crit', off: {} };
+  }
+  renderVals() {
+    var B = '';
+    var base = [
+      { id: 'crit', name: 'Crit Tome', src: '../icons_4x/tomes/crit.png', locked: false },
+      { id: 'damage', name: 'Damage Tome', src: '../icons_4x/tomes/damage.png', locked: false },
+      { id: 'projectile', name: 'Projectile Tome', src: '../icons_4x/tomes/projectile.png', locked: true },
+      { id: 'size', name: 'Size Tome', src: '../icons_4x/tomes/size.png', locked: true },
+      { id: 'attackspeed', name: 'Attack Speed Tome', src: '../icons_4x/tomes/attackspeed.png', locked: false },
+      { id: 'movespeed', name: 'Movement Speed Tome', src: '../icons_4x/tomes/movespeed.png', locked: false },
+      { id: 'maxhp', name: 'Max HP Tome', src: '../icons_4x/tomes/maxhp.png', locked: false },
+      { id: 'lifesteal', name: 'Lifesteal Tome', src: '../icons_4x/tomes/lifesteal.png', locked: true },
+      { id: 'xp', name: 'XP Tome', src: '../icons_4x/tomes/xp.png', locked: false },
+      { id: 'gold', name: 'Gold Tome', src: '../icons_4x/tomes/gold.png', locked: true }
+    ];
+    var self = this;
+    var st = this.state;
+    var tomes = base.map(function (t) {
+      var isOn = !t.locked && !st.off[t.id];
+      var selected = st.sel === t.id;
+      return {
+        id: t.id, name: t.name, src: t.src, locked: t.locked,
+        isOn: isOn, isOff: !t.locked && !isOn, selected: selected,
+        bg: selected ? '#221616' : 'rgba(14,15,14,0.85)',
+        border: selected ? '2px solid #B3363F' : (t.locked ? '1px dashed #3A3D38' : '1px solid #3A3D38'),
+        filter: t.locked ? 'grayscale(1) brightness(0.55)' : 'none',
+        nameColor: t.locked ? '#7A7D76' : '#E8E2D0',
+        pick: function () { self.setState({ sel: t.id }); }
+      };
+    });
+    var sel = tomes.filter(function (t) { return t.selected; })[0] || tomes[0];
+    var selVals = {
+      name: sel.name, src: sel.src, locked: sel.locked, unlocked: !sel.locked, isOn: sel.isOn,
+      filter: sel.locked ? 'grayscale(1) brightness(0.6)' : 'none',
+      onBg: sel.isOn ? '#1C1A15' : 'transparent', onColor: sel.isOn ? '#D3CBB2' : '#1C1A15',
+      offBg: sel.isOn ? 'transparent' : '#1C1A15', offColor: sel.isOn ? '#1C1A15' : '#D3CBB2'
+    };
+    return {
+      tomes: tomes,
+      sel: selVals,
+      toggle: function () {
+        var off = Object.assign({}, st.off);
+        off[sel.id] = !off[sel.id];
+        self.setState({ off: off });
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

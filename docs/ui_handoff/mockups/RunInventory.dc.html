@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Run inventory panel</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English&amp;family=Overpass:wght@400;600;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<section aria-labelledby="inv-h" style="width: 420px; height: 870px; box-sizing: border-box; padding: 28px 30px; background: rgba(14,15,14,0.92); border: 1px solid #3A3D38; font-family: 'Overpass', sans-serif; color: #E8E2D0; display: flex; flex-direction: column; gap: 26px">
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<h2 id="inv-h" style="margin: 0; font-family: 'IM Fell English', serif; font-weight: 400; font-size: 38px; line-height: 1">Inventory</h2>
+<div aria-hidden="true" style="width: 40px; height: 4px; background: #7E1820"></div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<span style="font-weight: 800; font-size: 13px; letter-spacing: 0.28em; color: #8D9188">WEAPONS</span>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px">
+<sc-for list="{{weapons}}" as="w" hint-placeholder-count="4">
+<sc-if value="{{w.filled}}" hint-placeholder-val="{{ true }}">
+<div style="height: 88px; box-sizing: border-box; border: 1px solid #5A5D56; background: #1C1E1B; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px">
+<img src="{{w.src}}" alt="{{w.name}}" style="width: 52px; height: 52px; image-rendering: pixelated; object-fit: contain">
+<span style="font-weight: 800; font-size: 11px; letter-spacing: 0.16em; color: #D9D4C4">{{w.lv}}</span>
+</div>
+</sc-if>
+<sc-if value="{{w.empty}}" hint-placeholder-val="{{ false }}">
+<div style="height: 88px; box-sizing: border-box; border: 1px dashed #3A3D38"></div>
+</sc-if>
+</sc-for>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<span style="font-weight: 800; font-size: 13px; letter-spacing: 0.28em; color: #8D9188">TOMES · 0/4</span>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px">
+<div style="height: 72px; border: 1px dashed #3A3D38"></div>
+<div style="height: 72px; border: 1px dashed #3A3D38"></div>
+<div style="height: 72px; border: 1px dashed #3A3D38"></div>
+<div style="height: 72px; border: 1px dashed #3A3D38"></div>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<span style="font-weight: 800; font-size: 13px; letter-spacing: 0.28em; color: #8D9188">SOCKET GEMS</span>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px">
+<sc-for list="{{gems}}" as="g" hint-placeholder-count="4">
+<div style="height: 70px; box-sizing: border-box; border: 1px solid {{g.border}}; background: #1C1E1B; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px">
+<div style="display: flex; align-items: center; gap: 8px">
+<svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16"><path d="M8 1 15 8 8 15 1 8z" fill="{{g.fill}}" stroke="{{g.color}}" stroke-width="2"></path></svg>
+<span style="font-weight: 800; font-size: 20px; color: {{g.countColor}}">{{g.count}}</span>
+</div>
+<span style="font-weight: 800; font-size: 10px; letter-spacing: 0.2em; color: {{g.color}}">{{g.short}}</span>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<span style="font-weight: 800; font-size: 13px; letter-spacing: 0.28em; color: #8D9188">ITEMS</span>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px">
+<div style="height: 88px; box-sizing: border-box; border: 1px solid #5A5D56; background: #1C1E1B; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px">
+<img src="../icons_4x/items/tithe_purse.png" alt="Tithe Purse item" style="width: 48px; height: 48px; image-rendering: pixelated; object-fit: contain">
+<span style="font-weight: 800; font-size: 11px; letter-spacing: 0.16em; color: #D9D4C4">×1</span>
+</div>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<span style="font-weight: 800; font-size: 13px; letter-spacing: 0.28em; color: #8D9188">TRAIT &amp; ULTIMATE</span>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px">
+<div style="height: 88px; box-sizing: border-box; border: 1px solid #5A5D56; background: #1C1E1B; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px">
+<img src="../icons_4x/traits/cartographer.png" alt="Cartographer trait" style="width: 52px; height: 52px; image-rendering: pixelated">
+<span style="font-weight: 800; font-size: 11px; letter-spacing: 0.16em; color: #A9ADA4">TRAIT</span>
+</div>
+<div style="height: 88px; box-sizing: border-box; border: 2px solid #B3363F; background: #1C1E1B; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px">
+<img src="../icons_4x/ultimates/cataclysm.png" alt="Cataclysm ultimate" style="width: 52px; height: 52px; image-rendering: pixelated">
+<span style="font-weight: 800; font-size: 11px; letter-spacing: 0.16em; color: #F4EFE2; background: #7E1820; padding: 1px 5px 0">Q READY</span>
+</div>
+</div>
+</div>
+
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"weapons":{"editor":"enum","options":["1","2","3"],"default":"2"},"ice":{"editor":"int","default":0,"min":0},"corrosive":{"editor":"int","default":0,"min":0},"fire":{"editor":"int","default":0,"min":0},"electric":{"editor":"int","default":0,"min":0},"$preview":{"width":420,"height":870}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var n = Math.max(1, Math.min(3, Number(this.props.weapons ?? 2) || 2));
+    var ice = Number(this.props.ice ?? 0) || 0;
+    var cor = Number(this.props.corrosive ?? 0) || 0;
+    var fire = Number(this.props.fire ?? 0) || 0;
+    var elec = Number(this.props.electric ?? 0) || 0;
+    var all = [
+      { name: 'Firestaff', lv: 'LV 2', src: '../icons_4x/weapons/firestaff.png' },
+      { name: 'Lightning Staff', lv: 'LV 1', src: '../icons_4x/weapons/lightning.png' },
+      { name: 'Bow', lv: 'LV 1', src: '../icons_4x/weapons/bow.png' }
+    ];
+    var weapons = [0, 1, 2, 3].map(function (i) {
+      var w = i < n ? all[i] : null;
+      return w ? { filled: true, empty: false, name: w.name, lv: w.lv, src: w.src } : { filled: false, empty: true };
+    });
+    var defs = [
+      { short: 'CORROSIVE', color: '#79B35F', count: cor },
+      { short: 'ICE', color: '#7FB8CF', count: ice },
+      { short: 'FIRE', color: '#D9763E', count: fire },
+      { short: 'ELECTRIC', color: '#A487DA', count: elec }
+    ];
+    var gems = defs.map(function (g) {
+      var has = g.count > 0;
+      return { short: g.short, color: g.color, count: g.count, fill: has ? g.color : 'none', border: has ? g.color : '#3A3D38', countColor: has ? '#F4EFE2' : '#6A6D66' };
+    });
+    return { weapons: weapons, gems: gems };
+  }
+}
+</script>
+</body>
+</html>
