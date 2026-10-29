@@ -75,9 +75,22 @@ func fill_quest(title: String,description: String,state: String,value: float,tar
     claim_button.add_theme_stylebox_override("hover",FogTheme.flat(Color("E4DCC3"),FogPalette.MEMO_INK,2))
     claim_button.add_theme_stylebox_override("focus",FogTheme.flat(Color("E4DCC3"),FogPalette.RUST,3))
     claim_button.add_theme_stylebox_override("pressed",FogTheme.flat(FogPalette.MEMO_INK,FogPalette.MEMO_INK,2))
+    for st in ["normal","hover","focus","pressed"]:(claim_button.get_theme_stylebox(st) as StyleBoxFlat).set_content_margin_all(8)
     row.add_child(claim_button);claim_button.pressed.connect(func():claim_pressed.emit())
    else:
     var note=memo_label("Reward claimed",15,FogPalette.MEMO_INK_SOFT,row);note.name="Claimed"
+ return self
+# Keyboard / controller focus on the whole card (Quests grid): a rust ring follows the tilt, Enter claims when a claim is offered.
+var focus_ring: Panel
+func make_focusable() -> MemoCard:
+ focus_mode=Control.FOCUS_ALL
+ if focus_ring==null:
+  focus_ring=Panel.new();focus_ring.name="FocusRing";focus_ring.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);focus_ring.mouse_filter=Control.MOUSE_FILTER_IGNORE
+  var st=FogTheme.flat(Color(0,0,0,0),FogPalette.RUST_BRIGHT,4);focus_ring.add_theme_stylebox_override("panel",st);focus_ring.hide();tilter.add_child(focus_ring)
+  focus_entered.connect(func():focus_ring.show());focus_exited.connect(func():focus_ring.hide())
+  gui_input.connect(func(event: InputEvent):
+   if claim_button!=null and (event.is_action_pressed("ui_accept")) and not event.is_echo():accept_event();claim_pressed.emit())
+ if claim_button!=null:claim_button.focus_mode=Control.FOCUS_NONE
  return self
 static func _n(v: float) -> String:return str(int(v)) if is_equal_approx(v,floorf(v)) else "%.1f"%v
 class ProgressTrack extends Control:

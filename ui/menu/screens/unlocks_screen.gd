@@ -1,41 +1,26 @@
 class_name UnlocksScreen
-extends MenuScreen
+extends FrameScreen
 # Fog-Unlocks / Fog-Unlocks-Weapons / Fog-Unlocks-Items: one frame (title, silver, Home, tab bar) and one body per
 # category. Everything shown comes from LoadoutCatalog / Catalog / MetaProgress / MenuData; nothing is typed twice.
 const GRID_POS=Vector2(120,322)
 const MEMO_INK_BORDER=Color("1C1A15")
 var category="weapons"
-var tab_bar: MenuTabBar
 var body: Control
 var memo: MemoCard
-var silver_number: HudNumber
-var home_button: MenuItem
 var tiles: Dictionary={}
 var entry_data: Dictionary={}
 var selected_id=""
 var toggle: OnOffToggle
 var buy_button: Button
 var slots_block: Control
-func progress() -> Dictionary:return game.progress.data
 func build() -> void:
  category=frontend.active_tab if frontend.active_tab in ['weapons','tomes','traits','items','ultimates'] else 'weapons'
- var header=VBoxContainer.new();header.name="Header";header.position=Vector2(120,72);header.add_theme_constant_override("separation",12);header.mouse_filter=Control.MOUSE_FILTER_IGNORE;content.add_child(header)
- header.add_child(MenuStyle.label("Unlocks & collection",MenuStyle.serif(),FogPalette.SIZE_TITLE,FogPalette.BONE,3))
- var sub=HBoxContainer.new();sub.add_theme_constant_override("separation",16);sub.mouse_filter=Control.MOUSE_FILTER_IGNORE;header.add_child(sub)
- var rule=ColorRect.new();rule.color=FogPalette.RUST;rule.custom_minimum_size=Vector2(48,6);rule.size_flags_vertical=Control.SIZE_SHRINK_CENTER;sub.add_child(rule)
- sub.add_child(SmallCapsLabel.new().setup("Enabled entries can appear in runs",17,Color("A9ADA4"),600,0.3))
- home_button=MenuStyle.spawn("menu_item") as MenuItem;home_button.setup("Home",30,30,false,Vector2(60,60));home_button.hint_text="ESC";home_button.indent=22.0;home_button.outlined=true
- home_button.position=Vector2(MenuStyle.W-110-190,121);home_button.custom_minimum_size=Vector2(190,60);home_button.size=Vector2(190,60);home_button.chosen.connect(go_back);content.add_child(home_button)
- var cap=SmallCapsLabel.new().setup("Silver",15,Color("8D9188"),600,0.3);cap.name="SilverCaption";cap.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT;cap.position=Vector2(MenuStyle.W-110-190-40-240,122);cap.size=Vector2(240,22);content.add_child(cap)
- silver_number=HudNumber.new().setup(progress().silver,42,FogPalette.BONE_BRIGHT);silver_number.name="SilverAmount";silver_number.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT;silver_number.position=Vector2(MenuStyle.W-110-190-40-240,138);silver_number.size=Vector2(240,50);content.add_child(silver_number)
- tab_bar=MenuTabBar.new();tab_bar.name="Tabs";tab_bar.position=Vector2(120,232);content.add_child(tab_bar)
- tab_bar.set_tabs(MenuData.UNLOCK_TABS,category);tab_bar.tab_selected.connect(show_category)
+ build_frame("Unlocks & collection","Enabled entries can appear in runs",MenuData.UNLOCK_TABS,category)
+ tab_bar.tab_selected.connect(show_category)
  body=Control.new();body.name="Body";body.size=Vector2(MenuStyle.W,MenuStyle.H);body.mouse_filter=Control.MOUSE_FILTER_IGNORE;content.add_child(body)
  build_body()
-func step_tabs(direction: int) -> void:tab_bar.step(direction)
 func show_category(id: String) -> void:
  category=id;frontend.active_tab=id;build_body()
-func go_back() -> void:navigate(frontend.home)
 func remember_focus() -> String:
  var owner=get_viewport().gui_get_focus_owner() if is_inside_tree() else null
  return owner.name if owner!=null else ""
@@ -90,7 +75,6 @@ func refresh_tile(id: String) -> void:
  var tile: CollectionTile=tiles[id];tile.set_state(MenuData.tile_state(progress(),category,id));tile.is_new=MenuData.is_new(progress(),category,id);tile.queue_redraw()
 func refresh_all_tiles() -> void:
  for id in tiles:refresh_tile(id)
-func refresh_silver() -> void:silver_number.set_value(progress().silver)
 # ---- shared memo pieces ------------------------------------------------------------------------------------------
 func new_memo(at: Vector2,width: float,tilt: float,margins: Vector4) -> MemoCard:
  memo=MenuStyle.spawn("memo_card") as MemoCard;memo.name="DetailMemo";memo.position=at;memo.custom_minimum_size.x=width;memo.size.x=width

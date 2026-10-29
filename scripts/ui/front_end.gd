@@ -193,7 +193,7 @@ func home() -> void:
  if is_instance_valid(game.audio):game.audio.music_menu()
  show_screen("main_menu")
 # Out-of-run menus are Fog County MenuScreen scenes (res://ui/menu). They own their theme; in-run screens keep theirs.
-const SCREENS={"main_menu":"res://ui/menu/screens/main_menu.tscn","loadout":"res://ui/menu/screens/loadout_screen.tscn","unlocks":"res://ui/menu/screens/unlocks_screen.tscn"}
+const SCREENS={"main_menu":"res://ui/menu/screens/main_menu.tscn","loadout":"res://ui/menu/screens/loadout_screen.tscn","unlocks":"res://ui/menu/screens/unlocks_screen.tscn","quests":"res://ui/menu/screens/quests_screen.tscn"}
 func show_screen(kind: String) -> MenuScreen:
  MenuScreen.play_sound=func(sound_name: String):game.play_sound("ui."+sound_name)
  var screen=load(SCREENS[kind]).instantiate() as MenuScreen
@@ -208,27 +208,8 @@ func unlocks() -> void:
  show_screen("unlocks")
 func quest_description(q: Dictionary) -> String:return MenuData.quest_description(q)
 func quests() -> void:
- game.mode="quests";var col=page("Quests");paragraph(wallet(),col,800)
- var tabs=TabContainer.new();tabs.custom_minimum_size=Vector2(1130,440);col.add_child(tabs)
- for category in ["Hunting","Arsenal","Survival","Exploration"]:
-  var scroll=ScrollContainer.new();scroll.name=category;tabs.add_child(scroll)
-  var list=VBoxContainer.new();list.size_flags_horizontal=Control.SIZE_EXPAND_FILL;scroll.add_child(list)
-  for q in quest_definitions:
-   if q.category!=category:continue
-   heading(q.name,list,20);paragraph(quest_description(q)+" • Reward: %d silver"%LoadoutCatalog.quest_reward(q),list,900)
-   var bar=ProgressBar.new();bar.max_value=q.target;bar.value=MetaProgress.quest_value(game.progress.data,q.metric);list.add_child(bar)
-   var claimed=q.id in game.progress.data.claimed
-   var claim=action("Claimed" if claimed else "Claim reward" if MetaProgress.quest_state(game.progress.data,q)=="completed" else "In progress",list,func():
-    if MetaProgress.claim(game.progress.data,q.id):
-     game.play_sound("ui.purchase");game.progress.save();claim_quest_button(list,q.id);wallet_refresh(col))
-   claim.set_meta("quest_id",q.id)
-   claim.disabled=claimed or MetaProgress.quest_value(game.progress.data,q.metric)<q.target
-func claim_quest_button(list: Node,id: String) -> void:
- for child in list.get_children():
-  if child is Button and child.get_meta("quest_id","")==id:child.text="Claimed";child.disabled=true
-func wallet_refresh(column: Node) -> void:
- for child in column.get_children():
-  if child is Label and child.text.begins_with("SILVER"):child.text=wallet()
+ game.mode="quests";preview_mode="home";prepare_backdrop();clear()
+ show_screen("quests")
 func fade_celebrations() -> void:
  for child in RewardScreens.descendants(menu):
   if child is RewardCelebration:

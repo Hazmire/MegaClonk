@@ -52,4 +52,8 @@ func run() -> void:
     var screen=fe.menu.get_child(fe.menu.get_child_count()-1)
     screen.tiles['9'].grab_focus();await snap('unlocks-weapons-scythes',2.2)
     screen.tiles['15'].grab_focus();await snap('unlocks-weapons-locked',1.2)
+ if want('quests'):
+  game.progress.data.quest_metrics['kills']=0.0;game.progress.data.kills=140;game.progress.data.claimed=['first_hunt']
+  fe.quests();await snap('quests',0.6)
+  var qs=fe.menu.get_child(fe.menu.get_child_count()-1);qs.tab_bar.select('Arsenal');await snap('quests-arsenal',0.6)
  quit()
