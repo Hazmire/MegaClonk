@@ -31,7 +31,7 @@ func run():
  var result={"note":"headless CPU only (no GPU/mixer); enemies are stationary with huge HP so every hook keeps firing","cases":[]}
  for name in ["A","B"]:
   for count in [50,150,300,500]:
-   game.enemies.clear();game.wrt.clear();game.psx.clear();game.irt.clear_effects()
+   game.enemies.clear();game.wrt.clear();game.psx.clear();game.irt.clear_effects();game.player.position=Vector3(0,1,0);game.player.velocity=Vector3.ZERO
    loadout(name)
    for i in count:
     var a=TAU*float(i)/count;var rad=3.0+float(i%7)*1.6
@@ -39,7 +39,7 @@ func run():
     if not e.is_empty():e.hp=1.0e9;e.max_hp=1.0e9;e.speed=0.0
    var samples=[];var peak_live=0
    for frame in 600:
-    game.player.position+=Vector3(0,0,0.15)
+    game.player.position=Vector3(0,1,0)+Vector3(sin(float(frame)*0.05),0,float(frame%120)*0.25)
     var t=Time.get_ticks_usec()
     game.rebuild_grid();game.update_weapons(1.0/60.0);game.update_projectiles(1.0/60.0)
     if game.irt.ticking:game.irt.tick(1.0/60.0)
