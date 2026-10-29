@@ -25,6 +25,7 @@ func run():
  await catalog_tests()
  await stat_tests()
  await proc_tests()
+ gem_tests()
  await migration_tests()
  print("ITEMS_REGRESSION: %d checks, %d failures"%[checks,failures.size()])
  game.queue_free();await process_frame;await process_frame
@@ -318,4 +319,120 @@ func proc_tests():
  fresh();give("ouija_planchette",30);game.irt.rng.seed=13;var counter0=int(game.irt.counters.get("ouija",0))
  var e2=make_enemy(Vector3(2,0,0));for i in 200:game.irt.deal(e2,1.0,"black_candle");e2.hp=1000.0
  check(int(game.irt.counters.get("ouija",0))==counter0,"No chain: 200 item hits never roll Ouija Planchette")
+ fresh()
+
+# ---------------------------------------------------------------- batch 3: gem and status items
+func equip_gems(weapon: int,elements: Array):
+ if not game.weapons.has(weapon):game.weapons[weapon]={"level":1,"upgrades":{}}
+ for el in elements:WeaponSockets.install(game.weapons[weapon],el)
+func gem_tests():
+ fresh();game.player.position=Vector3(0,1,0);game.enemies.clear()
+ var e=make_enemy(Vector3(2,0,0));game.rebuild_grid()
+ var base=hit_damage(e)
+ # Tinder Pouch / Lodestone / Coven Sigil: inert until the status exists
+ give("tinder_pouch");give("lodestone")
+ check(absf(hit_damage(e)/base-1.0)<0.001,"Tinder Pouch and Lodestone are inert on an enemy with no status")
+ e["burn"]=3.0
+ check(absf(hit_damage(e)/base-1.15)<0.001,"Tinder Pouch: burning enemies take +15%% from weapon hits")
+ var before=e.hp;game.irt.deal(e,100.0,"black_candle");var item_dmg=before-e.hp;e.hp=before
+ check(absf(item_dmg-115.0)<0.01,"Tinder Pouch also boosts item damage ('all sources')")
+ e["burn"]=0.0;StatusManager.state(e)["stun"]={"left":2.0}
+ check(absf(hit_damage(e)/base-1.25)<0.001,"Lodestone: stunned enemies take +25%")
+ e.erase("fx")
+ # inert with a weapon that has no matching gem: ice gem only, 40 hits, never any bonus
+ fresh();give("tinder_pouch");give("lodestone");game.enemies.clear();equip_gems(0,["ice"])
+ var ice_target=make_enemy(Vector3(2,0,0),100000.0);game.rebuild_grid();game.irt.rng.seed=1
+ var bonus_seen=false
+ for i in 40:
+  game.invulnerability=0.0;game.hit(ice_target,10.0,0,{"source":"slash","pos":ice_target.pos,"dir":Vector3.FORWARD})
+  if float(ice_target.get("burn",0.0))>0.0 or StatusManager.stunned(ice_target):bonus_seen=true
+ check(not bonus_seen and StatusManager.chill_stacks(ice_target)>0,"Gem boosters stay inert with a different gem: ice applies chill, no burn or stun, no bonus")
+ game.weapons[0].erase("sockets")
+ fresh();give("coven_sigil");game.enemies.clear()
+ var cv=make_enemy(Vector3(2,0,0));var cbase=hit_damage(cv)
+ cv["burn"]=2.0
+ check(absf(hit_damage(cv)/cbase-1.15)<0.001,"Coven Sigil: +15%% for one status")
+ StatusManager.state(cv)["stun"]={"left":2.0};StatusManager.apply_corrosive(game,cv,0);StatusManager.apply_chill(game,cv,1)
+ check(absf(hit_damage(cv)/cbase-1.60)<0.001,"Coven Sigil caps at +60%% (4 statuses)")
+ # Leper's Bell
+ fresh();game.enemies.clear();var pe=make_enemy(Vector3(2,0,0));StatusManager.apply_corrosive(game,pe,0);var h0=pe.hp;StatusManager.tick(game,pe,1.0);var plain_tick=h0-pe.hp
+ fresh();give("lepers_bell");game.enemies.clear();var pe2=make_enemy(Vector3(2,0,0));StatusManager.apply_corrosive(game,pe2,0);h0=pe2.hp;StatusManager.tick(game,pe2,1.0)
+ check(plain_tick>0.0 and absf((h0-pe2.hp)/plain_tick-1.2)<0.001,"Leper's Bell: corrosion deals +20%% (%.2f vs %.2f)"%[h0-pe2.hp,plain_tick])
+ fresh();give("lepers_bell");game.enemies.clear();var np=make_enemy(Vector3(2,0,0));var np_hp=np.hp;StatusManager.tick(game,np,5.0)
+ check(is_equal_approx(np.hp,np_hp),"Leper's Bell is inert on an enemy with no corrosion")
+ # Rime Shard: chill lasts longer; shatter radius
+ fresh();game.enemies.clear();var ce=make_enemy(Vector3(2,0,0));StatusManager.apply_chill(game,ce,3)
+ for i in 330:StatusManager.tick(game,ce,1.0/60.0)
+ var plain_stacks=StatusManager.chill_stacks(ce)
+ fresh();give("rime_shard");game.enemies.clear();var ce2=make_enemy(Vector3(2,0,0));StatusManager.apply_chill(game,ce2,3)
+ for i in 330:StatusManager.tick(game,ce2,1.0/60.0)
+ check(plain_stacks<3 and StatusManager.chill_stacks(ce2)==3,"Rime Shard: chill lasts 50%% longer (stacks after 5.5 s: %d vs %d)"%[plain_stacks,StatusManager.chill_stacks(ce2)])
+ fresh();game.enemies.clear();var dying=make_enemy(Vector3(2,0,0));StatusManager.apply_chill(game,dying,2);var victim=make_enemy(Vector3(6.2,0,0));game.rebuild_grid()
+ StatusManager.shatter(game,dying)
+ var out_of_range=is_equal_approx(victim.hp,1000.0)
+ fresh();give("rime_shard");game.enemies.clear();dying=make_enemy(Vector3(2,0,0));StatusManager.apply_chill(game,dying,2);victim=make_enemy(Vector3(6.2,0,0));game.rebuild_grid()
+ StatusManager.shatter(game,dying)
+ check(out_of_range and victim.hp<1000.0,"Rime Shard: Shatter radius +1 m (victim at 4.2 m is hit only with the shard)")
+ # Gem Cutter's Loupe
+ fresh();game.enemies.clear();var le=make_enemy(Vector3(2,0,0));StatusManager.apply_corrosive(game,le,0);var plain_left=float(le.fx.poison.left)
+ fresh();give("gem_loupe");game.enemies.clear();var le2=make_enemy(Vector3(2,0,0));StatusManager.apply_corrosive(game,le2,0)
+ var hp_a=le2.hp;StatusManager.tick(game,le2,1.0)
+ check(absf(float(le2.fx.poison.left)/plain_left-1.3)<0.01 or absf((float(le2.fx.poison.left)+1.0)/plain_left-1.3)<0.01,"Gem Cutter's Loupe: statuses last 30%% longer")
+ check(absf((hp_a-le2.hp)/(plain_tick)-1.3)<0.001,"Gem Cutter's Loupe: statuses hit 30%% harder")
+ # Mire Flask
+ fresh();give("mire_flask");game.enemies.clear();game.irt.rng.seed=21
+ var clean=make_enemy(Vector3(2,0,0));var corroded=make_enemy(Vector3(3,0,0));StatusManager.apply_corrosive(game,corroded,0)
+ for i in 200:
+  game.irt.buffs.erase("puddle_cd");game.irt.on_hit(clean,10.0,10.0,false,0)
+ check(game.irt.puddles.is_empty(),"Mire Flask is inert on enemies without corrosion")
+ var made=0
+ for i in 4000:
+  game.irt.buffs.erase("puddle_cd");game.irt.puddles.clear();game.irt.on_hit(corroded,10.0,10.0,false,0);made+=game.irt.puddles.size()
+ check(near(float(made)/4000.0,0.15,0.02),"Mire Flask: 15%% of hits on corroded enemies leave a puddle (%.3f)"%(float(made)/4000.0))
+ game.irt.puddles.clear();game.irt.rng.seed=22;game.irt.stacks["mire_flask"]=60
+ for i in 100:game.irt.buffs.erase("puddle_cd");game.irt.on_hit(corroded,10.0,10.0,false,0)
+ game.irt.stacks["mire_flask"]=1
+ check(game.irt.puddles.size()<=int(ItemStats.v("mire_flask","cap")) and int(game.irt.dropped.get("puddles",0))>0,"Puddle pool is hard-capped and refusals are counted")
+ game.rebuild_grid();game.irt.puddles=[{"pos":corroded.pos,"life":4.0,"clock":0.0}];var ph=corroded.hp
+ for i in 60:game.irt.tick(1.0/60.0)
+ check(corroded.hp<ph and bool(corroded.get("last_item",false)),"Puddles damage enemies through Game.hit (item source)")
+ # Alchemist's Retort + Heretic's Prism through a real combo
+ fresh();game.enemies.clear();var ce3=make_enemy(Vector3(2,0,0),1000.0);ce3["burn"]=3.0;StatusManager.apply_chill(game,ce3,3)
+ Combos.window_count=0;var combo=Elements.combo("fire","ice")
+ var hp_plain=ce3.hp;Combos.evaluate(game,ce3,0,combo);var plain_combo=hp_plain-ce3.hp;var cd_plain=float(ce3.fx.cd.get("combo_thermal_shock",0.0))
+ check(plain_combo>0.0 and is_equal_approx(cd_plain,3.0),"Control: thermal shock fires with a 3 s cooldown")
+ fresh();give("alchemist_retort");give("heretics_prism");game.enemies.clear();game.health=10.0
+ ce3=make_enemy(Vector3(2,0,0),1000.0);ce3["burn"]=3.0;StatusManager.apply_chill(game,ce3,3);Combos.window_count=0
+ hp_plain=ce3.hp;Combos.evaluate(game,ce3,0,combo)
+ check(absf((hp_plain-ce3.hp)/plain_combo-1.5)<0.001,"Heretic's Prism: combos deal +50%% damage")
+ check(is_equal_approx(game.health,11.0),"Heretic's Prism: each combo heals 1 HP")
+ check(is_equal_approx(float(ce3.fx.cd.get("combo_thermal_shock",0.0)),2.25),"Alchemist's Retort: combo cooldowns 25%% shorter")
+ check(is_equal_approx(game.irt.combo_radius(),1.3),"Alchemist's Retort: combo radius +30%%")
+ fresh();give("heretics_prism");give("alchemist_retort");game.health=10.0
+ var plain_e=make_enemy(Vector3(2,0,0));Combos.window_count=0;Combos.evaluate(game,plain_e,0,combo)
+ check(is_equal_approx(game.health,10.0) and is_equal_approx(plain_e.hp,1000.0),"Retort and Prism are inert when no combo fires")
+ # Goat Skull
+ fresh();give("goat_skull");game.enemies.clear();game.irt.rng.seed=31
+ var procs=0
+ for i in 4000:
+  game.irt.counters["goat"]=0;game.irt.on_kill({"pos":Vector3(0,0,80),"burn":2.0,"last_item":false,"burn_source":0})
+  procs+=int(game.irt.counters.get("goat",0))
+ check(near(float(procs)/4000.0,0.10,0.02),"Goat Skull: 10%% of burning kills ignite nearby enemies (%.3f)"%(float(procs)/4000.0))
+ game.irt.counters["goat"]=0;for i in 500:game.irt.on_kill({"pos":Vector3(0,0,80),"burn":0.0,"last_item":false})
+ check(int(game.irt.counters.get("goat",0))==0,"Goat Skull is inert on enemies that are not burning")
+ game.enemies.clear();var spreader=make_enemy(Vector3(2,0,0));var neighbour=make_enemy(Vector3(3,0,0));var far_n=make_enemy(Vector3(9,0,0));game.rebuild_grid()
+ game.irt.stacks["goat_skull"]=60
+ for i in 40:game.irt.on_kill({"pos":spreader.pos,"burn":2.0,"last_item":false,"burn_source":0})
+ game.irt.stacks["goat_skull"]=1
+ check(float(neighbour.burn)>0.0 and float(far_n.burn)==0.0,"Goat Skull ignites enemies within 3 m only")
+ # Witch-Hunter's Brand
+ fresh();give("witch_hunters_brand");game.enemies.clear()
+ for i in 3:
+  var b=make_enemy(Vector3(5+i,0,0));b["burn"]=3.0
+ var armor0=game.stats.armor;var ls0=game.stats.lifesteal
+ for i in 40:game.irt.tick(1.0/60.0)
+ check(is_equal_approx(game.stats.armor-armor0,3*0.4) and is_equal_approx(game.stats.lifesteal-ls0,3*0.002),"Witch-Hunter's Brand: armour and lifesteal per burning enemy")
+ for e2 in game.enemies:e2["burn"]=0.0
+ for i in 40:game.irt.tick(1.0/60.0)
+ check(is_equal_approx(game.stats.armor,armor0) and is_equal_approx(game.stats.lifesteal,ls0),"Witch-Hunter's Brand: bonuses vanish when nothing burns")
  fresh()

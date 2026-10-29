@@ -75,7 +75,7 @@ static func apply_corrosive(game: Object, e: Dictionary, weapon: int) -> void:
  var fx=state(e)
  var started=not fx.has("poison")
  # Refreshes to full duration; it never stacks, so overlapping weapons cannot multiply the damage.
- fx["poison"]={"left":float(t.duration),"clock":float(fx.poison.clock) if not started else float(t.interval),"weapon":weapon}
+ fx["poison"]={"left":float(t.duration)*game.irt.status_longer(),"clock":float(fx.poison.clock) if not started else float(t.interval),"weapon":weapon}
  if started and cooldown_ready(e,"fx_poison_sound"):
   start_cooldown(e,"fx_poison_sound",float(t.interval));game.play_sound("status.poison")
 static func consume_chill(e: Dictionary, stacks: int) -> void:
@@ -110,7 +110,7 @@ static func restore_speed(e: Dictionary) -> void:
 static func apply_ignite(game: Object, e: Dictionary, weapon: int) -> bool:
  var t: Dictionary=Elements.TUNING.fire
  if float(e.get("burn",0.0))>0.0:return false # non-refreshing while already burning
- e.burn=float(t.ignite_duration);e["burn_source"]=weapon;e["burn_clock"]=0.0
+ e.burn=float(t.ignite_duration)*game.irt.status_longer();e["burn_source"]=weapon;e["burn_clock"]=0.0
  game.play_sound("status.ignite")
  return true
 # Returns the stun duration actually applied (0 when nothing happened).
@@ -120,7 +120,7 @@ static func apply_stun(game: Object, e: Dictionary, weapon: int) -> float:
  var fx=state(e)
  var dr: Dictionary=fx.get("stun_dr",{"count":0,"since":0.0})
  var index=mini(int(dr.count),t.stun_durations.size()-1)
- var duration=float(t.stun_durations[index])
+ var duration=float(t.stun_durations[index])*game.irt.status_longer()
  var boss=is_boss(e)
  if boss:duration=minf(duration,float(t.boss_max_stun))
  dr["count"]=int(dr.count)+1;dr["since"]=0.0;fx["stun_dr"]=dr
@@ -142,7 +142,7 @@ static func tick(game: Object, e: Dictionary, delta: float) -> void:
   cooldowns[key]=float(cooldowns[key])-delta
   if cooldowns[key]<=0:cooldowns.erase(key)
  if fx.has("poison"):tick_poison(game,e,fx.poison,delta)
- if fx.has("chill"):tick_chill(e,fx.chill,delta)
+ if fx.has("chill"):tick_chill(e,fx.chill,delta,game.irt.chill_hold())
  if fx.has("stun"):
   var stun: Dictionary=fx.stun
   stun["left"]=float(stun.left)-delta
@@ -160,12 +160,13 @@ static func tick_poison(game: Object, e: Dictionary, poison: Dictionary, delta: 
   var boss=is_boss(e)
   var amount=float(e.hp)*(float(t.boss_percent_current_hp) if boss else float(t.percent_current_hp))
   if boss:amount=minf(amount,float(t.boss_tick_cap))
+  amount*=game.irt.corrosion_mult()
   deal(game,e,amount,int(poison.weapon),Color("a4ff6a"))
  if float(poison.left)<=0.0:e.fx.erase("poison")
-static func tick_chill(e: Dictionary, chill: Dictionary, delta: float) -> void:
+static func tick_chill(e: Dictionary, chill: Dictionary, delta: float,hold: float=1.0) -> void:
  var t: Dictionary=Elements.TUNING.ice
  chill["since"]=float(chill.since)+delta
- if float(chill.since)>=float(t.decay_delay):
+ if float(chill.since)>=float(t.decay_delay)*hold:
   chill["decay"]=float(chill.decay)-delta
   if float(chill.decay)<=0.0:
    chill["decay"]=float(t.decay_interval);chill["stacks"]=int(chill.stacks)-1
@@ -206,9 +207,9 @@ static func shatter(game: Object, e: Dictionary) -> void:
  var generation=int(e.fx.get("shatter_gen",0))
  if generation>=int(t.shatter_max_depth):return
  var weapon=int(e.get("last_weapon",-1))
- for victim in game.nearby(e.pos,float(t.shatter_radius)):
+ for victim in game.nearby(e.pos,float(t.shatter_radius)+game.irt.shatter_bonus_radius()):
   if victim==e or victim.hp<=0:continue
-  deal(game,victim,minf(float(t.shatter_damage_cap),float(victim.max_hp)*float(t.shatter_percent_max_hp)),weapon,Color("8fd8ff"))
+  deal(game,victim,minf(float(t.shatter_damage_cap),float(victim.max_hp)*float(t.shatter_percent_max_hp))*game.irt.status_harder(),weapon,Color("8fd8ff"))
   var vfx=state(victim);vfx["shatter_gen"]=maxi(int(vfx.get("shatter_gen",0)),generation+1)
  game.play_sound("status.ice_shatter")
  if is_instance_valid(game.combat_fx):game.combat_fx.supplied_burst("shatter",e.pos,1.0)

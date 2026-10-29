@@ -639,7 +639,7 @@ func update_enemies(real_delta: float) -> void:
   if e.burn>0:
    if rng.randf()<delta:combat_fx.burst("fire_torch",e.pos,1,0.7)
    e.burn_clock-=delta
-   if e.burn_clock<=0: hit(e,3+level*0.5,int(e.get("burn_source",1))); e.burn_clock=0.5
+   if e.burn_clock<=0: hit(e,(3+level*0.5)*irt.status_harder(),int(e.get("burn_source",1))); e.burn_clock=0.5
    if not settings.reduced and rng.randf()<0.07: impact(e.pos,Color("ffb45a"),1)
   if e.poison > 0:
    e.poison_clock -= delta

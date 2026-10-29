@@ -31,6 +31,9 @@ var still_time=0.0
 var meat: Array=[]            # roast meat pickups (Pyre Ashes): {"pos","life"}
 var wraiths: Array=[]         # Restless Bones summons: {"pos","life","cd"} (hard cap, see ItemStats)
 var black_clock=0.0
+var puddles: Array=[]         # Mire Flask: {"pos","life","clock"}
+var burning_count=0           # Witch-Hunter's Brand
+var brand_clock=0.0
 
 func _init(owner: Node=null) -> void:
  game=owner
@@ -49,16 +52,17 @@ func rebuild() -> void:
  for entry in game.items:stacks[str(entry.id)]=int(entry.stacks)
  any=not stacks.is_empty()
  cond_damage=false
- for id in ["executioners_hood","bounty_writ","brutes_gauntlet","plague_mask","ouija_planchette"]:
+ for id in ["executioners_hood","bounty_writ","brutes_gauntlet","plague_mask","ouija_planchette","tinder_pouch","lodestone","coven_sigil"]:
   if stacks.has(id):cond_damage=true
  refresh_flags()
 func refresh_flags() -> void:
- kill_hooks=stacks.has("pyre_ashes") or stacks.has("soul_lantern")
+ kill_hooks=stacks.has("pyre_ashes") or stacks.has("soul_lantern") or stacks.has("goat_skull")
+ hit_hooks=stacks.has("mire_flask")
  hurt_hooks=stacks.has("thunderstruck_nail") or stacks.has("mourners_veil") or stacks.has("witch_bottle")
- ticking=stacks.has("hermits_ember") or stacks.has("black_candle") or not meat.is_empty() or not wraiths.is_empty() or not buffs.is_empty()
+ ticking=stacks.has("hermits_ember") or stacks.has("black_candle") or stacks.has("witch_hunters_brand") or not puddles.is_empty() or not meat.is_empty() or not wraiths.is_empty() or not buffs.is_empty()
 # Stage changes and run starts: summons and pickups never carry over.
 func clear_effects() -> void:
- meat.clear();wraiths.clear();still_time=0.0;black_clock=0.0
+ meat.clear();wraiths.clear();puddles.clear();still_time=0.0;black_clock=0.0;burning_count=0;brand_clock=0.0
 
 # ---------------------------------------------------------------- on_stats
 # Stat deltas from every owned item. Percentages are additive within the stat (the base game's stats are multipliers).
@@ -89,6 +93,10 @@ func compute_mods() -> Dictionary:
 func mods_extra(m: Dictionary) -> void:
  m["speed"]=float(m.get("speed",0.0))+(ItemStats.v("mourners_veil","hurt_speed")*n("mourners_veil") if float(buffs.get("mourner",0.0))>0.0 else 0.0)
  m["damage"]=float(m.get("damage",0.0))+n("tax_ledger")*ItemStats.v("tax_ledger","per_chest")*float(counters.get("chests",0))
+ if stacks.has("witch_hunters_brand") and burning_count>0:
+  var k=float(n("witch_hunters_brand"))
+  m["armor"]=float(m.get("armor",0.0))+minf(ItemStats.v("witch_hunters_brand","armor_cap")*k,ItemStats.v("witch_hunters_brand","armor_each")*float(burning_count)*k)
+  m["lifesteal"]=minf(ItemStats.v("witch_hunters_brand","lifesteal_cap")*k,ItemStats.v("witch_hunters_brand","lifesteal_each")*float(burning_count)*k)
  if float(buffs.get("leaden",0.0))>0.0:m["damage"]=float(m.damage)+ItemStats.v("leaden_heart","damage")*n("leaden_heart")
 # Folds the difference between the wanted and the already-applied modifiers into game.stats.
 func refresh_stats() -> void:
@@ -118,6 +126,12 @@ func is_elite(e: Dictionary) -> bool:return bool(e.get("elite",false)) or is_bos
 # Multiplier for one hit. item_hit damage only receives the "all sources" vulnerability bonuses.
 func damage_mult(e: Dictionary,item_hit: bool,amount: float=0.0) -> float:
  var m=1.0
+ # "from all sources" effects also apply to item damage
+ if stacks.has("tinder_pouch") and float(e.get("burn",0.0))>0.0:m*=1.0+ItemStats.v("tinder_pouch","bonus")*n("tinder_pouch")
+ if stacks.has("lodestone") and StatusManager.stunned(e):m*=1.0+ItemStats.v("lodestone","bonus")*n("lodestone")
+ if stacks.has("coven_sigil"):
+  var c=status_kinds(e)
+  if c>0:m*=1.0+minf(ItemStats.v("coven_sigil","cap")*n("coven_sigil"),ItemStats.v("coven_sigil","per_status")*float(c)*n("coven_sigil"))
  if not item_hit:
   if stacks.has("executioners_hood") and float(e.hp)>float(e.max_hp)*ItemStats.v("executioners_hood","above"):m*=1.0+ItemStats.v("executioners_hood","bonus")*n("executioners_hood")
   if stacks.has("bounty_writ") and is_elite(e):m*=1.0+ItemStats.v("bounty_writ","bonus")*n("bounty_writ")
@@ -131,6 +145,7 @@ func damage_mult(e: Dictionary,item_hit: bool,amount: float=0.0) -> float:
    m*=big
    counters["ouija"]=int(counters.get("ouija",0))+1
  return m
+func status_kinds(e: Dictionary) -> int:return status_count(e)
 # Distinct statuses on an enemy: corrosion, chill, burning, stun.
 func status_count(e: Dictionary) -> int:
  var c=0
@@ -142,8 +157,25 @@ func status_count(e: Dictionary) -> int:
  return c
 
 # ---------------------------------------------------------------- on_hit / on_crit (weapon hits only)
-func on_hit(_e: Dictionary,_amount: float,_actual: float,_critical: bool,_weapon: int) -> void:
- pass
+func on_hit(e: Dictionary,_amount: float,_actual: float,_critical: bool,_weapon: int) -> void:
+ if stacks.has("mire_flask") and e.hp>0 and StatusManager.poisoned(e) and float(buffs.get("puddle_cd",0.0))<=0.0 and roll_hit("mire_flask"):
+  buffs["puddle_cd"]=ItemStats.v("mire_flask","cooldown");ticking=true
+  if puddles.size()>=int(ItemStats.v("mire_flask","cap")):dropped["puddles"]=int(dropped.get("puddles",0))+1
+  else:puddles.append({"pos":e.pos,"life":ItemStats.v("mire_flask","life"),"clock":0.0})
+
+# ---------------------------------------------------------------- status / combo modifiers (read by StatusManager and Combos)
+func status_longer() -> float:return 1.0+ItemStats.v("gem_loupe","longer")*float(n("gem_loupe"))
+func status_harder() -> float:return 1.0+ItemStats.v("gem_loupe","harder")*float(n("gem_loupe"))
+func corrosion_mult() -> float:return status_harder()*(1.0+ItemStats.v("lepers_bell","bonus")*float(n("lepers_bell")))
+func chill_hold() -> float:return status_longer()*(1.0+ItemStats.v("rime_shard","chill_longer")*float(n("rime_shard")))
+func shatter_bonus_radius() -> float:return ItemStats.v("rime_shard","shatter_radius")*float(n("rime_shard"))
+func combo_radius() -> float:return 1.0+ItemStats.v("alchemist_retort","radius")*float(n("alchemist_retort"))
+func combo_cooldown() -> float:return maxf(0.25,1.0-ItemStats.v("alchemist_retort","cooldown")*float(n("alchemist_retort")))
+func combo_damage() -> float:return status_harder()*(1.0+ItemStats.v("heretics_prism","bonus")*float(n("heretics_prism")))
+func on_combo() -> void:
+ if stacks.has("heretics_prism"):
+  game.health=minf(game.stats.max_health,game.health+ItemStats.v("heretics_prism","heal")*float(n("heretics_prism")))
+  counters["prism"]=int(counters.get("prism",0))+1
 
 # ---------------------------------------------------------------- chance helper
 # Stacked chance of an independent per-stack roll, capped. Uses the item RNG so game.rng consumption never changes.
@@ -154,6 +186,12 @@ func chance(id: String,key: String="chance") -> float:
  return minf(cap,1.0-pow(1.0-p,k))
 func roll(id: String) -> bool:
  return stacks.has(id) and rng.randf()<chance(id)
+# Weapon-hit procs only: Saint's Finger (batch 4) adds one more roll here.
+func roll_hit(id: String) -> bool:
+ var p=chance(id)
+ if p<=0.0:return false
+ if rng.randf()<p:return true
+ return stacks.has("saints_finger") and rng.randf()<p
 
 # ---------------------------------------------------------------- on_chest_opened / on_vase_smashed / on_powerup / on_level_up
 # Rusted Key: asked before a paid chest charges gold.
@@ -212,6 +250,10 @@ func on_kill(e: Dictionary) -> void:
  if bool(e.get("last_item",false)):return
  if stacks.has("soul_lantern") and rng.randf()<chance("soul_lantern"):
   game.add_xp_drop(e.pos+Vector3(0.6,0.0,0.6),float(e.variant.reward if e.has("variant") else 5));counters["lantern"]=int(counters.get("lantern",0))+1
+ if stacks.has("goat_skull") and float(e.get("burn",0.0))>0.0 and rng.randf()<chance("goat_skull"):
+  counters["goat"]=int(counters.get("goat",0))+1
+  for v in game.nearby(e.pos,ItemStats.v("goat_skull","radius")):
+   if v!=e and v.hp>0:StatusManager.apply_ignite(game,v,int(e.get("burn_source",1)))
  if stacks.has("pyre_ashes") and rng.randf()<chance("pyre_ashes"):
   if meat.size()>=int(ItemStats.v("pyre_ashes","pickup_cap")):dropped["meat"]=int(dropped.get("meat",0))+1
   else:meat.append({"pos":e.pos,"life":ItemStats.v("pyre_ashes","pickup_life")});ticking=true
@@ -252,9 +294,28 @@ func tick(delta: float) -> void:
    var dmg=ItemStats.v("black_candle","dps")*interval*float(n("black_candle"))*(1.0+ItemStats.v("black_candle","level_scale")*float(maxi(0,game.level-1)))
    for e in game.nearby(game.player.position,ItemStats.v("black_candle","radius")):
     if e.hp>0 and e.pos.distance_to(game.player.position)<=ItemStats.v("black_candle","radius"):deal(e,dmg,"black_candle")
+ if stacks.has("witch_hunters_brand"):
+  brand_clock+=delta
+  if brand_clock>=ItemStats.v("witch_hunters_brand","interval"):
+   brand_clock=0.0;var c=0
+   for e in game.enemies:
+    if float(e.get("burn",0.0))>0.0 and e.hp>0:c+=1
+   if c!=burning_count:burning_count=c;refresh_stats()
  tick_meat(delta)
  tick_wraiths(delta)
- if buffs.is_empty() and meat.is_empty() and wraiths.is_empty() and not stacks.has("hermits_ember") and not stacks.has("black_candle"):ticking=false
+ tick_puddles(delta)
+ if buffs.is_empty() and puddles.is_empty() and not stacks.has("witch_hunters_brand") and meat.is_empty() and wraiths.is_empty() and not stacks.has("hermits_ember") and not stacks.has("black_candle"):ticking=false
+func tick_puddles(delta: float) -> void:
+ if puddles.is_empty():return
+ var radius=ItemStats.v("mire_flask","radius");var interval=ItemStats.v("mire_flask","interval")
+ for i in range(puddles.size()-1,-1,-1):
+  var p=puddles[i];p.life=float(p.life)-delta;p.clock=float(p.clock)-delta
+  if p.life<=0.0:puddles.remove_at(i);continue
+  game.psx.draw_square(p.pos+Vector3.UP*0.08,radius*0.9,Color(0.35,0.75,0.25,0.55))
+  if p.clock<=0.0:
+   p.clock=interval
+   for e in game.nearby(p.pos,radius):
+    if e.hp>0 and e.pos.distance_to(p.pos)<=radius:deal(e,ItemStats.v("mire_flask","dps")*interval,"mire_flask")
 func tick_meat(delta: float) -> void:
  if meat.is_empty():return
  var radius=ItemStats.v("pyre_ashes","pickup_radius")

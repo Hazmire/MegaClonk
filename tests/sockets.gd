@@ -9,6 +9,7 @@ class StubGame:
  var stage=1
  var weapons={}
  var gems=GemInventory.new()
+ var irt=ItemRuntime.new()
 func check(ok: bool,label: String):
  checks+=1
  if not ok:failures.append(label);push_error("FAIL: "+label)
