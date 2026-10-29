@@ -195,7 +195,7 @@ func home() -> void:
 # Out-of-run menus are Fog County MenuScreen scenes (res://ui/menu). They own their theme; in-run screens keep theirs.
 const SCREENS={"main_menu":"res://ui/menu/screens/main_menu.tscn","loadout":"res://ui/menu/screens/loadout_screen.tscn","unlocks":"res://ui/menu/screens/unlocks_screen.tscn","quests":"res://ui/menu/screens/quests_screen.tscn","settings":"res://ui/menu/screens/settings_screen.tscn"}
 func show_screen(kind: String) -> MenuScreen:
- MenuScreen.play_sound=func(sound_name: String):game.play_sound("ui."+sound_name)
+ MenuScreen.set_audio_owner(game)
  var screen=load(SCREENS[kind]).instantiate() as MenuScreen
  screen.bind(self);menu.add_child(screen);return screen
 func wallet() -> String:
@@ -204,11 +204,11 @@ func play_screen() -> void:
  game.mode="play";preview_mode="play";prepare_backdrop();game.mode="play";clear()
  show_screen("loadout")
 func unlocks() -> void:
- game.mode="unlocks";preview_mode="home";prepare_backdrop();clear()
+ game.mode="unlocks";preview_mode="home";clear()
  show_screen("unlocks")
 func quest_description(q: Dictionary) -> String:return MenuData.quest_description(q)
 func quests() -> void:
- game.mode="quests";preview_mode="home";prepare_backdrop();clear()
+ game.mode="quests";preview_mode="home";clear()
  show_screen("quests")
 func fade_celebrations() -> void:
  for child in RewardScreens.descendants(menu):

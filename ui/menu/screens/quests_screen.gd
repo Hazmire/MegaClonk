@@ -45,7 +45,7 @@ func fill(keep_index: int=0) -> void:
   var id=String(q.id);card.claim_pressed.connect(func():claim(id))
   if card.claim_button!=null:card.claim_button.pressed.connect(func():claim(id))
  tab_bar.set_note("%d / %d CLAIMED"%[done,list.size()])
- if not cards.is_empty():cards[clampi(keep_index,0,cards.size()-1)].grab_focus.call_deferred()
+ if not cards.is_empty():focus_later(cards[clampi(keep_index,0,cards.size()-1)])
 func claim(id: String) -> void:
  var index=0
  for i in cards.size():

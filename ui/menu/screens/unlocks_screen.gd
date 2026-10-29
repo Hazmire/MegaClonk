@@ -36,7 +36,7 @@ func build_body() -> void:
   _:build_cards(category)
  set_hints(hint_set())
  var first=first_tile()
- if first!=null:first.grab_focus.call_deferred()
+ if first!=null:focus_later(first)
 func hint_set() -> Array:
  var hints_list=[["Q / E","Category"],["ENTER","Toggle" if category!="traits" and category!="ultimates" else "Inspect"],["ESC","Home"]]
  if category=="items":hints_list.insert(1,["TAB","Rarity"])
@@ -112,7 +112,7 @@ func buy_row(entry: Dictionary) -> void:
  buy_button.pressed.connect(func():buy(id));memo.body.add_child(buy_button)
 func buy(id: String) -> void:
  if MetaProgress.purchase(progress(),category,id):
-  sfx("purchase");game.progress.save();refresh_silver();refresh_tile(id);refresh_slots();fill_memo(id)
+  sfx("purchase");MenuData.mark_seen(progress(),category,id);game.progress.save();refresh_silver();refresh_tile(id);refresh_slots();fill_memo(id)
   if tiles.has(id):tiles[id].grab_focus()
  else:game.toast("Meet the kill milestone and silver cost")
 # ---- Weapons / Tomes / Traits / Ultimates cards ------------------------------------------------------------------

@@ -51,7 +51,7 @@ func fill() -> void:
     for key in game.bindings:
      var button=binding_button(String(key));binding_buttons[key]=button;add_row(String(key).replace("_"," ").capitalize(),button)
  var first=first_focusable(list)
- if first!=null:first.grab_focus.call_deferred()
+ if first!=null:focus_later(first)
 func first_focusable(node: Node) -> Control:
  for c in node.get_children():
   if c is Control and c.focus_mode==Control.FOCUS_ALL:return c

@@ -61,7 +61,7 @@ func build() -> void:
  dropdown=MenuStyle.spawn("slot_dropdown") as SlotDropdown;dropdown.z_index=20;content.add_child(dropdown)
  dropdown.picked.connect(on_picked);dropdown.closed.connect(on_closed)
  set_hints([["↑↓","Slot","D-PAD"],["SPACE","Open list","A"],["ENTER","Start","START"]])
- slots["weapons"].grab_focus.call_deferred()
+ focus_later(slots["weapons"])
 func build_destination(column: VBoxContainer) -> void:
  var block=VBoxContainer.new();block.name="Destination";block.add_theme_constant_override("separation",8);block.mouse_filter=Control.MOUSE_FILTER_IGNORE;column.add_child(block)
  block.add_child(SmallCapsLabel.new().setup("Destination",15,FogPalette.ASH_DIM,800,0.3))

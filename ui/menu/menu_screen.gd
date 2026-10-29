@@ -4,9 +4,11 @@ extends Control
 # project-wide, so in-run screens keep their own), a 1920x1080 design stage scaled to the window, the dithered fog
 # background, the scanline/vignette overlay, the key-hint bar, the ~150 ms fade through #0E0F0E and Esc / Q / E handling.
 signal back_requested
-static var using_pad=false
-static var instant=false # tests switch fades off
-static var play_sound: Callable
+# State lives in Engine metadata, not script statics: static vars on this class left the engine with heap corruption at shutdown (Godot 4.7.2).
+static func is_instant() -> bool:return bool(Engine.get_meta("menu_instant",false)) # tests switch fades off
+static func set_instant(value: bool) -> void:Engine.set_meta("menu_instant",value)
+static func pad_active() -> bool:return bool(Engine.get_meta("menu_using_pad",false))
+static func set_pad_active(value: bool) -> void:Engine.set_meta("menu_using_pad",value)
 const FADE=0.075
 const PAD_WORDS={"ENTER":"A","ESC":"B","Q / E":"LB / RB","TAB":"Y","↑↓":"D-PAD","↑ ↓":"D-PAD"}
 var right_dark=false # "world" backdrop only: also darken the right edge (the loadout memo sits there)
@@ -26,8 +28,12 @@ var frontend: Node # FrontEnd that owns screen switching (set by FrontEnd before
 var game: Node
 func bind(owner_frontend: Node) -> MenuScreen:
  frontend=owner_frontend;game=owner_frontend.game;return self
+static func set_audio_owner(game_node: Node) -> void:
+ if not game_node.is_in_group("menu_audio"):game_node.add_to_group("menu_audio")
 static func sfx(name: String) -> void:
- if play_sound.is_valid():play_sound.call(name)
+ var tree=Engine.get_main_loop() as SceneTree
+ var target=tree.get_first_node_in_group("menu_audio") if tree!=null else null
+ if target!=null:target.play_sound("ui."+name)
 func _init() -> void:
  theme=MenuStyle.theme();set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);mouse_filter=Control.MOUSE_FILTER_STOP
  stage=Control.new();stage.name="Stage";stage.size=Vector2(MenuStyle.W,MenuStyle.H);stage.mouse_filter=Control.MOUSE_FILTER_IGNORE
@@ -38,12 +44,13 @@ func _ready() -> void:
  add_child(backdrop);_build_backdrop()
  add_child(stage);stage.add_child(content);stage.add_child(hint_bar)
  overlay=ColorRect.new();overlay.name="FogOverlay";overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);overlay.mouse_filter=Control.MOUSE_FILTER_IGNORE;overlay.color=Color.WHITE
- overlay.material=MenuStyle.shader_material("res://ui/shaders/fog_overlay.gdshader",{"vignette_strength":0.42,"vignette_start":0.62}) # lighter than the token default: the overlay sits on top of text here, the mockup vignette sits under it;add_child(overlay)
+ overlay.material=MenuStyle.shader_material("res://ui/shaders/fog_overlay.gdshader",{"vignette_strength":0.42,"vignette_start":0.62}) # lighter than the token default: the overlay sits on top of text here, the mockup vignette sits under it
+ add_child(overlay)
  fade=ColorRect.new();fade.name="Fade";fade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);fade.mouse_filter=Control.MOUSE_FILTER_IGNORE;fade.color=FogPalette.NIGHT;add_child(fade)
  resized.connect(fit_stage);fit_stage();_place_hints()
  build()
  refresh_hints()
- if instant:fade.color.a=0.0
+ if is_instant():fade.color.a=0.0
  else:
   tween=create_tween();tween.tween_property(fade,"color:a",0.0,FADE).from(1.0)
 # Subclasses add their widgets to `content` here (design coordinates, 1920x1080).
@@ -81,15 +88,15 @@ func refresh_hints() -> void:
  for e in hints:
   var pair=HBoxContainer.new();pair.add_theme_constant_override("separation",10);pair.mouse_filter=Control.MOUSE_FILTER_IGNORE
   var key=String(e[0])
-  if using_pad:key=String(e[2]) if e.size()>2 else PAD_WORDS.get(key,key)
+  if pad_active():key=String(e[2]) if e.size()>2 else PAD_WORDS.get(key,key)
   var font_key=MenuStyle.sans(800,0.18,15);var font_act=MenuStyle.sans(600,0.18,15)
   MenuStyle.label(key,font_key,15,FogPalette.BONE,0,pair);MenuStyle.label(String(e[1]).to_upper(),font_act,15,FogPalette.ASH_DIM,0,pair)
   hint_bar.add_child(pair)
 func _input(event: InputEvent) -> void:
  var pad=event is InputEventJoypadButton or (event is InputEventJoypadMotion and absf(event.axis_value)>0.5)
  var kb=event is InputEventKey or event is InputEventMouseButton or (event is InputEventMouseMotion and event.relative.length()>2.0)
- if (pad and not using_pad) or (kb and using_pad):
-  using_pad=pad;refresh_hints()
+ if (pad and not pad_active()) or (kb and pad_active()):
+  set_pad_active(pad);refresh_hints()
 func _unhandled_input(event: InputEvent) -> void:
  if not is_visible_in_tree():return
  if event.is_action_pressed("ui_cancel") and allow_back:
@@ -107,9 +114,12 @@ func step_tabs(_direction: int) -> void:pass
 func go_back() -> void:back_requested.emit()
 # Leaves the screen through #0E0F0E, then runs `next` (which builds the following screen).
 func navigate(next: Callable) -> void:
- if instant or not is_inside_tree():next.call();return
+ if is_instant() or not is_inside_tree():next.call();return
  if tween!=null and tween.is_valid():tween.kill()
  fade.color.a=0.0;tween=create_tween();tween.tween_property(fade,"color:a",1.0,FADE)
  tween.tween_callback(next)
-func focus_first(control: Control) -> void:
- if control!=null and control.is_inside_tree():control.grab_focus()
+# Focus a control on the next idle frame, only if it is still on screen (screens can be replaced before the call runs).
+func focus_later(control: Control) -> void:
+ _focus_now.call_deferred(control)
+func _focus_now(control: Variant) -> void:
+ if is_instance_valid(control) and control.is_inside_tree() and control.is_visible_in_tree():control.grab_focus()

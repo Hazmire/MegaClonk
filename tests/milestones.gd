@@ -35,7 +35,7 @@ func run():
  game=load("res://scenes/main/main.tscn").instantiate();root.add_child(game);await process_frame
  game.progress=Progress.new();game.progress.storage_path="user://milestone-profile.json";game.selected_weapon=7;game.next_run_seed=453;game.selected_trait="momentum";game.map_seed_override=9;game.begin_run();game.terrain_version=3;game.build_stage();game.resume();game.mode="pause";game.player.active=false;game.enemies.clear();game.stats.crit=0
  check(ImportedArt.mesh("res://assets/quaternius/nature/CommonTree_1.gltf",7).get_surface_count()>0,"Supplied forest model loads and batches")
- check(UIAssets.icon("weapons","0").resource_path.contains("vendor/weapons"),"Undead skill icon is used")
+ check(UIAssets.icon("weapons","0").resource_path.contains("assets/icons/weapons"),"Undead skill icon is used")
  check(UIAssets.icon("items","whetstone").resource_path=="res://assets/icons/items/whetstone.png","Final item art is used")
  check(game.sound_bank.has("hit") and game.sound_bank.has("level"),"Supplied sound events load")
  for id in ["blood_burst","impact_concrete","explosion_small","smoke_puff","sparks_shower","fire_torch","muzzle_front"]:

@@ -26,7 +26,7 @@ func run() -> void:
  for a in OS.get_cmdline_user_args():
   if a.begins_with("only="):only=a.substr(5).split(",")
  DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(out))
- MenuScreen.instant=true
+ MenuScreen.set_instant(true)
  game=load("res://scenes/main/main.tscn").instantiate();root.add_child(game)
  await create_timer(0.6).timeout
  seed_profile()

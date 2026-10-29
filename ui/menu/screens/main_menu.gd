@@ -26,7 +26,7 @@ func build() -> void:
  silver_number=HudNumber.new().setup(game.progress.data.silver,44,FogPalette.BONE_BRIGHT,3);silver_number.name="SilverAmount";silver_number.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT;silver_number.position=Vector2(0,24);silver_number.size=Vector2(320,56);silver.add_child(silver_number)
  build_reach()
  set_hints([["↑↓","Navigate"],["ENTER","Select"]])
- items["play"].grab_focus.call_deferred()
+ focus_later(items["play"])
 func build_reach() -> void:
  var quests=MenuData.within_reach(game.progress.data,frontend.quest_definitions,4)
  reach=VBoxContainer.new();reach.name="WithinReach";reach.add_theme_constant_override("separation",18);reach.mouse_filter=Control.MOUSE_FILTER_IGNORE

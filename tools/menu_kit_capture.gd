@@ -3,7 +3,7 @@ extends SceneTree
 # toggle, tab bar. usage: xvfb-run -a tools/godot.sh --path . --rendering-driver vulkan --resolution 1920x1080 --script tools/menu_kit_capture.gd
 func _initialize() -> void:call_deferred("run")
 func run() -> void:
- MenuScreen.instant=true
+ MenuScreen.set_instant(true)
  var screen=MenuStyle.spawn("menu_screen") as MenuScreen
  root.add_child(screen);await process_frame
  var c=screen.content

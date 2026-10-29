@@ -105,11 +105,12 @@ func run():
  probe.posture="standing";motion.tick(motion_game,.01)
  probe.queue_free();motion_game.free()
  audio.stop_event("player.slide");check(not audio.voices.any(func(v):return v.event=="player.slide" and v.until>audio.clock),"Slide stop silences its pooled voices")
- game.frontend.settings(game.frontend.home);await process_frame
  var sliders=0
- for n in RewardScreens.descendants(game.frontend.menu):
-  if n is HSlider:sliders+=1
- check(sliders>=7,"Settings retain graphics/gameplay controls and all five audio sliders")
+ for tab in ["Display","Graphics","Audio","Gameplay"]:
+  SettingsScreen.last_tab=tab;game.frontend.settings(game.frontend.home);await process_frame
+  for n in RewardScreens.descendants(game.frontend.menu):
+   if n is HSlider:sliders+=1
+ check(sliders>=7,"Settings (all four tabs) retain graphics/gameplay controls and all five audio sliders")
  game.frontend.reward("hourglass_damned");await process_frame;audio.clock+=2;audio.last_events.clear();accepted=audio.accepted;var skip=game.frontend.chest_skip;skip.call();var after=audio.accepted
  check(after>accepted and not audio.voices.any(func(v):return v.event=="reward.chest.tick" and v.until>audio.clock),"Chest skip stops cycling and plays predetermined reveal celebration")
  skip.call();check(audio.accepted==after,"Repeated reveal callback cannot play another celebration")

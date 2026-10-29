@@ -107,18 +107,19 @@ func run():
  game.progress.data.kills=100000;game.progress.data.best=100000
  for quest in LoadoutCatalog.quests():game.progress.data.quest_metrics[quest.metric]=100000
  game.frontend.quests();await process_frame
- var tabs: TabContainer
- for n in nodes(game.frontend.menu):
-  if n is TabContainer:tabs=n;break
- tabs.current_tab=3;var scroll=tabs.get_child(3);scroll.scroll_vertical=30;await process_frame;var scroll_before=scroll.scroll_vertical
+ var quest_screen=game.frontend.menu.get_child(game.frontend.menu.get_child_count()-1)
+ quest_screen.tab_bar.select("Exploration");await process_frame
  var claim: Button
- for n in nodes(scroll):
-  if n is Button and not n.disabled:claim=n;break
+ for n in nodes(quest_screen.grid):
+  if n is Button and n.name=="Claim":claim=n;break
  check(claim!=null,"Quest menu retains a claimable completed quest")
  if claim:
-  var id=claim.get_meta("quest_id");claim.pressed.emit();await process_frame
-  check(is_instance_valid(tabs) and tabs.current_tab==3 and scroll.scroll_vertical==scroll_before,"Claim preserves the existing tab container, selected category and scroll")
-  check(id in game.progress.data.claimed and claim.disabled and claim.text=="Claimed","Claim state updates in place and remains visible")
+  var card=claim.get_parent()
+  while not card is MemoCard:card=card.get_parent()
+  var id=String(card.name).trim_prefix("Quest_");claim.pressed.emit();await process_frame
+  check(quest_screen.category=="Exploration" and id in game.progress.data.claimed,"Claim keeps the selected category and records the claim")
+  var again=quest_screen.grid.get_node("Quest_"+id)
+  check(nodes(again).any(func(n):return n is Label and n.text=="Reward claimed") and again.claim_button==null,"Claimed quest stays visible as a DONE memo without a claim button")
  game.progress.data=profile;game.progress.save();game.shrine_reward_queue.clear();game.active_shrine_reward={};game.frontend.in_run=true
  game.active_reward="";game.reward_queue.clear();game.mode="run";var items=game.items.duplicate();var reward_rng=str(game.rng.state);game.frontend.reward("salted_pork");await process_frame
  var icon: TextureRect;var reveal: Control;var celebration: RewardCelebration

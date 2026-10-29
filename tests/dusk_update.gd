@@ -29,9 +29,9 @@ func run():
   game.tomes.clear();var stat=Catalog.TOMES[id][0];var before=float(game.stats[stat]);game.apply_upgrade({"type":"tome","id":id})
   verify(is_equal_approx(game.stats[stat],before+float(Catalog.TOMES[id][1])),"Actual stat effect for "+Catalog.tome_name(id))
   var icon=UIAssets.icon("tomes",id)
-  verify(icon is AtlasTexture and icon.atlas!=null and icon.region.size.x>0,"Generated tome icon loads: "+id)
-  regions[str(icon.region)]=true
- verify(regions.size()==10,"All ten tomes use distinct generated regions")
+  verify(icon!=null and icon.get_size()==Vector2(32,32),"Tome icon (32x32 final art) loads: "+id)
+  regions[icon.resource_path]=true
+ verify(regions.size()==10,"All ten tomes use distinct icon files")
  game.update_hud();verify(not game.frontend.quest_tracker.visible and game.frontend.quest_tracker.text.is_empty(),"Quest tracking is absent from the run HUD")
  var shrine={}
  for object in game.interactables:
