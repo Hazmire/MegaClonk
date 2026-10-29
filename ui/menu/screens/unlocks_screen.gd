@@ -240,9 +240,9 @@ func fill_item_memo(id: String) -> void:
   var diamond=Diamond.new();diamond.color=Elements.color(element);diamond.custom_minimum_size=Vector2(18,18);diamond.size_flags_vertical=Control.SIZE_SHRINK_CENTER;nrow.add_child(diamond)
   memo.memo_label("Does nothing until you own the %s socket gem."%Elements.display_name(element),16,Color("2E2A22"),nrow).name="NeedsText"
   memo.body.add_child(need)
- if bool(item.unique):
+ if bool(item.unique) or bool(item.get("consumable",false)):
   var row=HBoxContainer.new();row.mouse_filter=Control.MOUSE_FILTER_IGNORE;memo.body.add_child(row)
-  var u=MenuStyle.spawn("stamp") as Stamp;u.name="UniqueStamp";u.setup("Unique · once per run",Color("8A5A0E"),16,0.24,3,-3.0,Color(0,0,0,0),Vector2(12,5));row.add_child(u)
+  var u=MenuStyle.spawn("stamp") as Stamp;u.name="UniqueStamp";u.setup("Consumable · once per run" if bool(item.get("consumable",false)) else "Unique · once per run",Color("8A5A0E"),16,0.24,3,-3.0,Color(0,0,0,0),Vector2(12,5));row.add_child(u)
  memo_rule()
  var spacer=Control.new();spacer.size_flags_vertical=Control.SIZE_EXPAND_FILL;memo.body.add_child(spacer)
  if locked:

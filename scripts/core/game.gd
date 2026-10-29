@@ -30,8 +30,7 @@ var landmarks: Array[Vector3]=[]
 var weapons: Dictionary = {}
 var gems=GemInventory.new()
 var amulets=0 # Imbued Amulets in the bag (each unlocks one weapon's second socket)
-var amulets_found=0 # found this run, bounded by Elements.TUNING.amulet.max_per_run
-var chest_amulet=false
+var amulets_found=0 # Imbued Amulet items acquired this run, bounded by Elements.TUNING.amulet.max_per_run
 var chest_gem="" # element found by the chest being revealed, shown once by the reward screen
 var world_time=WorldTime.new()
 var vases: Array=[]
@@ -308,7 +307,7 @@ func begin_run() -> void:
  elapsed = 0
  damage_total = 0
  damage_by_weapon.clear();weapon_damage_windows.clear()
- weapons.clear();gems.reset();amulets=0;amulets_found=0;chest_amulet=false
+ weapons.clear();gems.reset();amulets=0;amulets_found=0
  tomes.clear()
  items.clear();irt.reset()
  banished.clear()
@@ -1183,7 +1182,7 @@ func sandbox_menu() -> void:
   equip(select.get_item_id(select.selected))
   if weapons.has(select.get_item_id(select.selected)):weapons[select.get_item_id(select.selected)].level=10)
  button("Clear weapons",col,func():
-  weapons.clear();gems.reset();amulets=0;amulets_found=0;chest_amulet=false)
+  weapons.clear();gems.reset();amulets=0;amulets_found=0)
  button("Add random tome",col,func(): var names=Catalog.ACTIVE_TOMES; var name=names[rng.randi_range(0,names.size()-1)]; apply_upgrade({"type":"tome","id":name}))
  button("Add item",col,award_item)
  title("Map seed: %s • F6 overlay • F7 repeat • F8 next"%stage_map_seed(),col,18)
@@ -1521,6 +1520,14 @@ func item_stacks(id: Variant) -> int:
 func grant_item(id: Variant,quiet: bool=false) -> bool:
  id=str(id)
  if not Catalog.item_exists(id):return false
+ if Catalog.item_consumable(id):
+  if id=="imbued_amulet":
+   if amulets_found>=int(Elements.TUNING.amulet.max_per_run):return false
+   amulets+=1;amulets_found+=1
+  else:return false
+  if not quiet:
+   toast("%s • %s"%[Catalog.item_name(id),Catalog.item_description(id,false)]);play_sound("gem.pickup")
+  return true
  var owned=item_stacks(id)
  if Catalog.item_unique(id) and owned>0:return false
  if owned>=int(ItemStats.T.bounds.max_stacks):return false

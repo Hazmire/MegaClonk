@@ -599,6 +599,17 @@
    "needs": null,
    "unique": true,
    "icon": "icons/items/devils_bargain.png"
+  },
+  {
+   "id": "imbued_amulet",
+   "name": "Imbued Amulet",
+   "tier": "legendary",
+   "short": "Consume at an Imbue Station: a weapon gains a 2nd gem socket",
+   "full": "Consumed at an Imbue Station to permanently unlock a second gem socket on one weapon. Two different elements form a combination.",
+   "needs": null,
+   "unique": false,
+   "consumable": true,
+   "icon": "icons/items/imbued_amulet.png"
   }
  ]
 }

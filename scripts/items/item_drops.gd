@@ -9,6 +9,7 @@ static func available(game: Node) -> Array:
  for id in Catalog.ITEM_IDS:
   if game.sandbox or MetaProgress.enabled(game.progress.data,"items",str(id)):
    if Catalog.item_unique(id) and game.item_stacks(id)>0:continue
+   if str(id)=="imbued_amulet" and int(game.amulets_found)>=int(Elements.TUNING.amulet.max_per_run):continue
    result.append(str(id))
  return result
 static func weights(luck: float=0.0) -> Dictionary:

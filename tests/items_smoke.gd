@@ -15,7 +15,7 @@ func run():
  game.begin_run();game.terrain_version=3;game.build_stage();game.resume();await physics_frame
  game.settings.invincible=false
  for id in Catalog.ITEM_IDS:game.grant_item(id,true)
- check(game.items.size()==60,"All 60 items are equipped")
+ check(game.items.size()==60 and game.amulets==1,"All 60 relics are equipped and the Imbued Amulet went to the bag")
  for entry in game.items:if not Catalog.item_unique(entry.id):game.grant_item(entry.id,true)
  check(game.item_stacks("whetstone")==2 and game.item_stacks("saints_finger")==1,"Stacking and Unique rules hold with the full set")
  game.stats.evasion=0.0;game.health=game.stats.max_health

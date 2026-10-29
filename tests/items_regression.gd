@@ -34,7 +34,7 @@ func run():
 # ---------------------------------------------------------------- catalog / icons / drops
 func catalog_tests():
  var raw=JSON.parse_string(FileAccess.get_file_as_string("res://data/items.json")).items
- check(Catalog.ITEMS.size()==60 and raw.size()==60 and Catalog.ITEM_IDS.size()==60,"Catalog has exactly 60 items")
+ check(Catalog.ITEMS.size()==61 and raw.size()==61 and Catalog.ITEM_IDS.size()==61,"Catalog has exactly 61 items (60 relics + the consumable Imbued Amulet)")
  var same=true
  for item in raw:
   var c=Catalog.ITEMS.get(item.id,{})
@@ -42,9 +42,9 @@ func catalog_tests():
  check(same,"Catalog matches data/items.json field for field")
  var tiers={}
  for id in Catalog.ITEM_IDS:tiers[Catalog.item_tier(id)]=int(tiers.get(Catalog.item_tier(id),0))+1
- check(tiers=={"common":19,"uncommon":17,"rare":13,"epic":7,"legendary":4},"Tier counts match the roster (%s)"%str(tiers))
+ check(tiers=={"common":19,"uncommon":17,"rare":13,"epic":7,"legendary":5},"Tier counts match the roster (%s)"%str(tiers))
  var uniques=Catalog.ITEM_IDS.filter(func(i):return Catalog.item_unique(i))
- check(uniques.size()==5 and "saints_finger" in uniques and Catalog.ITEM_IDS.filter(func(i):return Catalog.item_tier(i)=="legendary").all(func(i):return i in uniques),"Saint's Finger and all 4 Legendaries are Unique")
+ check(uniques.size()==5 and "saints_finger" in uniques and Catalog.ITEM_IDS.filter(func(i):return Catalog.item_tier(i)=="legendary" and Catalog.item_consumable(i)==false).all(func(i):return i in uniques) and Catalog.item_consumable("imbued_amulet"),"Saint's Finger and the 4 permanent Legendaries are Unique; the Imbued Amulet is a consumable Legendary")
  var icons_ok=true;var filter_ok=true
  for id in Catalog.ITEM_IDS:
   var path="res://assets/icons/items/%s.png"%id

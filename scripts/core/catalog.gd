@@ -89,6 +89,8 @@ static func item_exists(id: Variant) -> bool:return ITEMS.has(str(id))
 static func item_name(id: Variant) -> String:return str(ITEMS.get(str(id),{}).get("name","Lost relic"))
 static func item_tier(id: Variant) -> String:return str(ITEMS.get(str(id),{}).get("tier","common"))
 static func item_unique(id: Variant) -> bool:return bool(ITEMS.get(str(id),{}).get("unique",false))
+# Consumables never enter the held-item list: acquiring one adds to a bag count that a station spends (the Imbued Amulet).
+static func item_consumable(id: Variant) -> bool:return bool(ITEMS.get(str(id),{}).get("consumable",false))
 # Tooltip/description text: the full effect, plus the gem requirement when there is one.
 static func item_description(id: Variant,full: bool=true) -> String:
  var item: Dictionary=ITEMS.get(str(id),{})

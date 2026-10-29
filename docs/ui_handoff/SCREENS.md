@@ -146,7 +146,7 @@ HP/LV/KILLS text line.
 - **Data:**
   - Pick the result *before* the reel starts, using the tier drop weights (50/28/15/5/2%).
   - Then build a reel that slows down and stops on that result.
-  - Chests can also contain gems (12%) and the Imbued Amulet (Epic and Legendary chests only).
+  - Chests can also contain gems (12%). The Imbued Amulet is now a consumable Legendary item in the normal item pool.
 
 ## Imbue Station — `RunImbue` (interactive)
 

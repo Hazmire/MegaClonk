@@ -230,18 +230,16 @@ static func reward(ui: FrontEnd,id: String) -> void:
   if child is TextureRect:image=child;break
  image.name="CyclingIcon"
  var description=ui.paragraph(Catalog.item_description(id,false),center,520);description.tooltip_text=Catalog.item_description(id);description.mouse_filter=Control.MOUSE_FILTER_PASS;description.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;description.hide()
- ui.text("Reward added to your build",center,14)
+ ui.text("Kept in your bag: spend it at an Imbue Station" if Catalog.item_consumable(id) else "Reward added to your build",center,14)
  var gem_found=game.chest_gem;game.chest_gem=""
  var gem_line=ui.text("",center,16);gem_line.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;gem_line.hide()
- var amulet_found=game.chest_amulet;game.chest_amulet=false
  if gem_found!="":gem_line.text="◆ %s socket gem found!"%Elements.display_name(gem_found);gem_line.add_theme_color_override("font_color",Elements.color(gem_found))
- if amulet_found:gem_line.text=(gem_line.text+"\n" if gem_line.text!="" else "")+"✦ Imbued Amulet found: unlocks a second weapon socket";gem_line.add_theme_color_override("font_color",Color("ffcf65"))
  var controls=HBoxContainer.new();center.add_child(controls)
  var proceed=button(ui,controls,"CONTINUE",game.resume,Color("276292"));proceed.disabled=true
  var generation=ui.reward_generation
  var reveal=func():
   if ui.reward_generation!=generation or not is_instance_valid(tile) or tile.get_meta("revealed",false):return
-  game.audio.stop_event("reward.chest.tick");tile.set_meta("revealed",true);image.texture=UIAssets.icon("items",str(id));rarity.text=tier.name.to_upper();name.text=Catalog.item_name(id);description.show();gem_line.visible=gem_found!="" or amulet_found;proceed.disabled=false;proceed.grab_focus();ui.chest_skip=Callable()
+  game.audio.stop_event("reward.chest.tick");tile.set_meta("revealed",true);image.texture=UIAssets.icon("items",str(id));rarity.text=tier.name.to_upper();name.text=Catalog.item_name(id);description.show();gem_line.visible=gem_found!="";proceed.disabled=false;proceed.grab_focus();ui.chest_skip=Callable()
   if tier.id=="legendary" and effect.has_meta("global_celebration"):effect.get_meta("global_celebration").burst(tier.color,2.0*game.settings.visual_intensity)
   effect.burst(tier.color,float(tier.celebration)*game.settings.visual_intensity);game.play_sound("applause",0.25+0.75*float(tier.celebration));game.play_sound("reward.chest.legendary" if tier.id=="legendary" else "reward.chest.reveal",0.4+0.6*float(tier.celebration))
  var eligible=game.available_items()

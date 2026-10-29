@@ -41,11 +41,11 @@ func run() -> void:
    if tex==null or tex.get_width()!=32 or tex.get_height()!=32:icon_ok=false
    if not FileAccess.get_file_as_string(path+".import").contains("mipmaps/generate=false"):filter_ok=false
    if UIAssets.icon(category,String(id))!=tex:icon_ok=false
- check(icon_ok and checked==8+10+5+3+60,"All %d weapon, tome, trait, ultimate and item icons exist at 32x32 and are what UIAssets returns"%checked)
+ check(icon_ok and checked==8+10+5+3+Catalog.ITEM_IDS.size(),"All %d weapon, tome, trait, ultimate and item icons exist at 32x32 and are what UIAssets returns"%checked)
  check(filter_ok,"Every menu icon imports with mipmaps off")
  # ---- data helpers ----
  var counts=MenuData.tier_counts()
- check(counts.all==60 and counts.common==19 and counts.uncommon==17 and counts.rare==13 and counts.epic==7 and counts.legendary==4,"Rarity filter counts are 60 / 19 / 17 / 13 / 7 / 4 from the catalogue")
+ check(counts.all==61 and counts.common==19 and counts.uncommon==17 and counts.rare==13 and counts.epic==7 and counts.legendary==5,"Rarity filter counts are 61 / 19 / 17 / 13 / 7 / 5 from the catalogue")
  check(MenuData.drop_weight_text("common")=="50%" and MenuData.drop_weight_text("legendary")=="2%","Drop weights come from ItemStats.TIER_WEIGHTS")
  check(MenuData.sources_text("whetstone")=="Appears in vases, chests and shops" and MenuData.sources_text("hex_penny")=="Appears in vases, chests and shops","Common items list vases, chests and shops")
  check(MenuData.sources_text("headsmans_oath")=="Appears in chests only","Legendary items are chest-only")
@@ -92,7 +92,7 @@ func run() -> void:
  main.items["unlocks"].pressed.emit();await process_frame
  check(game.mode=="unlocks" and current() is UnlocksScreen,"Main menu Unlocks opens the Unlocks screen")
  var unlocks=current()
- var expected={"weapons":8,"tomes":10,"traits":5,"items":60,"ultimates":3}
+ var expected={"weapons":8,"tomes":10,"traits":5,"items":Catalog.ITEM_IDS.size(),"ultimates":3}
  for tab in expected:
   unlocks.tab_bar.select(tab);await process_frame
   check(unlocks.category==tab and unlocks.tiles.size()==expected[tab],"%s tab shows %d entries"%[tab.capitalize(),expected[tab]])
@@ -145,7 +145,7 @@ func run() -> void:
  check(unlocks.memo.find_child("StartingNote",true,false)!=null and unlocks.memo.find_child("Toggle",true,false)!=null,"Unlocked weapon shows the toggle and the starting-weapon note")
  # items
  unlocks.tab_bar.select("items");await process_frame
- check(unlocks.tiles.size()==60 and unlocks.tab_bar.note=="FOUND 60 / 60","Items tab shows all 60 and FOUND 60 / 60")
+ check(unlocks.tiles.size()==61 and unlocks.tab_bar.note=="FOUND 61 / 61","Items tab shows all 61 and FOUND 61 / 61")
  var visible_ok=true
  for tier in Catalog.ITEM_TIERS:
   unlocks.set_filter(tier)
