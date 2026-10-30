@@ -3,7 +3,7 @@
 Branch `feature/audio-integration`. **Nothing here has been heard by a human.** Every check below is a headless test, a code read or a waveform measurement.
 Scope was audio only: no gameplay, balance, UI layout or save-format change. The one place a sound needed a new read of game state (boss enrage) only reads HP; see section 5.
 
-Validation: VALIDATION_RESULT
+Validation: `tools/validate.sh` exits **0** (2161 PASS lines, no FAIL), including `audio_regression` (59 checks) and `retro_audio` (312). The first two full runs each stopped at one stale assertion that described the old audio (`rewards_ai_v9` looked for the retired legendary sound entry; `dark_feedback` asserted the pitched-down "dark pass"); both were rewritten for the new behaviour and the whole script was re-run from the start. A harmless `ObjectDB instance was leaked at exit` warning appears at shutdown of the last suite.
 
 ## 1. What was done (one commit per step)
 | Step | Result |
@@ -233,7 +233,7 @@ Reading: by peak the new sounds are within a few dB of the old ones for most wea
 
 ## 9. Tests
 - **New `tests/audio_regression.gd` (59 checks, added to `tools/validate.sh`):** all 124 manifest events present and loadable; exactly the `_loop` files loop (all 186 WAVs and 10 OGGs); WAVs imported as uncompressed PCM; ordered sets play by index; random sets never repeat twice in a row (150 picks each); music state machine incl. 3 s crossfade timing, A/B alternation, no restart, level-up swap + resume position, pause duck, death / victory timing, manifest gains, −8 dB bus offset; element layers (none, one, two gems, aura pulse, `electric` mapping); determinism (the same seeded run, 600 frames with four gem-socketed weapons, gives the same RNG state / kills / enemies / gold with audio live and with `audio.muted`); voice pool never exceeds 24 or grows during the 500-enemy Loadout B stress build; UI voices cannot be stolen by gameplay sounds; music never enters the pool.
-- **Rewritten, not deleted:** `retro_audio` (variation pool now ≥ 2 files, no-dark-pass pitch check, music offset, music events), `dusk_update` (music assertions), `tools/export_retro_audio_smoke.gd` (music + bus offset; **not re-run**, it needs an export).
+- **Rewritten, not deleted:** `rewards_ai_v9` and `dark_feedback` (one assertion each), `retro_audio` (variation pool now ≥ 2 files, no-dark-pass pitch check, music offset, music events), `dusk_update` (music assertions), `tools/export_retro_audio_smoke.gd` (music + bus offset; **not re-run**, it needs an export).
 - Determinism caveat: the first seeded run after the other checks differed from the later ones (leftover test state), so the test discards one warm-up run, then compares live / muted / live. Muted and live runs always matched each other.
 
 ## 10. Performance (`tools/audio_perf_profile.gd`, `builds/audio-perf-profile.json`)
