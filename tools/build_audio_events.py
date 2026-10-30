@@ -7,7 +7,7 @@ import json,os
 ROOT=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MAN=json.load(open(os.path.join(ROOT,"docs/audio_handoff/manifest.json")))["events"]
 PATH=os.path.join(ROOT,"assets/audio/events.json")
-OLD=json.load(open(PATH))["events"]
+OLD=json.load(open(os.path.join(ROOT,"tools/audio_events_legacy.json")))["events"] # events.json before the Fog pack
 # old id -> manifest id (same game moment)
 REPOINT={
 "weapon.sword.swing":"weapon.sword_swing","weapon.sword.hit":"weapon.sword_hit",
@@ -19,11 +19,13 @@ REPOINT={
 "weapon.scythes.throw":"weapon.scythe_throw","weapon.scythes.catch":"weapon.scythe_catch","weapon.scythes.hit":"weapon.scythe_hit",
 "weapon.shotgun.fire":"weapon.shotgun_blast","weapon.shotgun.hit":"weapon.bullet_hit",
 "ui.hover":"ui.menu_move","ui.confirm":"ui.menu_select","ui.open":"ui.panel_open","ui.close":"ui.panel_close","ui.purchase":"ui.shop_buy",
-"gem.pickup":"ui.gem_pickup","pickup.gold":"ui.gold_pickup","player.damage":"ui.__none__",
+"gem.pickup":"ui.gem_pickup","pickup.gold":"ui.gold_pickup",
 "player.slide":"movement.slide","player.footstep.grass":"movement.step_grass","player.footstep.rock":"movement.step_stone",
 "reward.chest.tick":"ui.reel_tick",
-"imbue.install":"ui.imbue_fuse"}
+}
 REPOINT["player.damage"]="player.player_hurt"
+# legacy events whose moment the pack fully replaces and that nothing emits any more
+RETIRED={"imbue.install","imbue.interact","reward.chest.reveal","reward.chest.legendary","weapon.lightning.thunder"}
 ORDERED={"world.shrine_charge_tick","ui.gold_pickup","weapon.arrow_pierce","weapon.sword_hit","weapon.sword_swing"}
 DEFAULT_GAIN=-12.0
 def res(p):return "res://assets/audio/fog/"+p[len("audio/"):]
@@ -36,7 +38,7 @@ for old_id,man_id in REPOINT.items():
  if m["loop"]:c["loop"]=True
  out[old_id]=c
 for old_id,o in OLD.items():
- if old_id not in out:out[old_id]=o
+ if old_id not in out and old_id not in RETIRED:out[old_id]=o
 for m in MAN:
  if m["event"] in used:continue
  c={"files":[res(p) for p in m["files"]],"bus":m["bus"],"cooldown":m.get("cooldown",0.0),"priority":m.get("priority",5 if m["bus"]=="Music" else 1),"max_voices":m.get("max_voices",1),"gain_db":m.get("gain_db",DEFAULT_GAIN),"pitch":m.get("pitch_var",0.0),"base_pitch":1.0,"manifest":m["event"]}

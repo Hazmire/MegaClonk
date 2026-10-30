@@ -1242,7 +1242,7 @@ func apply_settings() -> void:
 func setup_audio() -> void:
  audio=RetroAudio.new();add_child(audio);audio.music_menu();apply_settings()
  sound_bank["hit"]=audio.streams[audio.events["player.damage"].files[0]];sound_bank["level"]=audio.streams[audio.events["reward.level_up"].files[0]]
- sound_bank["applause"]=audio.streams[audio.events["reward.applause"].files[0]];sound_bank["legendary"]=audio.streams[audio.events["reward.chest.legendary"].files[0]]
+ sound_bank["applause"]=audio.streams[audio.events["reward.applause"].files[0]]
 func play_sound(event: String,gain: float=1.0) -> void:
  if event in ["death","enemy.death","enemy.hit"]:return
  var aliases={"hit":"player.damage","purchase":"ui.purchase","level":"reward.level_up","menu":"ui.confirm","explosion":"combat.explosion","ready":"boss.warning","cast":"weapon.firestaff.cast","shot":"weapon.bow.fire","swing":"weapon.sword.swing","stone":"weapon.shotgun.hit","lightning":"weapon.lightning.strike","place":"weapon.scythes.catch","revolver":"weapon.revolver.fire","applause":"reward.applause","legendary":"reward.chest.legendary"}

@@ -232,7 +232,6 @@ func fire_lightning(id: int,r: Dictionary) -> bool:
  for k in picked.size():
   if k==0:do_strike(id,picked[k],cast)
   else:later(float(k)*float(WeaponStats.LIGHTNING.strike_delay),do_strike.bind(id,picked[k],cast))
- later(0.14,func():game.audio.emit("weapon.lightning.thunder",origin_pos(),1.0,1.0))
  return true
 func do_strike(id: int,target: Dictionary,cast: Dictionary) -> void:
  if not game.weapons.has(id):return

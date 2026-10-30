@@ -52,7 +52,9 @@ func activate(game: Node) -> bool:
   if game.settings.shake:game.player.camera.h_offset=0.3
  elif ultimate_id=="ghost":game.flash(game.player.position,Color("9bdeff"),4)
  else:game.flash(game.player.position,Color("ff8168"),4)
- game.play_sound("explosion");return true
+ if ultimate_id=="nova" and is_instance_valid(game.audio):game.audio.emit("weapon.ult_cataclysm",game.player.position)
+ else:game.play_sound("explosion")
+ return true
 func serialize() -> Dictionary:
  return {"trait":trait_id,"ultimate":ultimate_id,"cooldown":cooldown,"remaining":remaining,"movement_charge":movement_charge,"still_charge":still_charge,"stationary_time":stationary_time,"still_time":still_time,"uses":uses}
 func restore(data: Dictionary) -> void:
