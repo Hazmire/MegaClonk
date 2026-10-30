@@ -15,6 +15,9 @@ var accepted=0
 var cooldown_suppressed=0
 var voice_suppressed=0
 var music_players=[]
+var muted=false # test/profile stub: emit() accepts nothing (used to prove audio never changes the simulation)
+var count_emits=false # tests: count every emit request per event id
+var emit_counts: Dictionary={}
 var music_slot=0
 var current_track="" # event id of the track on the active music player
 var crossfade_seconds=3.0 # stage A <-> B crossfade
@@ -84,6 +87,8 @@ func choose(event: String,variant: int=-1) -> String:
  last_samples[event]=index;return files[index]
 func emit(event: String,position_value: Vector3=Vector3.INF,gain: float=1.0,pitch_multiplier: float=1.0,variant: int=-1,loop_key: String="") -> bool:
  if event.begins_with("enemy.") or not events.has(event):return false
+ if count_emits:emit_counts[event]=int(emit_counts.get(event,0))+1
+ if muted:return false
  var config=events[event]
  if config.get("music",false):return false # music has its own players
  if loop_key=="" and clock-float(last_events.get(event,-100))<float(config.get("cooldown",0.05)):cooldown_suppressed+=1;return false
