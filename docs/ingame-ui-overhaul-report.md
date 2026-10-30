@@ -53,7 +53,7 @@ Removed: the old stacked-offer reward screens and helpers (`RewardFrame`, `Rewar
 - Verified green individually: `rewards_ai_v9` (93), `reward_ui` (27), `retro_audio` (243), `imbue_station` (31), `combos_amulet` (45), `sockets` (101), `shrine_charging` (25), `stage_themes` (27), `menu_systems` (55), `menus_regression` (67), `integration` (30), `art_reset_gameplay` (25), `forest_physics` (200 seeds).
 
 ## 5. Full validation
-See the final line of this section (filled in after `tools/validate.sh` finished): VALIDATE_RESULT_PLACEHOLDER
+`tools/validate.sh` exits **0** (2033 PASS lines, no FAIL; includes `ingame_ui_regression`, 193 checks). The first full run stopped at one stale assertion in `tests/imbue_station.gd` that looked for the old build screen's socket pips; it was updated to the new build inspector and the whole script was re-run from the start. A harmless `ObjectDB instance was leaked at exit` warning appears at shutdown of the last suite.
 
 ## 6. Performance
 `tools/hud_perf_profile.gd` (Loadout B stress build, every item ×5, four gem-socketed weapons), CPU only, headless:
