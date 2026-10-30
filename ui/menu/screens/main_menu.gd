@@ -18,7 +18,8 @@ func build() -> void:
  var nav=VBoxContainer.new();nav.name="Nav";nav.position=Vector2(120,380);nav.size=Vector2(480,300);nav.add_theme_constant_override("separation",6);nav.mouse_filter=Control.MOUSE_FILTER_IGNORE;content.add_child(nav)
  var entries=[["play","Play",frontend.play_screen],["unlocks","Unlocks",frontend.unlocks],["quests","Quests",frontend.quests],["settings","Settings",func():frontend.settings(frontend.home)]]
  for e in entries:
-  var item=MenuStyle.spawn("menu_item") as MenuItem;item.setup(e[1]);if e[0]=="play":item.sound="play";nav.add_child(item);items[e[0]]=item
+  var item=MenuStyle.spawn("menu_item") as MenuItem;item.setup(e[1]);nav.add_child(item);items[e[0]]=item
+  if e[0]=="play":item.sound="play"
   var target: Callable=e[2]
   item.chosen.connect(func():navigate(target))
  var silver=Control.new();silver.name="Silver";silver.position=Vector2(MenuStyle.W-96-320,84);silver.size=Vector2(320,80);silver.mouse_filter=Control.MOUSE_FILTER_IGNORE;content.add_child(silver)
