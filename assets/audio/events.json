@@ -432,6 +432,19 @@
       "base_pitch": 1.0,
       "manifest": "ui.reel_tick"
     },
+    "imbue.install": {
+      "files": [
+        "res://assets/audio/fog/ui/imbue_fuse.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.2,
+      "priority": 4,
+      "max_voices": 2,
+      "gain_db": -9,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.imbue_fuse"
+    },
     "reward.chest.legendary": {
       "files": [
         "res://assets/audio/fog/ui/reveal_legendary.wav"
@@ -457,19 +470,6 @@
       "pitch": 0.0,
       "base_pitch": 1.0,
       "manifest": "ui.reveal_common"
-    },
-    "imbue.install": {
-      "files": [
-        "res://assets/audio/fog/ui/imbue_fuse.wav"
-      ],
-      "bus": "UI",
-      "cooldown": 0.2,
-      "priority": 4,
-      "max_voices": 2,
-      "gain_db": -9,
-      "pitch": 0.0,
-      "base_pitch": 1.0,
-      "manifest": "ui.imbue_fuse"
     },
     "player.land": {
       "files": [
@@ -2087,6 +2087,32 @@
       "pitch": 0.0,
       "base_pitch": 1.0,
       "manifest": "world.stage_boss_victory"
+    },
+    "ui.reveal_common": {
+      "files": [
+        "res://assets/audio/fog/ui/reveal_common.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.reveal_common"
+    },
+    "ui.reveal_legendary": {
+      "files": [
+        "res://assets/audio/fog/ui/reveal_legendary.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.reveal_legendary"
     }
   }
 }

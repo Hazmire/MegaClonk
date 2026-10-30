@@ -13,7 +13,7 @@ func _ready() -> void:
  pressed.connect(func():step(-1 if (is_hovered() and get_local_mouse_position().x<size.x*0.5) else 1))
 func step(direction: int) -> void:
  if options.is_empty():return
- index=posmod(index+direction,options.size());MenuScreen.sfx("hover");queue_redraw();changed.emit(index)
+ index=posmod(index+direction,options.size());MenuScreen.sfx("slider_tick");queue_redraw();changed.emit(index)
 func _gui_input(event: InputEvent) -> void:
  if event.is_action_pressed("ui_left"):accept_event();step(-1)
  elif event.is_action_pressed("ui_right"):accept_event();step(1)

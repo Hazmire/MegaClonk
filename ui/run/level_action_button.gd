@@ -9,7 +9,6 @@ func setup(text_value: String,frame: Color,text_color: Color) -> LevelActionButt
  caption=text_value;line=frame;ink=text_color;name=text_value.replace(" ","").replace("·","");flat=true;text="";focus_mode=Control.FOCUS_ALL;custom_minimum_size=Vector2(0,54)
  for state in ["normal","hover","pressed","focus","disabled","hover_pressed"]:add_theme_stylebox_override(state,StyleBoxEmpty.new())
  focus_entered.connect(queue_redraw);focus_exited.connect(queue_redraw);mouse_entered.connect(func():if not disabled and not has_focus():grab_focus())
- pressed.connect(func():MenuScreen.sfx("confirm"))
  return self
 func set_caption(value: String) -> void:caption=value;queue_redraw()
 func _draw() -> void:

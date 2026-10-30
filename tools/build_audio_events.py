@@ -21,7 +21,7 @@ REPOINT={
 "ui.hover":"ui.menu_move","ui.confirm":"ui.menu_select","ui.open":"ui.panel_open","ui.close":"ui.panel_close","ui.purchase":"ui.shop_buy",
 "gem.pickup":"ui.gem_pickup","pickup.gold":"ui.gold_pickup","player.damage":"ui.__none__",
 "player.slide":"movement.slide","player.footstep.grass":"movement.step_grass","player.footstep.rock":"movement.step_stone",
-"reward.chest.tick":"ui.reel_tick","reward.chest.legendary":"ui.reveal_legendary","reward.chest.reveal":"ui.reveal_common",
+"reward.chest.tick":"ui.reel_tick",
 "imbue.install":"ui.imbue_fuse"}
 REPOINT["player.damage"]="player.player_hurt"
 ORDERED={"world.shrine_charge_tick","ui.gold_pickup","weapon.arrow_pierce","weapon.sword_hit","weapon.sword_swing"}

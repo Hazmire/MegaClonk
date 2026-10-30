@@ -25,6 +25,9 @@ var skip_button: LevelActionButton
 var refresh_button: LevelActionButton
 var bursts: Array=[]
 var clock=0.0
+var dealt_sound=[false,false,false]
+var reveal_played=false
+const REVEAL_EVENTS=["ui.reveal_common","ui.reveal_uncommon","ui.reveal_rare","ui.reveal_epic","ui.reveal_legendary"]
 var interactive=false
 var plain=false # reduced motion or visual intensity ~0: no fanfare, no shake
 var last_preview=-1
@@ -57,7 +60,7 @@ func build() -> void:
 func build_footer() -> void:
  footer=Control.new();footer.name="Footer";footer.position=Vector2(572,850);footer.size=Vector2(776,138);footer.mouse_filter=Control.MOUSE_FILTER_IGNORE;content.add_child(footer)
  primary=MenuStyle.spawn("menu_item") as MenuItem;primary.setup("Take",36,36).make_primary("ENTER",72,36);primary.size=Vector2(776,72);primary.position=Vector2.ZERO;primary.indent=60.0;footer.add_child(primary)
- primary.chosen.connect(func():take(selected_index()))
+ primary.sound="";primary.chosen.connect(func():take(selected_index()))
  var row=HBoxContainer.new();row.position=Vector2(0,84);row.size=Vector2(776,54);row.add_theme_constant_override("separation",12);row.mouse_filter=Control.MOUSE_FILTER_IGNORE;footer.add_child(row)
  banish_button=LevelActionButton.new().setup("BANISH",FogPalette.RUST_BRIGHT,FogPalette.RUST_TEXT);skip_button=LevelActionButton.new().setup("SKIP · HEAL 10",FogPalette.BORDER,Color("D9D4C4"));refresh_button=LevelActionButton.new().setup("REFRESH",FogPalette.BORDER,Color("D9D4C4"))
  for b in [banish_button,skip_button,refresh_button]:b.size_flags_horizontal=Control.SIZE_EXPAND_FILL;row.add_child(b)
@@ -80,24 +83,25 @@ func selected_index() -> int:
 # Remembers the highlighted card, names it on the Take button and previews its stat change on the Stats panel.
 func select(i: int) -> void:
  if cards.is_empty():return
+ if interactive and i!=last_preview:MenuScreen.sfx("card_hover")
  last_preview=i;var data: Dictionary=cards_data[i]
  if primary!=null:primary.label_text="Take "+str(data.short_name);primary.queue_redraw()
  stats_panel.clear_preview()
  if not data.preview.is_empty():stats_panel.preview(str(data.preview.stat),float(data.preview.from),float(data.preview.to))
 func take(i: int) -> void:
  if not interactive or i<0 or i>=choices.size():return
- interactive=false;game.apply_upgrade(choices[i]);game.resume()
+ interactive=false;MenuScreen.sfx("card_take");game.apply_upgrade(choices[i]);game.resume()
 func banish() -> void:
  if not interactive or cards.is_empty():return
  var choice: Dictionary=choices[selected_index()]
  if choice.type=="supply":return
- interactive=false;game.banished.append(choice.key);game.resume()
+ interactive=false;MenuScreen.sfx("banish");game.banished.append(choice.key);game.resume()
 func skip() -> void:
  if not interactive:return
- interactive=false;game.health=minf(game.stats.max_health,game.health+10);game.resume()
+ interactive=false;MenuScreen.sfx("skip_heal");game.health=minf(game.stats.max_health,game.health+10);game.resume()
 func refresh() -> void:
  if not interactive or game.rerolls<=0:return
- interactive=false;game.rerolls-=1;frontend.upgrades()
+ interactive=false;MenuScreen.sfx("refresh");game.rerolls-=1;frontend.upgrades()
 func set_hints_for_device() -> void:
  if pad_active():set_hints([["← →","Choose","D-PAD"],["ENTER","Take","A"]])
  else:set_hints([["← →","Choose"],["1–3","Select"],["ENTER","Take"]])
@@ -125,11 +129,22 @@ func apply_timeline() -> void:
   card.modulate.a=clampf(p*1.6,0.0,1.0);card.pivot_offset=card.size*0.5
   card.scale=Vector2.ONE*lerpf(0.7,1.0,f);card.position.y=CARD_Y+(1.0-f)*180.0;card.rotation=(1.0-f)*deg_to_rad(12.0)
   card.mouse_filter=Control.MOUSE_FILTER_STOP if interactive else Control.MOUSE_FILTER_IGNORE
+  if clock>=s and not dealt_sound[i%3]:
+   dealt_sound[i%3]=true
+   if clock-s<0.4:MenuScreen.sfx("card_deal") # a skipped fanfare jumps past the deal: stay silent
   var was=card.burst;var raw=(clock-(s+0.35))/0.7;card.burst=raw if (not plain and int(card.data.tier)>=FogPalette.Rarity.RARE and raw>0.0 and raw<1.0) else -1.0
   if card.burst>=0.0 or was>=0.0:card.face.queue_redraw()
+ if not reveal_played and clock>=CARD_START[1]+CARD_DUR[1]+0.2:
+  if clock<CARD_START[1]+CARD_DUR[1]+0.9:play_reveal()
+  else:reveal_played=true
  if not interactive and clock>=READY_AT:
   interactive=true;primary.mouse_filter=Control.MOUSE_FILTER_STOP;_focus_first()
  content.position=Vector2.ZERO if plain else shake_offset()
+func play_reveal() -> void:
+ # One reveal for the best tier on the table when its card lands (the bells of three cards would otherwise fight for one voice).
+ reveal_played=true;var best=0
+ for c in cards:best=maxi(best,int(c.data.tier))
+ if is_instance_valid(game.audio):game.audio.emit(REVEAL_EVENTS[mini(best,4)])
 func shake_offset() -> Vector2:
  var k=(clock-0.08)/0.5
  if k<=0.0 or k>=1.0 or not bool(game.settings.get("shake",true)):return Vector2.ZERO

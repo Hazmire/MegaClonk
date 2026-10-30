@@ -19,6 +19,7 @@ func setup(value: String,normal_size: int=38,selected_size: int=48,is_locked: bo
  label_text=value;locked=is_locked;size_normal=normal_size;size_selected=selected_size;row_normal=int(row.x);row_selected=int(row.y)
  name=value.replace(" ","");tooltip_text=value
  return self
+var sound="confirm"
 func _ready() -> void:
  focus_mode=Control.FOCUS_ALL;text="";alignment=HORIZONTAL_ALIGNMENT_LEFT;flat=true
  for state in ["normal","hover","pressed","focus","disabled","hover_pressed"]:add_theme_stylebox_override(state,StyleBoxEmpty.new())
@@ -28,7 +29,7 @@ func _ready() -> void:
  _refresh()
 func _on_pressed() -> void:
  if locked:return
- MenuScreen.sfx("confirm");flash=0.08;set_process(true);queue_redraw();chosen.emit()
+ MenuScreen.sfx(sound);flash=0.08;set_process(true);queue_redraw();chosen.emit()
 func _process(delta: float) -> void:
  flash-=delta;queue_redraw()
  if flash<=0.0:set_process(false)

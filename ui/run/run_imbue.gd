@@ -148,7 +148,8 @@ func first_slot() -> Control:
 func pick_gem(element: String) -> void:
  if phase=="fusing":return
  if int(game.gems.count(element))<1:return
- held="" if held==element else element;target_weapon=-1;target_slot=-1;phase="idle";just_fused_weapon=-1;build_dynamic();sfx("ui.select") if false else null
+ held="" if held==element else element;target_weapon=-1;target_slot=-1;phase="idle";just_fused_weapon=-1;build_dynamic()
+ if held!="":MenuScreen.sfx("gem_pickup")
 func pick_socket(weapon: int,slot: int) -> void:
  if phase=="fusing":return
  for w in data.weapons:
@@ -156,14 +157,14 @@ func pick_socket(weapon: int,slot: int) -> void:
   var sk: Dictionary=w.sockets[slot]
   if sk.kind=="locked":
    var used=GemRewards.use_amulet(game,weapon)
-   if used.ok:game.play_sound("imbue.install");game.toast("%s gained a second socket"%w.name)
+   if used.ok:MenuScreen.sfx("socket_place");game.toast("%s gained a second socket"%w.name)
    else:game.toast(ImbueRules.reason_text(str(used.reason)))
    build_dynamic();return
   if sk.kind!="empty" or held=="":return
   var problem=ImbueRules.problem_for_slot(game,weapon,held)
   if problem=="insufficient_gold":phase="poor";target_weapon=-1;build_dynamic();return
   if problem!="":game.toast(ImbueRules.reason_text(problem));return
-  target_weapon=weapon;target_slot=slot;phase="confirm";build_dynamic();return
+  MenuScreen.sfx("socket_place");target_weapon=weapon;target_slot=slot;phase="confirm";build_dynamic();return
 func cancel() -> void:
  target_weapon=-1;target_slot=-1;phase="idle";build_dynamic()
 func fuse() -> void:
@@ -172,10 +173,15 @@ func fuse() -> void:
  var result=ImbueRules.install(game,wid,element)
  if not result.ok:
   game.toast(ImbueRules.reason_text(str(result.reason)));phase="idle";target_weapon=-1;build_dynamic();return
- game.play_sound("imbue.install");done_text="%s|%s"%[Elements.display_name(element),weapon_name(wid)];done_color=Elements.color(element)
+ game.play_sound(fuse_event(wid,element));done_text="%s|%s"%[Elements.display_name(element),weapon_name(wid)];done_color=Elements.color(element)
  phase="fusing";phase_time=0.0;just_fused_weapon=wid;target_slot=-1;_build_action();leave_button.hide()
  spent=price
 var spent=0
+# First gem: imbue_fuse_<element>; the second gem of a weapon completes a combo and plays imbue_combo_<combo> instead.
+func fuse_event(wid: int,element: String) -> String:
+ var combo=WeaponSockets.combo(game.weapons[wid])
+ if not combo.is_empty():return "imbue.imbue_combo_"+str(combo.id)
+ return "imbue.imbue_fuse_"+RetroAudio.element_id(element)
 var fuse_bar: Control
 func finish_fuse() -> void:
  phase="done";held="";target_weapon=-1;phase_time=0.0

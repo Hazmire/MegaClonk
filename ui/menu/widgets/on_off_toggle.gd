@@ -13,7 +13,7 @@ func setup(value: bool,on_dark: bool=false) -> OnOffToggle:
 func _ready() -> void:
  focus_mode=Control.FOCUS_ALL;text="";flat=true;custom_minimum_size=Vector2(116,40)
  for state in ["normal","hover","pressed","focus","disabled","hover_pressed"]:add_theme_stylebox_override(state,StyleBoxEmpty.new())
- pressed.connect(func():set_on(not on);MenuScreen.sfx("confirm"))
+ pressed.connect(func():set_on(not on);MenuScreen.sfx("toggle_on" if on else "toggle_off"))
  focus_entered.connect(queue_redraw);focus_exited.connect(queue_redraw)
 func set_on(value: bool,emit: bool=true) -> void:
  if value==on:return

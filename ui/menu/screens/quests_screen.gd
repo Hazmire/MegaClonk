@@ -51,4 +51,4 @@ func claim(id: String) -> void:
  for i in cards.size():
   if cards[i].name=="Quest_"+id:index=i
  if MetaProgress.claim(progress(),id):
-  sfx("purchase");game.progress.save();refresh_silver();fill(index)
+  sfx("quest_claim");game.progress.save();refresh_silver();fill(index)

@@ -454,7 +454,7 @@ func resume() -> void:
  Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 # Coloured "gem discovered" banner at the top of the screen (vase, chest and shop gems).
 func gem_discovered(element: String) -> void:
- play_sound("gem.pickup")
+ play_sound("world.gem_found_"+RetroAudio.element_id(element))
  if is_instance_valid(frontend):frontend.gem_notice(element)
 func toast(text: String) -> void:
  notice.text = text
@@ -499,6 +499,7 @@ func _physics_process(delta: float) -> void:
   if is_instance_valid(audio):audio.stop_event("player.slide");audio.silence_loops()
   movement_audio.reset();return
  movement_audio.tick(self,delta)
+ RunAudio.low_hp(self)
  if health <= 0:
   finish_run(false)
   return
@@ -759,7 +760,7 @@ func hurt(amount: float) -> void:
  player.hurt_time=0.22
  player.avatar.set_damage_flash(true)
  combat_fx.burst("blood_burst",player.position+Vector3.UP)
- play_sound("hit")
+ RunAudio.hurt(self,final_damage)
 # `ctx` (optional) is the shared weapon hit context: {"source": hit type, "dir", "pos"}. It only steers
 # impact feedback; damage, crit, sockets and combos all run through this one function for every source.
 func hit(e: Dictionary, base: float, weapon: int, ctx: Dictionary = {}) -> void:
@@ -787,6 +788,7 @@ func hit(e: Dictionary, base: float, weapon: int, ctx: Dictionary = {}) -> void:
   else:combat_fx.burst("impact_concrete",e.pos,0.5)
  var actual=minf(amount,maxf(0,e.hp))
  e.hp -= amount
+ if e.kind==8:RunAudio.check_enrage(self,e)
  if weapon>=0:
   if not weapon_damage_windows.has(weapon):weapon_damage_windows[weapon]=[]
   var samples: Array=weapon_damage_windows[weapon]
@@ -851,6 +853,7 @@ func kill_enemy(index: int) -> void:
    if summoned.get("summon_owner","")==e.get("owner_key","none"):summoned.hp=0;crowd.disable(summoned)
   run_metrics["bosses"]=int(run_metrics.get("bosses",0))+1
   if stage_encounter_complete:
+   RunAudio.stage_boss_cleared(self,e)
    boss_dead = true
    portal_state="exit"
    refresh_portal()
@@ -1070,7 +1073,7 @@ func roll_tier(weights: Dictionary) -> String:
  return "common"
 func show_upgrades() -> void:
  frontend.upgrades()
- play_sound("level")
+ play_sound("ui.levelup_toll")
 
 func apply_upgrade(choice: Dictionary) -> void:
  if choice.type=="supply":health=minf(stats.max_health,health+25);return
@@ -1174,6 +1177,7 @@ func finish_run(victory: bool) -> void:
  world_time.reset()
  if not victory and health<=0:
   player.dead=true
+  RunAudio.death(self)
   var dying_avatar=player.avatar
   var death_tween=dying_avatar.create_tween()
   death_tween.tween_method(func(_time):
@@ -1184,7 +1188,6 @@ func finish_run(victory: bool) -> void:
  MetaProgress.record(progress.data,{"weapon":selected_weapon,"trait":loadout_runtime.trait_id,"ultimate":loadout_runtime.ultimate_id,"time":elapsed,"kills":kills,"victory":victory,"metrics":run_metrics.duplicate(true)},sandbox)
  if not sandbox:progress.save()
  frontend.results(victory,unlocked)
- tone(520 if victory else 110,0.5)
 func show_progress() -> void:
  frontend.unlocks()
 

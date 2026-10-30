@@ -143,7 +143,7 @@ func on_picked(id: String) -> void:
  game.progress.data.loadout={"weapon":game.selected_weapon,"trait":game.selected_trait,"ultimate":game.selected_ultimate};game.progress.save()
  refresh_slot(open_category)
 func start_run() -> void:
- game.selected_biome=0;game.selected_tier=1;game.sandbox=false;sfx("confirm");game.begin_run()
+ game.selected_biome=0;game.selected_tier=1;game.sandbox=false;sfx("run_start");game.begin_run()
 func go_back() -> void:
  if dropdown!=null and dropdown.visible:dropdown.close();return
  navigate(frontend.home)

@@ -132,7 +132,7 @@ static func update(game: Node,delta: float) -> void:
 static func collect(game: Node,p: Dictionary) -> void:
  match str(p.kind):
   "gold":
-   game.gold+=int(p.value);game.play_sound("pickup.gold")
+   game.gold+=int(p.value);RunAudio.gold(game)
   "gem":
    game.gems.add(str(p.element));game.gem_discovered(str(p.element))
   "heart":heal(game);game.irt.on_powerup("heart")

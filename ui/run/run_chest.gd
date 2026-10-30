@@ -8,6 +8,7 @@ const SPIN_TIME=6.0
 const LAND_TIME=1.0
 var item_id=""
 var info: Dictionary={}
+const REVEAL_EVENTS=["ui.reveal_common","ui.reveal_uncommon","ui.reveal_rare","ui.reveal_epic","ui.reveal_legendary"]
 var phase="closed"
 var phase_time=0.0
 var chest_sprite: TextureRect
@@ -82,14 +83,15 @@ func build_open() -> void:
 func open_chest() -> void:
  if phase!="closed":return
  phase="opening";phase_time=0.0;open_group.hide();chest_sprite.texture=load("res://assets/icons/misc/chest_open.png");headline.text="Something stirs inside…"
- hold=0.0;armed=false;set_hints([["HOLD ENTER","Skip","A"]]);game.play_sound("reward.chest.reveal",0.3)
+ hold=0.0;armed=false;set_hints([["HOLD ENTER","Skip","A"]])
+ game.play_sound("ui.chest_hop")
 func skip() -> void:
  if phase=="reveal":return
  if phase=="closed":phase="opening"
  go_reveal()
 func go_reveal() -> void:
  if phase=="reveal":return
- phase="reveal";phase_time=0.0;frontend.chest_skip=Callable();game.audio.stop_event("reward.chest.tick")
+ phase="reveal";phase_time=0.0;frontend.chest_skip=Callable();game.audio.stop_event("reward.chest.tick");game.audio.stop_event("ui.chest_hop");game.audio.stop_event("ui.chest_open");game.audio.stop_event("ui.reel_stop")
  open_group.hide();wait_label.hide();headline.hide();shake_root.get_node("Caption").hide();chest_sprite.texture=load("res://assets/icons/misc/chest_open.png");chest_sprite.rotation=0.0;chest_sprite.position.y=236.0;chest_sprite.scale=Vector2.ONE
  beam.modulate.a=1.0;reel_panel.modulate.a=1.0;reel.set_progress(1.0,true)
  var t=int(info.tier);var tint: Color=FogPalette.RARITY[t]["color"];var legendary=t==FogPalette.Rarity.LEGENDARY
@@ -107,7 +109,7 @@ func go_reveal() -> void:
   var sb=StyleBoxFlat.new();sb.bg_color=Color("F2C14E") if legendary else tint;sb.content_margin_left=16;sb.content_margin_right=16;sb.content_margin_top=10;sb.content_margin_bottom=7;sb.shadow_color=Color("050505");sb.shadow_offset=Vector2(4,4)
   stamp.add_theme_stylebox_override("normal",sb);reveal_layer.add_child(stamp)
  take_button=MenuStyle.spawn("menu_item") as MenuItem;take_button.name="TakeIt";take_button.setup("Take it",36,36).make_primary("ENTER",72,36);take_button.size=Vector2(300,72);take_button.position=Vector2(810,740);take_button.indent=48.0
- take_button.chosen.connect(func():game.resume());reveal_layer.add_child(take_button)
+ take_button.sound="item_take";take_button.chosen.connect(func():game.resume());reveal_layer.add_child(take_button)
  flash=ColorRect.new();flash.color=Color("FFEDC2");flash.size=Vector2(1920,1080);flash.mouse_filter=Control.MOUSE_FILTER_IGNORE;reveal_layer.add_child(flash)
  reveal_layer.show();set_hints([["ENTER","Take it","A"]]);focus_later(take_button)
  if not game.settings.reduced:
@@ -120,7 +122,7 @@ func go_reveal() -> void:
   take_button.modulate.a=0.0;tw.tween_property(take_button,"modulate:a",1.0,0.4).set_delay(1.0)
  else:flash.hide()
  var cel=float(Rarity.definition(Catalog.item_tier(item_id)).celebration)
- game.play_sound("applause",0.25+0.75*cel);game.play_sound("reward.chest.legendary" if legendary else "reward.chest.reveal",0.4+0.6*cel)
+ game.play_sound("applause",0.25+0.75*cel);game.play_sound(REVEAL_EVENTS[clampi(t,0,4)])
 func _input(event: InputEvent) -> void:
  super._input(event)
  if phase=="spinning" and event is InputEventKey and event.pressed and not event.echo and event.keycode==KEY_SPACE:skip();get_viewport().set_input_as_handled()
@@ -135,12 +137,12 @@ func _process(delta: float) -> void:
    var jump=-36.0*sin(minf(k/0.55,1.0)*PI) if k<0.55 else -8.0*sin(clampf((k-0.55)/0.45,0.0,1.0)*PI)
    chest_sprite.position.y=236.0+jump;chest_sprite.scale=Vector2(1.0+0.08*sin(k*PI),1.0-0.06*sin(k*PI))
    beam.modulate.a=clampf(k*1.6,0.0,1.0);reel_panel.modulate.a=clampf(phase_time/0.4,0.0,1.0)
-   if phase_time>=OPEN_TIME:phase="spinning";phase_time=0.0;chest_sprite.position.y=236.0;chest_sprite.scale=Vector2.ONE;wait_label.show()
+   if phase_time>=OPEN_TIME:game.play_sound("ui.chest_open");phase="spinning";phase_time=0.0;chest_sprite.position.y=236.0;chest_sprite.scale=Vector2.ONE;wait_label.show()
   "spinning":
    var p=clampf(phase_time/SPIN_TIME,0.0,1.0);reel.set_progress(p,false)
    var under=reel.under_marker(p)
    if under!=reel.last_tick:reel.last_tick=under;game.play_sound("reward.chest.tick",0.35)
-   if p>=1.0:phase="landed";phase_time=0.0;reel.set_progress(1.0,true);wait_label.hide();game.audio.stop_event("reward.chest.tick")
+   if p>=1.0:phase="landed";phase_time=0.0;reel.set_progress(1.0,true);wait_label.hide();game.audio.stop_event("reward.chest.tick");game.play_sound("ui.reel_stop")
   "landed":
    var s=maxf(0.0,1.0-phase_time/0.4)*float(game.settings.visual_intensity) if not game.settings.reduced else 0.0
    shake_root.position=Vector2(sin(phase_time*90.0)*10.0,cos(phase_time*70.0)*6.0)*s

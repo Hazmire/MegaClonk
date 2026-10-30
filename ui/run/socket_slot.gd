@@ -15,7 +15,7 @@ func setup(n: String) -> SocketSlot:
  name=n;custom_minimum_size=SIZE_PX;size=SIZE_PX;focus_mode=Control.FOCUS_ALL;flat=true;text="";clip_contents=false
  for st in ["normal","hover","pressed","focus","disabled","hover_pressed"]:add_theme_stylebox_override(st,StyleBoxEmpty.new())
  mouse_entered.connect(func():if not disabled and not has_focus():grab_focus())
- focus_entered.connect(queue_redraw);focus_exited.connect(queue_redraw);set_process(true);return self
+ focus_entered.connect(queue_redraw);focus_entered.connect(func():if state=="ready" or state=="target":MenuScreen.sfx("socket_hover"));focus_exited.connect(queue_redraw);set_process(true);return self
 func set_state(new_state: String,gem_color: Color,text_label: String,why: String="") -> void:
  state=new_state;color=gem_color;label=text_label;reason=why;queue_redraw()
 func _process(delta: float) -> void:

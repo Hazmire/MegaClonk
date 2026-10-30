@@ -73,8 +73,8 @@ func rebuild() -> void:
   for k in ["font_color","font_hover_color","font_focus_color","font_pressed_color"]:b.add_theme_color_override(k,FogPalette.BONE_BRIGHT if on else FogPalette.ASH_FAINT)
 func _pick(row: DropdownOption) -> void:
  if not bool(row.info.get("unlocked",true)):
-  MenuScreen.sfx("hover");return # locked rows are visible but cannot be picked
- MenuScreen.sfx("confirm");picked.emit(String(row.info.id));close()
+  MenuScreen.sfx("locked");return # locked rows are visible but cannot be picked
+ MenuScreen.sfx("weapon_select");picked.emit(String(row.info.id));close()
 func _input(event: InputEvent) -> void:
  if not visible:return
  if event.is_action_pressed("ui_cancel"):
