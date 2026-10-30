@@ -5,6 +5,8 @@ var root: Control
 var menu: Control
 var hud_root: Control
 var stopwatch_overlay: StopwatchOverlay
+var run_stage: RunStage
+var run_overlay: RunOverlay
 var tally=PickupTally.new()
 var tally_gold: Label
 var tally_xp: Label
@@ -58,22 +60,11 @@ func setup(owner_game: Node) -> void:
  layer=2
  root=Control.new();root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);root.mouse_filter=Control.MOUSE_FILTER_IGNORE
  add_child(root)
- var theme=Theme.new();theme.default_font_size=18;theme.default_font=load("res://assets/fonts/Kurland.ttf")
- for state in ["normal","hover","pressed","focus"]:
-  var style=StyleBoxFlat.new();style.bg_color=Color("172a30") if state=="normal" else Color("29464b")
-  style.border_color=Color("5b7775") if state=="normal" else card_gold
-  style.set_border_width_all(1);style.set_corner_radius_all(5)
-  style.content_margin_left=14;style.content_margin_right=14;style.content_margin_top=10;style.content_margin_bottom=10
-  theme.set_stylebox(state,"Button",style)
- var track=StyleBoxFlat.new();track.bg_color=Color("263c40");track.border_color=Color("425c5b");track.set_border_width_all(1)
- var bar_fill=StyleBoxFlat.new();bar_fill.bg_color=card_gold
- theme.set_stylebox("background","ProgressBar",track);theme.set_stylebox("fill","ProgressBar",bar_fill)
- theme.set_color("font_color","Label",Color("f0e8d4"))
- root.theme=theme
+ root.theme=MenuStyle.theme() # the shared Fog theme; menus apply the same one to their own roots
  headline_font=load("res://assets/fonts/Kurland.ttf") if ResourceLoader.exists("res://assets/fonts/Kurland.ttf") else load("res://assets/fonts/PixelatedElegance.ttf")
  menu=Control.new();menu.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);root.add_child(menu)
  hud_root=Control.new();hud_root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);hud_root.mouse_filter=Control.MOUSE_FILTER_IGNORE;root.add_child(hud_root)
- stopwatch_overlay=StopwatchOverlay.new();stopwatch_overlay.setup(root,hud_root);hud_root.add_child(stopwatch_overlay)
+ stopwatch_overlay=StopwatchOverlay.new();stopwatch_overlay.setup(hud_root);hud_root.add_child(stopwatch_overlay)
  game.ui=self
  game.hud=text("",hud_root,18);game.hud.hide()
  game.health_bar=ProgressBar.new();game.health_bar.position=Vector2(28,220);game.health_bar.size=Vector2(270,22);game.health_bar.show_percentage=false;hud_root.add_child(game.health_bar)
@@ -98,6 +89,8 @@ func setup(owner_game: Node) -> void:
  minimap=RunMinimap.new();minimap.game=game;minimap.position=Vector2(1040,450);minimap.size=Vector2(210,210);hud_root.add_child(minimap)
  var legend=text("YOU • PORTAL • TREASURE",hud_root,12);legend.position=Vector2(1040,670)
  game.notice=text("",root,18);game.notice.position=Vector2(350,646);game.notice.custom_minimum_size.x=590;game.notice.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+ run_stage=RunStage.new();root.add_child(run_stage)
+ run_overlay=RunOverlay.new();root.add_child(run_overlay);root.move_child(menu,root.get_child_count()-1) # order: HUD, run overlay, then pause/reward screens above
  hud_root.hide()
 func text(value: String, parent: Node, size_value: int = 18) -> Label:
  var label=Label.new();label.text=value;label.add_theme_font_size_override("font_size",size_value);parent.add_child(label);return label
@@ -253,6 +246,7 @@ func update_tally(delta: float) -> void:
 func update_hud() -> void:
  var frame_delta=real_delta()
  if stopwatch_overlay:stopwatch_overlay.update_state(game.world_time,frame_delta)
+ if run_overlay:run_overlay.sync(game,frame_delta)
  update_tally(frame_delta)
  var weapon_names: Array[String]=[]
  for id in game.weapons:weapon_names.append("%s %d"%[Catalog.weapon_name(id),game.weapons[id].level])

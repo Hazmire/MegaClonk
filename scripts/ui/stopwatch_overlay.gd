@@ -1,13 +1,12 @@
 class_name StopwatchOverlay
 extends Control
 
-# Visual feedback for the Stopwatch: a screen grade behind the HUD, a short activation flash
-# and a remaining-time bar with a label. Purely presentational: it only reads WorldTime.
+# Visual feedback for the Stopwatch: a short activation flash
+# and a remaining-time bar with a label. The screen edge glow lives in the shared RunOverlay (stopwatch uniform).
+# Purely presentational: it only reads WorldTime.
 const FADE_IN=0.25
 const FADE_OUT=0.6
 const FLASH_TIME=0.35
-var grade: ColorRect
-var grade_material: ShaderMaterial
 var flash: ColorRect
 var bar: ProgressBar
 var label: Label
@@ -15,13 +14,9 @@ var strength=0.0
 var last_remaining=0.0
 var flash_left=0.0
 
-# `back_parent` receives the full-screen grade (added first so the HUD draws over it);
 # `front_parent` receives the flash, bar and label.
-func setup(back_parent: Control,front_parent: Control) -> void:
+func setup(front_parent: Control) -> void:
  mouse_filter=Control.MOUSE_FILTER_IGNORE
- grade=ColorRect.new();grade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);grade.mouse_filter=Control.MOUSE_FILTER_IGNORE;grade.color=Color.WHITE
- grade_material=ShaderMaterial.new();grade_material.shader=preload("res://shaders/stopwatch.gdshader");grade.material=grade_material;grade.hide()
- back_parent.add_child(grade);back_parent.move_child(grade,0)
  flash=ColorRect.new();flash.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);flash.mouse_filter=Control.MOUSE_FILTER_IGNORE;flash.color=Color(0.85,0.93,1.0,0.0);flash.hide()
  front_parent.add_child(flash)
  bar=ProgressBar.new();bar.position=Vector2(28,300);bar.size=Vector2(270,12);bar.show_percentage=false;bar.max_value=1.0;bar.mouse_filter=Control.MOUSE_FILTER_IGNORE
@@ -38,8 +33,6 @@ func update_state(time: WorldTime,delta: float) -> void:
  last_remaining=remaining
  var rate=(1.0/FADE_IN) if remaining>0.0 else (1.0/FADE_OUT)
  strength=move_toward(strength,1.0 if remaining>0.0 else 0.0,delta*rate)
- grade.visible=strength>0.0
- grade_material.set_shader_parameter("strength",strength)
  bar.visible=remaining>0.0;label.visible=remaining>0.0
  bar.value=time.fraction()
  label.text="STOPWATCH  %.1fs"%maxf(0.0,remaining)
@@ -49,11 +42,6 @@ func update_state(time: WorldTime,delta: float) -> void:
 # Hides everything at once; used when a run ends, a stage is built or a run starts.
 func reset() -> void:
  strength=0.0;last_remaining=0.0;flash_left=0.0
- if is_instance_valid(grade):grade.hide()
  if is_instance_valid(flash):flash.hide()
  if is_instance_valid(bar):bar.hide()
  if is_instance_valid(label):label.hide()
-# Drop the shader material explicitly so headless runs exit without leaked render resources.
-func _exit_tree() -> void:
- if is_instance_valid(grade):grade.material=null
- grade_material=null

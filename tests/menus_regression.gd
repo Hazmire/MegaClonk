@@ -85,7 +85,7 @@ func run() -> void:
  game=load("res://scenes/main/main.tscn").instantiate();root.add_child(game)
  await process_frame
  fresh_profile()
- check(root.theme==null and game.frontend.root.theme!=MenuStyle.theme(),"The Fog theme is scoped to menu screens, not the whole project or the in-run UI")
+ check(root.theme==null and game.frontend.root.theme==MenuStyle.theme(),"The Fog theme is not project-wide; menus and the in-run UI root share the one MenuStyle theme")
  game.frontend.home();await process_frame
  var main=current()
  check(main is MainMenuScreen and main.items.size()>=4,"Home builds the Fog main menu")

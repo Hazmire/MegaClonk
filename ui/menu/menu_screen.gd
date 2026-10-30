@@ -10,7 +10,6 @@ static func set_instant(value: bool) -> void:Engine.set_meta("menu_instant",valu
 static func pad_active() -> bool:return bool(Engine.get_meta("menu_using_pad",false))
 static func set_pad_active(value: bool) -> void:Engine.set_meta("menu_using_pad",value)
 const FADE=0.075
-const PAD_WORDS={"ENTER":"A","ESC":"B","Q / E":"LB / RB","TAB":"Y","↑↓":"D-PAD","↑ ↓":"D-PAD"}
 var right_dark=false # "world" backdrop only: also darken the right edge (the loadout memo sits there)
 var left_stop=0.56
 var backdrop_kind="fog" # "fog" = checker fog + 86% dim; "world" = live scene behind, darkened at the left and bottom
@@ -21,8 +20,7 @@ var backdrop: Control
 var content: Control
 var overlay: ColorRect
 var fade: ColorRect
-var hint_bar: HBoxContainer
-var hints: Array=[]
+var hint_bar: KeyHintBar
 var tween: Tween
 var frontend: Node # FrontEnd that owns screen switching (set by FrontEnd before the screen enters the tree)
 var game: Node
@@ -38,7 +36,12 @@ func _init() -> void:
  theme=MenuStyle.theme();set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);mouse_filter=Control.MOUSE_FILTER_STOP
  stage=Control.new();stage.name="Stage";stage.size=Vector2(MenuStyle.W,MenuStyle.H);stage.mouse_filter=Control.MOUSE_FILTER_IGNORE
  content=Control.new();content.name="Content";content.size=stage.size;content.mouse_filter=Control.MOUSE_FILTER_IGNORE
- hint_bar=HBoxContainer.new();hint_bar.name="KeyHints";hint_bar.add_theme_constant_override("separation",32);hint_bar.mouse_filter=Control.MOUSE_FILTER_IGNORE
+ hint_bar=KeyHintBar.new()
+# Nodes built in _init but never parented (a screen instantiated and freed without entering the tree) would leak.
+func _notification(what: int) -> void:
+ if what==NOTIFICATION_PREDELETE:
+  for n in [hint_bar,content,stage]:
+   if is_instance_valid(n) and n.get_parent()==null:n.free()
 func _ready() -> void:
  backdrop=Control.new();backdrop.name="Backdrop";backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);backdrop.mouse_filter=Control.MOUSE_FILTER_IGNORE
  add_child(backdrop);_build_backdrop()
@@ -81,17 +84,9 @@ func _place_hints() -> void:
  else:
   hint_bar.position=Vector2(120,MenuStyle.H-32-24);hint_bar.size=Vector2(900,24);hint_bar.alignment=BoxContainer.ALIGNMENT_BEGIN
 # entries: [keyboard key, action]. On a controller the key word is swapped for the button name.
-func set_hints(entries: Array) -> void:hints=entries;refresh_hints()
+func set_hints(entries: Array) -> void:hint_bar.set_entries(entries)
 func refresh_hints() -> void:
- if hint_bar==null:return
- for c in hint_bar.get_children():hint_bar.remove_child(c);c.queue_free()
- for e in hints:
-  var pair=HBoxContainer.new();pair.add_theme_constant_override("separation",10);pair.mouse_filter=Control.MOUSE_FILTER_IGNORE
-  var key=String(e[0])
-  if pad_active():key=String(e[2]) if e.size()>2 else PAD_WORDS.get(key,key)
-  var font_key=MenuStyle.sans(800,0.18,15);var font_act=MenuStyle.sans(600,0.18,15)
-  MenuStyle.label(key,font_key,15,FogPalette.BONE,0,pair);MenuStyle.label(String(e[1]).to_upper(),font_act,15,FogPalette.ASH_DIM,0,pair)
-  hint_bar.add_child(pair)
+ if hint_bar!=null:hint_bar.refresh()
 func _input(event: InputEvent) -> void:
  var pad=event is InputEventJoypadButton or (event is InputEventJoypadMotion and absf(event.axis_value)>0.5)
  var kb=event is InputEventKey or event is InputEventMouseButton or (event is InputEventMouseMotion and event.relative.length()>2.0)
