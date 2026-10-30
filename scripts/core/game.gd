@@ -445,6 +445,7 @@ func resume() -> void:
  if pending_upgrades>0:
   pending_upgrades-=1;show_upgrades();return
  mode = "run"
+ if is_instance_valid(audio):audio.music_levelup_close();audio.music_duck(false)
  if is_instance_valid(panel):panel.hide()
  frontend.enter_run()
  hud.show()
@@ -1074,6 +1075,7 @@ func roll_tier(weights: Dictionary) -> String:
 func show_upgrades() -> void:
  frontend.upgrades()
  play_sound("ui.levelup_toll")
+ if is_instance_valid(audio):audio.music_levelup_open()
 
 func apply_upgrade(choice: Dictionary) -> void:
  if choice.type=="supply":health=minf(stats.max_health,health+25);return
@@ -1188,6 +1190,10 @@ func finish_run(victory: bool) -> void:
  MetaProgress.record(progress.data,{"weapon":selected_weapon,"trait":loadout_runtime.trait_id,"ultimate":loadout_runtime.ultimate_id,"time":elapsed,"kills":kills,"victory":victory,"metrics":run_metrics.duplicate(true)},sandbox)
  if not sandbox:progress.save()
  frontend.results(victory,unlocked)
+ if is_instance_valid(audio):
+  if victory:audio.music_victory()
+  elif health<=0:audio.music_death()
+  else:audio.music_menu()
 func show_progress() -> void:
  frontend.unlocks()
 

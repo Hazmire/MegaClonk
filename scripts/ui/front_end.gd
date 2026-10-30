@@ -232,6 +232,7 @@ func settings_from_pause() -> bool:return pause_frame!=null and settings_back.is
 func pause() -> void:
  if game.mode=="run":capture_pause_frame()
  game.mode="pause";clear()
+ if is_instance_valid(game.audio):game.audio.music_duck(true)
  var screen=RunPause.new();MenuScreen.set_audio_owner(game);screen.bind(self);menu.add_child(screen)
 func results(victory: bool,unlocked: Array) -> void:
  clear();var screen=RunResults.new();screen.info=RunData.results(game,victory,unlocked);MenuScreen.set_audio_owner(game);screen.bind(self);menu.add_child(screen)

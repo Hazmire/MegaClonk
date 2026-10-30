@@ -36,7 +36,7 @@ func run():
  check(byte_count>0 and not DirAccess.dir_exists_absolute("res://assets/audio/sfx/library"),"Source library stays outside project; curated byte count="+str(byte_count))
  audio.volumes({"master":0,"music":.2,"effects":.8,"ui_volume":.4,"ambience":.3})
  check(AudioServer.is_bus_mute(0),"Master zero mutes exactly")
- check(absf(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Music"))-linear_to_db(.2))<.01,"Music gain converts linear slider to decibels")
+ check(absf(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Music"))-(linear_to_db(.2)+RetroAudio.MUSIC_OFFSET_DB))<.01,"Music gain (with its -8 dB offset) converts linear slider to decibels")
  check(absf(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("SFX"))-linear_to_db(.8))<.01,"SFX gain independent from music")
  audio.volumes(game.settings)
  game.progress.storage_path="user://retro-audio-settings-test.json";var old=game.progress.data.settings.duplicate(true);game.settings.ui_volume=.25;game.settings.ambience=.45;game.progress.data.settings=game.settings.duplicate(true);game.progress.save()
@@ -83,10 +83,10 @@ func run():
  check(audio.events.keys().all(func(k):return not (k.begins_with("weapon.") and (k.contains("chunkers") or k.contains("bone") or k.contains("bananarang") or k.contains("mines") or k.contains("aegis")))),"No audio events remain for removed weapons")
  check(audio.events["weapon.shotgun.fire"].files!=audio.events["weapon.revolver.fire"].files and is_equal_approx(float(audio.events["weapon.shotgun.fire"].base_pitch),1.0) and is_equal_approx(float(audio.events["weapon.revolver.fire"].base_pitch),1.0),"Shotgun and revolver use their own finished samples, played at original pitch (no dark pass)")
  check(audio.events["weapon.aura.hum"].max_voices==1 and audio.events["weapon.aura.hum"].cooldown>=1.5,"Aura hum is a single slow voice (no per-frame sound)")
- check(audio.tracks.size()==1 and not audio.menu_track.is_empty(),"Exactly one supplied looping menu and game track configured")
- var track=audio.current_track;var slot=audio.music_slot;audio.music_stage(game.stage)
- check(audio.current_track==track and audio.music_slot==slot,"Same-stage music does not restart")
- audio.music_stage(2);check(audio.current_track==track and audio.music_slot==slot,"Stage transitions preserve the same looping game track")
+ check(audio.events.keys().filter(func(k):return audio.events[k].get("music",false)).size()==10,"All ten Fog music tracks are registered as music events")
+ audio.music_stage(game.stage);var track=audio.current_track;var slot=audio.music_slot;audio.music_stage(game.stage)
+ check(audio.current_track==track and audio.music_slot==slot and track==audio.stage_track(game.stage,0),"Same-stage music does not restart and a stage starts on its A track")
+ audio.music_stage(2);check(audio.current_track=="music.stage2_a_red_canopy" and audio.music_slot!=slot,"A new stage starts on its own A track")
  var probe=MotionProbe.new();root.add_child(probe);var motion_game=MotionGame.new();motion_game.player=probe;motion_game.audio=audio;var motion=MovementAudio.new()
  for voice in audio.voices:voice.until=0
  audio.clock+=10;audio.last_events.clear();accepted=audio.accepted;probe.velocity=Vector3.ZERO
