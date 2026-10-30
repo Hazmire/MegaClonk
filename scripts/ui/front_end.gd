@@ -91,7 +91,7 @@ func _exit_tree() -> void:
 func clear() -> void:
  if is_instance_valid(game.audio):game.audio.emit("ui.open")
  if is_instance_valid(stage_banner):stage_banner.hide()
- fade_celebrations();chest_skip=Callable()
+ chest_skip=Callable()
  stop_reward_animations()
  reward_generation+=1;reward_consumed=false
  if is_instance_valid(game.notice):game.notice.text=""
@@ -174,12 +174,8 @@ func quest_description(q: Dictionary) -> String:return MenuData.quest_descriptio
 func quests() -> void:
  game.mode="quests";preview_mode="home";clear()
  show_screen("quests")
-func fade_celebrations() -> void:
- for child in RewardScreens.descendants(menu):
-  if child is RewardCelebration:
-   var position=child.global_position;child.reparent(root);child.global_position=position;child.fade_out()
 func enter_run() -> void:
- fade_celebrations();chest_skip=Callable()
+ chest_skip=Callable()
  stop_reward_animations()
  in_run=true;pause_frame=null
  menu.hide();hud_root.show();game.player.camera.current=true
