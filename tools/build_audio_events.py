@@ -46,5 +46,15 @@ for m in MAN:
  if m["loop"]:c["loop"]=True
  if m["bus"]=="Music":c["music"]=True
  out[m["event"]]=c
+# Feedback pass 1 (playtest: "cannot hear enemies taking damage", quiet pickups / chest reel / gem): new absolute gains in dB.
+# Hits land at the enemy, 10-15 m from the camera, so the 3D falloff costs another ~8 dB on top of their old quiet mix.
+GAIN_OVERRIDE={
+"weapon.sword.hit":-4,"weapon.firestaff.impact":-3,"weapon.bow.hit":-5,"weapon.revolver.hit":-5,"weapon.scythes.hit":-4,"weapon.shotgun.hit":-6,"weapon.lightning.chain":-8,
+"weapon.sword.crit":-7,"weapon.firestaff.crit":-7,"weapon.lightning.crit":-7,"weapon.bow.crit":-8,"weapon.revolver.crit":-7,"weapon.scythes.crit":-7,"weapon.shotgun.crit":-8,"weapon.aura.crit":-11,
+"pickup.gold":-21,"world.gem_found_corrosive":-5,"world.gem_found_electric":-5,"world.gem_found_fire":-5,"world.gem_found_ice":-5,"pickup.xp":-8,"gem.pickup":-7,"reward.chest.tick":-6,
+}
+for k,g in GAIN_OVERRIDE.items():out[k]["gain_db"]=g
+# The socket-hover swell is held as a charge: a gapless body of the sample (frames, zero-slope matched) loops while the pointer is on a slot.
+out["ui.socket_hover"]["charge_loop"]=[13740,25558]
 json.dump({"events":out},open(PATH,"w"),indent=2)
 print(len(out),"events;",len(used),"repointed manifest ids;",len({m['event'] for m in MAN}-used-{k for k in out if out[k].get('manifest')==k}),"x")

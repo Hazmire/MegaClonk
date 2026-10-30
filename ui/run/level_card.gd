@@ -73,6 +73,7 @@ func _draw_face() -> void:
  var icon=_icon()
  if icon!=null:
   var w=icon.get_width();var px=float(w*maxi(1,floori(104.0/maxf(1.0,float(w))))) if w<104 else 104.0
+  icon=crisp(icon,int(px)) # the face is linearly filtered (it sits rotated on the table): pre-scale pixel art by whole steps so it stays sharp
   face.draw_texture_rect(icon,Rect2(panel.position+(panel.size-Vector2(px,px))*0.5,Vector2(px,px)),false)
  y=panel.end.y+36.0
  var name_text=str(data.name);var name_h=body.get_multiline_string_size(name_text,HORIZONTAL_ALIGNMENT_LEFT,W-40,24,3).y
@@ -105,6 +106,14 @@ func level_text() -> String:
  if data.is_new:return "NEW"
  if int(data.level_from)>=int(data.level_to):return "LV %d MAX"%int(data.level_to)
  return "LV %d → %d"%[int(data.level_from),int(data.level_to)]
+static var crisp_cache={}
+static func crisp(tex: Texture2D,px: int) -> Texture2D:
+ if tex==null or tex.get_width()>=px or px%tex.get_width()!=0:return tex
+ var key="%d:%d"%[tex.get_rid().get_id(),px]
+ if crisp_cache.has(key):return crisp_cache[key]
+ var img=tex.get_image()
+ if img==null:return tex
+ img=img.duplicate();img.resize(px,px,Image.INTERPOLATE_NEAREST);crisp_cache[key]=ImageTexture.create_from_image(img);return crisp_cache[key]
 func _icon() -> Texture2D:
  if data.category=="":return null
  return UIAssets.icon(str(data.category),str(data.id))

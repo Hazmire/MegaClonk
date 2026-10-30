@@ -144,6 +144,8 @@ func _loop_update(key: String,pitch_multiplier: float,position_value: Vector3,ga
    return true
  return false
 func silence_loops() -> void:
+ charge_target=0.0;charge_level=0.0
+ if charge_player!=null:charge_player.stop()
  for voice in voices:
   if voice.get("key","")!="":voice.player.stop();voice.until=0;voice.key=""
 func loop_stop(key: String) -> void:
@@ -156,6 +158,37 @@ func stop_event(event: String):
   if voice.event==event:voice.player.stop();voice.until=0
 func _process(delta: float):
  clock+=delta;music_tick(delta)
+ if charge_player!=null:charge_tick(delta)
+# --- Socket hover "charge" ---------------------------------------------------------------------------------------
+# While a gem is held, hovering a fitting socket charges one dedicated voice up (a rising swell that then sustains on a loop of its
+# own body) and leaving charges it down and stops it. Moving across several sockets only changes the target, so the sound never
+# restarts or cuts. The stream is a private copy: the shared resource keeps its import settings.
+const CHARGE_EVENT="ui.socket_hover"
+const CHARGE_UP_SECONDS=0.12
+const CHARGE_DOWN_SECONDS=0.3
+var charge_player: AudioStreamPlayer
+var charge_level=0.0
+var charge_target=0.0
+func charge(on: bool) -> void:
+ charge_target=1.0 if on else 0.0
+ if muted or not events.has(CHARGE_EVENT):return
+ if charge_player==null:
+  if not on:return
+  var config=events[CHARGE_EVENT];var source=streams[config.files[0]]
+  charge_player=AudioStreamPlayer.new();charge_player.bus=str(config.get("bus","UI"));charge_player.volume_db=-80.0;add_child(charge_player)
+  var copy=source.duplicate() as AudioStreamWAV
+  if copy!=null and config.has("charge_loop"):copy.loop_mode=AudioStreamWAV.LOOP_FORWARD;copy.loop_begin=int(config.charge_loop[0]);copy.loop_end=int(config.charge_loop[1])
+  charge_player.stream=copy if copy!=null else source
+ if on and not charge_player.playing and AudioServer.get_driver_name()!="Dummy":charge_player.play(0.0)
+func charge_tick(delta: float) -> void:
+ var rate=1.0/(CHARGE_UP_SECONDS if charge_target>charge_level else CHARGE_DOWN_SECONDS)
+ charge_level=move_toward(charge_level,charge_target,delta*rate)
+ if charge_level<=0.0 and charge_target<=0.0:
+  if charge_player.playing:charge_player.stop()
+  charge_player.volume_db=-80.0
+  return
+ charge_player.volume_db=float(events[CHARGE_EVENT].get("gain_db",-12))+linear_to_db(maxf(charge_level,0.001))
+ charge_player.pitch_scale=lerpf(0.55,1.1,charge_level)
 # --- Music state machine -----------------------------------------------------------------------------------
 # menu (every out-of-run screen, never restarted between screens) -> stage N (A, then B ~3 s crossfaded, alternating) ->
 # level-up swaps in level_up_loop and resumes the stage track where it left off -> death / victory results.

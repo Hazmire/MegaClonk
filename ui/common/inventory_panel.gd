@@ -66,7 +66,6 @@ func _gems() -> void:
  for element in Elements.IDS:
   var color=FogPalette.ELEMENT.get(element,Elements.color(element));var n=int(counts[element])
   g.add_child(_gem_cell(color,str(n),Elements.display_name(element).substr(0,4).to_upper(),n>0,"%s gem ×%d — %s"%[Elements.display_name(element),n,Elements.summary(element)]))
- g.add_child(_gem_cell(FogPalette.GOLD,str(game.amulets),"AMUL",game.amulets>0,"Imbued Amulet ×%d — unlocks a second socket on one weapon (a different element)."%game.amulets))
 func _gem_cell(color: Color,count: String,short: String,lit: bool,tooltip: String) -> Control:
  var c=Control.new();c.custom_minimum_size=Vector2(60,70);c.tooltip_text=tooltip;c.mouse_filter=Control.MOUSE_FILTER_STOP;c.modulate=Color.WHITE if lit else Color(1,1,1,0.4)
  c.draw.connect(func():

@@ -37,12 +37,12 @@ static func descendants(node: Node) -> Array:
  var result=[]
  for child in node.get_children():result.append(child);result.append_array(descendants(child))
  return result
-static func upgrades(ui: FrontEnd,fixed_choices: Array=[]) -> void:
+static func upgrades(ui: FrontEnd,fixed_choices: Array=[],quick: bool=false) -> void:
  var game=ui.game
  if game.mode=="run":ui.capture_pause_frame()
  game.mode="upgrade";ui.clear();ui.reward_focus={}
  game.choices=fixed_choices if not fixed_choices.is_empty() else game.upgrade_choices()
- var screen=RunLevelUp.new();MenuScreen.set_audio_owner(game);screen.bind(ui);screen.choices=game.choices;ui.menu.add_child(screen)
+ var screen=RunLevelUp.new();MenuScreen.set_audio_owner(game);screen.bind(ui);screen.choices=game.choices;screen.quick=quick;ui.menu.add_child(screen)
 static func inventory(ui: FrontEnd) -> void:
  var game=ui.game
  if game.mode=="run":ui.capture_pause_frame()

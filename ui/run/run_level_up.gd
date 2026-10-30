@@ -2,7 +2,7 @@ class_name RunLevelUp
 extends RunPanelScreen
 # RunLevelUp: the Level-up screen. The frozen world behind, the Inventory and Stats panels either side and, between them, three
 # rarity-framed paper cards with their real "current → new" numbers, then Take / Banish / Skip / Refresh. The entrance is the
-# fanfare (any key skips it) and then the cards are dealt in. All choices run through the same game calls as before.
+# fanfare (only Space or E skips it: a held movement key must not) and then the cards are dealt in. All choices run through the same game calls as before.
 const CARD_X=572.0
 const CARD_Y=330.0
 const CARD_GAP=22.0
@@ -29,6 +29,7 @@ var dealt_sound=[false,false,false]
 var reveal_played=false
 const REVEAL_EVENTS=["ui.reveal_common","ui.reveal_uncommon","ui.reveal_rare","ui.reveal_epic","ui.reveal_legendary"]
 var interactive=false
+var quick=false # a refresh: the same screen again with no fanfare, deal or sounds
 var plain=false # reduced motion or visual intensity ~0: no fanfare, no shake
 var last_preview=-1
 func _init() -> void:
@@ -52,7 +53,7 @@ func build() -> void:
  wire_focus()
  set_hints_for_device()
  fanfare=LevelFanfare.new().setup(game.level);stage.add_child(fanfare);fanfare.finished.connect(func():pass)
- if plain:
+ if plain or quick:
   clock=READY_AT+1.0;fanfare.skip();apply_timeline()
  else:
   apply_timeline()
@@ -101,7 +102,7 @@ func skip() -> void:
  interactive=false;MenuScreen.sfx("skip_heal");game.health=minf(game.stats.max_health,game.health+10);game.resume()
 func refresh() -> void:
  if not interactive or game.rerolls<=0:return
- interactive=false;MenuScreen.sfx("refresh");game.rerolls-=1;frontend.upgrades()
+ interactive=false;MenuScreen.sfx("refresh");game.rerolls-=1;frontend.upgrades([],true)
 func set_hints_for_device() -> void:
  if pad_active():set_hints([["← →","Choose","D-PAD"],["ENTER","Take","A"]])
  else:set_hints([["← →","Choose"],["1–3","Select"],["ENTER","Take"]])
@@ -110,7 +111,7 @@ func refresh_hints() -> void:
 func _input(event: InputEvent) -> void:
  super._input(event)
  if not is_visible_in_tree():return
- var pressed_key=(event is InputEventKey and event.pressed and not event.echo) or (event is InputEventMouseButton and event.pressed) or (event is InputEventJoypadButton and event.pressed)
+ var pressed_key=(event is InputEventKey and event.pressed and not event.echo and event.keycode in [KEY_SPACE,KEY_E]) or (event is InputEventJoypadButton and event.pressed and event.button_index==JOY_BUTTON_A)
  if pressed_key and fanfare!=null and not fanfare.done:
   fanfare.skip();clock=maxf(clock,FANFARE_SKIP_TO);get_viewport().set_input_as_handled();return
  if interactive and event is InputEventKey and event.pressed and not event.echo:

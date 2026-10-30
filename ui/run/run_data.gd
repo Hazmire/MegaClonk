@@ -13,9 +13,8 @@ const LABELS={"max_health":"Max health","crit_damage":"Crit damage","projectile_
 static func tier_index(tier: String) -> int:return maxi(0,TIER_IDS.find(tier))
 static func label(key: String) -> String:return LABELS.get(key,key.replace("_"," ").capitalize())
 # --- stats -------------------------------------------------------------------------------------------------------
-# Value shown for a stat: crit and evasion are shown at their effective (capped) value, as the old panel did.
+# Value shown for a stat: evasion is shown at its effective (capped) value; crit chance is uncapped.
 static func shown(key: String,value: float) -> float:
- if key=="crit":return minf(1.0,value)
  if key=="evasion":return minf(0.75,value)
  return value
 static func stat_text(key: String,value: float) -> String:return BuildStats.value(key,shown(key,value))
@@ -61,6 +60,10 @@ static func items(game: Node) -> Array:
  for entry in game.items:
   var id=str(entry.id);var data: Dictionary=Catalog.ITEMS.get(id,{})
   out.append({"id":id,"name":str(data.get("name",id)),"stacks":int(entry.stacks),"tier":tier_index(str(data.get("tier","common")))})
+ # The Imbued Amulet is a consumable Legendary item (kept as a counter): it is listed with the other items while any are held.
+ if int(game.amulets)>0:
+  var data: Dictionary=Catalog.ITEMS.get("imbued_amulet",{})
+  out.append({"id":"imbued_amulet","name":str(data.get("name","Imbued Amulet")),"stacks":int(game.amulets),"tier":tier_index(str(data.get("tier","legendary")))})
  return out
 static func item_description(id: String) -> String:return Catalog.item_description(id)
 # Sets tooltip_text only when the pointer arrives (tooltips show after a delay), so building a row costs no text work.
@@ -87,11 +90,11 @@ static func tomes_signature(game: Node) -> String:
 static func items_signature(game: Node) -> String:
  var parts=PackedStringArray()
  for e in game.items:parts.append("i%s:%d"%[e.id,int(e.stacks)])
+ parts.append("a%d"%game.amulets)
  return "|".join(parts)
 static func gems_signature(game: Node) -> String:
  var parts=PackedStringArray()
  for element in Elements.IDS:parts.append("g%d"%game.gems.count(element))
- parts.append("a%d"%game.amulets)
  return "|".join(parts)
 static func build_signature(game: Node) -> String:
  return weapons_signature(game)+"@"+tomes_signature(game)+"@"+items_signature(game)+"@"+gems_signature(game)

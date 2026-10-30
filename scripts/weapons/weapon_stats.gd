@@ -24,7 +24,7 @@ static func resolve(game: Object,id: int,state: Dictionary) -> Dictionary:
  var r={"id":id,"kind":def[1],"damage":WeaponUpgrades.damage(id,state),"haste":haste,"interval":float(def[3])/maxf(0.1,haste)}
  r["size_mult"]=float(s.size)*(1.0+upg(state,"radius"))
  r["speed_mult"]=float(s.projectile_speed)*(1.0+upg(state,"velocity")) if "velocity" in pool else 1.0
- r["crit_chance"]=minf(1.0,float(s.crit)+upg(state,"crit"))
+ r["crit_chance"]=float(s.crit)+upg(state,"crit")
  r["crit_damage"]=float(s.crit_damage)+upg(state,"crit_damage")
  var extra=int(upg(state,"count"))+maxi(0,int(round(float(s.count)))-1)
  r["bounces"]=mini(int(CAPS.ricochet),int(upg(state,"ricochet")))

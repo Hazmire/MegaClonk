@@ -99,7 +99,15 @@ func _build_action() -> void:
   "confirm":
    var g=Elements.display_name(held);var wn=weapon_name(target_weapon)
    var q=MenuStyle.label("Fuse %s into %s?"%[g,wn],MenuStyle.serif(),26,FogPalette.BONE,0,panel);q.name="Question";q.position=Vector2(20,6)
-   var sm=MenuStyle.label("−%d gold %s −1 gem %s can't be undone"%[data.cost,"·","·"],f,14,Color("B9BAB1"),0,panel);sm.position=Vector2(20,42)
+   # What the gem does (and the combination it completes with the weapon's other gem), then the price.
+   var q_y=2.0;q.position=Vector2(20,q_y)
+   var fx=MenuStyle.label(Elements.short_summary(held),MenuStyle.sans(400,0,13),13,Elements.color(held),0,panel);fx.name="Effect";fx.position=Vector2(20,34);fx.size=Vector2(396,16);fx.clip_text=true;fx.tooltip_text=Elements.summary(held)
+   var combo_text="";for w in data.weapons:
+    if int(w.id)==target_weapon:
+     for sk in w.sockets:
+      if sk.kind=="gem" and combo_text=="":combo_text=Elements.combo_summary(held,str(sk.element))
+   var sm_text=("With %s — %s"%[combo_text.get_slice(":",0),combo_text.get_slice(":",1).strip_edges()]) if combo_text!="" else "−%d gold · −1 gem · can't be undone"%data.cost
+   var sm=MenuStyle.label(sm_text,MenuStyle.sans(400,0,12),12,FogPalette.GOLD if combo_text!="" else Color("B9BAB1"),0,panel);sm.name="Detail";sm.position=Vector2(20,51);sm.size=Vector2(396,16);sm.clip_text=true;sm.tooltip_text=sm_text
    cancel_button=MenuStyle.spawn("menu_item") as MenuItem;cancel_button.name="Cancel";cancel_button.setup("Cancel",20,20);cancel_button.size=Vector2(130,52);cancel_button.position=Vector2(420,9);cancel_button.indent=18.0;cancel_button.chosen.connect(cancel);panel.add_child(cancel_button)
    fuse_button=MenuStyle.spawn("menu_item") as MenuItem;fuse_button.name="Fuse";fuse_button.setup("Fuse",28,28).make_primary("ENTER",60,28);fuse_button.size=Vector2(200,52);fuse_button.position=Vector2(560,9);fuse_button.indent=44.0;fuse_button.chosen.connect(fuse);panel.add_child(fuse_button)
   "fusing":
@@ -108,7 +116,10 @@ func _build_action() -> void:
    bar.draw.connect(func():bar.draw_rect(Rect2(Vector2.ZERO,bar.size),Color("2A2C28"));bar.draw_rect(Rect2(Vector2.ZERO,Vector2(bar.size.x*clampf(phase_time/FUSE_TIME,0.0,1.0),bar.size.y)),col))
    fuse_bar=bar
   "done":
-   var l=MenuStyle.label("%s now runs through your %s."%[done_text.get_slice("|",0),done_text.get_slice("|",1)],MenuStyle.serif(),24,done_color,0,panel);l.name="Done";l.position=Vector2(20,18)
+   var l=MenuStyle.label("%s now runs through your %s."%[done_text.get_slice("|",0),done_text.get_slice("|",1)],MenuStyle.serif(),24,done_color,0,panel);l.name="Done";l.position=Vector2(20,6)
+   var el=Elements.IDS[0];for e in Elements.IDS:
+    if Elements.display_name(e)==done_text.get_slice("|",0):el=e
+   var dd=MenuStyle.label(Elements.short_summary(el),MenuStyle.sans(400,0,13),13,Color("B9BAB1"),0,panel);dd.name="DoneEffect";dd.position=Vector2(20,44)
   "poor":
    var l=MenuStyle.label("Not enough gold — fusing costs %d and you have %d."%[data.cost,data.gold],f,18,Color("E07B83"),0,panel);l.name="Poor";l.position=Vector2(20,20)
   _:
@@ -117,7 +128,7 @@ func _build_action() -> void:
    var txt="Pick up a gem to see where it can go."
    if not any_empty:txt="Every open socket is filled. Find an imbued amulet to open a second one."
    elif not any_gems:txt="No gems left. Buy socket gems from shops."
-   elif held!="":txt="%s gem in hand — click a glowing socket."%Elements.display_name(held)
+   elif held!="":txt="%s gem in hand — %s"%[Elements.display_name(held),Elements.short_summary(held)]
    var l=MenuStyle.label(txt,f,18,Color("B9BAB1"),0,panel);l.name="Idle";l.position=Vector2(20,20)
 func weapon_name(id: int) -> String:
  for w in data.weapons:

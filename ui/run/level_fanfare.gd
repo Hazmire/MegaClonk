@@ -1,7 +1,7 @@
 class_name LevelFanfare
 extends Control
 # The Level-up entrance (RunLevelUp): gold flash, rays, three expanding rings, "THE BELL TOLLS" and the level number slammed in.
-# Driven by one clock so it can be skipped (any key) and so tests can step it. Pure presentation, ~1.7 s.
+# Driven by one clock so it can be skipped (Space or E) and so tests can step it. Pure presentation, ~1.7 s.
 signal finished
 const DURATION=1.7
 const FADE_AT=1.25

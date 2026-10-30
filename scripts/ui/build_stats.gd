@@ -3,7 +3,7 @@ extends RefCounted
 const HELP={
  "damage":"Multiplies weapon damage. Higher increases damage before critical hits and trait/ultimate multipliers.",
  "haste":"Multiplies attacks per second; higher reduces cooldown. Per-weapon haste multiplies this bonus.",
- "crit":"Chance per hit to critically strike. Higher is better; effective chance is bounded at 100%.",
+ "crit":"Chance per hit to critically strike. Higher is better. Chance above 100% is a chance of a megacrit (1.5x a normal critical hit).",
  "crit_damage":"Damage multiplier of a critical hit. 100% bonus means a critical hit deals twice normal damage.",
  "armor":"Armour points: incoming damage is multiplied by 100 / (100 + 5 × armour). Higher reduces damage; Berserker then multiplies incoming damage by 0.70.",
  "evasion":"Chance to dodge all damage from a hit, bounded at 75%. Higher is better.",

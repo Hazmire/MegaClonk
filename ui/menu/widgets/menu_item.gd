@@ -48,7 +48,8 @@ func _draw() -> void:
  if selected:
   var inverted=flash>0.0
   draw_rect(Rect2(Vector2.ZERO,size),FogPalette.BONE if inverted else FogPalette.RUST)
-  draw_rect(Rect2(cursor_x,(size.y-14)*0.5,14,14),FogPalette.RUST if inverted else FogPalette.BONE_BRIGHT)
+  # the cursor square never reaches the label, whatever the row's indent
+  draw_rect(Rect2(minf(cursor_x,maxf(0.0,indent-22.0)),(size.y-14)*0.5,14,14),FogPalette.RUST if inverted else FogPalette.BONE_BRIGHT)
   color=FogPalette.RUST if inverted else FogPalette.BONE_BRIGHT
  if locked:color=MenuStyle.LOCKED_TEXT
  var s=font.get_string_size(label_text,HORIZONTAL_ALIGNMENT_LEFT,-1,px)

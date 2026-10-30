@@ -4,8 +4,8 @@ extends Control
 # RunData / game state. update() only compares cheap scalars with the last values it drew and touches a node when one
 # changed; the build rows (weapons, tomes, items, socket gems) are rebuilt only when RunData.build_signature changes.
 const TOP_LEFT=Vector2(40,32)
-const ITEM_ROWS_MAX=3
-const ITEMS_PER_ROW=12
+const ITEM_ROWS_MAX=5 # the left column stops short of the boss bars (x 500+): 8 tiles wide, then it wraps
+const ITEMS_PER_ROW=8
 var game: Node
 var frontend: Node
 var build_box: VBoxContainer
@@ -242,7 +242,6 @@ func _fill_items() -> void:
 func _fill_gems() -> void:
  _clear(gems_row);var counts=RunData.gem_counts(game)
  for element in Elements.IDS:gems_row.add_child(_gem_slot(FogPalette.ELEMENT.get(element,Elements.color(element)),int(counts[element]),"%s gem ×%d"%[Elements.display_name(element),counts[element]]))
- gems_row.add_child(_gem_slot(FogPalette.GOLD,game.amulets,"Imbued Amulet ×%d"%game.amulets))
 func _gem_slot(color: Color,count: int,tip: String) -> Control:
  var c=Control.new();c.custom_minimum_size=Vector2(44,44);c.tooltip_text=tip;c.mouse_filter=Control.MOUSE_FILTER_STOP;c.modulate=Color.WHITE if count>0 else Color(1,1,1,0.28)
  c.draw.connect(func():
@@ -257,12 +256,12 @@ func _rebuild_trait() -> void:
  var tile=InventoryPanel.tile("traits",l.trait,FogPalette.Rarity.COMMON,"",Vector2(72,72),64,"Trait: %s"%l.trait.capitalize());trait_slot.add_child(tile)
  var t=cap("TRAIT",11,0.22,Color("A9ADA4"),trait_slot);t.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 # ---- pickup notification targets ----------------------------------------------------------------------------------------
-# The HUD node a collected toast flies into: the gem slot (or Amulet slot) for gems, the item's tile for items.
+# The HUD node a collected toast flies into: the gem slot for gems, the item's tile for items (the Amulet is an item).
 func slot_for(entry: Dictionary) -> Control:
  var d: Dictionary=entry.get("data",{})
  if d.is_empty():return null
- if d.kind in ["gem","amulet"]:
-  var index=Elements.IDS.size() if d.kind=="amulet" else maxi(0,Elements.IDS.find(str(d.element)))
+ if d.kind=="gem":
+  var index=maxi(0,Elements.IDS.find(str(d.element)))
   if gems_row==null or not is_instance_valid(gems_row) or index>=gems_row.get_child_count():return items_flow # the row is rebuilt a moment later
   return gems_row.get_child(index)
  for e in item_pool:

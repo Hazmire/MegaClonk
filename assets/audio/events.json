@@ -26,7 +26,7 @@
       "cooldown": 0.07,
       "priority": 2,
       "max_voices": 3,
-      "gain_db": -15,
+      "gain_db": -4,
       "pitch": 0.05,
       "base_pitch": 1.0,
       "manifest": "weapon.sword_hit",
@@ -54,7 +54,7 @@
       "cooldown": 0.08,
       "priority": 2,
       "max_voices": 3,
-      "gain_db": -14,
+      "gain_db": -3,
       "pitch": 0.05,
       "base_pitch": 1.0,
       "manifest": "weapon.fireball_impact"
@@ -83,7 +83,7 @@
       "cooldown": 0.11,
       "priority": 1,
       "max_voices": 2,
-      "gain_db": -18,
+      "gain_db": -8,
       "pitch": 0.05,
       "base_pitch": 1.0,
       "manifest": "weapon.lightning_bounce"
@@ -113,7 +113,7 @@
       "cooldown": 0.06,
       "priority": 2,
       "max_voices": 3,
-      "gain_db": -16,
+      "gain_db": -5,
       "pitch": 0.05,
       "base_pitch": 1.0,
       "manifest": "weapon.arrow_pierce",
@@ -157,7 +157,7 @@
       "cooldown": 0.06,
       "priority": 2,
       "max_voices": 3,
-      "gain_db": -16,
+      "gain_db": -5,
       "pitch": 0.05,
       "base_pitch": 1.0,
       "manifest": "weapon.bullet_hit"
@@ -226,7 +226,7 @@
       "cooldown": 0.07,
       "priority": 2,
       "max_voices": 3,
-      "gain_db": -15,
+      "gain_db": -4,
       "pitch": 0.05,
       "base_pitch": 1.0,
       "manifest": "weapon.scythe_hit"
@@ -254,7 +254,7 @@
       "cooldown": 0.05,
       "priority": 2,
       "max_voices": 3,
-      "gain_db": -17,
+      "gain_db": -6,
       "pitch": 0.05,
       "base_pitch": 1.0,
       "manifest": "weapon.bullet_hit"
@@ -334,7 +334,7 @@
       "cooldown": 0.03,
       "priority": 1,
       "max_voices": 3,
-      "gain_db": -17,
+      "gain_db": -7,
       "pitch": 0.0,
       "base_pitch": 1.0,
       "manifest": "ui.gem_pickup"
@@ -349,7 +349,7 @@
       "cooldown": 0.06,
       "priority": 1,
       "max_voices": 2,
-      "gain_db": -30,
+      "gain_db": -21,
       "pitch": 0.02,
       "base_pitch": 1.0,
       "manifest": "ui.gold_pickup",
@@ -411,7 +411,7 @@
       "cooldown": 0.055,
       "priority": 4,
       "max_voices": 3,
-      "gain_db": -11,
+      "gain_db": -6,
       "pitch": 0.02,
       "base_pitch": 1.0,
       "manifest": "ui.reel_tick"
@@ -458,7 +458,7 @@
       "cooldown": 0.055,
       "priority": 1,
       "max_voices": 2,
-      "gain_db": -14,
+      "gain_db": -8,
       "pitch": 0.055,
       "base_pitch": 0.82
     },
@@ -661,7 +661,7 @@
       "cooldown": 0.12,
       "priority": 3,
       "max_voices": 2,
-      "gain_db": -12,
+      "gain_db": -7,
       "pitch": 0.04,
       "base_pitch": 0.9
     },
@@ -675,7 +675,7 @@
       "cooldown": 0.14,
       "priority": 3,
       "max_voices": 2,
-      "gain_db": -12,
+      "gain_db": -7,
       "pitch": 0.04,
       "base_pitch": 0.9
     },
@@ -689,7 +689,7 @@
       "cooldown": 0.15,
       "priority": 3,
       "max_voices": 2,
-      "gain_db": -12,
+      "gain_db": -7,
       "pitch": 0.04,
       "base_pitch": 0.95
     },
@@ -703,7 +703,7 @@
       "cooldown": 0.12,
       "priority": 3,
       "max_voices": 2,
-      "gain_db": -13,
+      "gain_db": -8,
       "pitch": 0.04,
       "base_pitch": 0.95
     },
@@ -717,7 +717,7 @@
       "cooldown": 0.12,
       "priority": 3,
       "max_voices": 2,
-      "gain_db": -12,
+      "gain_db": -7,
       "pitch": 0.04,
       "base_pitch": 0.95
     },
@@ -730,7 +730,7 @@
       "cooldown": 0.2,
       "priority": 2,
       "max_voices": 1,
-      "gain_db": -16,
+      "gain_db": -11,
       "pitch": 0.03,
       "base_pitch": 0.9
     },
@@ -744,7 +744,7 @@
       "cooldown": 0.12,
       "priority": 3,
       "max_voices": 2,
-      "gain_db": -12,
+      "gain_db": -7,
       "pitch": 0.04,
       "base_pitch": 0.9
     },
@@ -758,7 +758,7 @@
       "cooldown": 0.1,
       "priority": 3,
       "max_voices": 2,
-      "gain_db": -13,
+      "gain_db": -8,
       "pitch": 0.04,
       "base_pitch": 0.85
     },
@@ -1658,7 +1658,11 @@
       "gain_db": -12.0,
       "pitch": 0.0,
       "base_pitch": 1.0,
-      "manifest": "ui.socket_hover"
+      "manifest": "ui.socket_hover",
+      "charge_loop": [
+        13740,
+        25558
+      ]
     },
     "ui.socket_place": {
       "files": [
@@ -1934,7 +1938,7 @@
       "cooldown": 0.0,
       "priority": 5,
       "max_voices": 1,
-      "gain_db": -12.0,
+      "gain_db": -5,
       "pitch": 0.0,
       "base_pitch": 1.0,
       "manifest": "world.gem_found_corrosive"
@@ -1947,7 +1951,7 @@
       "cooldown": 0.0,
       "priority": 5,
       "max_voices": 1,
-      "gain_db": -12.0,
+      "gain_db": -5,
       "pitch": 0.0,
       "base_pitch": 1.0,
       "manifest": "world.gem_found_electric"
@@ -1960,7 +1964,7 @@
       "cooldown": 0.0,
       "priority": 5,
       "max_voices": 1,
-      "gain_db": -12.0,
+      "gain_db": -5,
       "pitch": 0.0,
       "base_pitch": 1.0,
       "manifest": "world.gem_found_fire"
@@ -1973,7 +1977,7 @@
       "cooldown": 0.0,
       "priority": 5,
       "max_voices": 1,
-      "gain_db": -12.0,
+      "gain_db": -5,
       "pitch": 0.0,
       "base_pitch": 1.0,
       "manifest": "world.gem_found_ice"

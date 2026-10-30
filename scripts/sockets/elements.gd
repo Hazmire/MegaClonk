@@ -77,6 +77,13 @@ static func display_name(element: String) -> String:
  return str(DATA[element].name) if valid(element) else ""
 static func color(element: String) -> Color:
  return DATA[element].color if valid(element) else Color.GRAY
+# One-line effect texts for the Imbue Station (fit a 400 px line); the full summaries stay for tooltips.
+const SHORT={"corrosive":"Poison: 3% of current HP per second for 10s.","ice":"Chill: each hit slows 3% (max 10). Chilled kills shatter.","fire":"5% chance to Ignite; your crits deal 20% more.","electricity":"5% chance to Stun for up to 2s."}
+const COMBO_SHORT={"thermal_shock":"Burning + 3 Chill stacks: bonus damage, stacks consumed.","toxic_conduction":"Poisoned + Stunned: damage and poison jump to 3 nearby.","caustic_combustion":"Burning + Poisoned: a blast hits enemies around the target.","blightfrost":"Chilling a poisoned enemy adds an extra Chill stack.","overcharge":"Burning + Stunned: bonus damage.","cryoshock":"Chilled + Stunned: damage and Chill to nearby enemies."}
+static func short_summary(element: String) -> String:
+ return str(SHORT.get(element,""))
+static func combo_summary(a: String,b: String) -> String:
+ var c=combo(a,b);return "%s: %s"%[c.name,COMBO_SHORT.get(str(c.id),"")] if not c.is_empty() else ""
 static func summary(element: String) -> String:
  return str(DATA[element].summary) if valid(element) else ""
 static func combo_key(a: String, b: String) -> String:

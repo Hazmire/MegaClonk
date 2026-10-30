@@ -30,6 +30,11 @@ static func set_audio_owner(game_node: Node) -> void:
  if not game_node.is_in_group("menu_audio"):game_node.add_to_group("menu_audio")
 # UI sound name -> event id (ids of moments the game already had are kept; the rest are the Fog pack ids).
 const SFX={"hover":"ui.hover","confirm":"ui.confirm","purchase":"ui.purchase","open":"ui.open","close":"ui.close","deny":"ui.cant_afford","back":"ui.menu_back","locked":"ui.menu_locked","toggle_on":"ui.toggle_on","toggle_off":"ui.toggle_off","slider_tick":"ui.slider_tick","play":"ui.menu_play","run_start":"ui.run_start","weapon_select":"ui.weapon_select","quest_claim":"ui.quest_claim","socket_hover":"ui.socket_hover","socket_place":"ui.socket_place","gem_pickup":"gem.pickup","card_deal":"ui.card_deal","card_hover":"ui.card_hover","card_take":"ui.card_take","banish":"ui.banish","skip_heal":"ui.skip_heal","refresh":"ui.refresh_shuffle","item_take":"ui.item_take","stamp_done":"ui.stamp_done","stamp_not_yet":"ui.stamp_not_yet","memo_hover":"ui.memo_hover"}
+# Held sounds (the socket-hover charge): on while the pointer is on the control, off when it leaves.
+static func charge(on: bool) -> void:
+ var tree=Engine.get_main_loop() as SceneTree
+ var target=tree.get_first_node_in_group("menu_audio") if tree!=null else null
+ if target!=null and is_instance_valid(target.get("audio")):target.audio.charge(on)
 static func sfx(name: String) -> void:
  if name=="":return
  var tree=Engine.get_main_loop() as SceneTree

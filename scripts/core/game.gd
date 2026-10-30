@@ -517,7 +517,7 @@ func _physics_process(delta: float) -> void:
  announcement_time=maxf(0,announcement_time-delta)
  frontend.event_label.text=announcement if announcement_time>0 else ""
  if message_time <= 0: notice.text = ""
- player.camera.h_offset=lerpf(player.camera.h_offset,0,delta*12)
+ player.camera.h_offset=lerpf(player.camera.h_offset,0,delta*12);player.camera.v_offset=lerpf(player.camera.v_offset,0,delta*12)
  invulnerability = maxf(0,invulnerability-delta)
  health = minf(stats.max_health,health+stats.regen*delta)
  if player.fall_hit > 0:
@@ -744,6 +744,7 @@ func nearest(pos: Vector3, radius: float, farthest: bool = false) -> Dictionary:
   var d = e.pos.distance_squared_to(pos)
   if (farthest and d>best) or (not farthest and d<best): best=d; result=e
  return result
+var hurt_events=0 # counts hits taken (the run overlay flashes red on each)
 func hurt(amount: float) -> void:
  if invulnerability>0 or loadout_runtime.immune() or (sandbox and settings.invincible): return
  amount*=loadout_runtime.incoming_multiplier()
@@ -757,20 +758,27 @@ func hurt(amount: float) -> void:
  health -= final_damage
  if irt.hurt_hooks:irt.on_damage_taken(amount)
  invulnerability = 0.5
- if settings.shake: player.camera.h_offset=rng.randf_range(-0.15,0.15)
- player.hurt_time=0.22
+ hurt_events+=1
+ if settings.shake:player.camera.h_offset=rng.randf_range(-0.35,0.35);player.camera.v_offset=wrt.rng.randf_range(-0.22,0.22) # the second axis uses the weapon rng: game.rng draws stay as before
+ player.hurt_time=0.3
  player.avatar.set_damage_flash(true)
+ if settings.numbers and DisplayServer.get_name()!="headless":numbers.show_damage(player.position+Vector3.UP*2.4,final_damage,true,Color("ff4545"),elapsed)
  combat_fx.burst("blood_burst",player.position+Vector3.UP)
  RunAudio.hurt(self,final_damage)
 # `ctx` (optional) is the shared weapon hit context: {"source": hit type, "dir", "pos"}. It only steers
 # impact feedback; damage, crit, sockets and combos all run through this one function for every source.
+const MEGACRIT_MULTIPLIER=1.5
 func hit(e: Dictionary, base: float, weapon: int, ctx: Dictionary = {}) -> void:
  if e.is_empty() or e.hp<=0: return
  if debug_combat:combat_counters.hits+=1
  var item_hit=ctx.has("item") # damage dealt by an item: no crit, no player damage stat, never feeds item procs
  var upgraded=weapons.has(weapon)
- var critical = false if item_hit else rng.randf()<minf(1,stats.crit+(WeaponUpgrades.value(weapons[weapon],"crit") if upgraded else 0))
+ # Crit chance is uncapped: up to 100% it is one roll; every point over 100% is a chance of a megacrit (1.5x a normal crit).
+ var crit_chance=stats.crit+(WeaponUpgrades.value(weapons[weapon],"crit") if upgraded else 0.0)
+ var critical = false if item_hit else rng.randf()<minf(1.0,crit_chance)
+ var megacrit = critical and crit_chance>1.0 and rng.randf()<crit_chance-1.0
  var crit_multiplier=stats.crit_damage+(WeaponUpgrades.value(weapons[weapon],"crit_damage") if upgraded else 0.0)
+ if megacrit:crit_multiplier*=MEGACRIT_MULTIPLIER
  var amount = base*stats.damage*(crit_multiplier if critical else 1.0)*loadout_runtime.damage_multiplier()
  if critical and irt.crit_hooks:amount*=irt.on_crit()
  if item_hit:amount=base
@@ -799,7 +807,7 @@ func hit(e: Dictionary, base: float, weapon: int, ctx: Dictionary = {}) -> void:
   while samples.size()>21:samples.pop_front()
  e.knock += (e.pos-player.position).normalized()*stats.knockback*2*(e.variant.knockback if e.kind<8 else 0.2)
  if settings.numbers and DisplayServer.get_name()!="headless":
-  var color=Color("ffe6a0") if critical else (Color("ffb370") if weapon==1 else (Color("a8e88f") if weapon==10 else Color.WHITE))
+  var color=Color("ff7a4a") if megacrit else Color("ffe6a0") if critical else (Color("ffb370") if weapon==1 else (Color("a8e88f") if weapon==10 else Color.WHITE))
   numbers.show_damage(e.pos+Vector3.UP,amount,critical,color,elapsed)
  damage_total += actual
  damage_by_weapon[weapon] = damage_by_weapon.get(weapon,0.0)+actual
@@ -1004,7 +1012,7 @@ func update_pickups(delta: float) -> void:
   if distance<1.2:
    if p.get("red",false):grant_red_level()
    else:xp+=p.value*stats.xp
-   audio.emit("pickup.xp",p.node.position,0.6)
+   audio.emit("pickup.xp",p.node.position,1.0)
    pool.release(p.node)
    pickups.remove_at(i)
  while xp>=Catalog.threshold(level):
@@ -1085,9 +1093,11 @@ func apply_upgrade(choice: Dictionary) -> void:
    if int(weapons[id].level)>=Economy.WEAPON_MAX_LEVEL or int(choice.get("expected_level",weapons[id].level))!=int(weapons[id].level):return
    var proposal=choice if choice.has("attribute") else WeaponUpgrades.proposal(id,rng,weapons[id],str(choice.get("tier","common")))
    if WeaponUpgrades.apply(id,weapons[id],proposal):
-    weapons[id].level+=1;weapons[id]["rarity"]=choice.get("tier",choice.get("metadata",{}).get("rarity",weapons[id].get("rarity","common")))
+    weapons[id].level+=1 # the item's border rarity is fixed when it is first taken: upgrades never change it
     irt.anvil_bonus(id)
-  elif id in Catalog.ACTIVE_WEAPONS and (sandbox or MetaProgress.enabled(progress.data,"weapons",str(id))) and weapons.size()<weapon_limit():equip(id)
+  elif id in Catalog.ACTIVE_WEAPONS and (sandbox or MetaProgress.enabled(progress.data,"weapons",str(id))) and weapons.size()<weapon_limit():
+   equip(id)
+   if weapons.has(id) and Rarity.valid(str(choice.get("tier",""))):weapons[id]["rarity"]=str(choice.tier) # a new weapon keeps the rarity it was offered at
  else:
   var name=str(choice.id)
   if not Catalog.TOMES.has(name):return
@@ -1096,7 +1106,7 @@ func apply_upgrade(choice: Dictionary) -> void:
   if int(tomes.get(name,0))>=Economy.TOME_MAX_LEVEL:return
   var tier=str(choice.get("tier","common"))
   if not Rarity.valid(tier):tier="common"
-  tome_rarities[name]=tier
+  if not tome_rarities.has(name):tome_rarities[name]=tier # first pick sets the border rarity for good
   tomes[name]=tomes.get(name,0)+1
   var stat=Catalog.TOMES[name][0]
   var amount=Economy.scaled(float(Catalog.TOMES[name][1]),tier,stat=="count")

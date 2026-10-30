@@ -163,15 +163,19 @@ func do_slash(id: int,index: int) -> void:
  var origin=origin_pos();var final_slash=index==int(r.count)-1 and int(r.count)>1
  game.audio.emit("weapon.sword_swing_final" if final_slash else "weapon.sword.swing",origin,1.0,1.0,mini(index,2));ElementAudio.attack(game,id,origin)
 
+# One random living enemy of `pool` (the weapon's own rng, never game.rng), or {} when the pool is empty.
+func random_enemy(pool: Array) -> Dictionary:
+ return {} if pool.is_empty() else pool[rng.randi()%pool.size()]
 # FIRESTAFF ---------------------------------------------------------------------------------
+# Every fireball flies at its own random enemy in range (not a fan); the muzzle flash points at the first.
 func fire_firestaff(id: int,r: Dictionary) -> bool:
- var target=game.nearest(game.player.position,float(r.range))
- if target.is_empty():return false
- var origin=origin_pos();var dir=(target.pos-origin).normalized()
- var n=int(r.count);var fan=deg_to_rad(WeaponStats.FIRESTAFF.fan_deg)
+ var pool=game.nearby(game.player.position,float(r.range))
+ if pool.is_empty():return false
+ var origin=origin_pos();var dir=(random_enemy(pool).pos-origin).normalized()
+ var n=int(r.count)
  for k in n:
   if fireballs.size()>=MAX_FIREBALLS:break
-  var d=yaw_dir(dir,(float(k)-float(n-1)*0.5)*fan)
+  var d=dir if k==0 else (random_enemy(pool).pos-origin).normalized()
   fireballs.append({"pos":origin+d*0.9,"vel":d*float(r.speed),"dir":d,"damage":float(r.damage),"id":id,"scale":float(r.scale),"hit_r":float(r.hit_radius),"left":float(r.range)+3.0,"trail":0.0,"age":0.0})
  WeaponFeel.fire_muzzle(self,origin+dir*0.9,dir)
  game.audio.emit("weapon.firestaff.cast",origin,1.0,1.0);ElementAudio.attack(game,id,origin)
@@ -312,16 +316,15 @@ func step_arrows(delta: float) -> void:
   i-=1
 
 # REVOLVER ----------------------------------------------------------------------------------
+# Every bullet flies at its own random enemy in range (not parallel lanes); the muzzle flash points at the first.
 func fire_revolver(id: int,r: Dictionary) -> bool:
- var target=game.nearest(game.player.position,float(Catalog.WEAPONS[id][4]))
- if target.is_empty():return false
- var origin=origin_pos();var dir=(target.pos-origin).normalized()
- var right=dir.cross(Vector3.UP).normalized();var n=int(r.count)
- for k in n: # compact pattern: parallel lanes, a second row once there are five or more
+ var pool=game.nearby(game.player.position,float(Catalog.WEAPONS[id][4]))
+ if pool.is_empty():return false
+ var origin=origin_pos();var dir=(random_enemy(pool).pos-origin).normalized();var n=int(r.count)
+ for k in n:
   if bullets.size()>=MAX_BULLETS:break
-  var lane=(float(k%4)-float(mini(n,4)-1)*0.5)*float(WeaponStats.REVOLVER.spacing)
-  var row=0.0 if k<4 else 0.3
-  bullets.append({"pos":origin+dir*0.9+right*lane+Vector3.UP*row,"dir":dir,"speed":float(r.speed),"left":float(r.range),"damage":float(r.damage),"id":id,"bounces":int(r.bounces),"hits":{},"smoke":0.0,"bounced":false})
+  var d=dir if k==0 else (random_enemy(pool).pos-origin).normalized()
+  bullets.append({"pos":origin+d*0.9,"dir":d,"speed":float(r.speed),"left":float(r.range),"damage":float(r.damage),"id":id,"bounces":int(r.bounces),"hits":{},"smoke":0.0,"bounced":false})
  WeaponFeel.revolver_muzzle(self,origin+dir*0.9,dir)
  game.audio.emit("weapon.revolver.fire",origin,1.0,1.0);ElementAudio.attack(game,id,origin)
  return true
@@ -433,6 +436,7 @@ func draw_aura_circle(center: Vector3,radius: float,spin: float,flash: bool) -> 
 
 # SCYTHES -----------------------------------------------------------------------------------
 func fire_scythes(id: int,r: Dictionary) -> bool:
+ if scythes.size()>=int(r.count):return false # a boomerang: the next throw waits until the last is caught (otherwise two are always in flight at count 1)
  var target=game.nearest(game.player.position,float(Catalog.WEAPONS[id][4]))
  if target.is_empty():return false
  var origin=origin_pos();var base=flat(target.pos-game.player.position)

@@ -141,7 +141,7 @@ func _process(delta: float) -> void:
   "spinning":
    var p=clampf(phase_time/SPIN_TIME,0.0,1.0);reel.set_progress(p,false)
    var under=reel.under_marker(p)
-   if under!=reel.last_tick:reel.last_tick=under;game.play_sound("reward.chest.tick",0.35)
+   if under!=reel.last_tick:reel.last_tick=under;game.play_sound("reward.chest.tick",0.8)
    if p>=1.0:phase="landed";phase_time=0.0;reel.set_progress(1.0,true);wait_label.hide();game.audio.stop_event("reward.chest.tick");game.play_sound("ui.reel_stop")
   "landed":
    var s=maxf(0.0,1.0-phase_time/0.4)*float(game.settings.visual_intensity) if not game.settings.reduced else 0.0

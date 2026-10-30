@@ -9,6 +9,8 @@ uniform float vignette_strength : hint_range(0.0, 1.0) = 0.58;
 uniform float vignette_start : hint_range(0.0, 1.0) = 0.46;
 uniform float low_hp : hint_range(0.0, 1.0) = 0.0;             // 0 off, 1 full; pulses at 1.1 s
 uniform vec4 low_hp_color : source_color = vec4(0.494, 0.094, 0.125, 0.85);
+uniform float hurt : hint_range(0.0, 1.0) = 0.0;               // red flash when the player takes damage
+uniform vec4 hurt_color : source_color = vec4(0.85, 0.08, 0.08, 0.55);
 uniform float stopwatch : hint_range(0.0, 1.0) = 0.0;          // cool blue edge glow while time is slowed
 uniform vec4 stopwatch_color : source_color = vec4(0.498, 0.769, 1.0, 0.35);
 
@@ -29,6 +31,11 @@ void fragment() {
 		float pulse = 0.55 + 0.45 * (0.5 + 0.5 * sin(TIME * 6.2831 / 1.1));
 		float k = edge * low_hp * pulse * low_hp_color.a;
 		col = mix(col, low_hp_color.rgb, k / max(alpha + k, 0.0001));
+		alpha = max(alpha, k);
+	}
+	if (hurt > 0.0) {
+		float k = (0.25 + 0.75 * edge) * hurt * hurt_color.a;
+		col = mix(col, hurt_color.rgb, k / max(alpha + k, 0.0001));
 		alpha = max(alpha, k);
 	}
 	if (stopwatch > 0.0) {
