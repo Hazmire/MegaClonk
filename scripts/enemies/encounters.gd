@@ -3,15 +3,15 @@ extends RefCounted
 static var meshes: Dictionary={}
 static func config(id: String) -> Dictionary:
  var table={
- "chunkus":{"name":"Big Chunkus","health":5000.0,"speed":1.8,"damage":25.0,"scale":3.4,"reward":80,"attacks":[],"visual_model":"Puglin","radius":2.0},
- "rock_golem":{"name":"Rock Golem","health":5000.0,"speed":1.7,"damage":25.0,"scale":2.0,"reward":80,"attacks":[],"visual_model":"Golem","radius":2.0},
- "statue_elite":{"name":"Obsidian Sentinel","health":350.0,"speed":2.8,"damage":15.0,"scale":1.2,"reward":8,"attacks":[],"visual_model":"Knight","radius":0.8},
- "lesser_golem":{"name":"Lesser Golem","health":60.0,"speed":3.8,"damage":8.0,"scale":0.55,"reward":2,"attacks":[],"visual_model":"Golem","radius":0.5},
- "colossus":{"name":"The Forest Colossus","health":2400.0,"speed":2.4,"damage":28.0,"scale":2.4,"reward":80,"attacks":["slam","charge","thorns"]},
- "sovereign":{"name":"The Wraith Sovereign","health":1900.0,"speed":4.0,"damage":23.0,"scale":2.2,"reward":80,"attacks":["dash","souls","phantom"]},
- "champion":{"name":"Brute Champion","health":650.0,"speed":2.0,"damage":20.0,"scale":1.7,"reward":30,"attacks":["slam","charge"]},
- "hunter":{"name":"Shadow Hunter","health":480.0,"speed":4.8,"damage":17.0,"scale":1.4,"reward":30,"attacks":["leap","cleave"]},
- "ghost":{"name":"Endless Revenant","health":100.0,"speed":5.5,"damage":16.0,"scale":1.0,"reward":4,"attacks":["cleave"]}}
+ "chunkus":{"name":"Big Chunkus","epithet":"","health":5000.0,"speed":1.8,"damage":25.0,"scale":3.4,"reward":80,"attacks":[],"visual_model":"Puglin","radius":2.0},
+ "rock_golem":{"name":"Rock Golem","epithet":"","health":5000.0,"speed":1.7,"damage":25.0,"scale":2.0,"reward":80,"attacks":[],"visual_model":"Golem","radius":2.0},
+ "statue_elite":{"name":"Obsidian Sentinel","epithet":"","health":350.0,"speed":2.8,"damage":15.0,"scale":1.2,"reward":8,"attacks":[],"visual_model":"Knight","radius":0.8},
+ "lesser_golem":{"name":"Lesser Golem","epithet":"","health":60.0,"speed":3.8,"damage":8.0,"scale":0.55,"reward":2,"attacks":[],"visual_model":"Golem","radius":0.5},
+ "colossus":{"name":"The Forest Colossus","epithet":"","health":2400.0,"speed":2.4,"damage":28.0,"scale":2.4,"reward":80,"attacks":["slam","charge","thorns"]},
+ "sovereign":{"name":"The Wraith Sovereign","epithet":"","health":1900.0,"speed":4.0,"damage":23.0,"scale":2.2,"reward":80,"attacks":["dash","souls","phantom"]},
+ "champion":{"name":"Brute Champion","epithet":"","health":650.0,"speed":2.0,"damage":20.0,"scale":1.7,"reward":30,"attacks":["slam","charge"]},
+ "hunter":{"name":"Shadow Hunter","epithet":"","health":480.0,"speed":4.8,"damage":17.0,"scale":1.4,"reward":30,"attacks":["leap","cleave"]},
+ "ghost":{"name":"Endless Revenant","epithet":"","health":100.0,"speed":5.5,"damage":16.0,"scale":1.0,"reward":4,"attacks":["cleave"]}}
  var d=table[id].duplicate(true);d.visual_model=d.get("visual_model",{"colossus":"Behemoth","sovereign":"Ghost","champion":"Champion","hunter":"Hunter","ghost":"Ghost"}.get(id,"Puglin"));d.id=id;d.model="";d.mesh=model(id);return d
 static func model(id: String) -> Mesh:
  return BestiaryFrames.mesh("Golem" if id in ["rock_golem","lesser_golem"] else ("Knight" if id=="statue_elite" else ("Puglin" if id in ["colossus","champion","chunkus"] else "Imp")),"enemy_idle",0)

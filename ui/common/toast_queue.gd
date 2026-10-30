@@ -17,15 +17,17 @@ func push(key: String,data: Dictionary={}) -> void:
   if w.key==key:w.count+=1;return
  if waiting.size()>=CAP:waiting[waiting.size()-1].count+=1;return # full: fold into the last waiting toast, never grow
  waiting.append({"key":key,"count":1,"data":data})
-# Returns true when the current toast changed (finished or a new one started), so the view can restyle.
-func tick(delta: float) -> bool:
- if current.is_empty():
-  if waiting.is_empty():return false
-  current=waiting.pop_front();age=0.0;merged_into_current=false;return true
+# Pops the next waiting toast into `current` (the view calls this when it is idle). Returns false when nothing waits.
+func start_next() -> bool:
+ if not current.is_empty() or waiting.is_empty():return false
+ current=waiting.pop_front();age=0.0;merged_into_current=false;return true
+# Advances the shown toast. Returns the finished toast (a non-empty Dictionary) on the frame it ends, otherwise {}.
+# With pickups waiting a toast leaves after MIN_SHOW; otherwise it shows its full DURATION.
+func tick(delta: float) -> Dictionary:
+ if current.is_empty():return {}
  age+=delta
- # With pickups waiting, a toast leaves after MIN_SHOW; otherwise it shows its full duration.
- var limit=MIN_SHOW if not waiting.is_empty() else DURATION
- if age>=limit:current={};age=0.0;return tick(0.0) or true
- return false
+ if age>=(MIN_SHOW if not waiting.is_empty() else DURATION):
+  var done=current;current={};age=0.0;return done
+ return {}
 func busy() -> bool:return not current.is_empty() or not waiting.is_empty()
 func clear() -> void:waiting.clear();current={};age=0.0

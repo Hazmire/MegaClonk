@@ -109,16 +109,25 @@ func hud():
   if n is SocketPips and n.gems==["fire"]:filled=true
  check(filled,"The HUD socket diamond updates when a gem is installed")
  game.gems.reset();game.gold=0
+ var toasts=game.frontend.run_hud.toasts;var q=toasts.queue
+ var pending=func():
+  var out=q.waiting.map(func(w):return w.key)
+  if not q.current.is_empty():out.append(q.current.key)
+  return out
+ var datas=func(key):
+  var all=q.waiting.duplicate()
+  if not q.current.is_empty():all.append(q.current)
+  return all.filter(func(w):return w.key==key)[0].data
  game.gem_discovered("ice")
- check(game.frontend.gem_label.visible and game.frontend.gem_label.text.find("ICE")>=0,"Gem banner names the element")
- check(game.frontend.gem_label.get_theme_color("font_color").b>game.frontend.gem_label.get_theme_color("font_color").r,"Ice banner is coloured blue")
+ check("gem:ice" in pending.call() and datas.call("gem:ice").name=="Ice Gem","Gem toast names the element")
+ check(datas.call("gem:ice").color.b>datas.call("gem:ice").color.r,"Ice toast is coloured blue")
  game.gem_discovered("corrosive")
- var c=game.frontend.gem_label.get_theme_color("font_color")
- check(c.g>c.r and c.g>c.b,"Corrosive banner is coloured green")
+ var c: Color=datas.call("gem:corrosive").color
+ check(c.g>c.r and c.g>c.b,"Corrosive toast is coloured green")
  game.gem_discovered("fire")
- c=game.frontend.gem_label.get_theme_color("font_color")
- check(c.r>c.b,"Fire banner is coloured orange/red")
- for i in 300:game.frontend.update_tally(0.02)
- check(not game.frontend.gem_label.visible,"The banner disappears after its timer")
+ c=datas.call("gem:fire").color
+ check(c.r>c.b,"Fire toast is coloured orange/red")
+ for i in 900:toasts._process(0.02)
+ check(not q.busy() and toasts.phase=="idle","The toast sequence finishes by itself without blocking")
  WorldPickups.collect(game,{"kind":"gem","element":"electricity"})
- check(game.gems.count("electricity")==1 and game.frontend.gem_label.visible and game.frontend.gem_notice_left>3.0,"Picking up a gem raises the banner")
+ check(game.gems.count("electricity")==1 and "gem:electricity" in pending.call(),"Picking up a gem raises its toast")

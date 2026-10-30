@@ -876,8 +876,7 @@ func show_stage_intro() -> void:
  if stage in announced_stages:return
  announced_stages.append(stage);frontend.stage_intro(stage)
 func announce(text: String) -> void:
- announcement=text;announcement_time=4
- toast(text)
+ announcement=text;announcement_time=4 # shown by the HUD banner (RunHud), not as a second toast
 func stage_event(event_id: String) -> void:
  match event_id:
   "rush_1","rush_2":
@@ -1551,7 +1550,8 @@ func grant_item(id: Variant,quiet: bool=false) -> bool:
    amulets+=1;amulets_found+=1
   else:return false
   if not quiet:
-   toast("%s • %s"%[Catalog.item_name(id),Catalog.item_description(id,false)]);play_sound("gem.pickup")
+   if is_instance_valid(frontend):frontend.item_notice(id,amulets)
+   play_sound("gem.pickup")
   return true
  var owned=item_stacks(id)
  if Catalog.item_unique(id) and owned>0:return false
@@ -1562,7 +1562,7 @@ func grant_item(id: Variant,quiet: bool=false) -> bool:
  else:items.append({"id":id,"stacks":1})
  irt.on_acquire(id)
  if not quiet:
-  toast("%s • %s"%[Catalog.item_name(id),Catalog.item_description(id,false)])
+  if is_instance_valid(frontend):frontend.item_notice(id,item_stacks(id))
   tone(720,0.15)
  return true
 func buy_shop(object: Dictionary, id: Variant, price: int) -> bool:

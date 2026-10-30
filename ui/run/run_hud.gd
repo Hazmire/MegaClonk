@@ -36,12 +36,19 @@ var fps_label: Label
 var fps_clock=0.0
 var minimap: RunMinimap
 var popups: PickupPopups
+var toasts: RunToasts
+var bosses: RunBossBars
+var bump_label: Label
+var bump_tween: Tween
 var drawn={} # last drawn scalar values
 func setup(owner_game: Node,owner_frontend: Node) -> RunHud:
  game=owner_game;frontend=owner_frontend;name="RunHud";mouse_filter=Control.MOUSE_FILTER_IGNORE;size=Vector2(MenuStyle.W,MenuStyle.H)
  _build_left();_build_top_centre();_build_top_right();_build_bottom_left();_build_map();_build_xp()
  fps_label=MenuStyle.label("",MenuStyle.sans(800,0.1,13),13,FogPalette.ASH,2,self);fps_label.position=Vector2(MenuStyle.W-44-120,124);fps_label.size=Vector2(120,18);fps_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT;fps_label.name="FpsDebug";fps_label.visible=false
  popups=PickupPopups.new();popups.size=size;add_child(popups)
+ bosses=RunBossBars.new().setup(game,self);add_child(bosses)
+ toasts=RunToasts.new().setup(self);add_child(toasts)
+ bump_label=cap("+1",18,0.05,FogPalette.BONE_BRIGHT,self);bump_label.visible=false;bump_label.name="BumpPlus"
  return self
 # ---- construction ---------------------------------------------------------------------------------------------------
 func cap(text: String,size_px: int,tracking: float,color: Color,parent: Node=null,weight: int=800) -> Label:
@@ -135,6 +142,9 @@ func update(delta: float) -> void:
  fps_label.visible=bool(game.settings.get("fps",false));fps_clock+=delta
  if fps_label.visible and fps_clock>=0.5:fps_clock=0.0;fps_label.text="%d FPS"%Engine.get_frames_per_second()
  banner.visible=event_label.text!=""
+ var top=RunBossBars.TOP+(52.0 if banner.visible else 0.0)
+ bosses.update(delta,top)
+ toasts.card_y=top+bosses.occupied_height()+(0.0 if bosses.occupied_height()>0.0 else 60.0)
  minimap.paper_style=true
 func gain(kind: String,amount: float,at: Vector2) -> void:
  popups.add(kind,amount,at)
@@ -246,3 +256,28 @@ func _rebuild_trait() -> void:
  var l=RunData.loadout(game)
  var tile=InventoryPanel.tile("traits",l.trait,FogPalette.Rarity.COMMON,"",Vector2(72,72),64,"Trait: %s"%l.trait.capitalize());trait_slot.add_child(tile)
  var t=cap("TRAIT",11,0.22,Color("A9ADA4"),trait_slot);t.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+# ---- pickup notification targets ----------------------------------------------------------------------------------------
+# The HUD node a collected toast flies into: the gem slot (or Amulet slot) for gems, the item's tile for items.
+func slot_for(entry: Dictionary) -> Control:
+ var d: Dictionary=entry.get("data",{})
+ if d.is_empty():return null
+ if d.kind=="gem":return gems_row.get_child(maxi(0,Elements.IDS.find(str(d.element))))
+ if d.kind=="amulet":return gems_row.get_child(Elements.IDS.size())
+ for e in item_pool:
+  if e.wrap.visible and not e.item.is_empty() and str(e.item.id)==str(d.id):return e.wrap
+ return items_flow
+func slot_center(entry: Dictionary) -> Vector2:
+ var n=slot_for(entry)
+ if n==null or not n.is_inside_tree():return Vector2(120,300)
+ return get_global_transform().affine_inverse()*(n.get_global_transform()*(n.size*0.5))
+# Slot bumps to 135% and a "+1" rises from it.
+func bump(entry: Dictionary) -> void:
+ var n=slot_for(entry)
+ if n==null:return
+ n.pivot_offset=n.size*0.5
+ if bump_tween!=null and bump_tween.is_valid():bump_tween.kill()
+ var center=slot_center(entry);bump_label.visible=true;bump_label.modulate.a=1.0;bump_label.position=center+Vector2(10,-34)
+ bump_tween=create_tween().set_parallel(true)
+ bump_tween.tween_property(n,"scale",Vector2(1.35,1.35),0.12);bump_tween.tween_property(n,"scale",Vector2.ONE,0.25).set_delay(0.12)
+ bump_tween.tween_property(bump_label,"position:y",center.y-60.0,0.8);bump_tween.tween_property(bump_label,"modulate:a",0.0,0.8).set_delay(0.2)
+ bump_tween.chain().tween_callback(func():bump_label.visible=false)

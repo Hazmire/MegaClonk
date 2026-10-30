@@ -9,11 +9,6 @@ var run_stage: RunStage
 var run_hud: RunHud
 var run_overlay: RunOverlay
 var tally=PickupTally.new()
-var gem_label: Label
-var gem_notice_left=0.0
-var boss_panel: VBoxContainer
-var boss_fingerprint=""
-var boss_widgets: Array=[]
 var event_label: Label
 var timer_label: Label
 var minimap: RunMinimap
@@ -65,8 +60,6 @@ func setup(owner_game: Node) -> void:
  game.health_bar=run_hud.health_bar;game.xp_bar=run_hud.xp_bar;health_text=run_hud.health_text;minimap=run_hud.minimap;event_label=run_hud.event_label;timer_label=run_hud.timer_label
  var hp_background=StyleBoxFlat.new();hp_background.bg_color=FogPalette.RUST_DEEP;hp_background.border_color=FogPalette.INK;hp_background.set_border_width_all(1)
  character_health=ProgressBar.new();character_health.name="CharacterHealth";character_health.size=Vector2(64,7);character_health.show_percentage=false;character_health.mouse_filter=Control.MOUSE_FILTER_IGNORE;character_health.add_theme_stylebox_override("background",hp_background.duplicate());var hp_fill=StyleBoxFlat.new();hp_fill.bg_color=HEALTH_COLOR;character_health.add_theme_stylebox_override("fill",hp_fill);character_health.add_theme_font_size_override("font_size",1);character_health.size=Vector2(64,7);hud_root.add_child(character_health)
- gem_label=heading("",hud_root,26);gem_label.position=Vector2(240,112);gem_label.custom_minimum_size.x=800;gem_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;gem_label.add_theme_constant_override("outline_size",8);gem_label.add_theme_color_override("font_outline_color",Color(0,0,0,0.9));gem_label.hide()
- boss_panel=VBoxContainer.new();boss_panel.position=Vector2(415,95);boss_panel.custom_minimum_size.x=450;hud_root.add_child(boss_panel)
  game.notice=text("",root,18);game.notice.position=Vector2(350,560);game.notice.custom_minimum_size.x=590;game.notice.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
  run_overlay=RunOverlay.new();root.add_child(run_overlay);root.move_child(menu,root.get_child_count()-1) # order: HUD, run overlay, then pause/reward screens above
  hud_root.hide()
@@ -190,10 +183,16 @@ func enter_run() -> void:
  stop_reward_animations()
  in_run=true
  menu.hide();hud_root.show();game.player.camera.current=true
+# Pickup notifications (RunToasts): where the item/gem was picked up is where the player stands, so the burst starts at the head.
+func player_head_stage() -> Vector2:
+ var origin=Vector2(640,380)
+ if is_instance_valid(game.player) and is_instance_valid(game.player.camera) and DisplayServer.get_name()!="headless" and not game.player.camera.is_position_behind(game.player.position):
+  origin=game.player.camera.unproject_position(game.player.position+Vector3.UP*1.5)
+ return run_stage.from_screen(origin)
 func gem_notice(element: String) -> void:
- gem_label.text="◆  %s GEM DISCOVERED  ◆"%Elements.display_name(element).to_upper()
- gem_label.add_theme_color_override("font_color",Elements.color(element).lightened(0.15))
- gem_notice_left=3.5;gem_label.modulate.a=1.0;gem_label.show()
+ run_hud.toasts.push_gem(element,game.gems.count(element),player_head_stage())
+func item_notice(id: String,owned: int) -> void:
+ run_hud.toasts.push_item(id,owned,player_head_stage())
 # Running +gold / +XP totals beside the player's head, and the fading gem banner.
 # Wall-clock seconds since the previous HUD update. update_hud can run several times per
 # rendered frame (physics ticks), so counting get_process_delta_time() each call would make
@@ -211,9 +210,6 @@ func update_tally(delta: float) -> void:
   origin=game.player.camera.unproject_position(game.player.position+Vector3.UP*1.5)
  if tally.gold_gain_now>0:run_hud.gain("gold",tally.gold_gain_now,run_stage.from_screen(origin+Vector2(44,-16)))
  if tally.xp_gain_now>0.0:run_hud.gain("xp",tally.xp_gain_now,run_stage.from_screen(origin+Vector2(44,10)))
- if gem_notice_left>0.0:
-  gem_notice_left-=delta;gem_label.modulate.a=clampf(gem_notice_left,0.0,1.0)
-  if gem_notice_left<=0.0:gem_label.hide()
 func update_hud() -> void:
  var frame_delta=real_delta()
  if stopwatch_overlay:stopwatch_overlay.update_state(game.world_time,frame_delta)
@@ -222,7 +218,6 @@ func update_hud() -> void:
  run_hud.update(frame_delta)
  character_health.max_value=game.stats.max_health;character_health.value=game.health
  update_character_health()
- update_boss_bars()
 func pause() -> void:
  RewardScreens.pause(self)
 func world_map(from_pause: bool=false) -> void:
@@ -281,30 +276,6 @@ func leave_settings() -> void:
 func empty_slot(parent: Node, label: String) -> void:
  var slot=PanelContainer.new();slot.custom_minimum_size=Vector2(34,34);slot.tooltip_text=label;parent.add_child(slot)
  var mark=text("—",slot,18);mark.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
-func update_boss_bars() -> void:
- var bosses=[]
- for e in game.enemies:
-  if e.kind in [8,9,10] and e.hp>0:bosses.append(e)
- bosses.sort_custom(func(a,b):return a.kind<b.kind)
- var rows=[]
- for e in bosses.slice(0,3 if bosses.size()>4 else 4):rows.append({"name":e.variant.name,"hp":e.hp,"max_hp":e.max_hp,"kind":e.kind})
- if bosses.size()>4:
-  var hp=0.0;var maximum=0.0
-  for e in bosses.slice(3):hp+=maxf(0,e.hp);maximum+=e.max_hp
-  rows.append({"name":"%d more bosses (combined)"%(bosses.size()-3),"hp":hp,"max_hp":maximum,"kind":8})
- var fingerprint=""
- for row in rows:fingerprint+=row.name+str(row.kind)
- if fingerprint!=boss_fingerprint:
-  boss_fingerprint=fingerprint
-  for child in boss_panel.get_children():boss_panel.remove_child(child);child.queue_free()
-  boss_widgets.clear()
-  for row in rows:
-   var label=text("",boss_panel,15);var bar=ProgressBar.new();bar.custom_minimum_size=Vector2(450,8);bar.show_percentage=false;boss_panel.add_child(bar)
-   var fill=StyleBoxFlat.new();fill.bg_color=Color("e56f73") if row.kind==8 else Color("d9a95f");bar.add_theme_stylebox_override("fill",fill)
-   boss_widgets.append({"label":label,"bar":bar})
- for i in rows.size():
-  var row=rows[i];boss_widgets[i].label.text="%s  %d / %d"%[row.name,maxf(0,row.hp),row.max_hp];boss_widgets[i].bar.max_value=row.max_hp;boss_widgets[i].bar.value=maxf(0,row.hp)
-
 func stage_intro(number: int) -> void:
  if is_instance_valid(stage_banner):stage_banner.queue_free()
  var banner=Label.new();stage_banner=banner;banner.mouse_filter=Control.MOUSE_FILTER_IGNORE;banner.process_mode=Node.PROCESS_MODE_ALWAYS

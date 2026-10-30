@@ -82,7 +82,8 @@ func run():
   if boss.state=="waves":
    var before=game.projectiles.size();Encounters.step(game,boss,0.1);check(game.projectiles.size()>before,"Soul barrage emits damaging projectiles")
  game.frontend.update_hud()
- check(game.frontend.boss_widgets.size()>=3,"Main and miniboss health bars coexist")
+ game.frontend.run_hud.bosses.refresh_now()
+ check(game.frontend.run_hud.bosses.stage_bars[0].lit and game.frontend.run_hud.bosses.shown_bars().size()>=3,"Main and miniboss health bars coexist")
  var ghost=game.spawn_enemy(11,game.player.position+Vector3(20,0,0));game.stage_time=720;Encounters.step(game,ghost,0.1)
  check(ghost.speed>5.5 and ghost.speed<=10,"Endless ghost speed escalates within bounds")
  game.gold=1000;game.mode="shop"

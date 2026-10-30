@@ -19,6 +19,8 @@ func run() -> void:
  await physics_frame
  foundation()
  await hud()
+ await notifications()
+ await boss_bars()
  print("INGAME_UI: %d checks, %d failures"%[count,failures.size()])
  quit(1 if failures.size()>0 else 0)
 func foundation() -> void:
@@ -59,13 +61,13 @@ func foundation() -> void:
  inv.free()
  # ---- toast queue: merge and cap ----
  var q=ToastQueue.new()
- q.push("gem:fire");q.push("gem:fire");q.tick(0.0)
+ q.push("gem:fire");q.push("gem:fire");q.start_next()
  check(q.current.key=="gem:fire" and q.current.count==2,"Same-element pickups merge into one toast (×2)")
  q.push("gem:fire");check(q.current.count==3,"A pickup of the toast being shown merges into it")
  for i in 20:q.push("gem:k%d"%i)
  check(q.waiting.size()<=ToastQueue.CAP,"The waiting line is hard-capped")
- q.tick(ToastQueue.MIN_SHOW-0.1);check(q.current.key=="gem:fire","A toast stays at least 1.2 s while others wait")
- q.tick(0.2);check(q.current.key!="gem:fire","...then makes way for the next one")
+ check(q.tick(ToastQueue.MIN_SHOW-0.1).is_empty() and q.current.key=="gem:fire","A toast stays at least 1.2 s while others wait")
+ var done=q.tick(0.2);check(done.key=="gem:fire" and done.count==3 and q.current.is_empty() and q.start_next() and q.current.key!="gem:fire","...then finishes (still ×3) and makes way for the next one")
  # ---- pickup popups: pooled, merging, capped ----
  var pops=PickupPopups.new();root.add_child(pops)
  pops.add("gold",5,Vector2(100,100));pops.add("gold",7,Vector2(110,100))
@@ -119,3 +121,88 @@ func hud() -> void:
  var before=total.call();game.gold+=9;fe.update_hud();check(total.call()>=before+9.0 and h.popups.live_count()>=1,"A gold pickup raises (or merges into) a world popup")
  # HUD lives on the design stage and uses the shared theme
  check(h.get_parent()==fe.run_stage.stage and fe.run_stage.theme==MenuStyle.theme(),"HUD is laid out on the 1920x1080 stage with the shared theme")
+func notifications() -> void:
+ var fe=game.frontend;var h=fe.run_hud;var tq=h.toasts;var q=tq.queue
+ q.clear();tq.phase="idle";tq.card.visible=false
+ game.mode="run"
+ game.gems.reset();game.gems.add("fire");game.gem_discovered("fire")
+ check(q.waiting.size()==1 and q.waiting[0].data.new and q.waiting[0].data.name=="Fire Gem","First gem of an element queues a toast marked as a new element")
+ game.gems.add("fire");game.gem_discovered("fire")
+ check(q.waiting.size()==1 and q.waiting[0].count==2,"A second gem of the same element merges into the same toast (×2)")
+ var steps=0
+ while tq.phase!="show" and steps<400:tq._process(0.02);steps+=1
+ check(tq.phase=="show" and tq.card.visible and tq.stamp.text=="NEW ELEMENT" and tq.count_label.text=="×2","The card shows 'NEW ELEMENT' and the merged ×2 after burst and fly")
+ check(tq.title.text=="Fire Gem" and tq.detail.text==Elements.summary("fire") and tq.hint.text.contains("Imbue Station"),"Toast text comes from the element data (name, summary, hint)")
+ check(game.mode=="run","A toast never pauses the game or changes the mode")
+ game.gems.add("fire");game.gem_discovered("fire");tq._process(0.02)
+ check(tq.count_label.text=="×3","A pickup during the toast merges into the card being shown")
+ steps=0
+ while tq.phase!="idle" and steps<600:tq._process(0.02);steps+=1
+ check(tq.phase=="idle" and not tq.card.visible,"The card collects itself and the toast ends")
+ game.gem_discovered("fire")
+ steps=0
+ while tq.phase!="show" and steps<400:tq._process(0.02);steps+=1
+ check(tq.stamp.text.begins_with("OWNED ×"),"A later gem shows 'OWNED ×n' instead of the new-element stamp")
+ q.clear();tq.phase="idle"
+ for i in 12:
+  game.gem_discovered(Elements.IDS[i%4]);game.grant_item(Catalog.ITEM_IDS[i],false)
+ check(q.waiting.size()<=ToastQueue.CAP,"Many pickups never grow the waiting line past the cap")
+ q.clear();tq.phase="idle"
+ game.amulets=0;game.grant_item("imbued_amulet",false)
+ var amulet=q.waiting.filter(func(w):return w.data.kind=="amulet")
+ check(amulet.size()==1 and amulet[0].data.tier==FogPalette.Rarity.LEGENDARY and game.amulets==1,"An Imbued Amulet uses the Legendary toast variant")
+ check(h.slot_for({"data":amulet[0].data})==h.gems_row.get_child(Elements.IDS.size()),"The Amulet toast flies to the Amulet slot beside the gem row")
+ q.clear();tq.phase="idle";game.grant_item(Catalog.ITEM_IDS[3],false)
+ check(q.waiting.size()==1 and q.waiting[0].data.kind=="item" and q.waiting[0].data.name==Catalog.item_name(Catalog.ITEM_IDS[3]),"An item pickup raises an item toast with the item's name")
+ q.clear();tq.phase="idle"
+ # elite / mob / miniboss warnings are the game's own announce() events, shown in the HUD banner
+ game.announce("ELITE ENCOUNTER • Obsidian Sentinels");game.frontend.event_label.text=game.announcement;fe.update_hud()
+ check(h.banner.visible and h.event_label.text.begins_with("ELITE ENCOUNTER"),"The warning banner shows the game's real announcement (elite / miniboss / rush)")
+ check(not game.notice.text.begins_with("ELITE ENCOUNTER"),"An announcement is not also shown as a second bottom toast")
+ game.announcement_time=0.0;game.frontend.event_label.text="";fe.update_hud()
+ check(not h.banner.visible,"The banner leaves when the announcement ends")
+func boss_bars() -> void:
+ var fe=game.frontend;var bb=fe.run_hud.bosses
+ game.enemies.clear();game.mode="run"
+ var spawn=func(kind,i):
+  var e=game.spawn_enemy(kind,game.player.position+Vector3(10+i*3,0,5));e.speed=0.0;return e
+ var stage_a=spawn.call(8,0);var stage_b=spawn.call(8,1);var stage_c=spawn.call(8,2)
+ var mini_a=spawn.call(9,3);var mini_b=spawn.call(10,4);var mini_c=spawn.call(9,5)
+ bb.refresh_now()
+ var lit_stage=bb.stage_bars.filter(func(b):return b.lit).size();var lit_mini=bb.mini_bars.filter(func(b):return b.lit).size()
+ check(lit_stage==2 and lit_mini==2,"Three stage bosses and three minibosses show at most 2+2 bars (%d+%d)"%[lit_stage,lit_mini])
+ check(bb.more_label.visible and bb.more_label.text=="+2 MORE BOSSES","The rest are summarised as '+n more' (%s)"%bb.more_label.text)
+ check(bb.stage_bars[0].size.x==920 and bb.mini_bars[0].size.x==440,"Stage bars are 920px and minibosses 440px wide")
+ check(bb.stage_bars[0].boss_name==stage_a.variant.name,"The bar carries the boss's real name from its variant")
+ fe.run_hud.update(0.016)
+ check(bb.occupied_height()>200.0 and fe.run_hud.toasts.card_y>=RunBossBars.TOP+bb.occupied_height(),"Gem/item toasts move below the boss bars")
+ # damage trail, hit flash, enraged, slain
+ var bar: BossBar=bb.stage_bars[0]
+ stage_a.hp=stage_a.max_hp*0.6;bb.update(0.016,RunBossBars.TOP)
+ check(bar.fraction<0.61 and bar.trail>bar.fraction and bar.flash_left>0.0,"A hit drops the fill at once, leaves a damage trail and flashes the bar")
+ for i in 10:bb.update(0.1,RunBossBars.TOP)
+ check(absf(bar.trail-bar.fraction)<0.001 and bar.flash_left==0.0,"The trail drains after its delay and the flash ends")
+ check(not bar.low(),"A healthy boss is not enraged")
+ stage_a.hp=stage_a.max_hp*0.2;bb.update(0.016,RunBossBars.TOP);check(bar.low(),"At 25% HP or below a stage boss is enraged")
+ stage_a.hp=0.0;bb.update(0.016,RunBossBars.TOP)
+ check(bar.slain_t>=0.0 and bar.lit,"A dead boss gets the SLAIN stamp and keeps its bar")
+ for i in 20:bb.update(0.1,RunBossBars.TOP)
+ check(bar.slain_t<0.0 and not is_same(bar.target,stage_a),"The SLAIN bar leaves after about 1.5 s and its slot is freed (a waiting boss may take it)")
+ bb.refresh_now()
+ check(bb.stage_bars.filter(func(b):return b.lit).size()==2,"A waiting stage boss takes the freed slot")
+ # statuses show in their element colours
+ stage_b.fx={"cd":{},"fire":{"t":3.0}}
+ var shown=bb.stage_bars.filter(func(b):return b.lit and is_same(b.target,stage_b))[0];bb.update(0.016,RunBossBars.TOP)
+ check(shown.statuses==["fire"],"The status row lists the boss's active elements")
+ # off-screen pointer
+ check(RunBossBars.pointer_for(Vector2(960,540),false).is_empty(),"No pointer while the boss is on screen")
+ var left=RunBossBars.pointer_for(Vector2(-400,500),false);var behind=RunBossBars.pointer_for(Vector2(960,540),true)
+ check(not left.is_empty() and left.pos.x<400 and not behind.is_empty(),"A pointer appears for a boss off to the side or behind the camera")
+ var map_rect=Rect2(1540,670,380,410);var hp_rect=Rect2(0,880,780,200)
+ var clear=true
+ for angle in range(0,360,15):
+  var r=RunBossBars.pointer_for(Vector2(960,540)+Vector2.RIGHT.rotated(deg_to_rad(angle))*3000.0,false)
+  if r.is_empty() or map_rect.has_point(r.pos) or hp_rect.has_point(r.pos) or r.pos.x<0 or r.pos.y<0 or r.pos.x>1920 or r.pos.y>1080:clear=false
+ check(clear,"Pointers stay on screen and clear of the minimap and the health / ultimate block from every direction")
+ game.enemies.clear();bb.refresh_now()
+ check(bb.shown_bars().is_empty() or bb.shown_bars().all(func(b):return b.slain_t>=0.0 or not b.lit),"Bars with no boss left are released")

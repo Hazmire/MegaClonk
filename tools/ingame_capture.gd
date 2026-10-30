@@ -39,4 +39,24 @@ func run() -> void:
   late_build();game.gold=1840;game.kills=412;game.frontend.update_hud();await snap("hud-late",0.6)
   game.health=20.0;game.frontend.update_hud();await snap("hud-low-hp",1.0)
   game.health=game.stats.max_health;game.world_time.freeze(3.0);game.frontend.update_hud();await snap("hud-stopwatch",1.0)
+
+ if want("toast"):
+  var tq=game.frontend.run_hud.toasts
+  game.gems.reset();game.gems.add("corrosive");game.gem_discovered("corrosive");await wait_phase(tq,"show",0.8);await snap("toast-gem-first",0.15)
+  await wait_phase(tq,"idle",0.0)
+  game.gems.add("corrosive");game.gem_discovered("corrosive");await wait_phase(tq,"show",0.8);await snap("toast-gem-repeat",0.15)
+  game.gems.add("corrosive");game.gem_discovered("corrosive");await snap("toast-gem-merged",0.2)
+  await wait_phase(tq,"idle",0.0)
+  game.grant_item("imbued_amulet",false);await wait_phase(tq,"show",0.8);await snap("toast-amulet",0.15)
+  await wait_phase(tq,"idle",0.0)
+  game.grant_item(Catalog.ITEM_IDS[5],false);await wait_phase(tq,"show",0.8);await snap("toast-item",0.15)
+  await wait_phase(tq,"idle",0.0)
+  game.gems.add("ice");game.gem_discovered("ice");await create_timer(0.25).timeout;await snap("toast-burst",0.0)
+  await wait_phase(tq,"idle",0.0)
+  game.announce("ELITE ENCOUNTER • Obsidian Sentinels");game.frontend.event_label.text=game.announcement;game.frontend.update_hud();await snap("banner-elite",0.4)
  quit(0)
+func wait_phase(tq: RunToasts,phase: String,extra: float) -> void:
+ var guard=0
+ while tq.phase!=phase and guard<2000:
+  await create_timer(0.05).timeout;guard+=1
+ if extra>0.0:await create_timer(extra).timeout
