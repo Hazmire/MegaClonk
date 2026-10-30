@@ -94,6 +94,22 @@ func run() -> void:
   ls.cards[2].grab_focus();await snap("levelup-new-weapon",0.4)
   ls.skip_button.grab_focus();await snap("levelup-skip-focus",0.3)
   game.resume()
+
+ if want("shop"):
+  late_build();game.gold=113;game.level=4;game.frontend.update_hud()
+  var code=GemRewards.offer_code("corrosive")
+  var obj={"tier":"Rare","offers":["pilgrims_sandals","whetstone",code],"sold":[],"used":false}
+  game.frontend.shop(obj);var sh=game.frontend.menu.get_child(0);await create_timer(0.7).timeout
+  sh.rows[0].grab_focus();await snap("shop-rare-buy-focus",0.35)
+  game.gold=40;sh.rows[2].grab_focus();game.frontend.shop(obj);sh=game.frontend.menu.get_child(0);await create_timer(0.5).timeout;sh.rows[2].grab_focus();await snap("shop-gem-need-more",0.35);game.gold=113;game.frontend.shop(obj);sh=game.frontend.menu.get_child(0);await create_timer(0.5).timeout
+  sh.rows[1].grab_focus();await snap("shop-preview-row2",0.3)
+  var legend=[]
+  for id in Catalog.ITEM_IDS:
+   if Catalog.item_tier(id)=="legendary" and not Catalog.item_consumable(id):legend.append(id)
+  game.gold=900;game.resume();game.frontend.shop({"tier":"Legendary","offers":[legend[0],legend[1] if legend.size()>1 else legend[0]],"sold":[],"used":false});await create_timer(0.6).timeout
+  await snap("shop-legendary",0.2)
+  game.gold=113;game.frontend.shop({"tier":"Common","offers":["whetstone"],"sold":["whetstone"],"used":true});await create_timer(0.5).timeout;await snap("shop-sold",0.2)
+  game.resume()
  quit(0)
 func wait_phase(tq: RunToasts,phase: String,extra: float) -> void:
  var guard=0

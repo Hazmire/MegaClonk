@@ -12,7 +12,7 @@ func setup(price: int,can_pay: bool=true,px: int=26,angle: float=-2.0) -> PriceT
 func _draw() -> void:
  var r=Rect2(Vector2.ZERO,size);var cut=size.y*0.3
  var poly=PackedVector2Array([Vector2(cut,0),Vector2(size.x,0),Vector2(size.x,size.y),Vector2(cut,size.y),Vector2(0,size.y*0.5)])
- draw_colored_polygon(poly+Vector2(2,2),Color(0,0,0,0.45));draw_colored_polygon(poly,FogPalette.MEMO)
+ draw_set_transform(Vector2(2,2),0.0,Vector2.ONE);draw_colored_polygon(poly,Color(0,0,0,0.45));draw_set_transform(Vector2.ZERO,0.0,Vector2.ONE);draw_colored_polygon(poly,FogPalette.MEMO)
  draw_polyline(poly+PackedVector2Array([poly[0]]),MenuStyle.PAPER_LINE,1.0)
  draw_circle(Vector2(cut*0.55,size.y*0.5),size.y*0.09,FogPalette.NIGHT)
  var ink=FogPalette.MEMO_INK if affordable else MenuStyle.SILVER_RUST

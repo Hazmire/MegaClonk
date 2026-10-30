@@ -1,5 +1,5 @@
 class_name RunLevelUp
-extends MenuScreen
+extends RunPanelScreen
 # RunLevelUp: the Level-up screen. The frozen world behind, the Inventory and Stats panels either side and, between them, three
 # rarity-framed paper cards with their real "current → new" numbers, then Take / Banish / Skip / Refresh. The entrance is the
 # fanfare (any key skips it) and then the cards are dealt in. All choices run through the same game calls as before.
@@ -16,8 +16,6 @@ const SHAKE=[[0.0,0.0,0.0],[0.12,-12.0,7.0],[0.26,10.0,-8.0],[0.40,-7.0,5.0],[0.
 var choices: Array=[]
 var cards_data: Array=[]
 var cards: Array=[]
-var inventory_panel: InventoryPanel
-var stats_panel: StatsPanel
 var fanfare: LevelFanfare
 var header: Control
 var footer: Control
@@ -31,18 +29,14 @@ var interactive=false
 var plain=false # reduced motion or visual intensity ~0: no fanfare, no shake
 var last_preview=-1
 func _init() -> void:
- super._init();backdrop_kind="frozen";allow_back=false
+ super._init()
 func setup_choices(list: Array) -> RunLevelUp:
  choices=list;cards_data=RunData.level_cards(game,list) if game!=null else [];return self
 func build() -> void:
  if choices.is_empty():choices=game.choices
  cards_data=RunData.level_cards(game,choices)
  plain=bool(game.settings.reduced) or float(game.settings.visual_intensity)<0.1
- inventory_panel=InventoryPanel.new().setup(game);inventory_panel.name="Inventory";inventory_panel.position=Vector2(72,150);content.add_child(inventory_panel)
- stats_panel=StatsPanel.new().setup(game);stats_panel.name="Stats";stats_panel.position=Vector2(1428,150);content.add_child(stats_panel)
- build_status()
- var section=Panel.new();section.name="Section";section.position=Vector2(532,150);section.size=Vector2(856,870);section.mouse_filter=Control.MOUSE_FILTER_IGNORE
- section.add_theme_stylebox_override("panel",FogTheme.flat(Color(0.055,0.059,0.055,0.94),FogPalette.BORDER,1));content.add_child(section)
+ build_panels();build_status();build_section()
  header=Control.new();header.name="Header";header.size=Vector2(776,110);header.position=Vector2(572,182);header.mouse_filter=Control.MOUSE_FILTER_IGNORE;content.add_child(header)
  MenuStyle.label("LEVEL UP · LEVEL %d"%game.level,MenuStyle.sans(800,0.3,14),14,FogPalette.GOLD,0,header)
  var h1=MenuStyle.label("Choose an upgrade",MenuStyle.serif(),52,FogPalette.BONE,0,header);h1.position=Vector2(0,22)
@@ -60,22 +54,6 @@ func build() -> void:
  else:
   apply_timeline()
  set_process(true)
-func build_status() -> void:
- var row=HBoxContainer.new();row.name="Status";row.position=Vector2(72,36);row.add_theme_constant_override("separation",48);row.mouse_filter=Control.MOUSE_FILTER_IGNORE;content.add_child(row)
- var t=int(game.elapsed)
- for pair in [["LVL",str(game.level),FogPalette.GOLD],["STAGE",str(game.stage),FogPalette.BONE_BRIGHT]]:
-  var cell=VBoxContainer.new();cell.add_theme_constant_override("separation",2);cell.mouse_filter=Control.MOUSE_FILTER_IGNORE;row.add_child(cell)
-  MenuStyle.label(pair[0],MenuStyle.sans(600,0.3,13),13,Color("A9ADA4"),0,cell);cell.add_child(HudNumber.new().setup(pair[1],32,pair[2],3))
- var hp=VBoxContainer.new();hp.add_theme_constant_override("separation",6);hp.custom_minimum_size=Vector2(240,0);hp.mouse_filter=Control.MOUSE_FILTER_IGNORE;row.add_child(hp)
- MenuStyle.label("HP",MenuStyle.sans(600,0.3,13),13,Color("A9ADA4"),0,hp)
- var bar=Control.new();bar.name="Hp";bar.custom_minimum_size=Vector2(240,24);bar.mouse_filter=Control.MOUSE_FILTER_IGNORE;hp.add_child(bar)
- var frac=clampf(float(game.health)/maxf(1.0,float(game.stats.max_health)),0.0,1.0)
- bar.draw.connect(func():
-  bar.draw_rect(Rect2(Vector2.ZERO,bar.size),Color("2A1416"));bar.draw_rect(Rect2(Vector2(2,2),Vector2((bar.size.x-4.0)*frac,bar.size.y-4.0)),FogPalette.RUST);bar.draw_rect(Rect2(Vector2.ZERO,bar.size).grow(-1.0),Color("050505"),false,2.0))
- var hpl=MenuStyle.label("%d / %d"%[roundi(game.health),roundi(game.stats.max_health)],MenuStyle.sans(800,0,14),14,FogPalette.BONE_BRIGHT,0,bar);hpl.position=Vector2(8,2)
- for pair in [["GOLD",str(game.gold)],["TIME","%02d:%02d"%[t/60,t%60]]]:
-  var cell=VBoxContainer.new();cell.add_theme_constant_override("separation",2);cell.mouse_filter=Control.MOUSE_FILTER_IGNORE;row.add_child(cell)
-  MenuStyle.label(pair[0],MenuStyle.sans(600,0.3,13),13,Color("A9ADA4"),0,cell);cell.add_child(HudNumber.new().setup(pair[1],32,FogPalette.BONE_BRIGHT,3))
 func build_footer() -> void:
  footer=Control.new();footer.name="Footer";footer.position=Vector2(572,850);footer.size=Vector2(776,138);footer.mouse_filter=Control.MOUSE_FILTER_IGNORE;content.add_child(footer)
  primary=MenuStyle.spawn("menu_item") as MenuItem;primary.setup("Take",36,36).make_primary("ENTER",72,36);primary.size=Vector2(776,72);primary.position=Vector2.ZERO;primary.indent=60.0;footer.add_child(primary)

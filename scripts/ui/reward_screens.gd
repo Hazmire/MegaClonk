@@ -147,33 +147,15 @@ static func inventory(ui: FrontEnd) -> void:
  ui.action("RESUME",center,game.resume).grab_focus()
 static func imbue_station(ui: FrontEnd,object: Dictionary) -> void:
  SocketScreens.imbue_station(ui,object)
-static func gem_offer(ui: FrontEnd,center: Node,object: Dictionary,code: int) -> void:
- var game=ui.game;var element=GemRewards.offer_element(code);var price=ShopSystem.gem_price(game.stage)
- var sold=GemRewards.has_code(object.get("sold",[]),code) or object.get("used",false)
- var meta={"rarity":"rare","name":Elements.display_name(element)+" Socket Gem","uid":"gem_"+element}
- var button=offer(ui,center,"gems",element,0,Elements.summary(element)+"\nSocket it into a weapon at an Imbue Station.",func():
-  if not GemRewards.buy_offer(game,object,code).ok:ui.reward_consumed=false;game.toast("Purchase unavailable"),"SOLD" if sold else "NEED %d gold"%price if game.gold<price else "BUY · %d gold"%price,meta)
- button.disabled=sold or game.gold<price
 static func shop(ui: FrontEnd,object: Dictionary) -> void:
- var game=ui.game;game.mode="shop";ui.shop_object=object
+ var game=ui.game
+ if game.mode=="run":ui.capture_pause_frame()
+ game.mode="shop";ui.shop_object=object
  if not object.has("offers"):
   object.offers=ShopSystem.offers(object.get("tier","Common"),game.available_items(),game.rng,float(game.stats.luck),game.world_content_version>=2)
  ui.shop_offers=object.offers
- var center=layout(ui,Economy.shop_display_name(object.get("tier","Common"))+" shop · Gold %d"%game.gold)
- ui.text("One purchase per seller",center,15)
- for id_value in object.offers:
-  if not id_value is String:
-   var code=int(id_value)
-   if GemRewards.is_gem_offer(code):gem_offer(ui,center,object,code)
-   continue
-  var id=str(id_value)
-  var price=ShopSystem.price(id,game.stage);var sold=id in object.get("sold",[])
-  var button=offer(ui,center,"items",id,game.item_stacks(id),Catalog.item_description(id,false),func():
-   if not game.buy_shop(object,id,price):ui.reward_consumed=false;game.toast("Purchase unavailable"),"SOLD" if sold or object.get("used",false) else "NEED %d gold"%price if game.gold<price else "BUY · %d gold"%price)
-  button.tooltip_text=Catalog.item_description(id)
-  button.disabled=sold or game.gold<price or object.get("used",false) or not id in game.available_items()
- if object.offers.is_empty():ui.paragraph("No enabled items available",center,520)
- button(ui,center,"LEAVE SHOP",game.resume).grab_focus()
+ ui.clear()
+ var screen=RunShop.new();screen.object=object;MenuScreen.set_audio_owner(game);screen.bind(ui);ui.menu.add_child(screen)
 static func reward(ui: FrontEnd,id: String) -> void:
  var game=ui.game;game.mode="reward";var center=layout(ui,"Treasure discovered")
  var tier=Rarity.definition(Catalog.item_tier(id))

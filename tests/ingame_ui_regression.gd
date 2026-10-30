@@ -23,6 +23,7 @@ func run() -> void:
  await boss_bars()
  await pause_screen()
  await level_up()
+ await shop_screen()
  print("INGAME_UI: %d checks, %d failures"%[count,failures.size()])
  quit(1 if failures.size()>0 else 0)
 func foundation() -> void:
@@ -335,4 +336,66 @@ func level_up() -> void:
  game.banished.clear();game.rerolls=3
  var supply=await open_level([{"type":"supply","id":"0","key":"supply0"},{"type":"supply","id":"1","key":"supply1"},{"type":"supply","id":"2","key":"supply2"}])
  check(supply.cards_data[0].name=="Field supplies" and supply.banish_button.disabled,"With nothing left to offer the cards are Field supplies and Banish is off")
+ game.resume();await process_frame
+func shop_screen() -> void:
+ var fe=game.frontend;game.enemies.clear();game.mode="run";game.gold=20;game.stage=1
+ game.gems.reset();game.items.clear();game.irt.reset();game.stats=Catalog.base_stats();game.stats.damage=float(game.stats.damage)
+ var code=GemRewards.offer_code("fire")
+ var obj={"tier":"Rare","offers":["whetstone","pilgrims_sandals",code],"sold":[],"used":false}
+ fe.shop(obj);await process_frame
+ var s: RunShop
+ for n in fe.menu.get_children():
+  if n is RunShop:s=n
+ check(s!=null and game.mode=="shop" and s.rows.size()==3,"Shop opens RunShop with a row per offer (including the Socket Gem)")
+ if s==null:return
+ check(s.get_node("Stage/Content/Header/Title").text=="Rare shop","Title names the shop type (%s)"%s.get_node("Stage/Content/Header/Title").text)
+ var std={"tier":"Common","offers":["whetstone"],"sold":[],"used":false};fe.shop(std);await process_frame
+ for n in fe.menu.get_children():
+  if n is RunShop:s=n
+ check(s.get_node("Stage/Content/Header/Title").text=="Standard shop","A Common seller is titled Standard shop")
+ fe.shop(obj);await process_frame
+ for n in fe.menu.get_children():
+  if n is RunShop:s=n
+ var item_row=s.rows[0];var gem_row=s.rows[2]
+ check(item_row.data.price==ShopSystem.price("whetstone",1) and item_row.data.price==Economy.item_price(Catalog.item_tier("whetstone"),1),"Item price is the Economy price (%d)"%item_row.data.price)
+ check(gem_row.data.kind=="gem" and gem_row.data.price==Economy.gem_price(1) and gem_row.data.kind_label=="Socket gem" and gem_row.data.tier_name=="Rare","Socket gem rows use the Economy gem price and the Rare tier")
+ check(item_row.data.owned==0 and item_row.data.owned_after==1 and gem_row.data.owned==0 and gem_row.data.owned_after==1,"Owned ×a → ×b shows the real count and +1")
+ check(item_row.data.preview.size()>0 and item_row.data.preview[0].stat=="damage" and item_row.data.preview[0].to>item_row.data.preview[0].from,"The Whetstone row carries a real damage preview")
+ var before=game.stats.duplicate()
+ check(is_equal_approx(float(game.stats.damage),float(before.damage)),"Computing a preview does not change the stats")
+ s.rows[0].grab_focus();await process_frame
+ check(s.stats_panel.has_preview() and s.stats_panel.shown_text("damage").contains("→"),"Focusing a row previews its stat change in the Stats panel (%s)"%s.stats_panel.shown_text("damage"))
+ s.rows[2].grab_focus();await process_frame
+ check(not s.stats_panel.has_preview(),"A row with no stat effect (Socket Gem) clears the preview")
+ # affordability
+ check(item_row.data.affordable==(game.gold>=item_row.data.price) and (item_row.data.price<=20 or item_row.button_text()=="NEED %d MORE"%(item_row.data.price-20)),"Button reads Need n more with the exact shortfall (%s)"%item_row.button_text())
+ check(gem_row.button_text()=="NEED %d MORE"%(Economy.gem_price(1)-20) and not gem_row.can_buy(),"The gem row is unaffordable at 20 gold and says so (%s)"%gem_row.button_text())
+ check(s.get_node("Stage/Content/Header/YourGold").get_child(1).text=="20","Your gold shows the real gold")
+ # denied purchase changes nothing
+ var gold=game.gold;var denied=[0];gem_row.denied.connect(func():denied[0]+=1);s.rows[2].grab_focus()
+ var enter=InputEventAction.new();enter.action="ui_accept";enter.pressed=true;gem_row._gui_input(enter)
+ check(denied[0]==1 and game.gold==gold and game.mode=="shop","Enter on an unaffordable row is refused and changes nothing")
+ # buy the item
+ game.gold=1000;fe.shop(obj);await process_frame
+ for n in fe.menu.get_children():
+  if n is RunShop:s=n
+ var price=s.rows[0].data.price;s.rows[0].buy_requested.emit()
+ check(game.gold==1000-price and game.item_stacks("whetstone")==1 and obj.used and game.mode=="run","Buying takes exactly the price, grants the item, uses up the seller and returns to the run")
+ # reopened: used seller
+ fe.shop(obj);await process_frame
+ for n in fe.menu.get_children():
+  if n is RunShop:s=n
+ check(s.rows[0].button_text()=="SOLD" and s.rows[1].button_text()=="CLOSED" and not s.rows[1].can_buy(),"A used seller shows SOLD on the bought row and CLOSED on the rest")
+ check(s.rows[0].data.owned==1 and s.rows[0].data.owned_after==2,"Owned reads ×1 → ×2 after buying one")
+ # gem purchase
+ var gobj={"tier":"Rare","offers":[code],"sold":[],"used":false};game.gold=1000;fe.shop(gobj);await process_frame
+ for n in fe.menu.get_children():
+  if n is RunShop:s=n
+ var gp=s.rows[0].data.price;s.rows[0].buy_requested.emit()
+ check(game.gold==1000-gp and game.gems.count("fire")==1 and game.mode=="run","Buying a Socket Gem takes the gem price and adds the gem")
+ # navigation
+ fe.shop({"tier":"Common","offers":["whetstone","pilgrims_sandals"],"sold":[],"used":false});await process_frame
+ for n in fe.menu.get_children():
+  if n is RunShop:s=n
+ check(s.rows[0].focus_neighbor_bottom==s.rows[0].get_path_to(s.rows[1]) and s.rows[1].focus_neighbor_bottom==s.rows[1].get_path_to(s.leave_button),"Focus moves down the offers and on to Leave shop")
  game.resume();await process_frame

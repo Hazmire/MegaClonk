@@ -7,6 +7,7 @@ const SIZE_PX=Vector2(420,870)
 var game: Node
 var rows: Dictionary={} # stat key -> {bg, label, value, base_text, changed}
 var previewing=""
+var previewed: Array=[] # every stat row currently showing a preview (an item can change several)
 var column: VBoxContainer
 func setup(game_node: Node) -> StatsPanel:
  game=game_node;custom_minimum_size=SIZE_PX;size=SIZE_PX;mouse_filter=Control.MOUSE_FILTER_STOP
@@ -14,7 +15,7 @@ func setup(game_node: Node) -> StatsPanel:
  add_theme_stylebox_override("panel",box)
  refresh();return self
 func refresh() -> void:
- previewing=""
+ previewing="";previewed.clear()
  for c in get_children():remove_child(c);c.queue_free()
  rows.clear()
  column=VBoxContainer.new();column.add_theme_constant_override("separation",18);column.mouse_filter=Control.MOUSE_FILTER_IGNORE;add_child(column)
@@ -44,21 +45,31 @@ static func _number_font(is_changed: bool) -> Font:
  var f=FontVariation.new();f.base_font=base;f.opentype_features={"tnum":1};return f
 # Shows what a choice would do: the row goes rust and reads "old → new". `from`/`to` are raw stat values.
 func preview(stat: String,from: float,to: float) -> void:
+ clear_preview();_preview_row(stat,from,to)
+# changes: [{stat, from, to}]; the first one is `previewing`.
+func preview_many(changes: Array) -> void:
  clear_preview()
+ for c in changes:_preview_row(str(c.stat),float(c.from),float(c.to))
+func _preview_row(stat: String,from: float,to: float) -> void:
  if not rows.has(stat):return
- var row: Dictionary=rows[stat];previewing=stat
+ var row: Dictionary=rows[stat]
+ if previewing=="":previewing=stat
+ previewed.append(stat)
  row.bg.color=FogPalette.RUST
  row.label.add_theme_color_override("font_color",FogPalette.BONE_BRIGHT)
  row.value.text="%s → %s"%[RunData.stat_text(stat,from),RunData.stat_text(stat,to)]
  row.value.add_theme_color_override("font_color",FogPalette.BONE_BRIGHT)
  row.value.add_theme_font_override("font",_number_font(true))
 func clear_preview() -> void:
- if previewing=="" or not rows.has(previewing):previewing="";return
- var row: Dictionary=rows[previewing];previewing=""
- row.bg.color=Color(0,0,0,0)
- row.value.text=str(row.text)
- row.label.add_theme_color_override("font_color",FogPalette.ASH if row.changed else FogPalette.ASH_DIM)
- row.value.add_theme_color_override("font_color",FogPalette.BONE_BRIGHT if row.changed else FogPalette.ASH_DIM)
- row.value.add_theme_font_override("font",_number_font(row.changed))
+ for stat in previewed:
+  if not rows.has(stat):continue
+  var row: Dictionary=rows[stat]
+  row.bg.color=Color(0,0,0,0)
+  row.value.text=str(row.text)
+  row.label.add_theme_color_override("font_color",FogPalette.ASH if row.changed else FogPalette.ASH_DIM)
+  row.value.add_theme_color_override("font_color",FogPalette.BONE_BRIGHT if row.changed else FogPalette.ASH_DIM)
+  row.value.add_theme_font_override("font",_number_font(row.changed))
+ previewed.clear();previewing=""
+func has_preview() -> bool:return not previewed.is_empty()
 # Text currently shown for a stat (tests compare this to the real change).
 func shown_text(stat: String) -> String:return str(rows[stat].value.text) if rows.has(stat) else ""

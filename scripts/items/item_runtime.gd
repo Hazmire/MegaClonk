@@ -117,6 +117,18 @@ func mods_extra(m: Dictionary) -> void:
   m["armor"]=float(m.get("armor",0.0))+minf(ItemStats.v("witch_hunters_brand","armor_cap")*k,ItemStats.v("witch_hunters_brand","armor_each")*float(burning_count)*k)
   m["lifesteal"]=minf(ItemStats.v("witch_hunters_brand","lifesteal_cap")*k,ItemStats.v("witch_hunters_brand","lifesteal_each")*float(burning_count)*k)
  if float(buffs.get("leaden",0.0))>0.0:m["damage"]=float(m.damage)+ItemStats.v("leaden_heart","damage")*n("leaden_heart")
+# Stat change one more stack of `id` would cause ({stat: delta}), worked out by the same compute_mods() the game uses; nothing is
+# changed. Shops and rewards show it on the Stats panel before the player commits.
+func preview(id: String) -> Dictionary:
+ var had=stacks.has(id);var old=int(stacks.get(id,0));stacks[id]=old+1
+ var want=compute_mods()
+ if had:stacks[id]=old
+ else:stacks.erase(id)
+ var out={}
+ for k in want:
+  var d=float(want[k])-float(applied.get(k,0.0))
+  if absf(d)>0.0000001:out[k]=d
+ return out
 # Folds the difference between the wanted and the already-applied modifiers into game.stats.
 func refresh_stats() -> void:
  if game==null or not "stats" in game:return

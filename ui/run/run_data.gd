@@ -128,3 +128,31 @@ static func level_card(game: Node,choice: Dictionary) -> Dictionary:
  var stat=str(Catalog.TOMES[tome][0]);var now=float(game.stats[stat]);var later=now+Economy.scaled(float(Catalog.TOMES[tome][1]),tier_name,stat=="count")
  card.rows=[{"label":label(stat),"from":BuildStats.value(stat,shown(stat,now)),"to":BuildStats.value(stat,shown(stat,later))}];card.preview={"stat":stat,"from":now,"to":later}
  return card
+# --- shop -----------------------------------------------------------------------------------------------------------
+# Stat rows an item would change when bought: [{stat, from, to}] from the live stats, using the item runtime's own maths.
+static func item_preview(game: Node,id: String) -> Array:
+ var out=[]
+ if not Catalog.item_exists(id) or Catalog.item_consumable(id):return out
+ var deltas: Dictionary=game.irt.preview(id)
+ for key in ["max_health","regen","armor","evasion","lifesteal","thorns","damage","crit","crit_damage","haste","count","size","projectile_speed","duration","knockback","speed","air_jumps","jump","pickup","xp","gold_gain","luck","difficulty"]:
+  if deltas.has(key) and game.stats.has(key):out.append({"stat":key,"from":float(game.stats[key]),"to":float(game.stats[key])+float(deltas[key])})
+ for key in deltas:
+  if not out.any(func(c):return c.stat==key) and game.stats.has(key):out.append({"stat":key,"from":float(game.stats[key]),"to":float(game.stats[key])+float(deltas[key])})
+ return out
+# One Dictionary per seller offer, in the seller's order: items and Socket Gems. Prices come from ShopSystem / Economy only.
+# {kind item|gem, id, code, name, tier, tier_name, kind_label, description, owned, owned_after, price, gold, need, sold, closed, affordable, available, preview}
+static func shop_rows(game: Node,object: Dictionary) -> Array:
+ var rows=[];var used=bool(object.get("used",false));var sold_list=object.get("sold",[])
+ for offer in object.get("offers",[]):
+  if not offer is String:
+   var code=int(offer)
+   if not GemRewards.is_gem_offer(code):continue
+   var element=GemRewards.offer_element(code);var price=ShopSystem.gem_price(game.stage);var owned=game.gems.count(element);var sold=GemRewards.has_code(sold_list,code)
+   rows.append({"kind":"gem","id":element,"code":code,"name":Elements.display_name(element)+" Socket Gem","tier":FogPalette.Rarity.RARE,"tier_name":"Rare","kind_label":"Socket gem","description":Elements.summary(element)+" Socket it at an Imbue Station.","owned":owned,"owned_after":owned+1,"price":price,"sold":sold,"closed":used and not sold,"available":true,"preview":[]})
+   continue
+  var id=str(offer);var tier=tier_index(Catalog.item_tier(id));var price=ShopSystem.price(id,game.stage);var stacks=game.item_stacks(id)
+  var maxed=Catalog.item_unique(id) and stacks>0
+  rows.append({"kind":"item","id":id,"code":0,"name":str(Catalog.ITEMS[id].name) if Catalog.ITEMS.has(id) else id,"tier":tier,"tier_name":str(FogPalette.RARITY[tier]["name"]),"kind_label":"Item","description":Catalog.item_description(id,false),"owned":stacks,"owned_after":stacks if maxed else stacks+1,"price":price,"sold":id in sold_list,"closed":used and not (id in sold_list),"available":id in game.available_items(),"preview":item_preview(game,id)})
+ for r in rows:
+  r["gold"]=int(game.gold);r["need"]=maxi(0,int(r.price)-int(game.gold));r["affordable"]=int(game.gold)>=int(r.price)
+ return rows
