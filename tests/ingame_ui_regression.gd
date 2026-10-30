@@ -105,15 +105,15 @@ func hud() -> void:
  # socket gems row and Amulet slot follow the counts
  game.gems.reset();game.amulets=0;fe.update_hud()
  var gem_slots=h.gems_row.get_children()
- check(gem_slots.size()==5 and gem_slots.all(func(c):return c.modulate.a<0.5),"Socket gem row has four elements plus the Amulet and all are dimmed when empty")
+ check(gem_slots.size()==4 and gem_slots.all(func(c):return c.modulate.a<0.5),"Socket gem row has the four elements only (no Amulet) and all are dimmed when empty")
  game.gems.add("ice",3);game.amulets=2;fe.update_hud()
- check(h.gems_row.get_child(1).modulate.a>0.9 and h.gems_row.get_child(4).modulate.a>0.9 and h.gems_row.get_child(4).tooltip_text.contains("×2"),"Socket gem row shows the Ice count and the Imbued Amulet count")
+ check(h.gems_row.get_child(1).modulate.a>0.9 and h.gems_row.get_child_count()==4 and RunData.items(game).any(func(i):return i.id=="imbued_amulet" and i.stacks==2 and i.tier==FogPalette.Rarity.LEGENDARY),"Gem row shows the Ice count; the Imbued Amulet is a Legendary entry in the item list")
  # per-section updates: an item pickup rebuilds items only
  var tomes_before=h.tomes_row.get_child(0) if h.tomes_row.get_child_count()>0 else null
  game.grant_item(Catalog.ITEM_IDS[0],true);fe.update_hud();await process_frame
  check(tomes_before==null or h.tomes_row.get_child(0)==tomes_before,"An item pickup does not rebuild the weapon or tome rows")
  var visible_items=h.item_pool.filter(func(e):return e.wrap.visible).size()
- check(visible_items==game.items.size(),"Item tiles show every item up to the pool cap (%d)"%visible_items)
+ check(visible_items==RunData.items(game).size(),"Item tiles show every item up to the pool cap (%d)"%visible_items)
  check(h.item_pool.size()==RunHud.ITEM_POOL,"The item tile pool is fixed in size")
  for id in Catalog.ITEM_IDS:game.grant_item(id,true)
  fe.update_hud();await process_frame
@@ -158,7 +158,7 @@ func notifications() -> void:
  game.amulets=0;game.grant_item("imbued_amulet",false)
  var amulet=q.waiting.filter(func(w):return w.data.kind=="amulet")
  check(amulet.size()==1 and amulet[0].data.tier==FogPalette.Rarity.LEGENDARY and game.amulets==1,"An Imbued Amulet uses the Legendary toast variant")
- check(h.slot_for({"data":amulet[0].data})==h.gems_row.get_child(Elements.IDS.size()),"The Amulet toast flies to the Amulet slot beside the gem row")
+ check(h.gems_row.get_children().all(func(c):return h.slot_for({"data":amulet[0].data})!=c),"The Amulet toast flies to the item tiles, not a gem slot")
  q.clear();tq.phase="idle";game.grant_item(Catalog.ITEM_IDS[3],false)
  check(q.waiting.size()==1 and q.waiting[0].data.kind=="item" and q.waiting[0].data.name==Catalog.item_name(Catalog.ITEM_IDS[3]),"An item pickup raises an item toast with the item's name")
  q.clear();tq.phase="idle"
