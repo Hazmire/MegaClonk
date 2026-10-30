@@ -157,46 +157,10 @@ static func shop(ui: FrontEnd,object: Dictionary) -> void:
  ui.clear()
  var screen=RunShop.new();screen.object=object;MenuScreen.set_audio_owner(game);screen.bind(ui);ui.menu.add_child(screen)
 static func reward(ui: FrontEnd,id: String) -> void:
- var game=ui.game;game.mode="reward";var center=layout(ui,"Treasure discovered")
- var tier=Rarity.definition(Catalog.item_tier(id))
- var effect=celebration(ui,tier.color,float(tier.celebration))
- var rarity=ui.heading("OPENING…",center,25);rarity.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;rarity.add_theme_color_override("font_color",tier.color)
- var name=ui.heading("Unsealing treasure",center,28);name.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
- var slot=CenterContainer.new();slot.custom_minimum_size.y=235;center.add_child(slot)
- var tile=icon(ui,slot,"items",str(id),"",tier.color,160);tile.name="ChestReveal";tile.set_meta("final_id",id)
- var image: TextureRect
- for child in descendants(tile):
-  if child is TextureRect:image=child;break
- image.name="CyclingIcon"
- var description=ui.paragraph(Catalog.item_description(id,false),center,520);description.tooltip_text=Catalog.item_description(id);description.mouse_filter=Control.MOUSE_FILTER_PASS;description.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;description.hide()
- ui.text("Kept in your bag: spend it at an Imbue Station" if Catalog.item_consumable(id) else "Reward added to your build",center,14)
- var gem_found=game.chest_gem;game.chest_gem=""
- var gem_line=ui.text("",center,16);gem_line.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;gem_line.hide()
- if gem_found!="":gem_line.text="◆ %s socket gem found!"%Elements.display_name(gem_found);gem_line.add_theme_color_override("font_color",Elements.color(gem_found))
- var controls=HBoxContainer.new();center.add_child(controls)
- var proceed=button(ui,controls,"CONTINUE",game.resume,Color("276292"));proceed.disabled=true
- var generation=ui.reward_generation
- var reveal=func():
-  if ui.reward_generation!=generation or not is_instance_valid(tile) or tile.get_meta("revealed",false):return
-  game.audio.stop_event("reward.chest.tick");tile.set_meta("revealed",true);image.texture=UIAssets.icon("items",str(id));rarity.text=tier.name.to_upper();name.text=Catalog.item_name(id);description.show();gem_line.visible=gem_found!="";proceed.disabled=false;proceed.grab_focus();ui.chest_skip=Callable()
-  if tier.id=="legendary" and effect.has_meta("global_celebration"):effect.get_meta("global_celebration").burst(tier.color,2.0*game.settings.visual_intensity)
-  effect.burst(tier.color,float(tier.celebration)*game.settings.visual_intensity);game.play_sound("applause",0.25+0.75*float(tier.celebration));game.play_sound("reward.chest.legendary" if tier.id=="legendary" else "reward.chest.reveal",0.4+0.6*float(tier.celebration))
- var eligible=game.available_items()
- if eligible.is_empty():eligible=[id]
- tile.tooltip_text=Catalog.item_description(id)
- var tween=tile.create_tween();ui.reward_tweens.append(tween);tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
- tween.tween_method(func(progress):
-  if ui.reward_generation!=generation or not is_instance_valid(image):return
-  var tick=int(70*(1-pow(1-progress,2.6)))
-  if tile.get_meta("tick",-1)!=tick:
-   tile.set_meta("tick",tick);image.texture=UIAssets.icon("items",str(eligible[posmod(tick+3,eligible.size())]));game.play_sound("reward.chest.tick",0.35)
-  ,0.0,1.0,3.5)
- tween.tween_callback(reveal)
- ui.chest_skip=func():
-  if tween.is_valid():tween.kill()
-  reveal.call()
- var skip=button(ui,controls,"SKIP REVEAL",ui.chest_skip);skip.grab_focus()
- if game.settings.reduced:ui.chest_skip.call()
+ var game=ui.game
+ if game.mode=="run":ui.capture_pause_frame()
+ game.mode="reward";ui.clear()
+ var screen=RunChest.new();screen.item_id=id;MenuScreen.set_audio_owner(game);screen.bind(ui);ui.menu.add_child(screen)
 
 static func shrine(ui: FrontEnd,reward: Dictionary) -> void:
  var game=ui.game

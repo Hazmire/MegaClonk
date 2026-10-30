@@ -122,33 +122,24 @@ func run():
   check(nodes(again).any(func(n):return n is Label and n.text=="Reward claimed") and again.claim_button==null,"Claimed quest stays visible as a DONE memo without a claim button")
  game.progress.data=profile;game.progress.save();game.shrine_reward_queue.clear();game.active_shrine_reward={};game.frontend.in_run=true
  game.active_reward="";game.reward_queue.clear();game.mode="run";var items=game.items.duplicate();var reward_rng=str(game.rng.state);game.frontend.reward("salted_pork");await process_frame
- var icon: TextureRect;var reveal: Control;var celebration: RewardCelebration
- for n in nodes(game.frontend.menu):
-  if n.name=="CyclingIcon":icon=n
-  if n.name=="ChestReveal":reveal=n
-  if n is RewardCelebration and n.confetti:celebration=n
- check(icon!=null and reveal!=null and not nodes(game.frontend.menu).any(func(n):return n is HBoxContainer and n.get_child_count()>20),"Chest uses a single cycling icon with no roulette strip")
- var first_texture=icon.texture;await create_timer(0.15).timeout
- check(icon.texture!=first_texture or int(reveal.get_meta("tick",0))>0,"Central chest icon cycles over time")
- var count=celebration.particles.size();celebration._process(15)
- check(celebration.is_processing() and celebration.particles.size()==count and celebration.age>15,"Confetti remains active after fifteen seconds with a bounded particle pool")
+ var screen: RunChest
+ for n in game.frontend.menu.get_children():
+  if n is RunChest:screen=n
+ check(screen!=null and screen.phase=="closed" and screen.reel.strip.size()==RunData.STRIP_LENGTH and screen.reel.strip[screen.reel.win_index].id=="salted_pork","Chest opens closed with a reel whose winning card is the item already decided")
+ screen.open_chest();await create_timer(1.2).timeout
+ check(screen.phase=="spinning" and screen.reel.progress>0.0,"The reel turns after the chest opens")
  game.frontend.chest_skip.call();await process_frame
- check(reveal.get_meta("revealed",false) and icon.texture==UIAssets.icon("items","salted_pork") and game.items==items,"Fast-forward reveals the predetermined item without awarding again")
- check(str(game.rng.state)==reward_rng,"Icon animation and skipping leave the gameplay reward RNG unchanged")
+ var reveal=screen.card
+ check(screen.is_revealed() and reveal!=null and reveal.data.id=="salted_pork" and game.items==items,"Fast-forward reveals the predetermined item without awarding again")
+ check(str(game.rng.state)==reward_rng,"Reel animation and skipping leave the gameplay reward RNG unchanged")
  check(game.sound_bank.has("applause") and game.sound_bank.has("legendary"),"Original applause and distinctive Legendary audio are loaded")
  game.resume();await create_timer(0.5).timeout
  game.frontend.reward("salted_pork");await process_frame
- var natural: Control
- for n in nodes(game.frontend.menu):
-  if n.name=="ChestReveal":natural=n
- await create_timer(0.2).timeout;var early=int(natural.get_meta("tick",0))
- await create_timer(0.2).timeout;var fast_ticks=int(natural.get_meta("tick",0))-early
- await create_timer(2.7).timeout;var late=int(natural.get_meta("tick",0))
- await create_timer(0.2).timeout;var slow_ticks=int(natural.get_meta("tick",0))-late
- check(fast_ticks>slow_ticks,"Icon cycling decelerates toward the final reveal")
- await create_timer(0.4).timeout
- check(natural.get_meta("revealed",false) and game.items==items,"Natural reveal stops on the fixed reward after 3.5 seconds without another grant")
+ for n in game.frontend.menu.get_children():
+  if n is RunChest:screen=n
+ screen.open_chest();screen.phase_time=0.0;await create_timer(RunChest.OPEN_TIME+RunChest.SPIN_TIME+RunChest.LAND_TIME+0.5).timeout
+ check(screen.is_revealed() and game.items==items,"Natural reveal lands after the full reel without another grant")
  game.resume();await create_timer(0.5).timeout
- check(not is_instance_valid(celebration),"Closing reward smoothly fades and frees celebration")
+ check(not game.frontend.menu.get_children().any(func(n):return n is RunChest and is_instance_valid(n) and not n.is_queued_for_deletion()),"Closing the chest frees its screen")
  game.queue_free();await process_frame;await process_frame
  print("REWARDS AI V9: %d checks, %d failures"%[checks,failures.size()]);quit(0 if failures.is_empty() else 1)

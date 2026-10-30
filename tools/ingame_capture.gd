@@ -123,6 +123,20 @@ func run() -> void:
   game.active_shrine_reward={};game.resume();game.mode="run"
   var gd={"choices":ShrineRewards.generate(game.stats,rng,true),"golden":true};game.active_shrine_reward=gd;RewardScreens.shrine(game.frontend,gd);await create_timer(0.7).timeout;await snap("shrine-golden",0.3)
   game.active_shrine_reward={};game.resume()
+ if want("chest"):
+  late_build();game.mode="run";game.chests_opened=14;game.gold=113;game.frontend.update_hud()
+  var legend=""
+  for id in Catalog.ITEM_IDS:
+   if Catalog.item_tier(id)=="legendary" and not Catalog.item_consumable(id):legend=id;break
+  game.frontend.reward(legend);var cs=game.frontend.menu.get_child(0);await create_timer(0.8).timeout;await snap("chest-closed",0.2)
+  cs.open_chest();await create_timer(0.35).timeout;await snap("chest-opening",0.0)
+  await create_timer(1.8).timeout;await snap("chest-reel-fast",0.0)
+  await create_timer(3.4).timeout;await snap("chest-reel-slow",0.0)
+  await create_timer(1.4).timeout;await snap("chest-landed",0.0)
+  await create_timer(1.6).timeout;await snap("chest-reveal-legendary",0.0)
+  game.resume();game.mode="run";game.chests_opened=14
+  game.frontend.reward("whetstone");cs=game.frontend.menu.get_child(0);cs.skip();await create_timer(1.6).timeout;await snap("chest-reveal-common",0.0)
+  game.resume()
  quit(0)
 func wait_phase(tq: RunToasts,phase: String,extra: float) -> void:
  var guard=0

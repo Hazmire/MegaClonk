@@ -17,15 +17,15 @@ func run():
  if not require(JSON.stringify(game.active_shrine_reward)==fixed,"Compiled shrine choices rerolled on load"):return
  var choice=game.active_shrine_reward.choices[0];var before=float(game.stats[choice.stat]);ShrineRewards.select(game,0)
  if not require(is_equal_approx(float(game.stats[choice.stat])-before,float(choice.amount)),"Compiled stat card applied a different amount"):return
- game.frontend.reward("hourglass_damned");await process_frame;var image: TextureRect;var effect: RewardCelebration
+ game.frontend.reward("hourglass_damned");await process_frame;var reel: ChestReel
  for node in RewardScreens.descendants(game.frontend.menu):
-  if node.name=="CyclingIcon":image=node
-  if node is RewardCelebration and node.confetti:effect=node
- if not require(image!=null and effect!=null,"Compiled cycling icon/continuous celebration missing"):return
- effect._process(15)
- if not require(effect.is_processing() and effect.particles.size()>0,"Compiled confetti ended before screen closed"):return
- var count=game.item_total();game.frontend.chest_skip.call()
- if not require(image.texture==UIAssets.icon("items","hourglass_damned") and game.item_total()==count,"Compiled reveal mismatched or granted another item"):return
+  if node is ChestReel:reel=node
+ if not require(reel!=null and reel.strip.size()==RunData.STRIP_LENGTH and reel.strip[reel.win_index].id=="hourglass_damned","Compiled chest reel missing or not landing on the held item"):return
+ var count=game.item_total();game.frontend.chest_skip.call();await process_frame
+ var shown=false
+ for node in RewardScreens.descendants(game.frontend.menu):
+  if node.name=="ChestReveal" and node.data.id=="hourglass_damned":shown=true
+ if not require(shown and game.item_total()==count,"Compiled reveal mismatched or granted another item"):return
  game.resume();game.tomes={"Wind":2};game.update_hud();await process_frame
  var hud_rows=game.frontend.run_hud.build_box
  if not require(hud_rows.get_child(1).get_children().filter(func(n):return n.tooltip_text!="").size()==game.weapons.size() and hud_rows.get_child(3).get_children().filter(func(n):return n.tooltip_text!="").size()==game.tomes.size(),"Compiled HUD contains empty or missing equipment"):return

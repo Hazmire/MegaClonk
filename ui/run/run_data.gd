@@ -164,3 +164,30 @@ static func shrine_cards(reward: Dictionary) -> Array:
   var c: Dictionary=reward.choices[i];var tier=tier_index(str(c.rarity))
   out.append({"index":i,"stat":str(c.stat),"stat_name":ShrineRewards.stat_name(str(c.stat)),"bonus":ShrineRewards.bonus_text(c),"description":str(c.description),"tier":tier,"tier_name":str(FogPalette.RARITY[tier]["name"]),"before":float(c.before),"after":float(c.after)})
  return out
+# --- treasure chest -------------------------------------------------------------------------------------------------
+# What the chest screen shows. The item is already decided and granted by RewardDrops before the screen opens; this only builds the
+# look of the reel around it: STRIP_LENGTH cards drawn from the items the run can still find (tier weights match the drop weights, for
+# looks only), with the real item on WIN_INDEX. A private RNG seeded from the item and the chest count keeps game.rng untouched and
+# makes the same chest always spin the same way.
+const STRIP_LENGTH=40
+const WIN_INDEX=34
+const REEL_WEIGHTS=[50,28,15,5,2]
+static func chest_data(game: Node,id: String) -> Dictionary:
+ var rng=RandomNumberGenerator.new();rng.seed=hash(id)+int(game.chests_opened)*7919
+ var pool={}
+ for item in game.available_items():
+  var t=tier_index(Catalog.item_tier(str(item)));if not pool.has(t):pool[t]=[]
+  pool[t].append(str(item))
+ var strip=[]
+ for i in STRIP_LENGTH:
+  var pick=id
+  if i!=WIN_INDEX and not pool.is_empty():
+   var total=0;for t in pool:total+=REEL_WEIGHTS[t]
+   var roll=rng.randi_range(1,total);var tier=pool.keys()[0]
+   for t in pool:
+    roll-=REEL_WEIGHTS[t];if roll<=0:tier=t;break
+   pick=str(pool[tier][rng.randi()%pool[tier].size()])
+  strip.append({"id":pick,"name":Catalog.item_name(pick),"tier":tier_index(Catalog.item_tier(pick))})
+ var tier=tier_index(Catalog.item_tier(id))
+ return {"id":id,"name":Catalog.item_name(id),"tier":tier,"tier_name":str(FogPalette.RARITY[tier]["name"]),"description":Catalog.item_description(id,false),"consumable":Catalog.item_consumable(id),
+  "strip":strip,"win_index":WIN_INDEX,"land_offset":rng.randf_range(-60.0,60.0),"chest_number":int(game.chests_opened),"stack":int(game.item_stacks(id))}

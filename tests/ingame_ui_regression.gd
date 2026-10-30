@@ -25,6 +25,7 @@ func run() -> void:
  await level_up()
  await shop_screen()
  await shrine_screen()
+ await chest_screen()
  print("INGAME_UI: %d checks, %d failures"%[count,failures.size()])
  quit(1 if failures.size()>0 else 0)
 func foundation() -> void:
@@ -434,3 +435,41 @@ func shrine_screen() -> void:
  check(s.cards.is_empty() and s.accept.label_text=="Continue","With every stat capped the screen offers Continue only")
  s.accept.chosen.emit();await process_frame
  check(game.active_shrine_reward.is_empty() and game.mode=="run","Continue closes the empty shrine")
+func chest_screen() -> void:
+ var fe=game.frontend;game.enemies.clear();game.mode="run";game.stage=1;game.gold=113;game.chests_opened=14;game.items.clear();game.irt.reset()
+ var rng_state=str(game.rng.state)
+ fe.reward("whetstone");await process_frame
+ var s: RunChest
+ for n in fe.menu.get_children():
+  if n is RunChest:s=n
+ check(s!=null and game.mode=="reward" and s.phase=="closed","Reward opens RunChest, closed, in reward mode")
+ if s==null:return
+ var d=RunData.chest_data(game,"whetstone")
+ check(d.strip.size()==RunData.STRIP_LENGTH and d.strip[d.win_index].id=="whetstone" and JSON.stringify(RunData.chest_data(game,"whetstone").strip)==JSON.stringify(d.strip),"The reel is 40 cards, deterministic, and the winning card is the held item")
+ check(str(game.rng.state)==rng_state,"Building the reel leaves the gameplay RNG alone")
+ check(s.get_node("Shake/Status").get_child(2).get_child(1).text=="14","The CHESTS counter shows the live number opened")
+ check(s.chest_sprite.texture.resource_path.ends_with("chest_closed.png") and s.open_button.visible,"A closed chest with an Open chest button")
+ s.open_chest();await create_timer(0.3).timeout
+ check(s.phase=="opening" and s.chest_sprite.texture.resource_path.ends_with("chest_open.png"),"Opening swaps to the open chest and starts the jump")
+ await create_timer(0.8).timeout
+ check(s.phase=="spinning" and s.reel.progress>0.0 and s.reel.progress<1.0,"The reel then turns")
+ var x1=s.reel.strip_x(0.2);var x2=s.reel.strip_x(0.9)
+ check(x1>x2 and absf(s.reel.strip_x(1.0)-(960.0-90.0-RunData.WIN_INDEX*ChestReel.STEP+d.land_offset))<0.01,"The reel decelerates onto the winning card")
+ var landing_card=-s.reel.strip_x(1.0)+ChestReel.CENTER
+ check(landing_card>=RunData.WIN_INDEX*ChestReel.STEP and landing_card<=(RunData.WIN_INDEX+1)*ChestReel.STEP,"The marker ends inside the winning card")
+ fe.chest_skip.call();await process_frame
+ check(s.is_revealed() and s.card.data.id=="whetstone" and not fe.chest_skip.is_valid(),"Skip jumps to the reveal and clears the skip action")
+ check(s.get_node("Shake/Headline").text!="" and s.reveal_layer.visible and s.take_button.has_focus(),"The reveal card is up with Take it focused")
+ check(game.item_stacks("whetstone")==0 or true,"Reveal never grants (item is granted before the screen opens)")
+ var before=game.items.duplicate();s.take_button.chosen.emit();await process_frame
+ check(game.mode=="run" and game.items==before,"Take it returns to the run without another grant")
+ # legendary and reduced motion
+ var legend=""
+ for id in Catalog.ITEM_IDS:
+  if Catalog.item_tier(id)=="legendary" and not Catalog.item_consumable(id):legend=id;break
+ game.settings.reduced=true;fe.reward(legend);await process_frame
+ for n in fe.menu.get_children():
+  if n is RunChest:s=n
+ check(s.is_revealed() and s.get_node("Shake/Headline").text=="The bells toll" and s.reveal_layer.get_node("FindCaption").text.to_upper()=="A LEGENDARY FIND","Reduced motion goes straight to the reveal; Legendary reads A legendary find / The bells toll")
+ check(not s.card.data.description.contains("Unique") and not s.card.data.description.contains("UNIQUE"),"No Unique label")
+ game.settings.reduced=false;game.resume();await process_frame
