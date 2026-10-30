@@ -447,7 +447,7 @@ func chest_screen() -> void:
  var d=RunData.chest_data(game,"whetstone")
  check(d.strip.size()==RunData.STRIP_LENGTH and d.strip[d.win_index].id=="whetstone" and JSON.stringify(RunData.chest_data(game,"whetstone").strip)==JSON.stringify(d.strip),"The reel is 40 cards, deterministic, and the winning card is the held item")
  check(str(game.rng.state)==rng_state,"Building the reel leaves the gameplay RNG alone")
- check(s.get_node("Shake/Status").get_child(2).get_child(1).text=="14","The CHESTS counter shows the live number opened")
+ check(s.shake_root.get_node("Status").get_child(2).get_child(1).text=="14","The CHESTS counter shows the live number opened")
  check(s.chest_sprite.texture.resource_path.ends_with("chest_closed.png") and s.open_button.visible,"A closed chest with an Open chest button")
  s.open_chest();await create_timer(0.3).timeout
  check(s.phase=="opening" and s.chest_sprite.texture.resource_path.ends_with("chest_open.png"),"Opening swaps to the open chest and starts the jump")
@@ -459,8 +459,7 @@ func chest_screen() -> void:
  check(landing_card>=RunData.WIN_INDEX*ChestReel.STEP and landing_card<=(RunData.WIN_INDEX+1)*ChestReel.STEP,"The marker ends inside the winning card")
  fe.chest_skip.call();await process_frame
  check(s.is_revealed() and s.card.data.id=="whetstone" and not fe.chest_skip.is_valid(),"Skip jumps to the reveal and clears the skip action")
- check(s.get_node("Shake/Headline").text!="" and s.reveal_layer.visible and s.take_button.has_focus(),"The reveal card is up with Take it focused")
- check(game.item_stacks("whetstone")==0 or true,"Reveal never grants (item is granted before the screen opens)")
+ check(s.headline.text!="" and s.reveal_layer.visible and s.take_button.has_focus(),"The reveal card is up with Take it focused")
  var before=game.items.duplicate();s.take_button.chosen.emit();await process_frame
  check(game.mode=="run" and game.items==before,"Take it returns to the run without another grant")
  # legendary and reduced motion
@@ -470,6 +469,6 @@ func chest_screen() -> void:
  game.settings.reduced=true;fe.reward(legend);await process_frame
  for n in fe.menu.get_children():
   if n is RunChest:s=n
- check(s.is_revealed() and s.get_node("Shake/Headline").text=="The bells toll" and s.reveal_layer.get_node("FindCaption").text.to_upper()=="A LEGENDARY FIND","Reduced motion goes straight to the reveal; Legendary reads A legendary find / The bells toll")
+ check(s.is_revealed() and s.headline.text=="The bells toll" and s.reveal_layer.get_node("FindCaption").text.to_upper()=="A LEGENDARY FIND","Reduced motion goes straight to the reveal; Legendary reads A legendary find / The bells toll")
  check(not s.card.data.description.contains("Unique") and not s.card.data.description.contains("UNIQUE"),"No Unique label")
  game.settings.reduced=false;game.resume();await process_frame

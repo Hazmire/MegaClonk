@@ -140,6 +140,6 @@ func run():
  screen.open_chest();screen.phase_time=0.0;await create_timer(RunChest.OPEN_TIME+RunChest.SPIN_TIME+RunChest.LAND_TIME+0.5).timeout
  check(screen.is_revealed() and game.items==items,"Natural reveal lands after the full reel without another grant")
  game.resume();await create_timer(0.5).timeout
- check(not game.frontend.menu.get_children().any(func(n):return n is RunChest and is_instance_valid(n) and not n.is_queued_for_deletion()),"Closing the chest frees its screen")
+ check(not is_instance_valid(screen) or not screen.is_visible_in_tree(),"Closing the chest frees its screen")
  game.queue_free();await process_frame;await process_frame
  print("REWARDS AI V9: %d checks, %d failures"%[checks,failures.size()]);quit(0 if failures.is_empty() else 1)

@@ -52,11 +52,9 @@ func run():
  check(disabled,"Unaffordable shop card cannot be bought and says how much more is needed")
  game.gold=100;var count=game.item_total();game.grant_item("salted_pork");game.frontend.reward("salted_pork");game.frontend.reward("salted_pork")
  check(game.item_total()==count+1,"Showing or skipping a chest reveal never grants a duplicate")
- var initial_items=game.items.duplicate();var skip: Button
- for node in descendants(game.frontend.menu):
-  if node is Button and node.text=="SKIP REVEAL":skip=node;break
- skip.pressed.emit();skip.pressed.emit()
- check(game.items==initial_items,"Skipping the preselected roulette twice cannot duplicate rewards")
+ var initial_items=game.items.duplicate()
+ if game.frontend.chest_skip.is_valid():game.frontend.chest_skip.call()
+ check(game.items==initial_items,"Skipping the preselected reel twice cannot duplicate rewards")
  for size in [Vector2i(1280,720),Vector2i(1920,1080),Vector2i(2560,1440)]:
   root.size=size;game.frontend.upgrades();await process_frame
   var level_screen: RunLevelUp

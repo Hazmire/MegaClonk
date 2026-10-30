@@ -76,7 +76,7 @@ func build_reel() -> void:
  wait_label=MenuStyle.label("THE REEL IS TURNING…     SPACE / ENTER HOLD  SKIP",MenuStyle.sans(600,0.24,15),15,Color("8D9188"),0,shake_root);wait_label.name="Waiting";wait_label.position=Vector2(0,880);wait_label.size=Vector2(1920,24);wait_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;wait_label.hide()
 func build_open() -> void:
  open_group=Control.new();open_group.name="OpenGroup";open_group.position=Vector2(0,560);open_group.size=Vector2(1920,140);open_group.mouse_filter=Control.MOUSE_FILTER_IGNORE;shake_root.add_child(open_group)
- open_button=MenuStyle.spawn("menu_item") as MenuItem;open_button.name="OpenChest";open_button.setup("Open chest",44,84).make_primary("ENTER",72,84);open_button.size=Vector2(440,84);open_button.position=Vector2(740,0);open_button.indent=44.0;open_group.add_child(open_button)
+ open_button=MenuStyle.spawn("menu_item") as MenuItem;open_button.name="OpenChest";open_button.setup("Open chest",44,44).make_primary("ENTER",72,44);open_button.size=Vector2(440,84);open_button.position=Vector2(740,0);open_button.indent=44.0;open_group.add_child(open_button)
  open_button.chosen.connect(open_chest)
  var line=MenuStyle.label("One item inside. Rarer items are rarer for a reason.",MenuStyle.sans(400,0,17),17,Color("8D9188"),0,open_group);line.position=Vector2(0,100);line.size=Vector2(1920,24);line.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 func open_chest() -> void:
@@ -90,11 +90,11 @@ func skip() -> void:
 func go_reveal() -> void:
  if phase=="reveal":return
  phase="reveal";phase_time=0.0;frontend.chest_skip=Callable();game.audio.stop_event("reward.chest.tick")
- open_group.hide();wait_label.hide();chest_sprite.texture=load("res://assets/icons/misc/chest_open.png");chest_sprite.rotation=0.0;chest_sprite.position.y=236.0;chest_sprite.scale=Vector2.ONE
+ open_group.hide();wait_label.hide();headline.hide();shake_root.get_node("Caption").hide();chest_sprite.texture=load("res://assets/icons/misc/chest_open.png");chest_sprite.rotation=0.0;chest_sprite.position.y=236.0;chest_sprite.scale=Vector2.ONE
  beam.modulate.a=1.0;reel_panel.modulate.a=1.0;reel.set_progress(1.0,true)
  var t=int(info.tier);var tint: Color=FogPalette.RARITY[t]["color"];var legendary=t==FogPalette.Rarity.LEGENDARY
  headline.text="The bells toll" if legendary else "The chest gives up its secret"
- var dim=ColorRect.new();dim.color=Color(0.02,0.024,0.02,0.78);dim.size=Vector2(1920,1080);dim.mouse_filter=Control.MOUSE_FILTER_IGNORE;reveal_layer.add_child(dim)
+ var dim=ColorRect.new();dim.color=Color(0.02,0.024,0.02,0.9);dim.size=Vector2(1920,1080);dim.mouse_filter=Control.MOUSE_FILTER_IGNORE;reveal_layer.add_child(dim)
  var power=float(Rarity.definition(Catalog.item_tier(item_id)).celebration)*game.settings.visual_intensity
  fx=ChestFx.new().setup(Color("F2C14E") if legendary else tint,clampf(0.35+power*0.65,0.0,1.0) if not game.settings.reduced else 0.0,t>=FogPalette.Rarity.EPIC);fx.name="Fx";reveal_layer.add_child(fx)
  var cap=SmallCapsLabel.new().setup(("A legendary find" if legendary else ("A %s find"%str(info.tier_name).to_lower() if t>=FogPalette.Rarity.RARE else "You found")),22 if legendary else 18,Color("F2C14E") if legendary else FogPalette.BONE,800,0.6 if legendary else 0.4)
@@ -106,7 +106,7 @@ func go_reveal() -> void:
   var stamp=SmallCapsLabel.new().setup("★ %s"%str(info.tier_name).to_upper(),22,Color("1C1A15"),800,0.24);stamp.name="Stamp";stamp.position=Vector2(1180,246);stamp.rotation=deg_to_rad(-8.0)
   var sb=StyleBoxFlat.new();sb.bg_color=Color("F2C14E") if legendary else tint;sb.content_margin_left=16;sb.content_margin_right=16;sb.content_margin_top=10;sb.content_margin_bottom=7;sb.shadow_color=Color("050505");sb.shadow_offset=Vector2(4,4)
   stamp.add_theme_stylebox_override("normal",sb);reveal_layer.add_child(stamp)
- take_button=MenuStyle.spawn("menu_item") as MenuItem;take_button.name="TakeIt";take_button.setup("Take it",36,72).make_primary("ENTER",72,72);take_button.size=Vector2(300,72);take_button.position=Vector2(810,740);take_button.indent=32.0
+ take_button=MenuStyle.spawn("menu_item") as MenuItem;take_button.name="TakeIt";take_button.setup("Take it",36,36).make_primary("ENTER",72,36);take_button.size=Vector2(300,72);take_button.position=Vector2(810,740);take_button.indent=48.0
  take_button.chosen.connect(func():game.resume());reveal_layer.add_child(take_button)
  flash=ColorRect.new();flash.color=Color("FFEDC2");flash.size=Vector2(1920,1080);flash.mouse_filter=Control.MOUSE_FILTER_IGNORE;reveal_layer.add_child(flash)
  reveal_layer.show();set_hints([["ENTER","Take it","A"]]);focus_later(take_button)
