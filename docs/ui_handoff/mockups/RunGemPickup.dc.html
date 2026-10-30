@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Megaclonk — Gem pickup</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English&amp;family=Overpass:wght@400;600;800&amp;family=Special+Elite&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+@keyframes gpRing{0%{transform:translate(-50%,-50%) scale(.2);opacity:1}100%{transform:translate(-50%,-50%) scale(2.6);opacity:0}}
+@keyframes gpPop{0%{transform:translate(-50%,-50%) translateY(20px) scale(.2)}55%{transform:translate(-50%,-50%) translateY(-36px) scale(1.25)}100%{transform:translate(-50%,-50%) translateY(-26px) scale(1)}}
+@keyframes gpSpark{0%{transform:translate(0,0);opacity:1}100%{transform:translate(var(--sx),var(--sy));opacity:0}}
+@keyframes gpFly{0%{transform:translate(-50%,-50%) translate(0,-26px) scale(1)}100%{transform:translate(-50%,-50%) translate(var(--dx),var(--dy)) scale(1.6)}}
+@keyframes gpEdge{0%{opacity:0}20%{opacity:1}100%{opacity:0}}
+@keyframes gpToastIn{0%{transform:translateX(-50%) scaleX(.04) scaleY(.5);opacity:0}45%{transform:translateX(-50%) scaleX(1.03) scaleY(1);opacity:1}100%{transform:translateX(-50%) scaleX(1) scaleY(1);opacity:1}}
+@keyframes gpText{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:translateY(0)}}
+@keyframes gpShine{0%{transform:translateX(-140px) skewX(-20deg)}100%{transform:translateX(760px) skewX(-20deg)}}
+@keyframes gpSocket{0%,100%{box-shadow:0 0 0 2px var(--c),0 0 16px 2px var(--g)}50%{box-shadow:0 0 0 2px var(--c),0 0 30px 8px var(--g)}}
+@keyframes gpSpin{0%{transform:scaleX(1)}25%{transform:scaleX(.15)}50%{transform:scaleX(1)}100%{transform:scaleX(1)}}
+@keyframes gpStamp{0%{transform:rotate(-4deg) scale(2.2);opacity:0}60%{transform:rotate(-4deg) scale(.92);opacity:1}100%{transform:rotate(-4deg) scale(1);opacity:1}}
+@keyframes gpToastOut{0%{transform:translateX(-50%) scale(1);opacity:1}100%{transform:translateX(-50%) scale(.6);opacity:0}}
+@keyframes gpCollect{0%{transform:translate(-50%,-50%) translate(0,0) scale(1.6)}100%{transform:translate(-50%,-50%) translate(var(--dx),var(--dy)) scale(.7)}}
+@keyframes gpSlot{0%{transform:scale(1)}35%{transform:scale(1.35)}100%{transform:scale(1)}}
+@keyframes gpPlus{0%{transform:translateY(4px);opacity:0}20%{transform:translateY(-6px);opacity:1}100%{transform:translateY(-22px);opacity:0}}
+</style>
+</helmet>
+<div style="width: 1920px; height: 1080px; position: relative; overflow: hidden; font-family: 'Overpass', sans-serif; color: #E8E2D0; background: #1F2620">
+<div style="position: absolute; left: 0; top: 0"><dc-import name="RunHUD" hint-size="1920px,1080px"></dc-import></div>
+
+<!-- GEM TRAY (new HUD row, under ITEMS) -->
+<section aria-label="Socket gems" style="position: absolute; left: 40px; top: 318px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.28em; color: #C9CEC8; text-shadow: 2px 2px 0 #050505">SOCKET GEMS</span>
+<div style="display: flex; gap: 8px">
+<sc-for list="{{tray}}" as="t" hint-placeholder-count="4">
+<div style="position: relative; width: 44px; height: 44px; box-sizing: border-box; background: rgba(14,15,14,0.85); border: 1px solid {{t.border}}; display: flex; align-items: center; justify-content: center; animation: {{t.anim}}">
+<svg aria-hidden="true" width="28" height="28" viewBox="0 0 16 16" shape-rendering="crispEdges" style="opacity: {{t.opacity}}"><path d="M8 0 16 8 8 16 0 8z" fill="#0E0F0E"></path><path d="M8 1.5 14.5 8 8 14.5 1.5 8z" fill="{{t.mid}}"></path><path d="M8 1.5 14.5 8 8 8z" fill="{{t.dark}}"></path><path d="M8 1.5 1.5 8 8 8z" fill="{{t.light}}"></path><path d="M8 8 14.5 8 8 14.5z" fill="{{t.deep}}"></path><rect x="5" y="5" width="2" height="2" fill="#FFFFFF" opacity="0.85"></rect></svg>
+<span style="position: absolute; right: -5px; bottom: -6px; min-width: 16px; text-align: center; font-weight: 800; font-size: 11px; padding: 1px 3px 0; background: {{t.badgeBg}}; color: {{t.badgeColor}}">{{t.count}}</span>
+<sc-if value="{{t.plus}}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="position: absolute; left: 50%; top: -18px; margin-left: -12px; width: 24px; text-align: center; font-weight: 800; font-size: 15px; color: {{t.light}}; text-shadow: 2px 2px 0 #050505; animation: gpPlus 0.9s ease-out both">+1</span></sc-if>
+</div>
+</sc-for>
+</div>
+</section>
+
+<!-- EDGE TINT -->
+<sc-if value="{{show.edge}}" hint-placeholder-val="{{ false }}"><div aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 160px 30px {{g.glow}}; animation: gpEdge 1.1s ease-out both"></div></sc-if>
+
+<!-- WORLD BURST at the pickup -->
+<sc-if value="{{show.burst}}" hint-placeholder-val="{{ false }}">
+<div aria-hidden="true" style="position: absolute; left: 1100px; top: 640px; width: 120px; height: 120px; border-radius: 50%; border: 6px solid {{g.mid}}; box-sizing: border-box; animation: gpRing 0.6s ease-out both"></div>
+<div aria-hidden="true" style="position: absolute; left: 1100px; top: 640px; width: 120px; height: 120px; border-radius: 50%; border: 3px solid {{g.light}}; box-sizing: border-box; animation: gpRing 0.7s ease-out 0.1s both"></div>
+<sc-for list="{{sparks}}" as="s" hint-placeholder-count="10">
+<span aria-hidden="true" style="position: absolute; left: 1096px; top: 610px; width: {{s.z}}px; height: {{s.z}}px; background: {{s.c}}; --sx: {{s.x}}px; --sy: {{s.y}}px; animation: gpSpark 0.6s ease-out {{s.d}}s both"></span>
+</sc-for>
+<div aria-hidden="true" style="position: absolute; left: 1100px; top: 640px; width: 56px; height: 56px; filter: drop-shadow(0 0 10px {{g.glow}}); animation: gpPop 0.5s cubic-bezier(.2,1.4,.4,1) both">
+<svg width="56" height="56" viewBox="0 0 16 16" shape-rendering="crispEdges"><path d="M8 0 16 8 8 16 0 8z" fill="#0E0F0E"></path><path d="M8 1.5 14.5 8 8 14.5 1.5 8z" fill="{{g.mid}}"></path><path d="M8 1.5 14.5 8 8 8z" fill="{{g.dark}}"></path><path d="M8 1.5 1.5 8 8 8z" fill="{{g.light}}"></path><path d="M8 8 14.5 8 8 14.5z" fill="{{g.deep}}"></path><rect x="5" y="5" width="2" height="2" fill="#FFFFFF" opacity="0.9"></rect></svg>
+</div>
+</sc-if>
+
+<!-- GEM FLIES TO THE TOAST -->
+<sc-if value="{{show.fly}}" hint-placeholder-val="{{ false }}">
+<div aria-hidden="true" style="position: absolute; left: 1100px; top: 640px; width: 56px; height: 56px; --dx: -402px; --dy: -400px; filter: drop-shadow(0 0 12px {{g.glow}}); animation: gpFly 0.42s cubic-bezier(.5,0,.3,1) both">
+<svg width="56" height="56" viewBox="0 0 16 16" shape-rendering="crispEdges"><path d="M8 0 16 8 8 16 0 8z" fill="#0E0F0E"></path><path d="M8 1.5 14.5 8 8 14.5 1.5 8z" fill="{{g.mid}}"></path><path d="M8 1.5 14.5 8 8 8z" fill="{{g.dark}}"></path><path d="M8 1.5 1.5 8 8 8z" fill="{{g.light}}"></path><path d="M8 8 14.5 8 8 14.5z" fill="{{g.deep}}"></path></svg>
+</div>
+</sc-if>
+
+<!-- TOAST -->
+<sc-if value="{{show.toast}}" hint-placeholder-val="{{ true }}">
+<div role="status" aria-live="polite" style="position: absolute; left: 960px; top: 172px; width: 660px; height: 136px; box-sizing: border-box; overflow: hidden; background: rgba(14,15,14,0.94); border: 1px solid {{g.mid}}; box-shadow: 0 0 30px 4px {{g.glowSoft}}, 6px 8px 0 rgba(0,0,0,0.5); transform-origin: 50% 50%; animation: {{toastAnim}}">
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 0; height: 4px; background: {{g.mid}}"></div>
+<div aria-hidden="true" style="position: absolute; top: 0; bottom: 0; left: 0; width: 70px; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.14), rgba(255,255,255,0)); animation: gpShine 0.9s ease-out 0.3s both"></div>
+<div style="position: absolute; left: 22px; top: 22px; width: 92px; height: 92px; display: flex; align-items: center; justify-content: center; background: #0E0F0E; --c: {{g.mid}}; --g: {{g.glow}}; animation: gpSocket 1.4s ease-in-out infinite">
+<div style="width: 72px; height: 72px; animation: gpSpin 2.8s ease-in-out 0.2s infinite">
+<svg aria-hidden="true" width="72" height="72" viewBox="0 0 16 16" shape-rendering="crispEdges"><path d="M8 0 16 8 8 16 0 8z" fill="#0E0F0E"></path><path d="M8 1.5 14.5 8 8 14.5 1.5 8z" fill="{{g.mid}}"></path><path d="M8 1.5 14.5 8 8 8z" fill="{{g.dark}}"></path><path d="M8 1.5 1.5 8 8 8z" fill="{{g.light}}"></path><path d="M8 8 14.5 8 8 14.5z" fill="{{g.deep}}"></path><rect x="5" y="5" width="2" height="2" fill="#FFFFFF" opacity="0.9"></rect></svg>
+</div>
+</div>
+<div style="position: absolute; left: 138px; right: 24px; top: 18px; display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; align-items: center; gap: 10px; animation: gpText 0.3s ease-out 0.15s both">
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.28em; color: {{g.light}}">SOCKET GEM FOUND</span>
+<div aria-hidden="true" style="flex: 1; height: 1px; background: #2E302C"></div>
+<sc-if value="{{notNew}}" hint-placeholder-val="{{ false }}"><span style="font-weight: 800; font-size: 12px; letter-spacing: 0.18em; color: #A9ADA4">OWNED ×{{owned}}</span></sc-if><sc-if value="{{isNew}}" hint-placeholder-val="{{ true }}"><span style="font-weight: 800; font-size: 12px; letter-spacing: 0.22em; color: #1C1A15; background: #F2C14E; padding: 4px 8px 2px; box-shadow: 0 0 0 2px #3A2600, 2px 2px 0 #050505; animation: gpStamp 0.4s ease-out 0.55s both">NEW ELEMENT</span></sc-if>
+</div>
+<span style="font-family: 'IM Fell English', serif; font-size: 38px; line-height: 1; color: #F4EFE2; text-shadow: 3px 3px 0 #050505; animation: gpText 0.3s ease-out 0.22s both">{{g.name}}</span>
+<span style="font-size: 15px; line-height: 1.35; color: #B9BAB1; animation: gpText 0.3s ease-out 0.3s both">{{g.desc}}</span>
+<span style="font-weight: 600; font-size: 12px; letter-spacing: 0.16em; color: #6E726A; animation: gpText 0.3s ease-out 0.38s both">SOCKET IT AT AN IMBUE STATION  ·  <b style="color: #D9D4C4">TAB</b> VIEW BUILD</span>
+</div>
+
+</div>
+</sc-if>
+
+<!-- GEM FLIES INTO THE TRAY -->
+<sc-if value="{{show.collect}}" hint-placeholder-val="{{ false }}">
+<div aria-hidden="true" style="position: absolute; left: 698px; top: 240px; width: 56px; height: 56px; --dx: {{collectDx}}px; --dy: {{collectDy}}px; filter: drop-shadow(0 0 10px {{g.glow}}); animation: gpCollect 0.45s cubic-bezier(.5,0,.4,1) both">
+<svg width="56" height="56" viewBox="0 0 16 16" shape-rendering="crispEdges"><path d="M8 0 16 8 8 16 0 8z" fill="#0E0F0E"></path><path d="M8 1.5 14.5 8 8 14.5 1.5 8z" fill="{{g.mid}}"></path><path d="M8 1.5 14.5 8 8 8z" fill="{{g.dark}}"></path><path d="M8 1.5 1.5 8 8 8z" fill="{{g.light}}"></path><path d="M8 8 14.5 8 8 14.5z" fill="{{g.deep}}"></path></svg>
+</div>
+</sc-if>
+
+<!-- MOCKUP CONTROLS (not part of the game) -->
+<div style="position: absolute; left: 50%; bottom: 96px; transform: translateX(-50%); display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: rgba(14,15,14,0.85); border: 1px dashed #5A5D56">
+<span style="font-weight: 800; font-size: 11px; letter-spacing: 0.2em; color: #8D9188; padding: 0 6px">MOCKUP · PICK UP</span>
+<sc-for list="{{buttons}}" as="b" hint-placeholder-count="4">
+<button type="button" onClick="{{b.go}}" style="display: flex; align-items: center; gap: 6px; height: 32px; padding: 0 10px; border: 1px solid {{b.c}}; background: transparent; cursor: pointer; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 11px; letter-spacing: 0.16em; color: {{b.c}}">{{b.label}}</button>
+</sc-for>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"autoplay":{"editor":"boolean","default":true},"$preview":{"width":1920,"height":1080}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { ph: 'idle', el: 3, counts: { corrosive: 1, ice: 0, fire: 0, electricity: 0 }, last: '', wasNew: false };
+    this.timers = [];
+  }
+  componentDidMount() { var self = this; if (this.props.autoplay !== false) this.gpLater(function () { self.gpPlay(null); }, 900); }
+  componentWillUnmount() { this.gpClear(); }
+  gpClear() { (this.timers || []).forEach(function (t) { clearTimeout(t); }); this.timers = []; }
+  gpLater(fn, ms) { if (!this.timers) this.timers = []; this.timers.push(setTimeout(fn, ms)); }
+  gpPlay(forceEl) {
+    var self = this;
+    var ORDER = ['fire', 'ice', 'electricity', 'corrosive'];
+    this.gpClear();
+    var el = forceEl !== null && forceEl !== undefined ? forceEl : (this.state.el + 1) % 4;
+    var key = ORDER[el];
+    var wasNew = (this.state.counts[key] || 0) === 0;
+    this.setState({ ph: 'burst', el: el, wasNew: wasNew, last: '' });
+    this.gpLater(function () { self.setState({ ph: 'fly' }); }, 480);
+    this.gpLater(function () { self.setState({ ph: 'toast' }); }, 900);
+    this.gpLater(function () { self.setState({ ph: 'out' }); }, 3500);
+    this.gpLater(function () {
+      var c = Object.assign({}, self.state.counts); c[key] = (c[key] || 0) + 1;
+      self.setState({ ph: 'collect', counts: c });
+    }, 3760);
+    this.gpLater(function () { self.setState({ ph: 'idle', last: key }); }, 4220);
+    if (this.props.autoplay !== false) this.gpLater(function () { self.gpPlay(null); }, 6200);
+  }
+  renderVals() {
+    var self = this, st = this.state;
+    var ORDER = ['fire', 'ice', 'electricity', 'corrosive'];
+    var GEM = {
+      fire: { name: 'Fire Socket Gem', light: '#FFE08A', mid: '#D9763E', dark: '#A8481E', deep: '#6E2410', glow: 'rgba(217,118,62,0.75)', glowSoft: 'rgba(217,118,62,0.35)', desc: 'Hits Ignite enemies. Crits on burning enemies hit harder.' },
+      ice: { name: 'Ice Socket Gem', light: '#DDF1FF', mid: '#7FB8CF', dark: '#4F8BA6', deep: '#2E5568', glow: 'rgba(127,184,207,0.75)', glowSoft: 'rgba(127,184,207,0.35)', desc: 'Hits Chill and slow enemies. Frozen enemies Shatter, hurting those nearby.' },
+      electricity: { name: 'Electricity Socket Gem', light: '#E6D7FF', mid: '#A487DA', dark: '#7458B0', deep: '#43307A', glow: 'rgba(164,135,218,0.75)', glowSoft: 'rgba(164,135,218,0.35)', desc: 'Hits Shock and stun enemies. Repeat stuns on the same enemy get shorter.' },
+      corrosive: { name: 'Corrosive Socket Gem', light: '#B9F2A0', mid: '#79B35F', dark: '#4E8A36', deep: '#2F5A22', glow: 'rgba(121,179,95,0.75)', glowSoft: 'rgba(121,179,95,0.35)', desc: 'Hits Poison: 3% of current HP per second for 10 s. Hits refresh it.' }
+    };
+    var TRAY = ['corrosive', 'ice', 'fire', 'electricity'];
+    var key = ORDER[st.el];
+    var g = GEM[key];
+    var ph = st.ph;
+    var slot = TRAY.indexOf(key);
+    var slotCx = 40 + 22 + slot * 52, slotCy = 318 + 24 + 22;
+    var tray = TRAY.map(function (k) {
+      var G = GEM[k], n = st.counts[k] || 0, has = n > 0;
+      var bump = (ph === 'collect' && k === key) || (ph === 'idle' && st.last === k);
+      return { light: G.light, mid: G.mid, dark: G.dark, deep: G.deep, count: String(n),
+        border: has ? G.mid : '#3A3D38', opacity: has ? '1' : '0.28',
+        badgeBg: has ? G.mid : '#2A2C28', badgeColor: has ? '#0E0F0E' : '#6E726A',
+        anim: bump ? 'gpSlot 0.45s ease-out both' : 'none', plus: ph === 'idle' && st.last === k };
+    });
+    var sparks = [];
+    for (var i = 0; i < 10; i++) {
+      var a = (i / 10) * Math.PI * 2;
+      sparks.push({ x: Math.round(Math.cos(a) * (70 + (i % 3) * 22)), y: Math.round(Math.sin(a) * (60 + (i % 2) * 26) - 20), z: 6 + (i % 3) * 2, c: i % 2 ? g.light : g.mid, d: ((i % 4) * 0.03).toFixed(2) });
+    }
+    var buttons = ORDER.map(function (k, i) { return { label: GEM[k].name.replace(' Socket Gem', '').toUpperCase(), c: GEM[k].mid, go: function () { self.gpPlay(i); } }; });
+    return {
+      g: g, tray: tray, sparks: sparks, buttons: buttons,
+      owned: String((st.counts[key] || 0) + (ph === 'collect' || ph === 'idle' ? 0 : 1)),
+      isNew: st.wasNew, notNew: !st.wasNew,
+      show: { burst: ph === 'burst', fly: ph === 'fly', toast: ph === 'toast' || ph === 'out', collect: ph === 'collect', edge: ph === 'burst' || ph === 'fly' },
+      toastAnim: ph === 'out' ? 'gpToastOut 0.26s ease-in both' : 'gpToastIn 0.32s cubic-bezier(.2,1.3,.4,1) both',
+      collectDx: slotCx - 698, collectDy: slotCy - 240
+    };
+  }
+}
+</script>
+</body>
+</html>

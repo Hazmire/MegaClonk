@@ -149,17 +149,17 @@ class Component extends DCLogic {
       legendary: { label: '★ LEGENDARY ★', color: '#C9861A', on: '#1C1A15', bg: '#2A2010', name: '#FFF1C2' }
     };
     var P = {
-      knot: { name: "Pilgrim's Sandals", src: '../icons_4x/items/pilgrims_sandals.png', r: 'common' },
-      petal: { name: 'Whetstone', src: '../icons_4x/items/whetstone.png', r: 'common' },
-      bow: { name: 'Bow', src: '../icons_4x/weapons/bow.png', r: 'common' },
-      aura: { name: 'Aura', src: '../icons_4x/weapons/aura.png', r: 'uncommon' },
-      xp: { name: 'XP Tome', src: '../icons_4x/tomes/xp.png', r: 'uncommon' },
-      crit: { name: 'Crit Tome', src: '../icons_4x/tomes/crit.png', r: 'uncommon' },
-      gem: { name: 'Corrosive Socket Gem', src: '../icons_4x/misc/gem_corrosive.png', r: 'rare' },
-      staff: { name: 'Lightning Staff', src: '../icons_4x/weapons/lightning.png', r: 'rare' },
-      life: { name: 'Lifesteal Tome', src: '../icons_4x/tomes/lifesteal.png', r: 'epic' },
-      goldt: { name: 'Gold Tome', src: '../icons_4x/tomes/gold.png', r: 'epic' },
-      bell: { name: 'Hourglass of the Damned', src: '../icons_4x/items/hourglass_damned.png', r: 'legendary' }
+      knot: { name: "Pilgrim's Sandals", src: B + '../icons_4x/items/pilgrims_sandals.png', r: 'common' },
+      petal: { name: 'Whetstone', src: B + '../icons_4x/items/whetstone.png', r: 'common' },
+      bow: { name: 'Bow', src: B + '../icons_4x/weapons/bow.png', r: 'common' },
+      aura: { name: 'Aura', src: B + '../icons_4x/weapons/aura.png', r: 'uncommon' },
+      xp: { name: 'XP Tome', src: B + '../icons_4x/tomes/xp.png', r: 'uncommon' },
+      crit: { name: 'Crit Tome', src: B + '../icons_4x/tomes/crit.png', r: 'uncommon' },
+      gem: { name: 'Corrosive Socket Gem', src: B + '../icons_4x/misc/gem_corrosive.png', r: 'rare' },
+      staff: { name: 'Lightning Staff', src: B + '../icons_4x/weapons/lightning.png', r: 'rare' },
+      life: { name: 'Lifesteal Tome', src: B + '../icons_4x/tomes/lifesteal.png', r: 'epic' },
+      goldt: { name: 'Gold Tome', src: B + '../icons_4x/tomes/gold.png', r: 'epic' },
+      bell: { name: 'Hourglass of the Damned', src: B + '../icons_4x/items/hourglass_damned.png', r: 'legendary' }
     };
     var seq = ['knot','petal','aura','bow','gem','knot','xp','petal','crit','bow','knot','staff','petal','aura','knot','life','bow','petal','xp','knot','gem','petal','bow','crit','knot','aura','petal','staff','knot','xp','bow','gem','petal','goldt','bell','life','knot','petal','aura','bow'];
     var WIN = 34;
@@ -186,7 +186,7 @@ class Component extends DCLogic {
     return {
       chests: ph === 'closed' ? 15 : 14,
       headline: ph === 'closed' ? 'A chest, half-buried in the mud' : (ph === 'reveal' ? 'The bells toll' : 'Something stirs inside…'),
-      chestSrc: ph === 'closed' ? '../icons_4x/misc/chest_closed.png' : '../icons_4x/misc/chest_open.png',
+      chestSrc: ph === 'closed' ? B + '../icons_4x/misc/chest_closed.png' : B + '../icons_4x/misc/chest_open.png',
       chestAlt: ph === 'closed' ? 'Closed treasure chest' : 'Open treasure chest',
       chestAnim: ph === 'closed' ? 'mcIdle 2.4s ease-in-out infinite' : (ph === 'opening' ? 'mcJump 0.6s ease-out both' : 'none'),
       beamOpacity: ph === 'closed' ? 0 : 1,

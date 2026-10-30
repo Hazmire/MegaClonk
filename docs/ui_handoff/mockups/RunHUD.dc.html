@@ -163,9 +163,9 @@ class Component extends DCLogic {
     var xp = Math.max(0, Math.min(18, Number(this.props.xp ?? 14)));
     var low = hp <= 30;
     var items = [
-      { name: 'Whetstone', src: '../icons_4x/items/whetstone.png', color: '#8F876F', count: '×2', stack: true },
-      { name: "Pilgrim's Sandals", src: '../icons_4x/items/pilgrims_sandals.png', color: '#8F876F', count: '', stack: false },
-      { name: 'Tinder Pouch', src: '../icons_4x/items/tinder_pouch.png', color: '#33772F', count: '', stack: false }
+      { name: 'Whetstone', src: B + '../icons_4x/items/whetstone.png', color: '#8F876F', count: '×2', stack: true },
+      { name: "Pilgrim's Sandals", src: B + '../icons_4x/items/pilgrims_sandals.png', color: '#8F876F', count: '', stack: false },
+      { name: 'Tinder Pouch', src: B + '../icons_4x/items/tinder_pouch.png', color: '#33772F', count: '', stack: false }
     ];
     var marks = [];
     var chests = [[218,8],[240,8],[262,8],[14,62],[262,78],[150,110],[176,118],[32,160],[132,160],[160,196],[40,232],[62,240],[150,236]];
