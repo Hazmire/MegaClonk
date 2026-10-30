@@ -83,7 +83,7 @@ cp assets/grimdark/knight/texture_source.txt builds/windows/KNIGHT_TEXTURE_CREDI
 cp docs/RETRO_AUDIO.md docs/DARK_FEEDBACK.md builds/windows/
 cp docs/audio/CURATION.json builds/windows/CURATED_AUDIO_MANIFEST.json
 cp assets/audio/sfx/ATTRIBUTION.txt builds/windows/PIXEL_COMBAT_ATTRIBUTION.txt
-cp assets/audio/music/CREDITS.txt builds/windows/MUSIC_CREDITS.txt
+cp docs/audio_handoff/README.md builds/windows/MUSIC_CREDITS.txt
 cp docs/ART_RESET.md docs/ART_RESET_ASSET_AUDIT.md docs/ART_RESET_PERFORMANCE.md builds/windows/
 cp assets/art_reset/status/StatusFX/license.txt builds/windows/STATUSFX_CC0_LICENSE.txt
 cp docs/REWARDS_AI_V9.md builds/windows/

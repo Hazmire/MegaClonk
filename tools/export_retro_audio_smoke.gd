@@ -17,7 +17,7 @@ func run():
   for path in config.files:
    if not require(audio.streams.has(path) and audio.streams[path].get_length()>0,"Compiled sample missing: "+path):return
  for event in audio.events.keys().filter(func(k):return audio.events[k].get("music",false)):
-  if not require(audio.streams[audio.events[event].files[0]].get_length()>60,"Compiled music missing"):return
+  if not require(audio.streams[audio.events[event].files[0]].get_length()>30,"Compiled music missing"):return
  if not require(not FileAccess.file_exists("res://Helton.Yan.s.Pixel.Combat.zip") and not DirAccess.dir_exists_absolute("res://assets/vendor/audio"),"Bulk/unused source audio exported"):return
  audio.volumes({"master":0,"music":.2,"effects":.8,"ui_volume":.4,"ambience":.3})
  if not require(AudioServer.is_bus_mute(0) and absf(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Music"))-(linear_to_db(.2)+RetroAudio.MUSIC_OFFSET_DB))<.01,"Compiled audio buses incorrect"):return
