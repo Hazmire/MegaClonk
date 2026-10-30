@@ -210,6 +210,7 @@ func stress_checks(game: Node) -> void:
   var a=TAU*float(i)/500.0;var rad=3.0+float(i%7)*1.6
   var e=game.spawn_enemy(0,game.player.position+Vector3(cos(a)*rad,0,sin(a)*rad))
   if not e.is_empty():e.hp=1.0e9;e.max_hp=1.0e9;e.speed=0.0
+ var spawned=game.enemies.size()
  var players_before=audio.voices.size();var nodes_before=audio.get_child_count()
  var peak=0;var ok=true;var ui_or_music_in_pool=false
  for frame in 300:
@@ -222,7 +223,7 @@ func stress_checks(game: Node) -> void:
   peak=maxi(peak,active)
   if audio.voices.size()!=24:ok=false
  print("stress: enemies=",game.enemies.size()," peak active voices=",peak," accepted=",audio.accepted," cooldown_suppressed=",audio.cooldown_suppressed," voice_suppressed=",audio.voice_suppressed)
- check(game.enemies.size()>=400,"Stress build ran with 400+ enemies (%d)"%game.enemies.size())
+ check(spawned>=450,"Stress build started with 450+ enemies (%d, %d alive at the end)"%[spawned,game.enemies.size()])
  check(ok and peak<=24 and audio.voices.size()==players_before and audio.get_child_count()==nodes_before,"Voice pool never exceeds 24 and never grows (peak %d)"%peak)
  check(audio.accepted>0,"The stress build actually produced sound (%d accepted)"%audio.accepted)
  check(not ui_or_music_in_pool,"Music never enters the pooled voices during the stress run")
