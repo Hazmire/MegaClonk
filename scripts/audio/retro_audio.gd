@@ -61,15 +61,19 @@ func volumes(settings: Dictionary):
  for pair in [["Master","master"],["Music","music"],["SFX","effects"],["UI","ui_volume"],["Ambience","ambience"]]:
   var value=clampf(float(settings.get(pair[1],0.7)),0,1);var index=AudioServer.get_bus_index(pair[0])
   AudioServer.set_bus_mute(index,value<=0);AudioServer.set_bus_volume_db(index,linear_to_db(maxf(value,0.0001)))
-func choose(event: String) -> String:
+func choose(event: String,variant: int=-1) -> String:
  if not events.has(event) or events[event].files.is_empty():return ""
- var files=events[event].files;var index=rng.randi_range(0,files.size()-1)
+ var files=events[event].files
+ # Ordered sets (shrine ticks, gold streak, arrow pierce, sword burst) play by index, never at random.
+ if variant>=0 and events[event].get("ordered",false):last_samples[event]=mini(variant,files.size()-1);return files[mini(variant,files.size()-1)]
+ var index=rng.randi_range(0,files.size()-1)
  if files.size()>1 and index==int(last_samples.get(event,-1)):index=(index+1+rng.randi_range(0,files.size()-2))%files.size()
  last_samples[event]=index;return files[index]
-func emit(event: String,position_value: Vector3=Vector3.INF,gain: float=1.0,pitch_multiplier: float=1.0) -> bool:
+func emit(event: String,position_value: Vector3=Vector3.INF,gain: float=1.0,pitch_multiplier: float=1.0,variant: int=-1,loop_key: String="") -> bool:
  if event.begins_with("enemy.") or not events.has(event):return false
  var config=events[event]
- if clock-float(last_events.get(event,-100))<float(config.get("cooldown",0.05)):cooldown_suppressed+=1;return false
+ if config.get("music",false):return false # music has its own players
+ if loop_key=="" and clock-float(last_events.get(event,-100))<float(config.get("cooldown",0.05)):cooldown_suppressed+=1;return false
  var priority=int(config.get("priority",1));var spatial=position_value.is_finite();var candidate=-1;var active_event=0
  for i in voices.size():
   var voice=voices[i]
@@ -82,19 +86,43 @@ func emit(event: String,position_value: Vector3=Vector3.INF,gain: float=1.0,pitc
   for i in voices.size():
    var voice=voices[i]
    if spatial!=(voice.player is AudioStreamPlayer3D):continue
+   if voice.player.bus=="UI" and config.get("bus","SFX")!="UI":continue
    if int(voice.priority)<lowest:lowest=int(voice.priority);candidate=i
  if candidate<0:voice_suppressed+=1;last_events[event]=clock;return false
- var path=choose(event)
+ var path=choose(event,variant)
  if path.is_empty():return false
  var stream=streams[path];var voice=voices[candidate];var player=voice.player;player.stop();player.stream=stream;player.bus=config.get("bus","SFX")
  var pitch=float(config.get("pitch",0.04));player.pitch_scale=float(config.get("base_pitch",1.0))*rng.randf_range(1-pitch,1+pitch)*pitch_multiplier
  player.volume_db=float(config.get("gain_db",-12))+linear_to_db(maxf(gain,0.001))+rng.randf_range(-0.7,0.7)
  if spatial:player.global_position=position_value
  if AudioServer.get_driver_name()!="Dummy":player.play()
- voice.event=event;voice.until=clock+maxf(0.02,stream.get_length()/player.pitch_scale);voice.priority=priority
+ voice.event=event;voice.until=clock+maxf(0.02,stream.get_length()/player.pitch_scale);voice.priority=priority;voice["key"]=loop_key
+ if loop_key!="":voice.until=clock+1.0e9
  last_events[event]=clock;accepted+=1;recent.append(event)
  if recent.size()>16:recent.pop_front()
  return true
+# Looping sounds (shrine charge, heartbeat, aura, scythes, element layers) hold one pooled voice under a key.
+func loop_start(key: String,event: String,position_value: Vector3=Vector3.INF,gain: float=1.0,pitch_multiplier: float=1.0) -> bool:
+ if loop_active(key):return true
+ return emit(event,position_value,gain,pitch_multiplier,-1,key)
+func loop_active(key: String) -> bool:
+ for voice in voices:
+  if voice.get("key","")==key and voice.until>clock:return true
+ return false
+func loop_update(key: String,pitch_multiplier: float,position_value: Vector3=Vector3.INF,gain: float=1.0) -> bool:
+ for voice in voices:
+  if voice.get("key","")==key and voice.until>clock:
+   var config=events[voice.event];var player=voice.player
+   player.pitch_scale=float(config.get("base_pitch",1.0))*pitch_multiplier
+   player.volume_db=float(config.get("gain_db",-12))+linear_to_db(maxf(gain,0.001))
+   if position_value.is_finite() and player is AudioStreamPlayer3D:player.global_position=position_value
+   return true
+ return false
+func loop_stop(key: String) -> void:
+ for voice in voices:
+  if voice.get("key","")==key:voice.player.stop();voice.until=0;voice.key=""
+static func element_id(element: String) -> String:
+ return "electric" if element=="electricity" else element
 func stop_event(event: String):
  for voice in voices:
   if voice.event==event:voice.player.stop();voice.until=0

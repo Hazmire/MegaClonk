@@ -28,7 +28,7 @@ func run():
    var sample=audio.choose(event)
    if not sample in files or sample==previous:varied=false
    previous=sample
-  check(files.size()>=3 and varied,"Appropriate variation pool avoids immediate repeats: "+event)
+  check(files.size()>=2 and varied,"Appropriate variation pool avoids immediate repeats: "+event)
  var byte_count=0
  for path in audio.streams:
   check(ResourceLoader.exists(path),"Selected audio dependency loads: "+path.get_file())
@@ -81,7 +81,7 @@ func run():
  var required=["weapon.sword.swing","weapon.sword.hit","weapon.sword.crit","weapon.firestaff.cast","weapon.firestaff.impact","weapon.firestaff.crit","weapon.lightning.strike","weapon.lightning.thunder","weapon.lightning.chain","weapon.lightning.crit","weapon.bow.fire","weapon.bow.hit","weapon.bow.crit","weapon.revolver.fire","weapon.revolver.hit","weapon.revolver.ricochet","weapon.revolver.crit","weapon.aura.hum","weapon.aura.pulse","weapon.aura.crit","weapon.scythes.throw","weapon.scythes.hit","weapon.scythes.catch","weapon.scythes.crit","weapon.shotgun.fire","weapon.shotgun.hit","weapon.shotgun.crit"]
  check(required.all(func(k):return audio.events.has(k)),"Every Weapon Overhaul attack/hit/crit/special event is registered")
  check(audio.events.keys().all(func(k):return not (k.begins_with("weapon.") and (k.contains("chunkers") or k.contains("bone") or k.contains("bananarang") or k.contains("mines") or k.contains("aegis")))),"No audio events remain for removed weapons")
- check(audio.events["weapon.shotgun.fire"].base_pitch<audio.events["weapon.revolver.fire"].base_pitch and audio.events["weapon.shotgun.fire"].gain_db>audio.events["weapon.revolver.fire"].gain_db,"Shotgun report is lower and heavier than revolver")
+ check(audio.events["weapon.shotgun.fire"].files!=audio.events["weapon.revolver.fire"].files and is_equal_approx(float(audio.events["weapon.shotgun.fire"].base_pitch),1.0) and is_equal_approx(float(audio.events["weapon.revolver.fire"].base_pitch),1.0),"Shotgun and revolver use their own finished samples, played at original pitch (no dark pass)")
  check(audio.events["weapon.aura.hum"].max_voices==1 and audio.events["weapon.aura.hum"].cooldown>=1.5,"Aura hum is a single slow voice (no per-frame sound)")
  check(audio.tracks.size()==1 and not audio.menu_track.is_empty(),"Exactly one supplied looping menu and game track configured")
  var track=audio.current_track;var slot=audio.music_slot;audio.music_stage(game.stage)

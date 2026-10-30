@@ -1,68 +1,475 @@
 {
   "events": {
+    "weapon.sword.swing": {
+      "files": [
+        "res://assets/audio/fog/weapons/sword_swing_01.wav",
+        "res://assets/audio/fog/weapons/sword_swing_02.wav",
+        "res://assets/audio/fog/weapons/sword_swing_03.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.09,
+      "priority": 2,
+      "max_voices": 3,
+      "gain_db": -14,
+      "pitch": 0.03,
+      "base_pitch": 1.0,
+      "manifest": "weapon.sword_swing",
+      "ordered": true
+    },
+    "weapon.sword.hit": {
+      "files": [
+        "res://assets/audio/fog/weapons/sword_hit_01.wav",
+        "res://assets/audio/fog/weapons/sword_hit_02.wav",
+        "res://assets/audio/fog/weapons/sword_hit_03.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.07,
+      "priority": 2,
+      "max_voices": 3,
+      "gain_db": -15,
+      "pitch": 0.05,
+      "base_pitch": 1.0,
+      "manifest": "weapon.sword_hit",
+      "ordered": true
+    },
+    "weapon.firestaff.cast": {
+      "files": [
+        "res://assets/audio/fog/weapons/fireball_cast.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.1,
+      "priority": 2,
+      "max_voices": 3,
+      "gain_db": -14,
+      "pitch": 0.03,
+      "base_pitch": 1.0,
+      "manifest": "weapon.fireball_cast"
+    },
+    "weapon.firestaff.impact": {
+      "files": [
+        "res://assets/audio/fog/weapons/fireball_impact_01.wav",
+        "res://assets/audio/fog/weapons/fireball_impact_02.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.08,
+      "priority": 2,
+      "max_voices": 3,
+      "gain_db": -14,
+      "pitch": 0.05,
+      "base_pitch": 1.0,
+      "manifest": "weapon.fireball_impact"
+    },
+    "weapon.lightning.strike": {
+      "files": [
+        "res://assets/audio/fog/weapons/lightning_strike_01.wav",
+        "res://assets/audio/fog/weapons/lightning_strike_02.wav",
+        "res://assets/audio/fog/weapons/lightning_strike_03.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.12,
+      "priority": 3,
+      "max_voices": 3,
+      "gain_db": -13,
+      "pitch": 0.03,
+      "base_pitch": 1.0,
+      "manifest": "weapon.lightning_strike"
+    },
+    "weapon.lightning.chain": {
+      "files": [
+        "res://assets/audio/fog/weapons/lightning_bounce_01.wav",
+        "res://assets/audio/fog/weapons/lightning_bounce_02.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.11,
+      "priority": 1,
+      "max_voices": 2,
+      "gain_db": -18,
+      "pitch": 0.05,
+      "base_pitch": 1.0,
+      "manifest": "weapon.lightning_bounce"
+    },
+    "weapon.bow.fire": {
+      "files": [
+        "res://assets/audio/fog/weapons/bow_shot_01.wav",
+        "res://assets/audio/fog/weapons/bow_shot_02.wav",
+        "res://assets/audio/fog/weapons/bow_shot_03.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.08,
+      "priority": 2,
+      "max_voices": 3,
+      "gain_db": -15,
+      "pitch": 0.03,
+      "base_pitch": 1.0,
+      "manifest": "weapon.bow_shot"
+    },
+    "weapon.bow.hit": {
+      "files": [
+        "res://assets/audio/fog/weapons/arrow_pierce_01.wav",
+        "res://assets/audio/fog/weapons/arrow_pierce_02.wav",
+        "res://assets/audio/fog/weapons/arrow_pierce_03.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.06,
+      "priority": 2,
+      "max_voices": 3,
+      "gain_db": -16,
+      "pitch": 0.05,
+      "base_pitch": 1.0,
+      "manifest": "weapon.arrow_pierce",
+      "ordered": true
+    },
+    "weapon.revolver.fire": {
+      "files": [
+        "res://assets/audio/fog/weapons/revolver_shot_01.wav",
+        "res://assets/audio/fog/weapons/revolver_shot_02.wav",
+        "res://assets/audio/fog/weapons/revolver_shot_03.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.07,
+      "priority": 2,
+      "max_voices": 3,
+      "gain_db": -13,
+      "pitch": 0.03,
+      "base_pitch": 1.0,
+      "manifest": "weapon.revolver_shot"
+    },
+    "weapon.revolver.ricochet": {
+      "files": [
+        "res://assets/audio/fog/weapons/revolver_ricochet_01.wav",
+        "res://assets/audio/fog/weapons/revolver_ricochet_02.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.09,
+      "priority": 2,
+      "max_voices": 2,
+      "gain_db": -16,
+      "pitch": 0.03,
+      "base_pitch": 1.0,
+      "manifest": "weapon.revolver_ricochet"
+    },
+    "weapon.revolver.hit": {
+      "files": [
+        "res://assets/audio/fog/weapons/bullet_hit_01.wav",
+        "res://assets/audio/fog/weapons/bullet_hit_02.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.06,
+      "priority": 2,
+      "max_voices": 3,
+      "gain_db": -16,
+      "pitch": 0.05,
+      "base_pitch": 1.0,
+      "manifest": "weapon.bullet_hit"
+    },
+    "weapon.aura.hum": {
+      "files": [
+        "res://assets/audio/fog/weapons/aura_loop.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 2.0,
+      "priority": 1,
+      "max_voices": 1,
+      "gain_db": -24,
+      "pitch": 0.03,
+      "base_pitch": 1.0,
+      "manifest": "weapon.aura_loop",
+      "loop": true
+    },
+    "weapon.aura.pulse": {
+      "files": [
+        "res://assets/audio/fog/weapons/aura_pulse_01.wav",
+        "res://assets/audio/fog/weapons/aura_pulse_02.wav",
+        "res://assets/audio/fog/weapons/aura_pulse_03.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.25,
+      "priority": 2,
+      "max_voices": 2,
+      "gain_db": -15,
+      "pitch": 0.05,
+      "base_pitch": 1.0,
+      "manifest": "weapon.aura_pulse"
+    },
+    "weapon.scythes.throw": {
+      "files": [
+        "res://assets/audio/fog/weapons/scythe_throw.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.12,
+      "priority": 2,
+      "max_voices": 3,
+      "gain_db": -15,
+      "pitch": 0.03,
+      "base_pitch": 1.0,
+      "manifest": "weapon.scythe_throw"
+    },
+    "weapon.scythes.catch": {
+      "files": [
+        "res://assets/audio/fog/weapons/scythe_catch.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.1,
+      "priority": 1,
+      "max_voices": 2,
+      "gain_db": -17,
+      "pitch": 0.03,
+      "base_pitch": 1.0,
+      "manifest": "weapon.scythe_catch"
+    },
+    "weapon.scythes.hit": {
+      "files": [
+        "res://assets/audio/fog/weapons/scythe_hit_01.wav",
+        "res://assets/audio/fog/weapons/scythe_hit_02.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.07,
+      "priority": 2,
+      "max_voices": 3,
+      "gain_db": -15,
+      "pitch": 0.05,
+      "base_pitch": 1.0,
+      "manifest": "weapon.scythe_hit"
+    },
+    "weapon.shotgun.fire": {
+      "files": [
+        "res://assets/audio/fog/weapons/shotgun_blast_01.wav",
+        "res://assets/audio/fog/weapons/shotgun_blast_02.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.3,
+      "priority": 4,
+      "max_voices": 2,
+      "gain_db": -8,
+      "pitch": 0.03,
+      "base_pitch": 1.0,
+      "manifest": "weapon.shotgun_blast"
+    },
+    "weapon.shotgun.hit": {
+      "files": [
+        "res://assets/audio/fog/weapons/bullet_hit_01.wav",
+        "res://assets/audio/fog/weapons/bullet_hit_02.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.05,
+      "priority": 2,
+      "max_voices": 3,
+      "gain_db": -17,
+      "pitch": 0.05,
+      "base_pitch": 1.0,
+      "manifest": "weapon.bullet_hit"
+    },
+    "ui.hover": {
+      "files": [
+        "res://assets/audio/fog/ui/menu_move_01.wav",
+        "res://assets/audio/fog/ui/menu_move_02.wav",
+        "res://assets/audio/fog/ui/menu_move_03.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.12,
+      "priority": 1,
+      "max_voices": 3,
+      "gain_db": -18,
+      "pitch": 0.02,
+      "base_pitch": 1.0,
+      "manifest": "ui.menu_move"
+    },
+    "ui.confirm": {
+      "files": [
+        "res://assets/audio/fog/ui/menu_select.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.12,
+      "priority": 1,
+      "max_voices": 3,
+      "gain_db": -18,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.menu_select"
+    },
+    "ui.open": {
+      "files": [
+        "res://assets/audio/fog/ui/panel_open.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.12,
+      "priority": 1,
+      "max_voices": 3,
+      "gain_db": -18,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.panel_open"
+    },
+    "ui.close": {
+      "files": [
+        "res://assets/audio/fog/ui/panel_close.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.12,
+      "priority": 1,
+      "max_voices": 3,
+      "gain_db": -18,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.panel_close"
+    },
+    "ui.purchase": {
+      "files": [
+        "res://assets/audio/fog/ui/shop_buy.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.12,
+      "priority": 1,
+      "max_voices": 3,
+      "gain_db": -18,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.shop_buy"
+    },
+    "gem.pickup": {
+      "files": [
+        "res://assets/audio/fog/ui/gem_pickup.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.03,
+      "priority": 1,
+      "max_voices": 3,
+      "gain_db": -17,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.gem_pickup"
+    },
+    "pickup.gold": {
+      "files": [
+        "res://assets/audio/fog/ui/gold_pickup_01.wav",
+        "res://assets/audio/fog/ui/gold_pickup_02.wav",
+        "res://assets/audio/fog/ui/gold_pickup_03.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.06,
+      "priority": 1,
+      "max_voices": 2,
+      "gain_db": -30,
+      "pitch": 0.02,
+      "base_pitch": 1.0,
+      "manifest": "ui.gold_pickup",
+      "ordered": true
+    },
     "player.damage": {
       "files": [
-        "res://assets/audio/sfx/player/damage_00.wav",
-        "res://assets/audio/sfx/player/damage_01.wav",
-        "res://assets/audio/sfx/player/damage_02.wav",
-        "res://assets/audio/sfx/player/damage_03.wav"
+        "res://assets/audio/fog/player/player_hurt_01.wav",
+        "res://assets/audio/fog/player/player_hurt_02.wav",
+        "res://assets/audio/fog/player/player_hurt_03.wav",
+        "res://assets/audio/fog/player/player_hurt_04.wav"
       ],
       "bus": "SFX",
       "cooldown": 0.15,
       "priority": 5,
       "max_voices": 3,
       "gain_db": -11,
-      "pitch": 0.055,
-      "base_pitch": 0.88
-    },
-    "player.footstep.grass": {
-      "files": [
-        "res://assets/audio/sfx/player/footstep/grass_00.wav",
-        "res://assets/audio/sfx/player/footstep/grass_01.wav",
-        "res://assets/audio/sfx/player/footstep/grass_02.wav",
-        "res://assets/audio/sfx/player/footstep/grass_03.wav",
-        "res://assets/audio/sfx/player/footstep/grass_04.wav",
-        "res://assets/audio/sfx/player/footstep/grass_05.wav"
-      ],
-      "bus": "SFX",
-      "cooldown": 0.15,
-      "priority": 1,
-      "max_voices": 3,
-      "gain_db": -18,
-      "pitch": 0.055,
-      "base_pitch": 0.88
-    },
-    "player.footstep.rock": {
-      "files": [
-        "res://assets/audio/sfx/player/footstep/rock_00.wav",
-        "res://assets/audio/sfx/player/footstep/rock_01.wav",
-        "res://assets/audio/sfx/player/footstep/rock_02.wav",
-        "res://assets/audio/sfx/player/footstep/rock_03.wav",
-        "res://assets/audio/sfx/player/footstep/rock_04.wav",
-        "res://assets/audio/sfx/player/footstep/rock_05.wav"
-      ],
-      "bus": "SFX",
-      "cooldown": 0.15,
-      "priority": 1,
-      "max_voices": 3,
-      "gain_db": -18,
-      "pitch": 0.055,
-      "base_pitch": 0.88
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "player.player_hurt"
     },
     "player.slide": {
       "files": [
-        "res://assets/audio/sfx/player/slide_00.wav",
-        "res://assets/audio/sfx/player/slide_01.wav",
-        "res://assets/audio/sfx/player/slide_02.wav",
-        "res://assets/audio/sfx/player/slide_03.wav"
+        "res://assets/audio/fog/movement/slide_01.wav",
+        "res://assets/audio/fog/movement/slide_02.wav"
       ],
       "bus": "SFX",
       "cooldown": 0.15,
       "priority": 1,
       "max_voices": 2,
       "gain_db": -14,
-      "pitch": 0.055,
-      "base_pitch": 0.88
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "movement.slide"
+    },
+    "player.footstep.grass": {
+      "files": [
+        "res://assets/audio/fog/movement/step_grass_01.wav",
+        "res://assets/audio/fog/movement/step_grass_02.wav",
+        "res://assets/audio/fog/movement/step_grass_03.wav",
+        "res://assets/audio/fog/movement/step_grass_04.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.15,
+      "priority": 1,
+      "max_voices": 3,
+      "gain_db": -18,
+      "pitch": 0.04,
+      "base_pitch": 1.0,
+      "manifest": "movement.step_grass"
+    },
+    "player.footstep.rock": {
+      "files": [
+        "res://assets/audio/fog/movement/step_stone_01.wav",
+        "res://assets/audio/fog/movement/step_stone_02.wav",
+        "res://assets/audio/fog/movement/step_stone_03.wav",
+        "res://assets/audio/fog/movement/step_stone_04.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.15,
+      "priority": 1,
+      "max_voices": 3,
+      "gain_db": -18,
+      "pitch": 0.04,
+      "base_pitch": 1.0,
+      "manifest": "movement.step_stone"
+    },
+    "reward.chest.tick": {
+      "files": [
+        "res://assets/audio/fog/ui/reel_tick_01.wav",
+        "res://assets/audio/fog/ui/reel_tick_02.wav",
+        "res://assets/audio/fog/ui/reel_tick_03.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.055,
+      "priority": 4,
+      "max_voices": 3,
+      "gain_db": -11,
+      "pitch": 0.02,
+      "base_pitch": 1.0,
+      "manifest": "ui.reel_tick"
+    },
+    "reward.chest.legendary": {
+      "files": [
+        "res://assets/audio/fog/ui/reveal_legendary.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.15,
+      "priority": 4,
+      "max_voices": 3,
+      "gain_db": -11,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.reveal_legendary"
+    },
+    "reward.chest.reveal": {
+      "files": [
+        "res://assets/audio/fog/ui/reveal_common.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.15,
+      "priority": 4,
+      "max_voices": 3,
+      "gain_db": -11,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.reveal_common"
+    },
+    "imbue.install": {
+      "files": [
+        "res://assets/audio/fog/ui/imbue_fuse.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.2,
+      "priority": 4,
+      "max_voices": 2,
+      "gain_db": -9,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.imbue_fuse"
     },
     "player.land": {
       "files": [
@@ -94,123 +501,11 @@
       "pitch": 0.055,
       "base_pitch": 0.82
     },
-    "ui.hover": {
-      "files": [
-        "res://assets/audio/sfx/ui/hover_00.wav",
-        "res://assets/audio/sfx/ui/hover_01.wav",
-        "res://assets/audio/sfx/ui/hover_02.wav"
-      ],
-      "bus": "UI",
-      "cooldown": 0.12,
-      "priority": 1,
-      "max_voices": 3,
-      "gain_db": -18,
-      "pitch": 0.055,
-      "base_pitch": 0.82
-    },
-    "ui.confirm": {
-      "files": [
-        "res://assets/audio/sfx/ui/confirm_00.wav",
-        "res://assets/audio/sfx/ui/confirm_01.wav",
-        "res://assets/audio/sfx/ui/confirm_02.wav"
-      ],
-      "bus": "UI",
-      "cooldown": 0.12,
-      "priority": 1,
-      "max_voices": 3,
-      "gain_db": -18,
-      "pitch": 0.055,
-      "base_pitch": 0.82
-    },
-    "ui.open": {
-      "files": [
-        "res://assets/audio/sfx/ui/open_00.wav",
-        "res://assets/audio/sfx/ui/open_01.wav",
-        "res://assets/audio/sfx/ui/open_02.wav"
-      ],
-      "bus": "UI",
-      "cooldown": 0.12,
-      "priority": 1,
-      "max_voices": 3,
-      "gain_db": -18,
-      "pitch": 0.055,
-      "base_pitch": 0.82
-    },
-    "ui.close": {
-      "files": [
-        "res://assets/audio/sfx/ui/close_00.wav",
-        "res://assets/audio/sfx/ui/close_01.wav",
-        "res://assets/audio/sfx/ui/close_02.wav"
-      ],
-      "bus": "UI",
-      "cooldown": 0.12,
-      "priority": 1,
-      "max_voices": 3,
-      "gain_db": -18,
-      "pitch": 0.055,
-      "base_pitch": 0.82
-    },
-    "ui.purchase": {
-      "files": [
-        "res://assets/audio/sfx/ui/purchase_00.wav",
-        "res://assets/audio/sfx/ui/purchase_01.wav",
-        "res://assets/audio/sfx/ui/purchase_02.wav"
-      ],
-      "bus": "UI",
-      "cooldown": 0.12,
-      "priority": 1,
-      "max_voices": 3,
-      "gain_db": -18,
-      "pitch": 0.055,
-      "base_pitch": 0.82
-    },
     "reward.level_up": {
       "files": [
         "res://assets/audio/sfx/reward/level_up_00.wav",
         "res://assets/audio/sfx/reward/level_up_01.wav",
         "res://assets/audio/sfx/reward/level_up_02.wav"
-      ],
-      "bus": "UI",
-      "cooldown": 0.15,
-      "priority": 4,
-      "max_voices": 3,
-      "gain_db": -11,
-      "pitch": 0.035,
-      "base_pitch": 0.82
-    },
-    "reward.chest.tick": {
-      "files": [
-        "res://assets/audio/sfx/reward/chest/tick_00.wav",
-        "res://assets/audio/sfx/reward/chest/tick_01.wav",
-        "res://assets/audio/sfx/reward/chest/tick_02.wav"
-      ],
-      "bus": "UI",
-      "cooldown": 0.055,
-      "priority": 4,
-      "max_voices": 3,
-      "gain_db": -11,
-      "pitch": 0.035,
-      "base_pitch": 0.82
-    },
-    "reward.chest.reveal": {
-      "files": [
-        "res://assets/audio/sfx/reward/chest/reveal_00.wav",
-        "res://assets/audio/sfx/reward/chest/reveal_01.wav",
-        "res://assets/audio/sfx/reward/chest/reveal_02.wav"
-      ],
-      "bus": "UI",
-      "cooldown": 0.15,
-      "priority": 4,
-      "max_voices": 3,
-      "gain_db": -11,
-      "pitch": 0.035,
-      "base_pitch": 0.82
-    },
-    "reward.chest.legendary": {
-      "files": [
-        "res://assets/audio/sfx/reward/chest/legendary_00.wav",
-        "res://assets/audio/sfx/reward/chest/legendary_01.wav",
-        "res://assets/audio/sfx/reward/chest/legendary_02.wav"
       ],
       "bus": "UI",
       "cooldown": 0.15,
@@ -290,34 +585,6 @@
       "pitch": 0.06,
       "base_pitch": 1.0
     },
-    "pickup.gold": {
-      "files": [
-        "res://assets/audio/sfx/sockets/pickup_gold_00.wav",
-        "res://assets/audio/sfx/sockets/pickup_gold_01.wav",
-        "res://assets/audio/sfx/sockets/pickup_gold_02.wav"
-      ],
-      "bus": "SFX",
-      "cooldown": 0.06,
-      "priority": 1,
-      "max_voices": 2,
-      "gain_db": -30,
-      "pitch": 0.04,
-      "base_pitch": 1.0
-    },
-    "gem.pickup": {
-      "files": [
-        "res://assets/audio/sfx/sockets/gem_pickup_00.wav",
-        "res://assets/audio/sfx/sockets/gem_pickup_01.wav",
-        "res://assets/audio/sfx/sockets/gem_pickup_02.wav"
-      ],
-      "bus": "SFX",
-      "cooldown": 0.03,
-      "priority": 1,
-      "max_voices": 3,
-      "gain_db": -17,
-      "pitch": 0.04,
-      "base_pitch": 1.0
-    },
     "powerup.heart": {
       "files": [
         "res://assets/audio/sfx/sockets/powerup_heart_00.wav"
@@ -363,18 +630,6 @@
       "priority": 3,
       "max_voices": 2,
       "gain_db": -11,
-      "pitch": 0.0,
-      "base_pitch": 1.0
-    },
-    "imbue.install": {
-      "files": [
-        "res://assets/audio/sfx/sockets/imbue_install_00.wav"
-      ],
-      "bus": "SFX",
-      "cooldown": 0.2,
-      "priority": 4,
-      "max_voices": 2,
-      "gain_db": -9,
       "pitch": 0.0,
       "base_pitch": 1.0
     },
@@ -447,21 +702,6 @@
       "pitch": 0.04,
       "base_pitch": 1.0
     },
-    "weapon.sword.hit": {
-      "files": [
-        "res://assets/audio/sfx/weapon/sword/hit_00.wav",
-        "res://assets/audio/sfx/weapon/sword/hit_01.wav",
-        "res://assets/audio/sfx/weapon/sword/hit_02.wav",
-        "res://assets/audio/sfx/weapon/sword/hit_03.wav"
-      ],
-      "bus": "SFX",
-      "cooldown": 0.07,
-      "priority": 2,
-      "max_voices": 3,
-      "gain_db": -15,
-      "pitch": 0.07,
-      "base_pitch": 0.95
-    },
     "weapon.sword.crit": {
       "files": [
         "res://assets/audio/sfx/weapon/sword/crit_00.wav",
@@ -475,21 +715,6 @@
       "gain_db": -12,
       "pitch": 0.04,
       "base_pitch": 0.9
-    },
-    "weapon.firestaff.impact": {
-      "files": [
-        "res://assets/audio/sfx/weapon/firestaff/impact_00.wav",
-        "res://assets/audio/sfx/weapon/firestaff/impact_01.wav",
-        "res://assets/audio/sfx/weapon/firestaff/impact_02.wav",
-        "res://assets/audio/sfx/weapon/firestaff/impact_03.wav"
-      ],
-      "bus": "SFX",
-      "cooldown": 0.08,
-      "priority": 2,
-      "max_voices": 3,
-      "gain_db": -14,
-      "pitch": 0.06,
-      "base_pitch": 0.85
     },
     "weapon.firestaff.crit": {
       "files": [
@@ -519,21 +744,6 @@
       "pitch": 0.05,
       "base_pitch": 0.8
     },
-    "weapon.lightning.chain": {
-      "files": [
-        "res://assets/audio/sfx/weapon/lightning/chain_00.wav",
-        "res://assets/audio/sfx/weapon/lightning/chain_01.wav",
-        "res://assets/audio/sfx/weapon/lightning/chain_02.wav",
-        "res://assets/audio/sfx/weapon/lightning/chain_03.wav"
-      ],
-      "bus": "SFX",
-      "cooldown": 0.11,
-      "priority": 1,
-      "max_voices": 2,
-      "gain_db": -18,
-      "pitch": 0.08,
-      "base_pitch": 1.0
-    },
     "weapon.lightning.crit": {
       "files": [
         "res://assets/audio/sfx/weapon/lightning/crit_00.wav",
@@ -547,21 +757,6 @@
       "gain_db": -12,
       "pitch": 0.04,
       "base_pitch": 0.95
-    },
-    "weapon.bow.hit": {
-      "files": [
-        "res://assets/audio/sfx/weapon/bow/hit_00.wav",
-        "res://assets/audio/sfx/weapon/bow/hit_01.wav",
-        "res://assets/audio/sfx/weapon/bow/hit_02.wav",
-        "res://assets/audio/sfx/weapon/bow/hit_03.wav"
-      ],
-      "bus": "SFX",
-      "cooldown": 0.06,
-      "priority": 2,
-      "max_voices": 3,
-      "gain_db": -16,
-      "pitch": 0.07,
-      "base_pitch": 1.0
     },
     "weapon.bow.crit": {
       "files": [
@@ -577,36 +772,6 @@
       "pitch": 0.04,
       "base_pitch": 0.95
     },
-    "weapon.revolver.hit": {
-      "files": [
-        "res://assets/audio/sfx/weapon/revolver/hit_00.wav",
-        "res://assets/audio/sfx/weapon/revolver/hit_01.wav",
-        "res://assets/audio/sfx/weapon/revolver/hit_02.wav",
-        "res://assets/audio/sfx/weapon/revolver/hit_03.wav"
-      ],
-      "bus": "SFX",
-      "cooldown": 0.06,
-      "priority": 2,
-      "max_voices": 3,
-      "gain_db": -16,
-      "pitch": 0.07,
-      "base_pitch": 1.0
-    },
-    "weapon.revolver.ricochet": {
-      "files": [
-        "res://assets/audio/sfx/weapon/revolver/ricochet_00.wav",
-        "res://assets/audio/sfx/weapon/revolver/ricochet_01.wav",
-        "res://assets/audio/sfx/weapon/revolver/ricochet_02.wav",
-        "res://assets/audio/sfx/weapon/revolver/ricochet_03.wav"
-      ],
-      "bus": "SFX",
-      "cooldown": 0.09,
-      "priority": 2,
-      "max_voices": 2,
-      "gain_db": -16,
-      "pitch": 0.08,
-      "base_pitch": 1.0
-    },
     "weapon.revolver.crit": {
       "files": [
         "res://assets/audio/sfx/weapon/revolver/crit_00.wav",
@@ -621,19 +786,6 @@
       "pitch": 0.04,
       "base_pitch": 0.95
     },
-    "weapon.aura.hum": {
-      "files": [
-        "res://assets/audio/sfx/weapon/aura/hum_00.wav",
-        "res://assets/audio/sfx/weapon/aura/hum_01.wav"
-      ],
-      "bus": "SFX",
-      "cooldown": 2.0,
-      "priority": 1,
-      "max_voices": 1,
-      "gain_db": -24,
-      "pitch": 0.02,
-      "base_pitch": 0.8
-    },
     "weapon.aura.crit": {
       "files": [
         "res://assets/audio/sfx/weapon/aura/crit_00.wav",
@@ -645,35 +797,6 @@
       "max_voices": 1,
       "gain_db": -16,
       "pitch": 0.03,
-      "base_pitch": 0.9
-    },
-    "weapon.scythes.hit": {
-      "files": [
-        "res://assets/audio/sfx/weapon/scythes/hit_00.wav",
-        "res://assets/audio/sfx/weapon/scythes/hit_01.wav",
-        "res://assets/audio/sfx/weapon/scythes/hit_02.wav",
-        "res://assets/audio/sfx/weapon/scythes/hit_03.wav"
-      ],
-      "bus": "SFX",
-      "cooldown": 0.07,
-      "priority": 2,
-      "max_voices": 3,
-      "gain_db": -15,
-      "pitch": 0.07,
-      "base_pitch": 0.9
-    },
-    "weapon.scythes.catch": {
-      "files": [
-        "res://assets/audio/sfx/weapon/scythes/catch_00.wav",
-        "res://assets/audio/sfx/weapon/scythes/catch_01.wav",
-        "res://assets/audio/sfx/weapon/scythes/catch_02.wav"
-      ],
-      "bus": "SFX",
-      "cooldown": 0.1,
-      "priority": 1,
-      "max_voices": 2,
-      "gain_db": -17,
-      "pitch": 0.06,
       "base_pitch": 0.9
     },
     "weapon.scythes.crit": {
@@ -690,37 +813,6 @@
       "pitch": 0.04,
       "base_pitch": 0.9
     },
-    "weapon.shotgun.fire": {
-      "files": [
-        "res://assets/audio/sfx/weapon/shotgun/fire_00.wav",
-        "res://assets/audio/sfx/weapon/shotgun/fire_01.wav",
-        "res://assets/audio/sfx/weapon/shotgun/fire_02.wav",
-        "res://assets/audio/sfx/weapon/shotgun/fire_03.wav",
-        "res://assets/audio/sfx/weapon/shotgun/fire_04.wav"
-      ],
-      "bus": "SFX",
-      "cooldown": 0.3,
-      "priority": 4,
-      "max_voices": 2,
-      "gain_db": -8,
-      "pitch": 0.04,
-      "base_pitch": 0.72
-    },
-    "weapon.shotgun.hit": {
-      "files": [
-        "res://assets/audio/sfx/weapon/shotgun/hit_00.wav",
-        "res://assets/audio/sfx/weapon/shotgun/hit_01.wav",
-        "res://assets/audio/sfx/weapon/shotgun/hit_02.wav",
-        "res://assets/audio/sfx/weapon/shotgun/hit_03.wav"
-      ],
-      "bus": "SFX",
-      "cooldown": 0.05,
-      "priority": 2,
-      "max_voices": 3,
-      "gain_db": -17,
-      "pitch": 0.08,
-      "base_pitch": 0.9
-    },
     "weapon.shotgun.crit": {
       "files": [
         "res://assets/audio/sfx/weapon/shotgun/crit_00.wav",
@@ -735,110 +827,1266 @@
       "pitch": 0.04,
       "base_pitch": 0.85
     },
-    "weapon.sword.swing": {
+    "element.corrosive.attack": {
       "files": [
-        "res://assets/audio/sfx/weapon/sword/swing_00.wav",
-        "res://assets/audio/sfx/weapon/sword/swing_01.wav",
-        "res://assets/audio/sfx/weapon/sword/swing_02.wav",
-        "res://assets/audio/sfx/weapon/sword/swing_03.wav"
+        "res://assets/audio/fog/imbued_layers/imbue_layer_corrosive_attack_01.wav",
+        "res://assets/audio/fog/imbued_layers/imbue_layer_corrosive_attack_02.wav",
+        "res://assets/audio/fog/imbued_layers/imbue_layer_corrosive_attack_03.wav"
       ],
       "bus": "SFX",
-      "cooldown": 0.09,
-      "priority": 2,
+      "cooldown": 0.06,
+      "priority": 0,
       "max_voices": 3,
-      "gain_db": -14,
-      "pitch": 0.06,
-      "base_pitch": 0.9
+      "gain_db": -12.0,
+      "pitch": 0.04,
+      "base_pitch": 1.0,
+      "manifest": "element.corrosive.attack"
     },
-    "weapon.firestaff.cast": {
+    "element.corrosive.hit": {
       "files": [
-        "res://assets/audio/sfx/weapon/firestaff/cast_00.wav",
-        "res://assets/audio/sfx/weapon/firestaff/cast_01.wav",
-        "res://assets/audio/sfx/weapon/firestaff/cast_02.wav",
-        "res://assets/audio/sfx/weapon/firestaff/cast_03.wav"
+        "res://assets/audio/fog/imbued_layers/imbue_layer_corrosive_hit_01.wav",
+        "res://assets/audio/fog/imbued_layers/imbue_layer_corrosive_hit_02.wav",
+        "res://assets/audio/fog/imbued_layers/imbue_layer_corrosive_hit_03.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.04,
+      "priority": 1,
+      "max_voices": 4,
+      "gain_db": -12.0,
+      "pitch": 0.05,
+      "base_pitch": 1.0,
+      "manifest": "element.corrosive.hit"
+    },
+    "element.corrosive.loop": {
+      "files": [
+        "res://assets/audio/fog/imbued_layers/imbue_layer_corrosive_loop.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.06,
+      "priority": 0,
+      "max_voices": 3,
+      "gain_db": -12.0,
+      "pitch": 0.04,
+      "base_pitch": 1.0,
+      "manifest": "element.corrosive.loop",
+      "loop": true
+    },
+    "element.electric.attack": {
+      "files": [
+        "res://assets/audio/fog/imbued_layers/imbue_layer_electric_attack_01.wav",
+        "res://assets/audio/fog/imbued_layers/imbue_layer_electric_attack_02.wav",
+        "res://assets/audio/fog/imbued_layers/imbue_layer_electric_attack_03.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.06,
+      "priority": 0,
+      "max_voices": 3,
+      "gain_db": -12.0,
+      "pitch": 0.04,
+      "base_pitch": 1.0,
+      "manifest": "element.electric.attack"
+    },
+    "element.electric.hit": {
+      "files": [
+        "res://assets/audio/fog/imbued_layers/imbue_layer_electric_hit_01.wav",
+        "res://assets/audio/fog/imbued_layers/imbue_layer_electric_hit_02.wav",
+        "res://assets/audio/fog/imbued_layers/imbue_layer_electric_hit_03.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.04,
+      "priority": 1,
+      "max_voices": 4,
+      "gain_db": -12.0,
+      "pitch": 0.05,
+      "base_pitch": 1.0,
+      "manifest": "element.electric.hit"
+    },
+    "element.electric.loop": {
+      "files": [
+        "res://assets/audio/fog/imbued_layers/imbue_layer_electric_loop.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.06,
+      "priority": 0,
+      "max_voices": 3,
+      "gain_db": -12.0,
+      "pitch": 0.04,
+      "base_pitch": 1.0,
+      "manifest": "element.electric.loop",
+      "loop": true
+    },
+    "element.fire.attack": {
+      "files": [
+        "res://assets/audio/fog/imbued_layers/imbue_layer_fire_attack_01.wav",
+        "res://assets/audio/fog/imbued_layers/imbue_layer_fire_attack_02.wav",
+        "res://assets/audio/fog/imbued_layers/imbue_layer_fire_attack_03.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.06,
+      "priority": 0,
+      "max_voices": 3,
+      "gain_db": -12.0,
+      "pitch": 0.04,
+      "base_pitch": 1.0,
+      "manifest": "element.fire.attack"
+    },
+    "element.fire.hit": {
+      "files": [
+        "res://assets/audio/fog/imbued_layers/imbue_layer_fire_hit_01.wav",
+        "res://assets/audio/fog/imbued_layers/imbue_layer_fire_hit_02.wav",
+        "res://assets/audio/fog/imbued_layers/imbue_layer_fire_hit_03.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.04,
+      "priority": 1,
+      "max_voices": 4,
+      "gain_db": -12.0,
+      "pitch": 0.05,
+      "base_pitch": 1.0,
+      "manifest": "element.fire.hit"
+    },
+    "element.fire.loop": {
+      "files": [
+        "res://assets/audio/fog/imbued_layers/imbue_layer_fire_loop.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.06,
+      "priority": 0,
+      "max_voices": 3,
+      "gain_db": -12.0,
+      "pitch": 0.04,
+      "base_pitch": 1.0,
+      "manifest": "element.fire.loop",
+      "loop": true
+    },
+    "element.ice.attack": {
+      "files": [
+        "res://assets/audio/fog/imbued_layers/imbue_layer_ice_attack_01.wav",
+        "res://assets/audio/fog/imbued_layers/imbue_layer_ice_attack_02.wav",
+        "res://assets/audio/fog/imbued_layers/imbue_layer_ice_attack_03.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.06,
+      "priority": 0,
+      "max_voices": 3,
+      "gain_db": -12.0,
+      "pitch": 0.04,
+      "base_pitch": 1.0,
+      "manifest": "element.ice.attack"
+    },
+    "element.ice.hit": {
+      "files": [
+        "res://assets/audio/fog/imbued_layers/imbue_layer_ice_hit_01.wav",
+        "res://assets/audio/fog/imbued_layers/imbue_layer_ice_hit_02.wav",
+        "res://assets/audio/fog/imbued_layers/imbue_layer_ice_hit_03.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.04,
+      "priority": 1,
+      "max_voices": 4,
+      "gain_db": -12.0,
+      "pitch": 0.05,
+      "base_pitch": 1.0,
+      "manifest": "element.ice.hit"
+    },
+    "element.ice.loop": {
+      "files": [
+        "res://assets/audio/fog/imbued_layers/imbue_layer_ice_loop.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.06,
+      "priority": 0,
+      "max_voices": 3,
+      "gain_db": -12.0,
+      "pitch": 0.04,
+      "base_pitch": 1.0,
+      "manifest": "element.ice.loop",
+      "loop": true
+    },
+    "imbue.imbue_combo_blightfrost": {
+      "files": [
+        "res://assets/audio/fog/imbue/imbue_combo_blightfrost.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "imbue.imbue_combo_blightfrost"
+    },
+    "imbue.imbue_combo_caustic_combustion": {
+      "files": [
+        "res://assets/audio/fog/imbue/imbue_combo_caustic_combustion.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "imbue.imbue_combo_caustic_combustion"
+    },
+    "imbue.imbue_combo_cryoshock": {
+      "files": [
+        "res://assets/audio/fog/imbue/imbue_combo_cryoshock.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "imbue.imbue_combo_cryoshock"
+    },
+    "imbue.imbue_combo_overcharge": {
+      "files": [
+        "res://assets/audio/fog/imbue/imbue_combo_overcharge.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "imbue.imbue_combo_overcharge"
+    },
+    "imbue.imbue_combo_thermal_shock": {
+      "files": [
+        "res://assets/audio/fog/imbue/imbue_combo_thermal_shock.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "imbue.imbue_combo_thermal_shock"
+    },
+    "imbue.imbue_combo_toxic_conduction": {
+      "files": [
+        "res://assets/audio/fog/imbue/imbue_combo_toxic_conduction.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "imbue.imbue_combo_toxic_conduction"
+    },
+    "imbue.imbue_fuse_corrosive": {
+      "files": [
+        "res://assets/audio/fog/imbue/imbue_fuse_corrosive.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "imbue.imbue_fuse_corrosive"
+    },
+    "imbue.imbue_fuse_electric": {
+      "files": [
+        "res://assets/audio/fog/imbue/imbue_fuse_electric.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "imbue.imbue_fuse_electric"
+    },
+    "imbue.imbue_fuse_fire": {
+      "files": [
+        "res://assets/audio/fog/imbue/imbue_fuse_fire.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "imbue.imbue_fuse_fire"
+    },
+    "imbue.imbue_fuse_ice": {
+      "files": [
+        "res://assets/audio/fog/imbue/imbue_fuse_ice.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "imbue.imbue_fuse_ice"
+    },
+    "movement.slide_recover": {
+      "files": [
+        "res://assets/audio/fog/movement/slide_recover.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.02,
+      "priority": 3,
+      "max_voices": 2,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "movement.slide_recover"
+    },
+    "movement.step_dirt": {
+      "files": [
+        "res://assets/audio/fog/movement/step_dirt_01.wav",
+        "res://assets/audio/fog/movement/step_dirt_02.wav",
+        "res://assets/audio/fog/movement/step_dirt_03.wav",
+        "res://assets/audio/fog/movement/step_dirt_04.wav"
       ],
       "bus": "SFX",
       "cooldown": 0.1,
-      "priority": 2,
-      "max_voices": 3,
-      "gain_db": -14,
-      "pitch": 0.06,
-      "base_pitch": 0.85
-    },
-    "weapon.lightning.strike": {
-      "files": [
-        "res://assets/audio/sfx/weapon/lightning/strike_00.wav",
-        "res://assets/audio/sfx/weapon/lightning/strike_01.wav",
-        "res://assets/audio/sfx/weapon/lightning/strike_02.wav",
-        "res://assets/audio/sfx/weapon/lightning/strike_03.wav",
-        "res://assets/audio/sfx/weapon/lightning/strike_04.wav"
-      ],
-      "bus": "SFX",
-      "cooldown": 0.12,
-      "priority": 3,
-      "max_voices": 3,
-      "gain_db": -13,
-      "pitch": 0.06,
-      "base_pitch": 0.9
-    },
-    "weapon.bow.fire": {
-      "files": [
-        "res://assets/audio/sfx/weapon/bow/fire_00.wav",
-        "res://assets/audio/sfx/weapon/bow/fire_01.wav",
-        "res://assets/audio/sfx/weapon/bow/fire_02.wav"
-      ],
-      "bus": "SFX",
-      "cooldown": 0.08,
-      "priority": 2,
-      "max_voices": 3,
-      "gain_db": -15,
-      "pitch": 0.06,
-      "base_pitch": 0.9
-    },
-    "weapon.revolver.fire": {
-      "files": [
-        "res://assets/audio/sfx/weapon/revolver/fire_00.wav",
-        "res://assets/audio/sfx/weapon/revolver/fire_01.wav",
-        "res://assets/audio/sfx/weapon/revolver/fire_02.wav",
-        "res://assets/audio/sfx/weapon/revolver/fire_03.wav",
-        "res://assets/audio/sfx/weapon/revolver/fire_04.wav",
-        "res://assets/audio/sfx/weapon/revolver/fire_05.wav"
-      ],
-      "bus": "SFX",
-      "cooldown": 0.07,
-      "priority": 2,
-      "max_voices": 3,
-      "gain_db": -13,
-      "pitch": 0.05,
-      "base_pitch": 0.92
-    },
-    "weapon.aura.pulse": {
-      "files": [
-        "res://assets/audio/sfx/weapon/aura/pulse_00.wav",
-        "res://assets/audio/sfx/weapon/aura/pulse_01.wav",
-        "res://assets/audio/sfx/weapon/aura/pulse_02.wav"
-      ],
-      "bus": "SFX",
-      "cooldown": 0.25,
-      "priority": 2,
+      "priority": 0,
       "max_voices": 2,
-      "gain_db": -15,
+      "gain_db": -12.0,
       "pitch": 0.04,
-      "base_pitch": 0.8
+      "base_pitch": 1.0,
+      "manifest": "movement.step_dirt"
     },
-    "weapon.scythes.throw": {
+    "movement.step_wood": {
       "files": [
-        "res://assets/audio/sfx/weapon/scythes/throw_00.wav",
-        "res://assets/audio/sfx/weapon/scythes/throw_01.wav",
-        "res://assets/audio/sfx/weapon/scythes/throw_02.wav"
+        "res://assets/audio/fog/movement/step_wood_01.wav",
+        "res://assets/audio/fog/movement/step_wood_02.wav",
+        "res://assets/audio/fog/movement/step_wood_03.wav",
+        "res://assets/audio/fog/movement/step_wood_04.wav"
       ],
       "bus": "SFX",
-      "cooldown": 0.12,
+      "cooldown": 0.1,
+      "priority": 0,
+      "max_voices": 2,
+      "gain_db": -12.0,
+      "pitch": 0.04,
+      "base_pitch": 1.0,
+      "manifest": "movement.step_wood"
+    },
+    "music.boss_the_god_below": {
+      "files": [
+        "res://assets/audio/fog/music/music_boss_the_god_below.ogg"
+      ],
+      "bus": "Music",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -6,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "music.boss_the_god_below",
+      "loop": true,
+      "music": true
+    },
+    "music.death_loop": {
+      "files": [
+        "res://assets/audio/fog/music/music_death_loop.ogg"
+      ],
+      "bus": "Music",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -4,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "music.death_loop",
+      "loop": true,
+      "music": true
+    },
+    "music.level_up_loop": {
+      "files": [
+        "res://assets/audio/fog/music/music_level_up_loop.ogg"
+      ],
+      "bus": "Music",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -4,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "music.level_up_loop",
+      "loop": true,
+      "music": true
+    },
+    "music.main_menu_loop": {
+      "files": [
+        "res://assets/audio/fog/music/music_main_menu_loop.ogg"
+      ],
+      "bus": "Music",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -4,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "music.main_menu_loop",
+      "loop": true,
+      "music": true
+    },
+    "music.stage1_a_sixty_miles_of_pine": {
+      "files": [
+        "res://assets/audio/fog/music/music_stage1_a_sixty_miles_of_pine.ogg"
+      ],
+      "bus": "Music",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -6,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "music.stage1_a_sixty_miles_of_pine",
+      "loop": true,
+      "music": true
+    },
+    "music.stage1_b_county_line": {
+      "files": [
+        "res://assets/audio/fog/music/music_stage1_b_county_line.ogg"
+      ],
+      "bus": "Music",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -6,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "music.stage1_b_county_line",
+      "loop": true,
+      "music": true
+    },
+    "music.stage2_a_red_canopy": {
+      "files": [
+        "res://assets/audio/fog/music/music_stage2_a_red_canopy.ogg"
+      ],
+      "bus": "Music",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -6,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "music.stage2_a_red_canopy",
+      "loop": true,
+      "music": true
+    },
+    "music.stage2_b_hollow_saints": {
+      "files": [
+        "res://assets/audio/fog/music/music_stage2_b_hollow_saints.ogg"
+      ],
+      "bus": "Music",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -6,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "music.stage2_b_hollow_saints",
+      "loop": true,
+      "music": true
+    },
+    "music.stage3_a_leviathan": {
+      "files": [
+        "res://assets/audio/fog/music/music_stage3_a_leviathan.ogg"
+      ],
+      "bus": "Music",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -6,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "music.stage3_a_leviathan",
+      "loop": true,
+      "music": true
+    },
+    "music.stage3_b_mouth_of_the_deep": {
+      "files": [
+        "res://assets/audio/fog/music/music_stage3_b_mouth_of_the_deep.ogg"
+      ],
+      "bus": "Music",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -6,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "music.stage3_b_mouth_of_the_deep",
+      "loop": true,
+      "music": true
+    },
+    "player.low_hp_heartbeat_loop": {
+      "files": [
+        "res://assets/audio/fog/player/low_hp_heartbeat_loop.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "player.low_hp_heartbeat_loop",
+      "loop": true
+    },
+    "player.player_death": {
+      "files": [
+        "res://assets/audio/fog/player/player_death.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "player.player_death"
+    },
+    "player.player_hurt_heavy": {
+      "files": [
+        "res://assets/audio/fog/player/player_hurt_heavy_01.wav",
+        "res://assets/audio/fog/player/player_hurt_heavy_02.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "player.player_hurt_heavy"
+    },
+    "ui.banish": {
+      "files": [
+        "res://assets/audio/fog/ui/banish.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.02,
+      "priority": 3,
+      "max_voices": 2,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.banish"
+    },
+    "ui.cant_afford": {
+      "files": [
+        "res://assets/audio/fog/ui/cant_afford.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.02,
+      "priority": 3,
+      "max_voices": 2,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.cant_afford"
+    },
+    "ui.card_deal": {
+      "files": [
+        "res://assets/audio/fog/ui/card_deal_01.wav",
+        "res://assets/audio/fog/ui/card_deal_02.wav",
+        "res://assets/audio/fog/ui/card_deal_03.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.02,
+      "priority": 3,
+      "max_voices": 2,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.card_deal"
+    },
+    "ui.card_hover": {
+      "files": [
+        "res://assets/audio/fog/ui/card_hover.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.03,
+      "priority": 0,
+      "max_voices": 2,
+      "gain_db": -12.0,
+      "pitch": 0.02,
+      "base_pitch": 1.0,
+      "manifest": "ui.card_hover"
+    },
+    "ui.card_take": {
+      "files": [
+        "res://assets/audio/fog/ui/card_take.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.02,
+      "priority": 3,
+      "max_voices": 2,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.card_take"
+    },
+    "ui.chest_hop": {
+      "files": [
+        "res://assets/audio/fog/ui/chest_hop_01.wav",
+        "res://assets/audio/fog/ui/chest_hop_02.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.02,
+      "priority": 3,
+      "max_voices": 2,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.chest_hop"
+    },
+    "ui.chest_open": {
+      "files": [
+        "res://assets/audio/fog/ui/chest_open.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.02,
+      "priority": 3,
+      "max_voices": 2,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.chest_open"
+    },
+    "ui.item_take": {
+      "files": [
+        "res://assets/audio/fog/ui/item_take.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.02,
+      "priority": 3,
+      "max_voices": 2,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.item_take"
+    },
+    "ui.levelup_toll": {
+      "files": [
+        "res://assets/audio/fog/ui/levelup_toll.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.levelup_toll"
+    },
+    "ui.memo_hover": {
+      "files": [
+        "res://assets/audio/fog/ui/memo_hover_01.wav",
+        "res://assets/audio/fog/ui/memo_hover_02.wav",
+        "res://assets/audio/fog/ui/memo_hover_03.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.03,
+      "priority": 0,
+      "max_voices": 2,
+      "gain_db": -12.0,
+      "pitch": 0.02,
+      "base_pitch": 1.0,
+      "manifest": "ui.memo_hover"
+    },
+    "ui.menu_back": {
+      "files": [
+        "res://assets/audio/fog/ui/menu_back.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.02,
+      "priority": 3,
+      "max_voices": 2,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.menu_back"
+    },
+    "ui.menu_locked": {
+      "files": [
+        "res://assets/audio/fog/ui/menu_locked.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.02,
+      "priority": 3,
+      "max_voices": 2,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.menu_locked"
+    },
+    "ui.menu_play": {
+      "files": [
+        "res://assets/audio/fog/ui/menu_play.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.menu_play"
+    },
+    "ui.quest_claim": {
+      "files": [
+        "res://assets/audio/fog/ui/quest_claim.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.02,
+      "priority": 3,
+      "max_voices": 2,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.quest_claim"
+    },
+    "ui.reel_spin_full": {
+      "files": [
+        "res://assets/audio/fog/ui/reel_spin_full.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.02,
+      "priority": 3,
+      "max_voices": 2,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.reel_spin_full"
+    },
+    "ui.reel_stop": {
+      "files": [
+        "res://assets/audio/fog/ui/reel_stop.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.02,
+      "priority": 3,
+      "max_voices": 2,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.reel_stop"
+    },
+    "ui.refresh_shuffle": {
+      "files": [
+        "res://assets/audio/fog/ui/refresh_shuffle.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.02,
+      "priority": 3,
+      "max_voices": 2,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.refresh_shuffle"
+    },
+    "ui.reveal_epic": {
+      "files": [
+        "res://assets/audio/fog/ui/reveal_epic.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.reveal_epic"
+    },
+    "ui.reveal_rare": {
+      "files": [
+        "res://assets/audio/fog/ui/reveal_rare.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.reveal_rare"
+    },
+    "ui.reveal_uncommon": {
+      "files": [
+        "res://assets/audio/fog/ui/reveal_uncommon.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.reveal_uncommon"
+    },
+    "ui.run_start": {
+      "files": [
+        "res://assets/audio/fog/ui/run_start.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.run_start"
+    },
+    "ui.skip_heal": {
+      "files": [
+        "res://assets/audio/fog/ui/skip_heal.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.02,
+      "priority": 3,
+      "max_voices": 2,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.skip_heal"
+    },
+    "ui.slider_tick": {
+      "files": [
+        "res://assets/audio/fog/ui/slider_tick.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.03,
+      "priority": 0,
+      "max_voices": 2,
+      "gain_db": -12.0,
+      "pitch": 0.02,
+      "base_pitch": 1.0,
+      "manifest": "ui.slider_tick"
+    },
+    "ui.socket_hover": {
+      "files": [
+        "res://assets/audio/fog/ui/socket_hover.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.02,
+      "priority": 3,
+      "max_voices": 2,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.socket_hover"
+    },
+    "ui.socket_place": {
+      "files": [
+        "res://assets/audio/fog/ui/socket_place.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.02,
+      "priority": 3,
+      "max_voices": 2,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.socket_place"
+    },
+    "ui.stamp_done": {
+      "files": [
+        "res://assets/audio/fog/ui/stamp_done.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.02,
+      "priority": 3,
+      "max_voices": 2,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.stamp_done"
+    },
+    "ui.stamp_not_yet": {
+      "files": [
+        "res://assets/audio/fog/ui/stamp_not_yet.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.02,
+      "priority": 3,
+      "max_voices": 2,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.stamp_not_yet"
+    },
+    "ui.toggle_off": {
+      "files": [
+        "res://assets/audio/fog/ui/toggle_off.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.02,
+      "priority": 3,
+      "max_voices": 2,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.toggle_off"
+    },
+    "ui.toggle_on": {
+      "files": [
+        "res://assets/audio/fog/ui/toggle_on.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.02,
+      "priority": 3,
+      "max_voices": 2,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.toggle_on"
+    },
+    "ui.type_bell": {
+      "files": [
+        "res://assets/audio/fog/ui/type_bell.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.02,
+      "priority": 3,
+      "max_voices": 2,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.type_bell"
+    },
+    "ui.type_key": {
+      "files": [
+        "res://assets/audio/fog/ui/type_key_01.wav",
+        "res://assets/audio/fog/ui/type_key_02.wav",
+        "res://assets/audio/fog/ui/type_key_03.wav",
+        "res://assets/audio/fog/ui/type_key_04.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.03,
+      "priority": 0,
+      "max_voices": 2,
+      "gain_db": -12.0,
+      "pitch": 0.02,
+      "base_pitch": 1.0,
+      "manifest": "ui.type_key"
+    },
+    "ui.weapon_select": {
+      "files": [
+        "res://assets/audio/fog/ui/weapon_select_01.wav",
+        "res://assets/audio/fog/ui/weapon_select_02.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.02,
+      "priority": 3,
+      "max_voices": 2,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "ui.weapon_select"
+    },
+    "weapon.bow_volley": {
+      "files": [
+        "res://assets/audio/fog/weapons/bow_volley.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.05,
       "priority": 2,
       "max_voices": 3,
-      "gain_db": -15,
-      "pitch": 0.07,
-      "base_pitch": 0.9
+      "gain_db": -12.0,
+      "pitch": 0.03,
+      "base_pitch": 1.0,
+      "manifest": "weapon.bow_volley"
+    },
+    "weapon.fireball_flight_loop": {
+      "files": [
+        "res://assets/audio/fog/weapons/fireball_flight_loop.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.05,
+      "priority": 2,
+      "max_voices": 3,
+      "gain_db": -12.0,
+      "pitch": 0.03,
+      "base_pitch": 1.0,
+      "manifest": "weapon.fireball_flight_loop",
+      "loop": true
+    },
+    "weapon.scythe_spin_loop": {
+      "files": [
+        "res://assets/audio/fog/weapons/scythe_spin_loop.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.05,
+      "priority": 2,
+      "max_voices": 3,
+      "gain_db": -12.0,
+      "pitch": 0.03,
+      "base_pitch": 1.0,
+      "manifest": "weapon.scythe_spin_loop",
+      "loop": true
+    },
+    "weapon.shotgun_knockback": {
+      "files": [
+        "res://assets/audio/fog/weapons/shotgun_knockback.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.04,
+      "priority": 1,
+      "max_voices": 4,
+      "gain_db": -12.0,
+      "pitch": 0.05,
+      "base_pitch": 1.0,
+      "manifest": "weapon.shotgun_knockback"
+    },
+    "weapon.shotgun_pump": {
+      "files": [
+        "res://assets/audio/fog/weapons/shotgun_pump.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.05,
+      "priority": 2,
+      "max_voices": 3,
+      "gain_db": -12.0,
+      "pitch": 0.03,
+      "base_pitch": 1.0,
+      "manifest": "weapon.shotgun_pump"
+    },
+    "weapon.sword_swing_final": {
+      "files": [
+        "res://assets/audio/fog/weapons/sword_swing_final.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.05,
+      "priority": 2,
+      "max_voices": 3,
+      "gain_db": -12.0,
+      "pitch": 0.03,
+      "base_pitch": 1.0,
+      "manifest": "weapon.sword_swing_final"
+    },
+    "weapon.ult_cataclysm": {
+      "files": [
+        "res://assets/audio/fog/weapons/ult_cataclysm.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.05,
+      "priority": 2,
+      "max_voices": 3,
+      "gain_db": -12.0,
+      "pitch": 0.03,
+      "base_pitch": 1.0,
+      "manifest": "weapon.ult_cataclysm"
+    },
+    "world.boss_enrage_abyssal": {
+      "files": [
+        "res://assets/audio/fog/world/boss_enrage_abyssal.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "world.boss_enrage_abyssal"
+    },
+    "world.boss_enrage_beast": {
+      "files": [
+        "res://assets/audio/fog/world/boss_enrage_beast.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "world.boss_enrage_beast"
+    },
+    "world.boss_enrage_bellow": {
+      "files": [
+        "res://assets/audio/fog/world/boss_enrage_bellow.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "world.boss_enrage_bellow"
+    },
+    "world.boss_enrage_god": {
+      "files": [
+        "res://assets/audio/fog/world/boss_enrage_god.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "world.boss_enrage_god"
+    },
+    "world.boss_enrage_shriek": {
+      "files": [
+        "res://assets/audio/fog/world/boss_enrage_shriek.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "world.boss_enrage_shriek"
+    },
+    "world.gem_found_corrosive": {
+      "files": [
+        "res://assets/audio/fog/world/gem_found_corrosive.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "world.gem_found_corrosive"
+    },
+    "world.gem_found_electric": {
+      "files": [
+        "res://assets/audio/fog/world/gem_found_electric.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "world.gem_found_electric"
+    },
+    "world.gem_found_fire": {
+      "files": [
+        "res://assets/audio/fog/world/gem_found_fire.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "world.gem_found_fire"
+    },
+    "world.gem_found_ice": {
+      "files": [
+        "res://assets/audio/fog/world/gem_found_ice.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "world.gem_found_ice"
+    },
+    "world.shrine_charge_cancel": {
+      "files": [
+        "res://assets/audio/fog/world/shrine_charge_cancel.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "world.shrine_charge_cancel"
+    },
+    "world.shrine_charge_loop": {
+      "files": [
+        "res://assets/audio/fog/world/shrine_charge_loop.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "world.shrine_charge_loop",
+      "loop": true
+    },
+    "world.shrine_charge_tick": {
+      "files": [
+        "res://assets/audio/fog/world/shrine_charge_tick_01.wav",
+        "res://assets/audio/fog/world/shrine_charge_tick_02.wav",
+        "res://assets/audio/fog/world/shrine_charge_tick_03.wav",
+        "res://assets/audio/fog/world/shrine_charge_tick_04.wav",
+        "res://assets/audio/fog/world/shrine_charge_tick_05.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "world.shrine_charge_tick",
+      "ordered": true
+    },
+    "world.shrine_complete": {
+      "files": [
+        "res://assets/audio/fog/world/shrine_complete.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "world.shrine_complete"
+    },
+    "world.stage_boss_death": {
+      "files": [
+        "res://assets/audio/fog/world/stage_boss_death.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "world.stage_boss_death"
+    },
+    "world.stage_boss_victory": {
+      "files": [
+        "res://assets/audio/fog/world/stage_boss_victory.wav"
+      ],
+      "bus": "UI",
+      "cooldown": 0.0,
+      "priority": 5,
+      "max_voices": 1,
+      "gain_db": -12.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "world.stage_boss_victory"
     }
   }
 }
