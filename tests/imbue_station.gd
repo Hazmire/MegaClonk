@@ -174,8 +174,8 @@ func inventory_ui():
  await process_frame
  var found_pips=false;var found_gems=false
  for n in RewardScreens.descendants(game.frontend.menu):
-  if n is SocketPips:found_pips=true
-  if n is Label and n.text=="Socket gems":found_gems=true
+  if n is Label and n.text.begins_with("Sockets 1/1") and n.text.contains("Fire"):found_pips=true
+  if n is Label and n.text.to_upper()=="SOCKET GEMS":found_gems=true
  check(found_pips and found_gems,"Build screen shows socket pips and the gem inventory")
  check(game.weapon_tooltip(0).find("Fire")>=0,"Weapon tooltip names the installed element")
  game.resume()
