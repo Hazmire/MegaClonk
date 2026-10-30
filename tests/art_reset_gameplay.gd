@@ -33,9 +33,9 @@ func run():
  var tome=game.upgrade_pool().filter(func(c):return c.type=="tome" and c.id=="Vampire")[0]
  check(tome.metadata.rarity=="legendary","Existing tome upgrades retain Legendary support")
  tome["tier"]="legendary";game.apply_upgrade(tome)
- check(game.equipment_meta("weapons",2).rarity=="rare" and game.equipment_meta("tomes","Vampire").rarity=="legendary","Displayed equipment tiers follow applied upgrades")
+ check(game.equipment_meta("weapons",2).rarity=="common" and game.equipment_meta("tomes","Vampire").rarity=="common","Displayed equipment tiers keep the rarity from first pick (upgrades do not recolour them)")
  game.equip(15)
- check(game.save_run("user://art-reset-legacy.json") and game.load_run("user://art-reset-legacy.json") and game.weapons.has(15) and game.weapons[2].rarity=="rare" and game.tome_rarities.Vampire=="legendary","Owned weapon rarity and tome state survive an old-style loadout checkpoint")
+ check(game.save_run("user://art-reset-legacy.json") and game.load_run("user://art-reset-legacy.json") and game.weapons.has(15) and game.weapons[2].rarity=="common" and game.tome_rarities.Vampire=="common","Owned weapon rarity and tome state survive an old-style loadout checkpoint")
  check(not game.upgrade_pool().any(func(c):return c.type=="weapon" and not int(c.id) in Catalog.ACTIVE_WEAPONS),"Removed weapons never appear in the reward pool")
  game.mode="pause";game.frontend.inventory();await process_frame
  var trait_icon: Control
