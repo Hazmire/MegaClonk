@@ -213,6 +213,7 @@ func stress_checks(game: Node) -> void:
  var players_before=audio.voices.size();var nodes_before=audio.get_child_count()
  var peak=0;var ok=true;var ui_or_music_in_pool=false
  for frame in 300:
+  if game.mode!="run":game.pending_upgrades=0;game.resume()
   await physics_frame
   var active=0
   for voice in audio.voices:

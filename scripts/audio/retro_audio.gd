@@ -18,6 +18,7 @@ var music_players=[]
 var muted=false # test/profile stub: emit() accepts nothing (used to prove audio never changes the simulation)
 var count_emits=false # tests: count every emit request per event id
 var emit_counts: Dictionary={}
+var profile_usec=0 # tests/profile: time spent inside emit() and the loop calls while count_emits is on
 var music_slot=0
 var current_track="" # event id of the track on the active music player
 var crossfade_seconds=3.0 # stage A <-> B crossfade
@@ -86,6 +87,9 @@ func choose(event: String,variant: int=-1) -> String:
  if files.size()>1 and index==int(last_samples.get(event,-1)):index=(index+1+rng.randi_range(0,files.size()-2))%files.size()
  last_samples[event]=index;return files[index]
 func emit(event: String,position_value: Vector3=Vector3.INF,gain: float=1.0,pitch_multiplier: float=1.0,variant: int=-1,loop_key: String="") -> bool:
+ if not count_emits:return _emit(event,position_value,gain,pitch_multiplier,variant,loop_key)
+ var started=Time.get_ticks_usec();var accepted_now=_emit(event,position_value,gain,pitch_multiplier,variant,loop_key);profile_usec+=Time.get_ticks_usec()-started;return accepted_now
+func _emit(event: String,position_value: Vector3,gain: float,pitch_multiplier: float,variant: int,loop_key: String) -> bool:
  if event.begins_with("enemy.") or not events.has(event):return false
  if count_emits:emit_counts[event]=int(emit_counts.get(event,0))+1
  if muted:return false
@@ -128,6 +132,9 @@ func loop_active(key: String) -> bool:
   if voice.get("key","")==key and voice.until>clock:return true
  return false
 func loop_update(key: String,pitch_multiplier: float,position_value: Vector3=Vector3.INF,gain: float=1.0) -> bool:
+ if not count_emits:return _loop_update(key,pitch_multiplier,position_value,gain)
+ var started=Time.get_ticks_usec();var found=_loop_update(key,pitch_multiplier,position_value,gain);profile_usec+=Time.get_ticks_usec()-started;return found
+func _loop_update(key: String,pitch_multiplier: float,position_value: Vector3,gain: float) -> bool:
  for voice in voices:
   if voice.get("key","")==key and voice.until>clock:
    var config=events[voice.event];var player=voice.player
