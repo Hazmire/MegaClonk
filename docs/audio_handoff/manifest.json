@@ -1,0 +1,2066 @@
+{
+ "version": 1,
+ "sample_rate": 44100,
+ "notes": [
+  "All sounds are synthesised and original; no third-party samples or licences.",
+  "WAV files are final: do not low-pass, bit-reduce, resample or otherwise re-process them.",
+  "Files ending in _loop are seamless loops; enable looping on import.",
+  "UI sounds are stereo; gameplay/world sounds are mono for positional playback.",
+  "cooldown / max_voices / pitch_var / priority are suggestions in the style of events.json."
+ ],
+ "events": [
+  {
+   "event": "element.corrosive.attack",
+   "files": [
+    "audio/imbued_layers/imbue_layer_corrosive_attack_01.wav",
+    "audio/imbued_layers/imbue_layer_corrosive_attack_02.wav",
+    "audio/imbued_layers/imbue_layer_corrosive_attack_03.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "corrosive gem layer: play on top of an imbued weapon's attack sound",
+   "cooldown": 0.06,
+   "max_voices": 3,
+   "pitch_var": 0.04,
+   "priority": 0,
+   "duration_s": 0.6,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "element.corrosive.hit",
+   "files": [
+    "audio/imbued_layers/imbue_layer_corrosive_hit_01.wav",
+    "audio/imbued_layers/imbue_layer_corrosive_hit_02.wav",
+    "audio/imbued_layers/imbue_layer_corrosive_hit_03.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "corrosive gem layer: play on top of an imbued weapon's hit sound",
+   "cooldown": 0.04,
+   "max_voices": 4,
+   "pitch_var": 0.05,
+   "priority": 1,
+   "duration_s": 0.9,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "element.corrosive.loop",
+   "files": [
+    "audio/imbued_layers/imbue_layer_corrosive_loop.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": true,
+   "channels": 1,
+   "description": "corrosive gem loop: run alongside the Aura hum, the Scythes spin or a fireball in flight while that weapon carries this gem",
+   "cooldown": 0.06,
+   "max_voices": 3,
+   "pitch_var": 0.04,
+   "priority": 0,
+   "duration_s": 2.0
+  },
+  {
+   "event": "element.electric.attack",
+   "files": [
+    "audio/imbued_layers/imbue_layer_electric_attack_01.wav",
+    "audio/imbued_layers/imbue_layer_electric_attack_02.wav",
+    "audio/imbued_layers/imbue_layer_electric_attack_03.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "electric gem layer: play on top of an imbued weapon's attack sound",
+   "cooldown": 0.06,
+   "max_voices": 3,
+   "pitch_var": 0.04,
+   "priority": 0,
+   "duration_s": 0.6,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "element.electric.hit",
+   "files": [
+    "audio/imbued_layers/imbue_layer_electric_hit_01.wav",
+    "audio/imbued_layers/imbue_layer_electric_hit_02.wav",
+    "audio/imbued_layers/imbue_layer_electric_hit_03.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "electric gem layer: play on top of an imbued weapon's hit sound",
+   "cooldown": 0.04,
+   "max_voices": 4,
+   "pitch_var": 0.05,
+   "priority": 1,
+   "duration_s": 0.9,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "element.electric.loop",
+   "files": [
+    "audio/imbued_layers/imbue_layer_electric_loop.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": true,
+   "channels": 1,
+   "description": "electric gem loop: run alongside the Aura hum, the Scythes spin or a fireball in flight while that weapon carries this gem",
+   "cooldown": 0.06,
+   "max_voices": 3,
+   "pitch_var": 0.04,
+   "priority": 0,
+   "duration_s": 2.0
+  },
+  {
+   "event": "element.fire.attack",
+   "files": [
+    "audio/imbued_layers/imbue_layer_fire_attack_01.wav",
+    "audio/imbued_layers/imbue_layer_fire_attack_02.wav",
+    "audio/imbued_layers/imbue_layer_fire_attack_03.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "fire gem layer: play on top of an imbued weapon's attack sound",
+   "cooldown": 0.06,
+   "max_voices": 3,
+   "pitch_var": 0.04,
+   "priority": 0,
+   "duration_s": 0.6,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "element.fire.hit",
+   "files": [
+    "audio/imbued_layers/imbue_layer_fire_hit_01.wav",
+    "audio/imbued_layers/imbue_layer_fire_hit_02.wav",
+    "audio/imbued_layers/imbue_layer_fire_hit_03.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "fire gem layer: play on top of an imbued weapon's hit sound",
+   "cooldown": 0.04,
+   "max_voices": 4,
+   "pitch_var": 0.05,
+   "priority": 1,
+   "duration_s": 0.9,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "element.fire.loop",
+   "files": [
+    "audio/imbued_layers/imbue_layer_fire_loop.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": true,
+   "channels": 1,
+   "description": "fire gem loop: run alongside the Aura hum, the Scythes spin or a fireball in flight while that weapon carries this gem",
+   "cooldown": 0.06,
+   "max_voices": 3,
+   "pitch_var": 0.04,
+   "priority": 0,
+   "duration_s": 2.0
+  },
+  {
+   "event": "element.ice.attack",
+   "files": [
+    "audio/imbued_layers/imbue_layer_ice_attack_01.wav",
+    "audio/imbued_layers/imbue_layer_ice_attack_02.wav",
+    "audio/imbued_layers/imbue_layer_ice_attack_03.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "ice gem layer: play on top of an imbued weapon's attack sound",
+   "cooldown": 0.06,
+   "max_voices": 3,
+   "pitch_var": 0.04,
+   "priority": 0,
+   "duration_s": 0.6,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "element.ice.hit",
+   "files": [
+    "audio/imbued_layers/imbue_layer_ice_hit_01.wav",
+    "audio/imbued_layers/imbue_layer_ice_hit_02.wav",
+    "audio/imbued_layers/imbue_layer_ice_hit_03.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "ice gem layer: play on top of an imbued weapon's hit sound",
+   "cooldown": 0.04,
+   "max_voices": 4,
+   "pitch_var": 0.05,
+   "priority": 1,
+   "duration_s": 0.9,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "element.ice.loop",
+   "files": [
+    "audio/imbued_layers/imbue_layer_ice_loop.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": true,
+   "channels": 1,
+   "description": "ice gem loop: run alongside the Aura hum, the Scythes spin or a fireball in flight while that weapon carries this gem",
+   "cooldown": 0.06,
+   "max_voices": 3,
+   "pitch_var": 0.04,
+   "priority": 0,
+   "duration_s": 2.0
+  },
+  {
+   "event": "imbue.imbue_combo_blightfrost",
+   "files": [
+    "audio/imbue/imbue_combo_blightfrost.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Second gem completes Blightfrost (Corrosive + Ice): both bursts, then a bell and choir reveal the combo",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 5.98
+  },
+  {
+   "event": "imbue.imbue_combo_caustic_combustion",
+   "files": [
+    "audio/imbue/imbue_combo_caustic_combustion.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Second gem completes Caustic Combustion (Corrosive + Fire): both bursts, then a bell and choir reveal the combo",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 6.04
+  },
+  {
+   "event": "imbue.imbue_combo_cryoshock",
+   "files": [
+    "audio/imbue/imbue_combo_cryoshock.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Second gem completes Cryoshock (Ice + Electricity): both bursts, then a bell and choir reveal the combo",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 6.22
+  },
+  {
+   "event": "imbue.imbue_combo_overcharge",
+   "files": [
+    "audio/imbue/imbue_combo_overcharge.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Second gem completes Overcharge (Fire + Electricity): both bursts, then a bell and choir reveal the combo",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 6.1
+  },
+  {
+   "event": "imbue.imbue_combo_thermal_shock",
+   "files": [
+    "audio/imbue/imbue_combo_thermal_shock.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Second gem completes Thermal Shock (Fire + Ice): both bursts, then a bell and choir reveal the combo",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 5.97
+  },
+  {
+   "event": "imbue.imbue_combo_toxic_conduction",
+   "files": [
+    "audio/imbue/imbue_combo_toxic_conduction.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Second gem completes Toxic Conduction (Corrosive + Electricity): both bursts, then a bell and choir reveal the combo",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 6.03
+  },
+  {
+   "event": "imbue.imbue_fuse_corrosive",
+   "files": [
+    "audio/imbue/imbue_fuse_corrosive.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Fuse a Corrosive gem: the usual build-up and anvil strike, then a corrosive burst",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 3.76
+  },
+  {
+   "event": "imbue.imbue_fuse_electric",
+   "files": [
+    "audio/imbue/imbue_fuse_electric.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Fuse a Electricity gem: the usual build-up and anvil strike, then a electricity burst",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 3.38
+  },
+  {
+   "event": "imbue.imbue_fuse_fire",
+   "files": [
+    "audio/imbue/imbue_fuse_fire.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Fuse a Fire gem: the usual build-up and anvil strike, then a fire burst",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 3.28
+  },
+  {
+   "event": "imbue.imbue_fuse_ice",
+   "files": [
+    "audio/imbue/imbue_fuse_ice.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Fuse a Ice gem: the usual build-up and anvil strike, then a ice burst",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 3.41
+  },
+  {
+   "event": "movement.slide",
+   "files": [
+    "audio/movement/slide_01.wav",
+    "audio/movement/slide_02.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Slide/dodge across dirt, slowing to a stop (2 lengths)",
+   "cooldown": 0.02,
+   "max_voices": 2,
+   "pitch_var": 0.0,
+   "priority": 3,
+   "duration_s": 0.72,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "movement.slide_recover",
+   "files": [
+    "audio/movement/slide_recover.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Back on your feet after a slide",
+   "cooldown": 0.02,
+   "max_voices": 2,
+   "pitch_var": 0.0,
+   "priority": 3,
+   "duration_s": 0.52
+  },
+  {
+   "event": "movement.step_dirt",
+   "files": [
+    "audio/movement/step_dirt_01.wav",
+    "audio/movement/step_dirt_02.wav",
+    "audio/movement/step_dirt_03.wav",
+    "audio/movement/step_dirt_04.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Footstep on dirt (4 variations: pick at random, never the same twice in a row)",
+   "cooldown": 0.1,
+   "max_voices": 2,
+   "pitch_var": 0.04,
+   "priority": 0,
+   "duration_s": 0.4,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "movement.step_grass",
+   "files": [
+    "audio/movement/step_grass_01.wav",
+    "audio/movement/step_grass_02.wav",
+    "audio/movement/step_grass_03.wav",
+    "audio/movement/step_grass_04.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Footstep on grass (4 variations: pick at random, never the same twice in a row)",
+   "cooldown": 0.1,
+   "max_voices": 2,
+   "pitch_var": 0.04,
+   "priority": 0,
+   "duration_s": 0.35,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "movement.step_stone",
+   "files": [
+    "audio/movement/step_stone_01.wav",
+    "audio/movement/step_stone_02.wav",
+    "audio/movement/step_stone_03.wav",
+    "audio/movement/step_stone_04.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Footstep on stone (4 variations: pick at random, never the same twice in a row)",
+   "cooldown": 0.1,
+   "max_voices": 2,
+   "pitch_var": 0.04,
+   "priority": 0,
+   "duration_s": 0.34,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "movement.step_wood",
+   "files": [
+    "audio/movement/step_wood_01.wav",
+    "audio/movement/step_wood_02.wav",
+    "audio/movement/step_wood_03.wav",
+    "audio/movement/step_wood_04.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Footstep on wood (4 variations: pick at random, never the same twice in a row)",
+   "cooldown": 0.1,
+   "max_voices": 2,
+   "pitch_var": 0.04,
+   "priority": 0,
+   "duration_s": 0.44,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "music.boss_the_god_below",
+   "files": [
+    "audio/music/music_boss_the_god_below.ogg"
+   ],
+   "bus": "Music",
+   "loop": true,
+   "positional": false,
+   "channels": 2,
+   "gain_db": -6,
+   "description": "Final boss stage"
+  },
+  {
+   "event": "music.death_loop",
+   "files": [
+    "audio/music/music_death_loop.ogg"
+   ],
+   "bus": "Music",
+   "loop": true,
+   "positional": false,
+   "channels": 2,
+   "gain_db": -4,
+   "description": "Death / game-over results"
+  },
+  {
+   "event": "music.level_up_loop",
+   "files": [
+    "audio/music/music_level_up_loop.ogg"
+   ],
+   "bus": "Music",
+   "loop": true,
+   "positional": false,
+   "channels": 2,
+   "gain_db": -4,
+   "description": "Level-up screen; quiet first bars so ui.levelup_toll rings over it"
+  },
+  {
+   "event": "music.main_menu_loop",
+   "files": [
+    "audio/music/music_main_menu_loop.ogg"
+   ],
+   "bus": "Music",
+   "loop": true,
+   "positional": false,
+   "channels": 2,
+   "gain_db": -4,
+   "description": "Main menu and other out-of-run screens"
+  },
+  {
+   "event": "music.stage1_a_sixty_miles_of_pine",
+   "files": [
+    "audio/music/music_stage1_a_sixty_miles_of_pine.ogg"
+   ],
+   "bus": "Music",
+   "loop": true,
+   "positional": false,
+   "channels": 2,
+   "gain_db": -6,
+   "description": "Stage 1, track A"
+  },
+  {
+   "event": "music.stage1_b_county_line",
+   "files": [
+    "audio/music/music_stage1_b_county_line.ogg"
+   ],
+   "bus": "Music",
+   "loop": true,
+   "positional": false,
+   "channels": 2,
+   "gain_db": -6,
+   "description": "Stage 1, track B"
+  },
+  {
+   "event": "music.stage2_a_red_canopy",
+   "files": [
+    "audio/music/music_stage2_a_red_canopy.ogg"
+   ],
+   "bus": "Music",
+   "loop": true,
+   "positional": false,
+   "channels": 2,
+   "gain_db": -6,
+   "description": "Stage 2, track A"
+  },
+  {
+   "event": "music.stage2_b_hollow_saints",
+   "files": [
+    "audio/music/music_stage2_b_hollow_saints.ogg"
+   ],
+   "bus": "Music",
+   "loop": true,
+   "positional": false,
+   "channels": 2,
+   "gain_db": -6,
+   "description": "Stage 2, track B"
+  },
+  {
+   "event": "music.stage3_a_leviathan",
+   "files": [
+    "audio/music/music_stage3_a_leviathan.ogg"
+   ],
+   "bus": "Music",
+   "loop": true,
+   "positional": false,
+   "channels": 2,
+   "gain_db": -6,
+   "description": "Stage 3, track A"
+  },
+  {
+   "event": "music.stage3_b_mouth_of_the_deep",
+   "files": [
+    "audio/music/music_stage3_b_mouth_of_the_deep.ogg"
+   ],
+   "bus": "Music",
+   "loop": true,
+   "positional": false,
+   "channels": 2,
+   "gain_db": -6,
+   "description": "Stage 3, track B"
+  },
+  {
+   "event": "player.low_hp_heartbeat_loop",
+   "files": [
+    "audio/player/low_hp_heartbeat_loop.wav"
+   ],
+   "bus": "SFX",
+   "positional": false,
+   "loop": true,
+   "channels": 1,
+   "description": "Low HP heartbeat (seamless loop, 72 bpm: speed it up as HP drops)",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 0.83
+  },
+  {
+   "event": "player.player_death",
+   "files": [
+    "audio/player/player_death.wav"
+   ],
+   "bus": "SFX",
+   "positional": false,
+   "loop": false,
+   "channels": 1,
+   "description": "Player dies: final blow, body falls, a flat bell tolls",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 4.75
+  },
+  {
+   "event": "player.player_hurt",
+   "files": [
+    "audio/player/player_hurt_01.wav",
+    "audio/player/player_hurt_02.wav",
+    "audio/player/player_hurt_03.wav",
+    "audio/player/player_hurt_04.wav"
+   ],
+   "bus": "SFX",
+   "positional": false,
+   "loop": false,
+   "channels": 1,
+   "description": "Player takes a hit: body blow + dissonant sting, PSX-crunched (4 variations)",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 0.51,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "player.player_hurt_heavy",
+   "files": [
+    "audio/player/player_hurt_heavy_01.wav",
+    "audio/player/player_hurt_heavy_02.wav"
+   ],
+   "bus": "SFX",
+   "positional": false,
+   "loop": false,
+   "channels": 1,
+   "description": "Big hit / boss hit / big chunk of HP lost (2 variations)",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 0.61,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "ui.banish",
+   "files": [
+    "audio/ui/banish.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "BANISH: card ripped in half, sinks into the dark",
+   "cooldown": 0.02,
+   "max_voices": 2,
+   "pitch_var": 0.0,
+   "priority": 3,
+   "duration_s": 1.31
+  },
+  {
+   "event": "ui.cant_afford",
+   "files": [
+    "audio/ui/cant_afford.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "NEED MORE GOLD / any error: two dull knocks, a low buzz, no reward",
+   "cooldown": 0.02,
+   "max_voices": 2,
+   "pitch_var": 0.0,
+   "priority": 3,
+   "duration_s": 1.02
+  },
+  {
+   "event": "ui.card_deal",
+   "files": [
+    "audio/ui/card_deal_01.wav",
+    "audio/ui/card_deal_02.wav",
+    "audio/ui/card_deal_03.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Upgrade card flying in and landing (one per card, 3 variations)",
+   "cooldown": 0.02,
+   "max_voices": 2,
+   "pitch_var": 0.0,
+   "priority": 3,
+   "duration_s": 0.97,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "ui.card_hover",
+   "files": [
+    "audio/ui/card_hover.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Hovering an upgrade card: crisp card lift",
+   "cooldown": 0.03,
+   "max_voices": 2,
+   "pitch_var": 0.02,
+   "priority": 0,
+   "duration_s": 0.59
+  },
+  {
+   "event": "ui.card_take",
+   "files": [
+    "audio/ui/card_take.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "TAKE upgrade: card stamped into your build",
+   "cooldown": 0.02,
+   "max_voices": 2,
+   "pitch_var": 0.0,
+   "priority": 3,
+   "duration_s": 1.02
+  },
+  {
+   "event": "ui.chest_hop",
+   "files": [
+    "audio/ui/chest_hop_01.wav",
+    "audio/ui/chest_hop_02.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Chest jumping / rattling before it opens (2 variations)",
+   "cooldown": 0.02,
+   "max_voices": 2,
+   "pitch_var": 0.0,
+   "priority": 3,
+   "duration_s": 1.08,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "ui.chest_open",
+   "files": [
+    "audio/ui/chest_open.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Open chest: hasp, creaking lid, lid thunk, air rushes out",
+   "cooldown": 0.02,
+   "max_voices": 2,
+   "pitch_var": 0.0,
+   "priority": 3,
+   "duration_s": 2.28
+  },
+  {
+   "event": "ui.gem_pickup",
+   "files": [
+    "audio/ui/gem_pickup.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Pick up a gem: bright crystal chime",
+   "cooldown": 0.02,
+   "max_voices": 2,
+   "pitch_var": 0.0,
+   "priority": 3,
+   "duration_s": 1.24
+  },
+  {
+   "event": "ui.gold_pickup",
+   "files": [
+    "audio/ui/gold_pickup_01.wav",
+    "audio/ui/gold_pickup_02.wav",
+    "audio/ui/gold_pickup_03.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Single coin pickup (3 rising pitches: step up on streaks)",
+   "cooldown": 0.03,
+   "max_voices": 2,
+   "pitch_var": 0.02,
+   "priority": 0,
+   "duration_s": 0.96,
+   "variations": "ordered: 01 for a single coin, step up to 02 and 03 on a pickup streak, then raise pitch slightly"
+  },
+  {
+   "event": "ui.imbue_fuse",
+   "files": [
+    "audio/ui/imbue_fuse.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "FUSE: power builds, anvil strike, crystal burst (\u2212500 gold, permanent)",
+   "cooldown": 0.02,
+   "max_voices": 2,
+   "pitch_var": 0.0,
+   "priority": 3,
+   "duration_s": 4.04
+  },
+  {
+   "event": "ui.item_take",
+   "files": [
+    "audio/ui/item_take.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "TAKE IT: item swept into your satchel",
+   "cooldown": 0.02,
+   "max_voices": 2,
+   "pitch_var": 0.0,
+   "priority": 3,
+   "duration_s": 1.06
+  },
+  {
+   "event": "ui.levelup_toll",
+   "files": [
+    "audio/ui/levelup_toll.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "THE BELL TOLLS: flash + sub hit + three bell rings (match the three rings in the animation)",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 4.34
+  },
+  {
+   "event": "ui.memo_hover",
+   "files": [
+    "audio/ui/memo_hover_01.wav",
+    "audio/ui/memo_hover_02.wav",
+    "audio/ui/memo_hover_03.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Hovering a paper memo: dry paper flick (3 variations)",
+   "cooldown": 0.03,
+   "max_voices": 2,
+   "pitch_var": 0.02,
+   "priority": 0,
+   "duration_s": 0.78,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "ui.menu_back",
+   "files": [
+    "audio/ui/menu_back.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Back / ESC: air drop then soft muffled latch",
+   "cooldown": 0.02,
+   "max_voices": 2,
+   "pitch_var": 0.0,
+   "priority": 3,
+   "duration_s": 1.14
+  },
+  {
+   "event": "ui.menu_locked",
+   "files": [
+    "audio/ui/menu_locked.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Locked item: rattling a locked iron handle (no reward)",
+   "cooldown": 0.02,
+   "max_voices": 2,
+   "pitch_var": 0.0,
+   "priority": 3,
+   "duration_s": 0.99
+  },
+  {
+   "event": "ui.menu_move",
+   "files": [
+    "audio/ui/menu_move_01.wav",
+    "audio/ui/menu_move_02.wav",
+    "audio/ui/menu_move_03.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Moving the selection up/down (3 variations: rotate them)",
+   "cooldown": 0.03,
+   "max_voices": 2,
+   "pitch_var": 0.02,
+   "priority": 0,
+   "duration_s": 0.63,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "ui.menu_play",
+   "files": [
+    "audio/ui/menu_play.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "PLAY: the signature Megaclonk: iron latch slam + county bell toll",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 2.58
+  },
+  {
+   "event": "ui.menu_select",
+   "files": [
+    "audio/ui/menu_select.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Selecting Unlocks / Quests / Settings: two-stage iron latch (press + release)",
+   "cooldown": 0.02,
+   "max_voices": 2,
+   "pitch_var": 0.0,
+   "priority": 3,
+   "duration_s": 0.95
+  },
+  {
+   "event": "ui.panel_close",
+   "files": [
+    "audio/ui/panel_close.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Close panel: ledger shut, puff of air",
+   "cooldown": 0.02,
+   "max_voices": 2,
+   "pitch_var": 0.0,
+   "priority": 3,
+   "duration_s": 1.06
+  },
+  {
+   "event": "ui.panel_open",
+   "files": [
+    "audio/ui/panel_open.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Open panel / pause / inventory: heavy ledger flops open",
+   "cooldown": 0.02,
+   "max_voices": 2,
+   "pitch_var": 0.0,
+   "priority": 3,
+   "duration_s": 1.13
+  },
+  {
+   "event": "ui.quest_claim",
+   "files": [
+    "audio/ui/quest_claim.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "CLAIM reward: DONE stamp then a pile of coins",
+   "cooldown": 0.02,
+   "max_voices": 2,
+   "pitch_var": 0.0,
+   "priority": 3,
+   "duration_s": 1.62
+  },
+  {
+   "event": "ui.reel_spin_full",
+   "files": [
+    "audio/ui/reel_spin_full.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Whole reel spin, slowing to a stop with a clunk (if you don't time ticks yourself)",
+   "cooldown": 0.02,
+   "max_voices": 2,
+   "pitch_var": 0.0,
+   "priority": 3,
+   "duration_s": 3.33
+  },
+  {
+   "event": "ui.reel_stop",
+   "files": [
+    "audio/ui/reel_stop.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Reel lands: heavy detent clunk",
+   "cooldown": 0.02,
+   "max_voices": 2,
+   "pitch_var": 0.0,
+   "priority": 3,
+   "duration_s": 0.99
+  },
+  {
+   "event": "ui.reel_tick",
+   "files": [
+    "audio/ui/reel_tick_01.wav",
+    "audio/ui/reel_tick_02.wav",
+    "audio/ui/reel_tick_03.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "One reel detent tick (fire per item that passes; 3 variations)",
+   "cooldown": 0.03,
+   "max_voices": 2,
+   "pitch_var": 0.02,
+   "priority": 0,
+   "duration_s": 0.46,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "ui.refresh_shuffle",
+   "files": [
+    "audio/ui/refresh_shuffle.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "REFRESH: riffle-shuffle the deck, tap it square",
+   "cooldown": 0.02,
+   "max_voices": 2,
+   "pitch_var": 0.0,
+   "priority": 3,
+   "duration_s": 1.19
+  },
+  {
+   "event": "ui.reveal_common",
+   "files": [
+    "audio/ui/reveal_common.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "COMMON card revealed: each tier is bigger than the last",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 0.91
+  },
+  {
+   "event": "ui.reveal_epic",
+   "files": [
+    "audio/ui/reveal_epic.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "EPIC card revealed: each tier is bigger than the last",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 2.6
+  },
+  {
+   "event": "ui.reveal_legendary",
+   "files": [
+    "audio/ui/reveal_legendary.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "LEGENDARY card revealed: each tier is bigger than the last",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 3.82
+  },
+  {
+   "event": "ui.reveal_rare",
+   "files": [
+    "audio/ui/reveal_rare.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "RARE card revealed: each tier is bigger than the last",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 1.72
+  },
+  {
+   "event": "ui.reveal_uncommon",
+   "files": [
+    "audio/ui/reveal_uncommon.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "UNCOMMON card revealed: each tier is bigger than the last",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 1.24
+  },
+  {
+   "event": "ui.run_start",
+   "files": [
+    "audio/ui/run_start.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "ENTER THE HOLLOW: iron gate, the lowest bell, wind in the fog",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 4.28
+  },
+  {
+   "event": "ui.shop_buy",
+   "files": [
+    "audio/ui/shop_buy.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "BUY: coins spill onto the counter, drawer ka-ching",
+   "cooldown": 0.02,
+   "max_voices": 2,
+   "pitch_var": 0.0,
+   "priority": 3,
+   "duration_s": 1.26
+  },
+  {
+   "event": "ui.skip_heal",
+   "files": [
+    "audio/ui/skip_heal.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "SKIP \u00b7 HEAL: soft warm chime",
+   "cooldown": 0.02,
+   "max_voices": 2,
+   "pitch_var": 0.0,
+   "priority": 3,
+   "duration_s": 1.94
+  },
+  {
+   "event": "ui.slider_tick",
+   "files": [
+    "audio/ui/slider_tick.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Slider notch / volume step: tiny ratchet tick",
+   "cooldown": 0.03,
+   "max_voices": 2,
+   "pitch_var": 0.02,
+   "priority": 0,
+   "duration_s": 0.3
+  },
+  {
+   "event": "ui.socket_hover",
+   "files": [
+    "audio/ui/socket_hover.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Hovering a glowing socket: faint resonant hum",
+   "cooldown": 0.02,
+   "max_voices": 2,
+   "pitch_var": 0.0,
+   "priority": 3,
+   "duration_s": 1.84
+  },
+  {
+   "event": "ui.socket_place",
+   "files": [
+    "audio/ui/socket_place.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Gem clicks into a socket: snap, seat, ring",
+   "cooldown": 0.02,
+   "max_voices": 2,
+   "pitch_var": 0.0,
+   "priority": 3,
+   "duration_s": 0.98
+  },
+  {
+   "event": "ui.stamp_done",
+   "files": [
+    "audio/ui/stamp_done.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "DONE stamp: self-inking ka-CHUNK (spring, slam, spring)",
+   "cooldown": 0.02,
+   "max_voices": 2,
+   "pitch_var": 0.0,
+   "priority": 3,
+   "duration_s": 1.22
+  },
+  {
+   "event": "ui.stamp_not_yet",
+   "files": [
+    "audio/ui/stamp_not_yet.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Red NOT YET stamp: rubber thump onto a wooden desk",
+   "cooldown": 0.02,
+   "max_voices": 2,
+   "pitch_var": 0.0,
+   "priority": 3,
+   "duration_s": 1.1
+  },
+  {
+   "event": "ui.toggle_off",
+   "files": [
+    "audio/ui/toggle_off.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Settings toggle: heavy two-stage bakelite switch",
+   "cooldown": 0.02,
+   "max_voices": 2,
+   "pitch_var": 0.0,
+   "priority": 3,
+   "duration_s": 0.78
+  },
+  {
+   "event": "ui.toggle_on",
+   "files": [
+    "audio/ui/toggle_on.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Settings toggle: heavy two-stage bakelite switch",
+   "cooldown": 0.02,
+   "max_voices": 2,
+   "pitch_var": 0.0,
+   "priority": 3,
+   "duration_s": 0.78
+  },
+  {
+   "event": "ui.type_bell",
+   "files": [
+    "audio/ui/type_bell.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Typewriter bell + carriage return: memo finished / quest updated",
+   "cooldown": 0.02,
+   "max_voices": 2,
+   "pitch_var": 0.0,
+   "priority": 3,
+   "duration_s": 1.19
+  },
+  {
+   "event": "ui.type_key",
+   "files": [
+    "audio/ui/type_key_01.wav",
+    "audio/ui/type_key_02.wav",
+    "audio/ui/type_key_03.wav",
+    "audio/ui/type_key_04.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Typewriter keystroke for memo text appearing (4 variations)",
+   "cooldown": 0.03,
+   "max_voices": 2,
+   "pitch_var": 0.02,
+   "priority": 0,
+   "duration_s": 0.7,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "ui.weapon_select",
+   "files": [
+    "audio/ui/weapon_select_01.wav",
+    "audio/ui/weapon_select_02.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Choosing a weapon / character: steel slides into the slot (2 variations)",
+   "cooldown": 0.02,
+   "max_voices": 2,
+   "pitch_var": 0.0,
+   "priority": 3,
+   "duration_s": 1.0,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "weapon.arrow_pierce",
+   "files": [
+    "audio/weapons/arrow_pierce_01.wav",
+    "audio/weapons/arrow_pierce_02.wav",
+    "audio/weapons/arrow_pierce_03.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Arrow punches through an enemy; play 01\u219202\u219203 as it pierces more",
+   "cooldown": 0.04,
+   "max_voices": 4,
+   "pitch_var": 0.05,
+   "priority": 1,
+   "duration_s": 0.41,
+   "variations": "ordered: 01 for the first enemy an arrow passes through, 02 the second, 03 the third and beyond"
+  },
+  {
+   "event": "weapon.aura_loop",
+   "files": [
+    "audio/weapons/aura_loop.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": true,
+   "channels": 1,
+   "description": "Sigil turning under the player (seamless loop, play while equipped)",
+   "cooldown": 0.05,
+   "max_voices": 3,
+   "pitch_var": 0.03,
+   "priority": 2,
+   "duration_s": 4.0
+  },
+  {
+   "event": "weapon.aura_pulse",
+   "files": [
+    "audio/weapons/aura_pulse_01.wav",
+    "audio/weapons/aura_pulse_02.wav",
+    "audio/weapons/aura_pulse_03.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Damage tick: soft occult throb, quiet enough to repeat every 0.6 s (3 variations)",
+   "cooldown": 0.04,
+   "max_voices": 4,
+   "pitch_var": 0.05,
+   "priority": 1,
+   "duration_s": 0.7,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "weapon.bow_shot",
+   "files": [
+    "audio/weapons/bow_shot_01.wav",
+    "audio/weapons/bow_shot_02.wav",
+    "audio/weapons/bow_shot_03.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Arrow released: string twang + limb thwack (3 variations)",
+   "cooldown": 0.05,
+   "max_voices": 3,
+   "pitch_var": 0.03,
+   "priority": 2,
+   "duration_s": 0.7,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "weapon.bow_volley",
+   "files": [
+    "audio/weapons/bow_volley.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Fan of arrows released together (use when projectile count > 1)",
+   "cooldown": 0.05,
+   "max_voices": 3,
+   "pitch_var": 0.03,
+   "priority": 2,
+   "duration_s": 0.68
+  },
+  {
+   "event": "weapon.bullet_hit",
+   "files": [
+    "audio/weapons/bullet_hit_01.wav",
+    "audio/weapons/bullet_hit_02.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Bullet hits (also suits Shotgun pellets; 2 variations)",
+   "cooldown": 0.04,
+   "max_voices": 4,
+   "pitch_var": 0.05,
+   "priority": 1,
+   "duration_s": 0.41,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "weapon.fireball_cast",
+   "files": [
+    "audio/weapons/fireball_cast.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Fireball launched: ignition puff, then it speeds away",
+   "cooldown": 0.05,
+   "max_voices": 3,
+   "pitch_var": 0.03,
+   "priority": 2,
+   "duration_s": 0.73
+  },
+  {
+   "event": "weapon.fireball_flight_loop",
+   "files": [
+    "audio/weapons/fireball_flight_loop.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": true,
+   "channels": 1,
+   "description": "Fireball flickering in flight (seamless loop, optional for near-camera fireballs)",
+   "cooldown": 0.05,
+   "max_voices": 3,
+   "pitch_var": 0.03,
+   "priority": 2,
+   "duration_s": 2.0
+  },
+  {
+   "event": "weapon.fireball_impact",
+   "files": [
+    "audio/weapons/fireball_impact_01.wav",
+    "audio/weapons/fireball_impact_02.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Fireball bursts on an enemy, flame bits spray and sizzle (2 variations)",
+   "cooldown": 0.04,
+   "max_voices": 4,
+   "pitch_var": 0.05,
+   "priority": 1,
+   "duration_s": 0.77,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "weapon.lightning_bounce",
+   "files": [
+    "audio/weapons/lightning_bounce_01.wav",
+    "audio/weapons/lightning_bounce_02.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Arc jumps sideways to the next enemy (2 variations)",
+   "cooldown": 0.04,
+   "max_voices": 4,
+   "pitch_var": 0.05,
+   "priority": 1,
+   "duration_s": 0.58,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "weapon.lightning_strike",
+   "files": [
+    "audio/weapons/lightning_strike_01.wav",
+    "audio/weapons/lightning_strike_02.wav",
+    "audio/weapons/lightning_strike_03.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Bolt drops on an enemy: crack, sizzle, rolling thunder (3 variations)",
+   "cooldown": 0.05,
+   "max_voices": 3,
+   "pitch_var": 0.03,
+   "priority": 2,
+   "duration_s": 1.22,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "weapon.revolver_ricochet",
+   "files": [
+    "audio/weapons/revolver_ricochet_01.wav",
+    "audio/weapons/revolver_ricochet_02.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Bullet bounces to the next enemy: spark ping + whine (2 variations)",
+   "cooldown": 0.05,
+   "max_voices": 3,
+   "pitch_var": 0.03,
+   "priority": 2,
+   "duration_s": 0.53,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "weapon.revolver_shot",
+   "files": [
+    "audio/weapons/revolver_shot_01.wav",
+    "audio/weapons/revolver_shot_02.wav",
+    "audio/weapons/revolver_shot_03.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Revolver fires: hammer, crack, smoky tail (3 variations)",
+   "cooldown": 0.05,
+   "max_voices": 3,
+   "pitch_var": 0.03,
+   "priority": 2,
+   "duration_s": 0.89,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "weapon.scythe_catch",
+   "files": [
+    "audio/weapons/scythe_catch.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Caught back in the hand",
+   "cooldown": 0.05,
+   "max_voices": 3,
+   "pitch_var": 0.03,
+   "priority": 2,
+   "duration_s": 0.43
+  },
+  {
+   "event": "weapon.scythe_hit",
+   "files": [
+    "audio/weapons/scythe_hit_01.wav",
+    "audio/weapons/scythe_hit_02.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Blade slices an enemy (out or back; 2 variations)",
+   "cooldown": 0.04,
+   "max_voices": 4,
+   "pitch_var": 0.05,
+   "priority": 1,
+   "duration_s": 0.44,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "weapon.scythe_spin_loop",
+   "files": [
+    "audio/weapons/scythe_spin_loop.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": true,
+   "channels": 1,
+   "description": "Spinning in the air (seamless loop): pitch it up/down with speed as it slows and returns",
+   "cooldown": 0.05,
+   "max_voices": 3,
+   "pitch_var": 0.03,
+   "priority": 2,
+   "duration_s": 2.0
+  },
+  {
+   "event": "weapon.scythe_throw",
+   "files": [
+    "audio/weapons/scythe_throw.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Scythe thrown",
+   "cooldown": 0.05,
+   "max_voices": 3,
+   "pitch_var": 0.03,
+   "priority": 2,
+   "duration_s": 0.65
+  },
+  {
+   "event": "weapon.shotgun_blast",
+   "files": [
+    "audio/weapons/shotgun_blast_01.wav",
+    "audio/weapons/shotgun_blast_02.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Shotgun blast with pellet spray and recoil thump (2 variations)",
+   "cooldown": 0.05,
+   "max_voices": 3,
+   "pitch_var": 0.03,
+   "priority": 2,
+   "duration_s": 1.12,
+   "variations": "rotate or pick at random; never the same twice in a row"
+  },
+  {
+   "event": "weapon.shotgun_knockback",
+   "files": [
+    "audio/weapons/shotgun_knockback.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Enemy caught in the cone and shoved back",
+   "cooldown": 0.04,
+   "max_voices": 4,
+   "pitch_var": 0.05,
+   "priority": 1,
+   "duration_s": 0.41
+  },
+  {
+   "event": "weapon.shotgun_pump",
+   "files": [
+    "audio/weapons/shotgun_pump.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Pump racks (shuck-shuck) during the cooldown",
+   "cooldown": 0.05,
+   "max_voices": 3,
+   "pitch_var": 0.03,
+   "priority": 2,
+   "duration_s": 0.71
+  },
+  {
+   "event": "weapon.sword_hit",
+   "files": [
+    "audio/weapons/sword_hit_01.wav",
+    "audio/weapons/sword_hit_02.wav",
+    "audio/weapons/sword_hit_03.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Slash connects; 01\u219203 get heavier, matching the growing pushback",
+   "cooldown": 0.04,
+   "max_voices": 4,
+   "pitch_var": 0.05,
+   "priority": 1,
+   "duration_s": 0.44,
+   "variations": "ordered: 01, 02, 03 across a slash burst (each heavier, matching the growing pushback)"
+  },
+  {
+   "event": "weapon.sword_swing",
+   "files": [
+    "audio/weapons/sword_swing_01.wav",
+    "audio/weapons/sword_swing_02.wav",
+    "audio/weapons/sword_swing_03.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Slash swing; alternate these through a burst (3 directions)",
+   "cooldown": 0.05,
+   "max_voices": 3,
+   "pitch_var": 0.03,
+   "priority": 2,
+   "duration_s": 0.54,
+   "variations": "alternate 01-03 through a burst; use weapon.sword_swing_final for the last slash"
+  },
+  {
+   "event": "weapon.sword_swing_final",
+   "files": [
+    "audio/weapons/sword_swing_final.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Last, biggest slash of a burst: longer arc and the blade rings",
+   "cooldown": 0.05,
+   "max_voices": 3,
+   "pitch_var": 0.03,
+   "priority": 2,
+   "duration_s": 0.62
+  },
+  {
+   "event": "weapon.ult_cataclysm",
+   "files": [
+    "audio/weapons/ult_cataclysm.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "15 m explosion: charge, blast, sub drop, debris, the county bell under it all",
+   "cooldown": 0.05,
+   "max_voices": 3,
+   "pitch_var": 0.03,
+   "priority": 2,
+   "duration_s": 3.33
+  },
+  {
+   "event": "world.boss_enrage_abyssal",
+   "files": [
+    "audio/world/boss_enrage_abyssal.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Abyssal: stacked roars and a groan from below (stage 3)",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 5.85
+  },
+  {
+   "event": "world.boss_enrage_beast",
+   "files": [
+    "audio/world/boss_enrage_beast.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Beast: a big animal roar (stage 1 forest bosses)",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 3.84
+  },
+  {
+   "event": "world.boss_enrage_bellow",
+   "files": [
+    "audio/world/boss_enrage_bellow.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Bellow: a long, deep roar for something huge",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 5.19
+  },
+  {
+   "event": "world.boss_enrage_god",
+   "files": [
+    "audio/world/boss_enrage_god.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "God: the final boss's roar, with the county bell and the opening of the god theme",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 6.86
+  },
+  {
+   "event": "world.boss_enrage_shriek",
+   "files": [
+    "audio/world/boss_enrage_shriek.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Shriek: a two-voiced, clashing screech (stage 2, red forest)",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 3.55
+  },
+  {
+   "event": "world.gem_found_corrosive",
+   "files": [
+    "audio/world/gem_found_corrosive.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Corrosive gem popup: shared chime (soured) + acid bubbles and hiss",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 1.52
+  },
+  {
+   "event": "world.gem_found_electric",
+   "files": [
+    "audio/world/gem_found_electric.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Electricity gem popup: shared chime + crackling arcs and a buzzing hum",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 1.38
+  },
+  {
+   "event": "world.gem_found_fire",
+   "files": [
+    "audio/world/gem_found_fire.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Fire gem popup: shared crystal chime + ignition and crackling embers",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 1.28
+  },
+  {
+   "event": "world.gem_found_ice",
+   "files": [
+    "audio/world/gem_found_ice.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Ice gem popup: shared chime + tumbling ice crystals and a frosty breath",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 1.88
+  },
+  {
+   "event": "world.shrine_charge_cancel",
+   "files": [
+    "audio/world/shrine_charge_cancel.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Charging interrupted (player left the circle): the glow drains away",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 0.99
+  },
+  {
+   "event": "world.shrine_charge_loop",
+   "files": [
+    "audio/world/shrine_charge_loop.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": true,
+   "channels": 1,
+   "description": "Charging (seamless loop, mono): raise its pitch from 1.0 to about 1.25 as the shrine fills",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 4.0
+  },
+  {
+   "event": "world.shrine_charge_tick",
+   "files": [
+    "audio/world/shrine_charge_tick_01.wav",
+    "audio/world/shrine_charge_tick_02.wav",
+    "audio/world/shrine_charge_tick_03.wav",
+    "audio/world/shrine_charge_tick_04.wav",
+    "audio/world/shrine_charge_tick_05.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Charge milestone 20%: one note of a rising D major line (play 01\u219205)",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 0.69,
+   "variations": "ordered: play 01 at 20% charge, 02 at 40% ... 05 at 100% (a rising D major line)"
+  },
+  {
+   "event": "world.shrine_complete",
+   "files": [
+    "audio/world/shrine_complete.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Shrine fully charged: blast of light, bell and a major choir chord (then the stat screen opens)",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 5.25
+  },
+  {
+   "event": "world.stage_boss_death",
+   "files": [
+    "audio/world/stage_boss_death.wav"
+   ],
+   "bus": "SFX",
+   "positional": true,
+   "loop": false,
+   "channels": 1,
+   "description": "Stage boss dies: a falling roar, the body crashes down, debris (mono, play at the boss)",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 3.83
+  },
+  {
+   "event": "world.stage_boss_victory",
+   "files": [
+    "audio/world/stage_boss_victory.wav"
+   ],
+   "bus": "UI",
+   "positional": false,
+   "loop": false,
+   "channels": 2,
+   "description": "Victory fanfare after a stage boss: the first notes of the hero theme, then a full D major chord with choir and bell",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "pitch_var": 0.0,
+   "priority": 5,
+   "duration_s": 8.54
+  }
+ ]
+}
