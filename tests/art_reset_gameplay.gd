@@ -40,7 +40,7 @@ func run():
  game.mode="pause";game.frontend.inventory();await process_frame
  var trait_icon: Control
  for node in RewardScreens.descendants(game.frontend.menu):
-  if node is Control and node.tooltip_text.begins_with("Wall Climber"):trait_icon=node;break
+  if node is Control and node.tooltip_text.begins_with("Trait:"):trait_icon=node;break
  check(trait_icon!=null and not RewardScreens.descendants(trait_icon).any(func(n):return n is ColorRect and n.material is ShaderMaterial),"Build trait icon has no animated gold shader frame")
  game.frontend.enter_run();game.update_hud();await process_frame
  var trait_tile=game.frontend.run_hud.trait_slot

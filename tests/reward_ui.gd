@@ -43,7 +43,7 @@ func run():
  var labels=[]
  for node in descendants(game.frontend.menu):
   if node is Label:labels.append(node.text)
- check("Inventory" in labels and "Stats" in labels and "Weapons" in labels and "Items" in labels,"Build screen uses inventory and real stats sidebars")
+ check("Inventory" in labels and "Stats" in labels and labels.any(func(t):return t.to_lower().begins_with("weapons")) and labels.any(func(t):return t.to_lower().begins_with("items")),"Build screen uses inventory and real stats sidebars")
  var shop={"tier":"Common","offers":["whetstone"],"sold":[],"used":false};game.gold=0;game.frontend.shop(shop)
  var shop_screen: RunShop
  for node in game.frontend.menu.get_children():

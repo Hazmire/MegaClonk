@@ -60,7 +60,7 @@ func setup(owner_game: Node) -> void:
  game.health_bar=run_hud.health_bar;game.xp_bar=run_hud.xp_bar;health_text=run_hud.health_text;minimap=run_hud.minimap;event_label=run_hud.event_label;timer_label=run_hud.timer_label
  var hp_background=StyleBoxFlat.new();hp_background.bg_color=FogPalette.RUST_DEEP;hp_background.border_color=FogPalette.INK;hp_background.set_border_width_all(1)
  character_health=ProgressBar.new();character_health.name="CharacterHealth";character_health.size=Vector2(64,7);character_health.show_percentage=false;character_health.mouse_filter=Control.MOUSE_FILTER_IGNORE;character_health.add_theme_stylebox_override("background",hp_background.duplicate());var hp_fill=StyleBoxFlat.new();hp_fill.bg_color=HEALTH_COLOR;character_health.add_theme_stylebox_override("fill",hp_fill);character_health.add_theme_font_size_override("font_size",1);character_health.size=Vector2(64,7);hud_root.add_child(character_health)
- game.notice=text("",root,18);game.notice.position=Vector2(350,560);game.notice.custom_minimum_size.x=590;game.notice.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+ game.notice=NoticeLabel.new();root.add_child(game.notice);game.notice.position=Vector2(350,556);game.notice.custom_minimum_size=Vector2(590,34)
  run_overlay=RunOverlay.new();root.add_child(run_overlay);root.move_child(menu,root.get_child_count()-1) # order: HUD, run overlay, then pause/reward screens above
  hud_root.hide()
 func text(value: String, parent: Node, size_value: int = 18) -> Label:
@@ -237,6 +237,11 @@ func pause() -> void:
  if game.mode=="run":capture_pause_frame()
  game.mode="pause";clear()
  var screen=RunPause.new();MenuScreen.set_audio_owner(game);screen.bind(self);menu.add_child(screen)
+func results(victory: bool,unlocked: Array) -> void:
+ clear();var screen=RunResults.new();screen.info=RunData.results(game,victory,unlocked);MenuScreen.set_audio_owner(game);screen.bind(self);menu.add_child(screen)
+func sandbox(entries: Array,seed_line: String) -> RunSandbox:
+ if game.mode=="run":capture_pause_frame()
+ clear();var screen=RunSandbox.new();screen.entries=entries;screen.seed_line=seed_line;MenuScreen.set_audio_owner(game);screen.bind(self);menu.add_child(screen);return screen
 func world_map(from_pause: bool=false) -> void:
  RewardScreens.world_map(self,from_pause)
 func inventory() -> void:
@@ -295,13 +300,4 @@ func empty_slot(parent: Node, label: String) -> void:
  var mark=text("—",slot,18);mark.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 func stage_intro(number: int) -> void:
  if is_instance_valid(stage_banner):stage_banner.queue_free()
- var banner=Label.new();stage_banner=banner;banner.mouse_filter=Control.MOUSE_FILTER_IGNORE;banner.process_mode=Node.PROCESS_MODE_ALWAYS
- banner.text="STAGE %d — %s"%[number,StageThemes.config(number).title];banner.position=Vector2(300,102);banner.custom_minimum_size=Vector2(680,60);banner.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;banner.add_theme_font_size_override("font_size",32)
- banner.add_theme_color_override("font_color",StageThemes.config(number).accent);banner.add_theme_color_override("font_shadow_color",Color("121522"));banner.add_theme_constant_override("shadow_offset_x",2);banner.add_theme_constant_override("shadow_offset_y",2)
- root.add_child(banner);banner.modulate.a=0;banner.scale=Vector2.ONE*0.92;banner.pivot_offset=Vector2(340,30)
- var tween=banner.create_tween();tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
- tween.tween_property(banner,"modulate:a",1.0,0.3)
- if not game.settings.reduced:
-  tween.parallel().tween_property(banner,"scale",Vector2.ONE,0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-  tween.tween_property(banner,"self_modulate",Color(1.25,1.25,1.25),0.25);tween.tween_property(banner,"self_modulate",Color.WHITE,0.25)
- tween.tween_interval(1.5);tween.tween_property(banner,"modulate:a",0.0,0.6);tween.tween_callback(banner.queue_free)
+ stage_banner=StageBanner.new().setup(number,game.settings.reduced);root.add_child(stage_banner)

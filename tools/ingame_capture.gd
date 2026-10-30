@@ -147,6 +147,15 @@ func run() -> void:
   await create_timer(0.8).timeout;await snap("imbue-done",0.3)
   game.gold=100;sc.pick_gem("corrosive");await create_timer(0.3).timeout;sc.data=RunData.imbue(game);sc.pick_socket(int(sc.data.weapons[1].id),0);await create_timer(0.3).timeout;await snap("imbue-poor",0.2)
   game.resume()
+ if want("misc"):
+  late_build();game.mode="run";game.gold=321;game.kills=842;game.level=9;game.elapsed=754.0;game.damage_by_weapon={0:18420.0,6:9210.0,3:4100.0};game.frontend.update_hud()
+  game.frontend.stage_intro(2);await create_timer(0.7).timeout;await snap("banner-stage",0.0)
+  game.notice.text="E  /  Chest · 15 gold";await create_timer(0.3).timeout;await snap("notice-plate",0.0);game.notice.text=""
+  game.frontend.world_map(true);await create_timer(0.6).timeout;await snap("map-full",0.2);game.resume();game.mode="run"
+  game.frontend.inventory();await create_timer(0.6).timeout;await snap("build-inspector",0.2);game.resume();game.mode="run"
+  game.frontend.results(false,["Slay 500 enemies"]);await create_timer(0.6).timeout;await snap("results-death",0.2)
+  game.frontend.results(true,[]);await create_timer(0.6).timeout;await snap("results-victory",0.2)
+  game.mode="run";game.sandbox=true;game.sandbox_menu();await create_timer(0.6).timeout;await snap("sandbox-menu",0.2);game.sandbox=false;game.resume()
  quit(0)
 func wait_phase(tq: RunToasts,phase: String,extra: float) -> void:
  var guard=0

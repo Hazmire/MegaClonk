@@ -1183,51 +1183,41 @@ func finish_run(victory: bool) -> void:
  run_metrics["ultimates"]=loadout_runtime.uses
  MetaProgress.record(progress.data,{"weapon":selected_weapon,"trait":loadout_runtime.trait_id,"ultimate":loadout_runtime.ultimate_id,"time":elapsed,"kills":kills,"victory":victory,"metrics":run_metrics.duplicate(true)},sandbox)
  if not sandbox:progress.save()
- var col=clear_panel("VICTORY / INFINITY BROKEN" if victory else "THE WILD CLAIMS ANOTHER")
- var best=-1
- for id in damage_by_weapon:
-  if id<0:continue
-  if best==-1 or damage_by_weapon[id]>damage_by_weapon[best]: best=id
- title("Survived %02d:%02d · Stage %d · Level %d\n%d kills · %.0f damage · %d gold\nHighest damage: %s\n%s"%[int(elapsed)/60,int(elapsed)%60,stage,level,kills,damage_total,gold,Catalog.weapon_name(best) if best>=0 else "None","Sandbox: no progression written" if sandbox else "Quest progress saved • claim silver in Quests"],col,20)
- if unlocked.size()>0: title("Requirements met: "+", ".join(unlocked),col,18)
- button("Run again",col,begin_run)
- button("Main menu",col,func(): build_menu_world(); main_menu())
+ frontend.results(victory,unlocked)
  tone(520 if victory else 110,0.5)
 func show_progress() -> void:
  frontend.unlocks()
 
 func sandbox_menu() -> void:
  mode="sandbox"
- var col=clear_panel("SANDBOX / PROGRESSION ISOLATED")
- var select=OptionButton.new()
- for id in Catalog.ACTIVE_WEAPONS:select.add_item(Catalog.WEAPONS[id][0],id)
- col.add_child(select)
- button("Equip / upgrade selected weapon",col,func(): equip(select.get_item_id(select.selected)); toast("Equipped or upgraded"))
- button("Set selected weapon to level 10",col,func():
-  equip(select.get_item_id(select.selected))
-  if weapons.has(select.get_item_id(select.selected)):weapons[select.get_item_id(select.selected)].level=10)
- button("Clear weapons",col,func():
-  weapons.clear();gems.reset();amulets=0;amulets_found=0)
- button("Add random tome",col,func(): var names=Catalog.ACTIVE_TOMES; var name=names[rng.randi_range(0,names.size()-1)]; apply_upgrade({"type":"tome","id":name}))
- button("Add item",col,award_item)
- title("Map seed: %s • F6 overlay • F7 repeat • F8 next"%stage_map_seed(),col,18)
- var seed_input=LineEdit.new();seed_input.text=str(stage_map_seed());seed_input.placeholder_text="Map seed";col.add_child(seed_input)
- button("Generate entered seed",col,func():
-  if seed_input.text.is_valid_int():map_seed_override=int(seed_input.text);build_stage();resume())
- button("Show regions / ramps / navigation",col,toggle_map_debug)
- button("Combat counters: "+str(debug_combat),col,func():
-  debug_combat=not debug_combat
-  if not is_instance_valid(combat_debug_label):
-   combat_debug_label=Label.new();combat_debug_label.position=Vector2(20,180);combat_debug_label.add_theme_font_size_override("font_size",16);ui.add_child(combat_debug_label)
-  combat_debug_label.visible=debug_combat;resume())
- button("Audio diagnostics",col,func():toast(JSON.stringify(audio.diagnostics())))
- button("Spawn 100 enemies",col,func(): for i in 100: spawn_enemy())
- button("Spawn Warden",col,func(): spawn_enemy(8))
- button("Add XP +100 / gold +100",col,func(): xp+=100; gold+=100)
- button("Invincibility: "+str(settings.invincible),col,func(): settings.invincible=not settings.invincible; sandbox_menu())
- button("Time scale: "+str(Engine.time_scale),col,func(): Engine.time_scale=2 if Engine.time_scale==1 else 1; sandbox_menu())
- button("Teleport to spawn",col,func(): player.position=map_layout.spawn+Vector3.UP)
- button("Resume",col,resume)
+ var screen: RunSandbox
+ var pick=func() -> int:return screen.select.get_item_id(screen.select.selected)
+ var entries=[
+  {"label":"Equip / upgrade selected weapon","call":func(): equip(pick.call()); toast("Equipped or upgraded")},
+  {"label":"Set selected weapon to level 10","call":func():
+   equip(pick.call())
+   if weapons.has(pick.call()):weapons[pick.call()].level=10},
+  {"label":"Clear weapons","call":func(): weapons.clear();gems.reset();amulets=0;amulets_found=0},
+  {"label":"Add random tome","call":func(): var names=Catalog.ACTIVE_TOMES; var name=names[rng.randi_range(0,names.size()-1)]; apply_upgrade({"type":"tome","id":name})},
+  {"label":"Add item","call":award_item},
+  {"label":"@seed","text":str(stage_map_seed())},
+  {"label":"Generate entered seed","call":func():
+   if screen.seed_input.text.is_valid_int():map_seed_override=int(screen.seed_input.text);build_stage();resume()},
+  {"label":"Show regions / ramps / navigation","call":toggle_map_debug},
+  {"label":"Combat counters: "+str(debug_combat),"call":func():
+   debug_combat=not debug_combat
+   if not is_instance_valid(combat_debug_label):
+    combat_debug_label=Label.new();combat_debug_label.position=Vector2(20,180);combat_debug_label.add_theme_font_size_override("font_size",16);ui.add_child(combat_debug_label)
+   combat_debug_label.visible=debug_combat;resume()},
+  {"label":"Audio diagnostics","call":func():toast(JSON.stringify(audio.diagnostics()))},
+  {"label":"Spawn 100 enemies","call":func(): for i in 100: spawn_enemy()},
+  {"label":"Spawn Warden","call":func(): spawn_enemy(8)},
+  {"label":"Add XP +100 / gold +100","call":func(): xp+=100; gold+=100},
+  {"label":"Invincibility: "+str(settings.invincible),"call":func(): settings.invincible=not settings.invincible; sandbox_menu()},
+  {"label":"Time scale: "+str(Engine.time_scale),"call":func(): Engine.time_scale=2 if Engine.time_scale==1 else 1; sandbox_menu()},
+  {"label":"Teleport to spawn","call":func(): player.position=map_layout.spawn+Vector3.UP},
+  {"label":"Resume","call":resume}]
+ screen=frontend.sandbox(entries,"Map seed: %s • F6 overlay • F7 repeat • F8 next"%stage_map_seed())
 func settings_menu(back: Callable) -> void:
  frontend.settings(back)
 

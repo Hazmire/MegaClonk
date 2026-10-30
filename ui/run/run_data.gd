@@ -208,3 +208,21 @@ static func imbue(game: Node) -> Dictionary:
   var combo=WeaponSockets.combo(state)
   weapons.append({"id":int(id),"name":str(Catalog.WEAPONS[id][0]),"level":int(state.level),"open":open,"used":gems.size(),"sockets":sockets,"combo":str(combo.get("name","")),"can_unlock_second":WeaponSockets.can_unlock_second(state)})
  return {"cost":cost,"gold":int(game.gold),"amulets":int(game.amulets),"tray":tray,"weapons":weapons}
+# --- results, build inspector ---------------------------------------------------------------------------------------------
+static func clock(seconds: float) -> String:return "%02d:%02d"%[int(seconds)/60,int(seconds)%60]
+# End-of-run summary: the same figures the old results text listed, plus damage per weapon for a bar list.
+static func results(game: Node,victory: bool,unlocked: Array) -> Dictionary:
+ var per=[];var best=-1
+ for id in game.damage_by_weapon:
+  if int(id)<0:continue
+  per.append({"id":int(id),"name":str(Catalog.weapon_name(int(id))),"damage":float(game.damage_by_weapon[id])})
+  if best==-1 or float(game.damage_by_weapon[id])>float(game.damage_by_weapon[best]):best=int(id)
+ per.sort_custom(func(a,b):return a.damage>b.damage)
+ return {"victory":victory,"time":clock(game.elapsed),"stage":int(game.stage),"level":int(game.level),"kills":int(game.kills),"damage":float(game.damage_total),"gold":int(game.gold),
+  "best":str(Catalog.weapon_name(best)) if best>=0 else "None","per_weapon":per,"unlocked":unlocked,"sandbox":bool(game.sandbox),"character":str(game.character)}
+# Build inspector: run totals and one entry per weapon (the game's own tooltip text) with its sockets.
+static func build_details(game: Node) -> Dictionary:
+ var ws=[]
+ for id in game.weapons:ws.append({"id":int(id),"name":str(Catalog.WEAPONS[id][0]),"level":int(game.weapons[id].level),"text":game.weapon_tooltip(id),"sockets":SocketScreens.tooltip(game.weapons[id])})
+ return {"level":int(game.level),"stage":int(game.stage),"kills":int(game.kills),"damage":float(game.damage_total),"gold":int(game.gold),"paid_chests":int(game.chests_opened),"free_chests":int(game.run_metrics.get("free_chests",0)),
+  "extra_bosses":int(game.additional_boss_count),"per_boss":1+int(game.additional_boss_count),"weapons":ws}

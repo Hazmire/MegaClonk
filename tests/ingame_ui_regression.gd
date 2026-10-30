@@ -27,6 +27,7 @@ func run() -> void:
  await shrine_screen()
  await chest_screen()
  await imbue_screen()
+ await misc_screens()
  print("INGAME_UI: %d checks, %d failures"%[count,failures.size()])
  quit(1 if failures.size()>0 else 0)
 func foundation() -> void:
@@ -517,3 +518,52 @@ func imbue_screen() -> void:
  check(WeaponSockets.unlocked(game.weapons[w1])==2 and game.amulets==0,"Using the amulet unlocks the second socket and spends it")
  s.leave_button.chosen.emit();await process_frame
  check(game.mode=="run","Leave resumes the run")
+func misc_screens() -> void:
+ var fe=game.frontend;game.enemies.clear();game.mode="run";game.stage=1;game.gold=321;game.kills=42;game.level=5
+ # stage banner
+ fe.stage_intro(2);await process_frame
+ check(fe.stage_banner is StageBanner and fe.stage_banner.get_node("Title").text==str(StageThemes.config(2).title),"Stage intro banner shows the stage's real title")
+ var first=fe.stage_banner;fe.stage_intro(2);await process_frame
+ check(not is_instance_valid(first) or first.is_queued_for_deletion(),"A new banner replaces the old one")
+ # notice
+ check(game.notice is NoticeLabel,"The bottom notice is the Fog plate")
+ game.notice.text="E / Chest · 15 gold";await process_frame;await process_frame
+ check(game.notice.plate.visible,"The notice plate shows with text");game.notice.text="";await process_frame;await process_frame
+ check(not game.notice.plate.visible,"and hides without")
+ # map
+ fe.world_map(true);await process_frame
+ var m: RunMap
+ for n in fe.menu.get_children():
+  if n is RunMap:m=n
+ check(m!=null and game.mode=="map" and m.map.paper_style and m.map.explored==fe.minimap.explored,"Full map opens as RunMap sharing the HUD map's explored cells")
+ check(m.get_node("Stage/Content/Legend").get_child_count()==RunMap.LEGEND.size(),"Legend lists every marker")
+ m.back.chosen.emit();await process_frame
+ check(game.mode=="pause","Back from the map returns to Pause")
+ game.resume();await process_frame
+ # build inspector
+ fe.inventory();await process_frame
+ var b: RunBuild
+ for n in fe.menu.get_children():
+  if n is RunBuild:b=n
+ check(b!=null and game.mode=="build" and b.get_node("Stage/Content/Weapons").get_child(0).get_child_count()==game.weapons.size(),"Build inspector lists every owned weapon")
+ b.back.chosen.emit();await process_frame
+ check(game.mode=="run","Resume closes the inspector")
+ # results
+ game.damage_by_weapon={0:1500.0,6:300.0};game.sandbox=false
+ fe.results(false,["Test requirement"]);await process_frame
+ var r: RunResults
+ for n in fe.menu.get_children():
+  if n is RunResults:r=n
+ check(r!=null and r.info.kills==42 and r.info.gold==321 and r.info.per_weapon[0].damage==1500.0 and r.get_node("Stage/Content/Title").text=="The wild claims another","Results show the run's real figures")
+ check(r.get_node("Stage/Content/Unlocked").text.contains("Test requirement"),"Newly met requirements are listed")
+ fe.results(true,[]);await process_frame
+ for n in fe.menu.get_children():
+  if n is RunResults:r=n
+ check(r.get_node("Stage/Content/Title").text=="Infinity broken","Victory has its own title")
+ # sandbox
+ game.sandbox=true;game.sandbox_menu();await process_frame
+ var sb: RunSandbox
+ for n in fe.menu.get_children():
+  if n is RunSandbox:sb=n
+ check(sb!=null and game.mode=="sandbox" and sb.list.get_child_count()>=15,"Sandbox menu lists its tools")
+ game.sandbox=false;game.resume();await process_frame

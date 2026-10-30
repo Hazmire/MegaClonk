@@ -17,13 +17,10 @@ static func button(ui: FrontEnd,parent: Node,label: String,callback: Callable,ti
   control.add_theme_stylebox_override(state,box)
  return control
 static func world_map(ui: FrontEnd,from_pause: bool) -> void:
- var game=ui.game;game.mode="map";ui.clear();ui.map_return_to_pause=from_pause;ui.minimap.reveal(game.player.position)
- var shade=ColorRect.new();shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);shade.color=Color(0.005,0.025,0.04,0.45);shade.mouse_filter=Control.MOUSE_FILTER_IGNORE;ui.menu.add_child(shade)
- var center=frame(ui,Vector2(24,28),Vector2(860,652),"FOREST · Stage %d · World map"%game.stage)
- var map=RunMinimap.new();map.game=game;map.reveal_all=ui.minimap.reveal_all;map.explored=ui.minimap.explored;map.terrain_colors=ui.minimap.terrain_colors;map.custom_minimum_size=Vector2(560,450);map.size_flags_horizontal=Control.SIZE_EXPAND_FILL;center.add_child(map)
- ui.text("N ↑    Gold: chest · Green: shop · Red: healing · Cyan: shrine\nOrange: elite · Purple: boss statue · Blue ring: portal\nWhite: you · Pink: enemies · Pale gold: free reward chests",center,14)
- button(ui,center,"BACK" if from_pause else "RESUME",game.pause_menu if from_pause else game.resume).grab_focus()
- statistics(ui,frame(ui,Vector2(938,28),Vector2(318,652),"Stats"))
+ var game=ui.game
+ if game.mode=="run":ui.capture_pause_frame()
+ game.mode="map";ui.clear();ui.map_return_to_pause=from_pause;ui.minimap.reveal(game.player.position)
+ var screen=RunMap.new();screen.from_pause=from_pause;MenuScreen.set_audio_owner(game);screen.bind(ui);ui.menu.add_child(screen)
 static func frame(ui: FrontEnd,pos: Vector2,dimensions: Vector2,title: String) -> VBoxContainer:
  var panel=RewardFrame.new();panel.position=pos;panel.custom_minimum_size=dimensions;panel.size=dimensions;panel.add_theme_stylebox_override("panel",style());ui.menu.add_child(panel)
  var stack=VBoxContainer.new();stack.size_flags_horizontal=Control.SIZE_EXPAND_FILL;panel.add_child(stack)
@@ -136,15 +133,10 @@ static func upgrades(ui: FrontEnd,fixed_choices: Array=[]) -> void:
  game.choices=fixed_choices if not fixed_choices.is_empty() else game.upgrade_choices()
  var screen=RunLevelUp.new();MenuScreen.set_audio_owner(game);screen.bind(ui);screen.choices=game.choices;ui.menu.add_child(screen)
 static func inventory(ui: FrontEnd) -> void:
- var game=ui.game;game.mode="build";var center=layout(ui,"Your build & character stats")
- ui.heading("Current run",center,26)
- ui.text("Additional Bosses: +%d · %d per future encounter"%[game.additional_boss_count,1+game.additional_boss_count],center,18)
- ui.paragraph("Level %d · Stage %d\n%d kills · %.0f total damage\n%d gold · %d paid chests · %d free chests"%[game.level,game.stage,game.kills,game.damage_total,game.gold,game.chests_opened,int(game.run_metrics.get("free_chests",0))],center,520)
- for id in game.weapons:
-  ui.heading(Catalog.WEAPONS[id][0]+" · Lv "+str(game.weapons[id].level),center,20)
-  ui.paragraph(game.weapon_tooltip(id),center,520)
-  ui.paragraph(SocketScreens.tooltip(game.weapons[id]),center,520)
- ui.action("RESUME",center,game.resume).grab_focus()
+ var game=ui.game
+ if game.mode=="run":ui.capture_pause_frame()
+ game.mode="build";ui.clear()
+ var screen=RunBuild.new();MenuScreen.set_audio_owner(game);screen.bind(ui);ui.menu.add_child(screen)
 static func imbue_station(ui: FrontEnd,object: Dictionary) -> void:
  SocketScreens.imbue_station(ui,object)
 static func shop(ui: FrontEnd,object: Dictionary) -> void:
