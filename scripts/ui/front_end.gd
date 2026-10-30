@@ -241,8 +241,8 @@ func world_map(from_pause: bool=false) -> void:
  RewardScreens.world_map(self,from_pause)
 func inventory() -> void:
  RewardScreens.inventory(self)
-func upgrades() -> void:
- RewardScreens.upgrades(self)
+func upgrades(fixed_choices: Array=[]) -> void:
+ RewardScreens.upgrades(self,fixed_choices)
 func shop(object: Dictionary) -> void:
  RewardScreens.shop(self,object)
 func imbue_station(object: Dictionary) -> void:

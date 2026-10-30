@@ -51,8 +51,10 @@ static func sans(weight: int=600,tracking_em: float=0.0,size: int=16) -> Font:
    var spaced=FontVariation.new();spaced.base_font=base;spaced.spacing_glyph=roundi(tracking_em*size);base=spaced
   cache[key]=base
  return cache[key]
+# The bundled Overpass has a zero-width middle dot (U+00B7), so "A · B" printed as "A ·B"; U+2219 has a proper advance.
+static func dot(text: String) -> String:return text.replace("\u00B7","\u2219")
 static func label(text: String,font: Font,size: int,color: Color,shadow: int=0,parent: Node=null) -> Label:
- var l=Label.new();l.text=text;l.mouse_filter=Control.MOUSE_FILTER_IGNORE
+ var l=Label.new();l.text=dot(text);l.mouse_filter=Control.MOUSE_FILTER_IGNORE
  if font!=null:l.add_theme_font_override("font",font)
  l.add_theme_font_size_override("font_size",size);l.add_theme_color_override("font_color",color)
  l.add_theme_color_override("font_shadow_color",FogPalette.INK if shadow>0 else Color(0,0,0,0))

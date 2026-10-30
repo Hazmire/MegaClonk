@@ -57,14 +57,18 @@ static func apply(id: int,state: Dictionary,proposal: Dictionary) -> bool:
  if not key in open_keys(id,state):return false
  if not state.has("upgrades"):state.upgrades={}
  state.upgrades[key]=value(state,key)+float(proposal.step);return true
-# "current -> new" card text, always computed from WeaponStats so it matches what combat then uses.
-static func description(id: int,state: Dictionary,attribute: String,game: Object=null,step: float=-1.0) -> String:
+# "current -> new" for one upgrade, always computed from WeaponStats so it matches what combat then uses:
+# {label, from, to} (the Level-up card shows the rows, description() joins them).
+static func change(id: int,state: Dictionary,attribute: String,game: Object=null,step: float=-1.0) -> Dictionary:
  var now=WeaponStats.resolve(game,id,state)
  var next_state=state.duplicate(true)
  if not next_state.has("upgrades"):next_state.upgrades={}
  next_state.upgrades[attribute]=value(state,attribute)+(float(STEPS[attribute]) if step<0.0 else step)
  var later=WeaponStats.resolve(game,id,next_state)
- return "%s: %s → %s"%[label(id,attribute),format_value(id,attribute,now),format_value(id,attribute,later)]
+ return {"label":label(id,attribute),"from":format_value(id,attribute,now),"to":format_value(id,attribute,later)}
+static func description(id: int,state: Dictionary,attribute: String,game: Object=null,step: float=-1.0) -> String:
+ var c=change(id,state,attribute,game,step)
+ return "%s: %s → %s"%[c.label,c.from,c.to]
 static func format_value(id: int,key: String,r: Dictionary) -> String:
  match key:
   "damage":return "%.0f damage"%(float(r.damage)*(1.0))

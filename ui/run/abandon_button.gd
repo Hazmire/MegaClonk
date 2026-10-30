@@ -42,4 +42,4 @@ func _draw() -> void:
  draw_string(f,Vector2(28,36),head,HORIZONTAL_ALIGNMENT_LEFT,-1,30,FogPalette.BONE_BRIGHT if selected else FogPalette.RUST_TEXT)
  var key="A" if MenuScreen.pad_active() else "Enter"
  var sub="Hold %s · run is lost"%key if selected else "Hold to confirm"
- draw_string(MenuStyle.sans(800,0.2,14),Vector2(28,66),sub.to_upper(),HORIZONTAL_ALIGNMENT_LEFT,-1,14,FogPalette.BONE if selected else FogPalette.RUST_TEXT)
+ draw_string(MenuStyle.sans(800,0.2,14),Vector2(28,66),MenuStyle.dot(sub.to_upper()),HORIZONTAL_ALIGNMENT_LEFT,-1,14,FogPalette.BONE if selected else FogPalette.RUST_TEXT)

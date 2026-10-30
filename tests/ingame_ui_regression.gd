@@ -22,6 +22,7 @@ func run() -> void:
  await notifications()
  await boss_bars()
  await pause_screen()
+ await level_up()
  print("INGAME_UI: %d checks, %d failures"%[count,failures.size()])
  quit(1 if failures.size()>0 else 0)
 func foundation() -> void:
@@ -248,3 +249,90 @@ func pause_screen() -> void:
  check(game.elapsed==elapsed,"Gameplay time does not advance while paused")
  game.resume();await process_frame
  check(game.mode=="run" and fe.pause_frame==null,"Resume returns to the run and drops the frozen frame")
+func level_screen() -> RunLevelUp:
+ for n in game.frontend.menu.get_children():
+  if n is RunLevelUp:return n
+ return null
+func open_level(choices: Array=[]) -> RunLevelUp:
+ game.mode="run";game.frontend.upgrades(choices);await process_frame
+ return level_screen()
+func ready_level(s: RunLevelUp) -> void:
+ s.fanfare.skip();s.clock=RunLevelUp.READY_AT+1.0;s.apply_timeline();await process_frame
+func level_up() -> void:
+ var fe=game.frontend;game.enemies.clear();game.pending_upgrades=0;game.rerolls=3;game.banished.clear()
+ var s=await open_level()
+ check(s!=null and game.mode=="upgrade" and s.cards.size()==3,"Level up opens RunLevelUp with three cards and mode upgrade")
+ if s==null:return
+ # fanfare and deal-in
+ check(not s.fanfare.done and not s.interactive,"The fanfare plays first and the cards cannot be taken yet")
+ var before=[game.weapons.duplicate(true),game.tomes.duplicate()]
+ s.take(0);check(game.mode=="upgrade" and [game.weapons,game.tomes]==before,"Taking a card during the fanfare does nothing")
+ s.clock=1.65;s.apply_timeline()
+ check(s.cards[1].modulate.a>0.5 and s.cards[0].modulate.a==0.0,"Cards are dealt 2, 3, then 1 (card 2 is visible before card 1)")
+ s.clock=0.3;s.apply_timeline();check(s.content.position!=Vector2.ZERO or s.clock<0.0,"The screen shakes during the fanfare")
+ s.clock=1.0;s.apply_timeline()
+ var skip_event=InputEventKey.new();skip_event.keycode=KEY_SPACE;skip_event.pressed=true;s._input(skip_event)
+ check(s.fanfare.done and s.clock>=RunLevelUp.FANFARE_SKIP_TO-0.001,"Any key skips the fanfare")
+ await ready_level(s)
+ check(s.interactive and s.cards[0].has_focus(),"After the deal the first card has focus and the screen takes input")
+ # data from the real choices
+ var weapon_card=-1;var tome_card=-1
+ for i in s.cards_data.size():
+  if s.cards_data[i].type=="weapon" and s.cards_data[i].rows.size()>0 and not s.cards_data[i].is_new:weapon_card=i
+  if s.cards_data[i].type=="tome":tome_card=i
+ check(s.cards_data.all(func(c):return c.tier==RunData.tier_index(str(s.choices[s.cards_data.find(c)].get("tier","common")))),"Each card carries the tier its choice rolled")
+ # a weapon upgrade: name format, LV n -> n+1, current -> new equals what WeaponStats resolves after applying it
+ var wid=game.weapons.keys()[0];var st: Dictionary=game.weapons[wid]
+ var proposal=WeaponUpgrades.proposal(wid,RandomNumberGenerator.new(),st,"rare");proposal["key"]="w%d"%wid;proposal["type"]="weapon";proposal["id"]=wid;proposal["tier"]="rare"
+ var wc=RunData.level_card(game,proposal)
+ check(wc.name==Catalog.weapon_name(wid)+" — "+WeaponUpgrades.label(wid,str(proposal.attribute)) and wc.level_from==int(st.level) and wc.level_to==int(st.level)+1,"Upgrade card reads 'Weapon — Stat' with LV n → n+1 (%s, %d → %d)"%[wc.name,wc.level_from,wc.level_to])
+ var after=st.duplicate(true);WeaponUpgrades.apply(wid,after,proposal);var resolved=WeaponStats.resolve(game,wid,after)
+ check(wc.rows[0].to==WeaponUpgrades.format_value(wid,str(proposal.attribute),resolved) and wc.rows[0].from==WeaponUpgrades.format_value(wid,str(proposal.attribute),WeaponStats.resolve(game,wid,st)),"The card's current → new are the numbers WeaponStats resolves before and after (%s → %s)"%[wc.rows[0].from,wc.rows[0].to])
+ var nw=-1
+ for id in Catalog.ACTIVE_WEAPONS:
+  if not game.weapons.has(id):nw=id;break
+ if nw>=0:
+  var nc=RunData.level_card(game,{"type":"weapon","id":nw,"key":"w%d"%nw,"tier":"common"})
+  check(nc.is_new and nc.name==Catalog.weapon_name(nw) and nc.rows.size()==3 and nc.rows[1].value=="%.0f"%float(Catalog.WEAPONS[nw][2]),"A new weapon shows its real type, base damage and cooldown")
+ # tomes: preview matches the stat after applying; level caps
+ var tome_id=Catalog.ACTIVE_TOMES[0];var tc=RunData.level_card(game,{"type":"tome","id":tome_id,"key":tome_id,"tier":"epic"})
+ var stat=str(Catalog.TOMES[tome_id][0]);var stats_before=float(game.stats[stat])
+ var applied=game.stats.duplicate();game.tomes[tome_id]=int(game.tomes.get(tome_id,0));var tomes_backup=game.tomes.duplicate();var tr_backup=game.tome_rarities.duplicate()
+ game.apply_upgrade({"type":"tome","id":tome_id,"key":tome_id,"tier":"epic"})
+ check(absf(float(game.stats[stat])-float(tc.preview.to))<0.0001 or absf(float(game.stats[stat])-float(tc.preview.to))<0.02,"Tome card preview (%s: %.3f → %.3f) matches the stat after taking it (%.3f)"%[stat,tc.preview.from,tc.preview.to,float(game.stats[stat])])
+ game.tomes=tomes_backup;game.tome_rarities=tr_backup;game.stats=applied
+ game.tomes[tome_id]=Economy.TOME_MAX_LEVEL;var capped=RunData.level_card(game,{"type":"tome","id":tome_id,"key":tome_id,"tier":"common"})
+ check(capped.level_to==Economy.TOME_MAX_LEVEL and capped.max_level==80,"Tome level display is capped at the real maximum (80)")
+ game.tomes=tomes_backup
+ check(Economy.WEAPON_MAX_LEVEL==40,"Weapon level display is capped at the real maximum (40)")
+ # selection: Take label, stats preview, number keys, focus
+ s.cards[1].grab_focus();await process_frame
+ check(s.primary.label_text=="Take "+str(s.cards_data[1].short_name),"The Take button names the selected card (%s)"%s.primary.label_text)
+ if tome_card>=0:
+  s.cards[tome_card].grab_focus();await process_frame
+  check(s.stats_panel.previewing==str(s.cards_data[tome_card].preview.stat) and s.stats_panel.shown_text(s.stats_panel.previewing).contains("→"),"Focusing a tome card previews its stat change in the Stats panel")
+ var key2=InputEventKey.new();key2.keycode=KEY_3;key2.pressed=true;s._input(key2)
+ check(s.cards[2].has_focus(),"Number key 3 selects the third card")
+ check(s.cards[0].focus_neighbor_right==s.cards[0].get_path_to(s.cards[1]) and s.cards[0].focus_neighbor_bottom==s.cards[0].get_path_to(s.primary) and s.primary.focus_neighbor_bottom==s.primary.get_path_to(s.skip_button),"Focus neighbours: cards left/right, down to Take, down to the footer row")
+ # device hints
+ MenuScreen.set_pad_active(true);s.refresh_hints()
+ check(s.hint_bar.entries.any(func(e):return e.size()>2 and e[2]=="A"),"On a controller the hints show the pad buttons")
+ MenuScreen.set_pad_active(false);s.refresh_hints()
+ # take: exactly once, applies the card
+ var lvl=int(game.weapons[wid].level);var picked={"type":"weapon","id":wid,"key":"w%d"%wid,"tier":"common"};var p2=WeaponUpgrades.proposal(wid,RandomNumberGenerator.new(),game.weapons[wid]);picked.merge(p2,true);picked["expected_level"]=lvl
+ var s2=await open_level([picked]);await ready_level(s2)
+ s2.cards[0].pressed.emit();s2.cards[0].pressed.emit()
+ check(game.mode=="run" and int(game.weapons[wid].level)==lvl+1,"Taking a card applies it exactly once and returns to the run (LV %d → %d)"%[lvl,int(game.weapons[wid].level)])
+ # skip, refresh, banish
+ game.health=50.0;var s3=await open_level();await ready_level(s3);s3.skip_button.pressed.emit()
+ check(game.mode=="run" and absf(game.health-60.0)<0.01,"Skip heals 10 and closes the screen")
+ game.rerolls=2;var s4=await open_level();await ready_level(s4);s4.refresh_button.pressed.emit();await process_frame
+ check(game.rerolls==1 and game.mode=="upgrade" and level_screen()!=s4,"Refresh uses one reroll and deals a new screen (1 left)")
+ var s5=level_screen();check(s5.refresh_button.caption=="REFRESH · 1 LEFT","Refresh shows the real rerolls left (%s)"%s5.refresh_button.caption)
+ game.rerolls=0;var s6=await open_level();check(s6.refresh_button.disabled,"Refresh is disabled with none left")
+ await ready_level(s6);var key=str(s6.choices[0].key);s6.cards[0].grab_focus();s6.banish_button.pressed.emit()
+ check(game.banished.has(key) and game.mode=="run","Banish removes the focused offer from the pool (existing rule: it uses up this pick)")
+ game.banished.clear();game.rerolls=3
+ var supply=await open_level([{"type":"supply","id":"0","key":"supply0"},{"type":"supply","id":"1","key":"supply1"},{"type":"supply","id":"2","key":"supply2"}])
+ check(supply.cards_data[0].name=="Field supplies" and supply.banish_button.disabled,"With nothing left to offer the cards are Field supplies and Banish is off")
+ game.resume();await process_frame

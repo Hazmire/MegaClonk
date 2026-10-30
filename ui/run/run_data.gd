@@ -95,3 +95,36 @@ static func gems_signature(game: Node) -> String:
  return "|".join(parts)
 static func build_signature(game: Node) -> String:
  return weapons_signature(game)+"@"+tomes_signature(game)+"@"+items_signature(game)+"@"+gems_signature(game)
+# --- level up -----------------------------------------------------------------------------------------------------
+# One Dictionary per offered card, from the real choice: {key,type,category,id,name,short_name,tier,tier_name,is_new,level_from,level_to,
+# max_level,rows:[{label,from,to}] (change rows) or [{label,value}] (a new weapon's facts),preview:{stat,from,to} or {}}.
+# Names read "Weapon — Stat" for a weapon upgrade; the numbers come from WeaponStats / Economy, never from card text.
+static func level_cards(game: Node,choices: Array) -> Array:
+ var out=[]
+ for choice in choices:out.append(level_card(game,choice))
+ return out
+static func level_card(game: Node,choice: Dictionary) -> Dictionary:
+ var tier_name=str(choice.get("tier","common"))
+ var card={"key":str(choice.get("key","")),"type":str(choice.type),"category":"","id":str(choice.get("id","")),"name":"","short_name":"","tier":tier_index(tier_name),"is_new":false,"level_from":0,"level_to":0,"max_level":0,"rows":[],"preview":{}}
+ card["tier_name"]=str(FogPalette.RARITY[card.tier]["name"])
+ if choice.type=="supply":
+  card.name="Field supplies";card.short_name=card.name;card.tier=0;card.tier_name="Common"
+  card.rows=[{"label":"Health","from":"%d"%roundi(game.health),"to":"%d"%roundi(minf(float(game.stats.max_health),float(game.health)+25.0))}]
+  return card
+ if choice.type=="weapon":
+  var id=int(choice.id);card.category="weapons";card.max_level=Economy.WEAPON_MAX_LEVEL;card.short_name=Catalog.weapon_name(id)
+  if game.weapons.has(id):
+   var state: Dictionary=game.weapons[id];card.level_from=int(state.level);card.level_to=mini(card.level_from+1,card.max_level)
+   if choice.has("attribute"):
+    var c=WeaponUpgrades.change(id,state,str(choice.attribute),game,float(choice.get("step",-1.0)))
+    card.name="%s — %s"%[card.short_name,c.label];card.rows=[{"label":c.label,"from":c.from,"to":c.to}]
+   else:card.name=card.short_name
+  else:
+   var def=Catalog.WEAPONS[id];card.is_new=true;card.name=card.short_name;card.level_to=1
+   card.rows=[{"label":"Type","value":str(def[1])},{"label":"Base damage","value":"%.0f"%float(def[2])},{"label":"Cooldown","value":"%.2fs"%float(def[3])}]
+  return card
+ var tome=str(choice.id);card.category="tomes";card.max_level=Economy.TOME_MAX_LEVEL;card.short_name=Catalog.tome_name(tome);card.name=card.short_name
+ card.level_from=int(game.tomes.get(tome,0));card.level_to=mini(card.level_from+1,card.max_level);card.is_new=card.level_from==0
+ var stat=str(Catalog.TOMES[tome][0]);var now=float(game.stats[stat]);var later=now+Economy.scaled(float(Catalog.TOMES[tome][1]),tier_name,stat=="count")
+ card.rows=[{"label":label(stat),"from":BuildStats.value(stat,shown(stat,now)),"to":BuildStats.value(stat,shown(stat,later))}];card.preview={"stat":stat,"from":now,"to":later}
+ return card

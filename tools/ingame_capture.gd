@@ -73,6 +73,27 @@ func run() -> void:
   ps.abandon.holding=false
   game.frontend.settings(game.pause_menu);await create_timer(0.6).timeout;await snap("pause-settings",0.2)
   game.frontend.leave_settings();game.resume()
+
+ if want("level"):
+  late_build();game.level=7;game.frontend.update_hud()
+  var pool=game.upgrade_pool();var picks=[]
+  var wp=pool.filter(func(c):return c.type=="weapon" and game.weapons.has(c.id) and c.has("attribute"))
+  var nw=pool.filter(func(c):return c.type=="weapon" and not game.weapons.has(c.id))
+  var tm=pool.filter(func(c):return c.type=="tome")
+  var up=wp[0];up["tier"]="rare";up.metadata["rarity"]="rare";up["step"]=WeaponUpgrades.step_for(str(up.attribute),"rare")
+  var tc=tm[0];tc["tier"]="epic";tc.metadata["rarity"]="epic"
+  var third=nw[0] if not nw.is_empty() else wp[1];if not third.has("tier"):third["tier"]="common"
+  picks=[up,tc,third]
+  game.frontend.upgrades(picks);var ls=game.frontend.menu.get_child(0)
+  await create_timer(0.35).timeout;await snap("levelup-fanfare-early",0.0)
+  await create_timer(0.55).timeout;await snap("levelup-fanfare-slam",0.0)
+  await create_timer(1.4).timeout;await snap("levelup-dealing",0.0)
+  await create_timer(1.4).timeout
+  ls.cards[0].grab_focus();await snap("levelup-rare-selected",0.4)
+  ls.cards[1].grab_focus();await snap("levelup-tome-preview",0.4)
+  ls.cards[2].grab_focus();await snap("levelup-new-weapon",0.4)
+  ls.skip_button.grab_focus();await snap("levelup-skip-focus",0.3)
+  game.resume()
  quit(0)
 func wait_phase(tq: RunToasts,phase: String,extra: float) -> void:
  var guard=0

@@ -129,37 +129,12 @@ static func descendants(node: Node) -> Array:
  var result=[]
  for child in node.get_children():result.append(child);result.append_array(descendants(child))
  return result
-static func upgrades(ui: FrontEnd) -> void:
- var game=ui.game;game.mode="upgrade";var center=layout(ui,"LEVEL UP · Upgrade offers")
- var celebration=celebration(ui,Color("ffdf75"),0.6)
- if game.settings.reduced or game.settings.visual_intensity<0.1:celebration.hide();celebration.set_process(false)
- game.choices=game.upgrade_choices();ui.reward_focus={}
- var first: Button
- for choice in game.choices:
-  if choice.type=="supply":
-   var supplies=ui.action("Field supplies · restore 25 health",center,func():game.apply_upgrade(choice);game.resume())
-   if first==null:first=supplies
-   continue
-  var category="weapons" if choice.type=="weapon" else "tomes"
-  var rank=int(game.weapons[choice.id].level) if choice.type=="weapon" and game.weapons.has(choice.id) else int(game.tomes.get(choice.id,0)) if choice.type=="tome" else 0
-  var description=choice.metadata.description
-  var card_meta=choice.metadata
-  if choice.type=="weapon" and rank>0:
-   description=WeaponUpgrades.description(int(choice.id),game.weapons[choice.id],choice.attribute,game,float(choice.get("step",-1.0)))
-   card_meta=choice.metadata.duplicate();card_meta["name"]="%s — %s"%[Catalog.weapon_name(int(choice.id)),WeaponUpgrades.label(int(choice.id),choice.attribute)]
-  elif choice.type=="tome":
-   var stat=Catalog.TOMES[choice.id][0];description=stat.replace("_"," ").capitalize()+": "+BuildStats.value(stat,game.stats[stat])+" → "+BuildStats.value(stat,game.stats[stat]+Economy.scaled(float(Catalog.TOMES[choice.id][1]),str(choice.get("tier","common")),stat=="count"))
-  var button=offer(ui,center,category,choice.id,rank,description,func():game.apply_upgrade(choice);game.resume(),"",card_meta)
-  button.focus_entered.connect(func():ui.reward_focus=choice)
-  button.mouse_entered.connect(func():ui.reward_focus=choice)
-  if first==null:first=button;ui.reward_focus=choice
- var controls=HBoxContainer.new();controls.add_theme_constant_override("separation",8);center.add_child(controls)
- button(ui,controls,"BANISH",func():
-  if not ui.reward_focus.is_empty():game.banished.append(ui.reward_focus.key);game.resume(),Color("9d353a"))
- button(ui,controls,"SKIP · heal 10",func():game.health=minf(game.stats.max_health,game.health+10);game.resume(),Color("306942"))
- button(ui,controls,"REFRESH (%d)"%game.rerolls,func():
-  if game.rerolls>0:game.rerolls-=1;upgrades(ui),Color("276292")).disabled=game.rerolls<=0
- if first!=null:first.grab_focus()
+static func upgrades(ui: FrontEnd,fixed_choices: Array=[]) -> void:
+ var game=ui.game
+ if game.mode=="run":ui.capture_pause_frame()
+ game.mode="upgrade";ui.clear();ui.reward_focus={}
+ game.choices=fixed_choices if not fixed_choices.is_empty() else game.upgrade_choices()
+ var screen=RunLevelUp.new();MenuScreen.set_audio_owner(game);screen.bind(ui);screen.choices=game.choices;ui.menu.add_child(screen)
 static func inventory(ui: FrontEnd) -> void:
  var game=ui.game;game.mode="build";var center=layout(ui,"Your build & character stats")
  ui.heading("Current run",center,26)
