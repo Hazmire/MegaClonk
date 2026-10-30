@@ -118,6 +118,9 @@ func loop_update(key: String,pitch_multiplier: float,position_value: Vector3=Vec
    if position_value.is_finite() and player is AudioStreamPlayer3D:player.global_position=position_value
    return true
  return false
+func silence_loops() -> void:
+ for voice in voices:
+  if voice.get("key","")!="":voice.player.stop();voice.until=0;voice.key=""
 func loop_stop(key: String) -> void:
  for voice in voices:
   if voice.get("key","")==key:voice.player.stop();voice.until=0;voice.key=""

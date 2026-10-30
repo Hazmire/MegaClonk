@@ -24,6 +24,9 @@ var aura_spin=0.0
 var aura_glow=0.0
 var aura_smoke=0.0
 var aura_hum=0.0
+var fireball_loop_id=-1
+var scythe_loop_id=-1
+var loop_speed=0.0
 var pulse_budget=0
 var counters={"strike":{},"casts":{},"dropped_timers":0}
 const SCYTHE_MODEL_PATH="res://assets/weapons/scythe.glb" # supplied model slot; PLACEHOLDER mesh is used until it exists
@@ -92,16 +95,16 @@ func flat(v: Vector3) -> Vector3:
 func yaw_dir(dir: Vector3,angle: float) -> Vector3:return dir.rotated(Vector3.UP,angle)
 func count_cast(id: int) -> void:counters.casts[id]=int(counters.casts.get(id,0))+1
 # Shared hit interface ---------------------------------------------------------------------
-func strike(e: Dictionary,damage: float,id: int,source: String,dir: Vector3=Vector3.ZERO,pos: Vector3=Vector3.INF) -> void:
+func strike(e: Dictionary,damage: float,id: int,source: String,dir: Vector3=Vector3.ZERO,pos: Vector3=Vector3.INF,variant: int=-1) -> void:
  if e.is_empty() or e.hp<=0:return
  counters.strike[source]=int(counters.strike.get(source,0))+1
- game.hit(e,damage,id,{"source":source,"dir":dir,"pos":pos if pos.is_finite() else e.pos})
+ game.hit(e,damage,id,{"source":source,"dir":dir,"pos":pos if pos.is_finite() else e.pos,"variant":variant})
 # Called by Game.hit once the crit roll is known (position/source come from the hit context).
 func on_hit(e: Dictionary,id: int,ctx: Dictionary,critical: bool) -> void:
  var source=str(ctx.get("source",""))
  if not WeaponFeel.AUDIO.has(source):return
  e["flash_tint"]=1.0 if source=="pulse" else 0.0
- WeaponFeel.impact(self,id,source,ctx.get("pos",e.pos),ctx.get("dir",Vector3.ZERO),critical,e)
+ WeaponFeel.impact(self,id,source,ctx.get("pos",e.pos),ctx.get("dir",Vector3.ZERO),critical,e,int(ctx.get("variant",-1)))
 func hit_reach(e: Dictionary,scale: float=0.7) -> float:return float(e.get("radius",0.5))*scale
 
 func update(delta: float) -> void:
@@ -130,7 +133,7 @@ func update(delta: float) -> void:
    15:fired=fire_shotgun(id,r)
   state.clock=float(r.interval)+(float(r.count-1)*float(r.get("gap",0.0)) if id==0 else 0.0) if fired else 0.12
   if fired:count_cast(id)
- step_fireballs(delta);step_arrows(delta);step_bullets(delta);step_scythes(delta)
+ step_fireballs(delta);step_arrows(delta);step_bullets(delta);step_scythes(delta);sync_loops()
  psx.tick(delta)
 
 # SWORD -------------------------------------------------------------------------------------
@@ -155,9 +158,10 @@ func do_slash(id: int,index: int) -> void:
   if dist>0.5:
    var allowed=half+atan(float(e.get("radius",0.5))/maxf(dist,0.6))
    if acos(clampf(dir.dot(to/dist),-1.0,1.0))>allowed:continue
-  strike(e,float(r.damage),id,"slash",dir)
+  strike(e,float(r.damage),id,"slash",dir,Vector3.INF,index)
  WeaponFeel.sword_arc(self,origin_pos(),dir,reach,half,index,deg_to_rad(40.0 if index%2==0 else -40.0))
- game.audio.emit("weapon.sword.swing",origin_pos(),1.0,1.0+0.045*float(index))
+ var origin=origin_pos();var final_slash=index==int(r.count)-1 and int(r.count)>1
+ game.audio.emit("weapon.sword_swing_final" if final_slash else "weapon.sword.swing",origin,1.0,1.0,mini(index,2));ElementAudio.attack(game,id,origin)
 
 # FIRESTAFF ---------------------------------------------------------------------------------
 func fire_firestaff(id: int,r: Dictionary) -> bool:
@@ -170,7 +174,7 @@ func fire_firestaff(id: int,r: Dictionary) -> bool:
   var d=yaw_dir(dir,(float(k)-float(n-1)*0.5)*fan)
   fireballs.append({"pos":origin+d*0.9,"vel":d*float(r.speed),"dir":d,"damage":float(r.damage),"id":id,"scale":float(r.scale),"hit_r":float(r.hit_radius),"left":float(r.range)+3.0,"trail":0.0,"age":0.0})
  WeaponFeel.fire_muzzle(self,origin+dir*0.9,dir)
- game.audio.emit("weapon.firestaff.cast",origin,1.0,1.0)
+ game.audio.emit("weapon.firestaff.cast",origin,1.0,1.0);ElementAudio.attack(game,id,origin)
  return true
 func step_fireballs(delta: float) -> void:
  var cam=WeaponFeel.cam_pos(self)
@@ -238,7 +242,7 @@ func do_strike(id: int,target: Dictionary,cast: Dictionary) -> void:
   if target.is_empty() or cast.hit.has(target.crowd_id):return
  var p=target.pos
  WeaponFeel.bolt_strike(self,p,float(r.strike_radius))
- game.audio.emit("weapon.lightning.strike",p,1.0,1.0)
+ game.audio.emit("weapon.lightning.strike",p,1.0,1.0);ElementAudio.attack(game,id,p)
  for e in game.nearby(p,float(r.strike_radius)+1.0):
   if cast.hit.has(e.crowd_id):continue
   if e.pos.distance_to(p)>float(r.strike_radius)+hit_reach(e):continue
@@ -273,7 +277,7 @@ func fire_bow(id: int,r: Dictionary) -> bool:
   var d=yaw_dir(dir,(float(k)-float(n-1)*0.5)*fan)
   arrows.append({"pos":origin+d*0.8,"dir":d,"speed":float(r.speed),"left":float(r.range),"damage":float(r.damage),"id":id,"scale":float(r.scale),"hit_r":float(r.hit_radius),"hits":{},"trail":0.0})
  WeaponFeel.arrow_launch(self,origin+dir*0.8,dir)
- game.audio.emit("weapon.bow.fire",origin,1.0,1.0)
+ game.audio.emit("weapon.bow_volley" if n>1 else "weapon.bow.fire",origin,1.0,1.0);ElementAudio.attack(game,id,origin)
  return true
 func step_arrows(delta: float) -> void:
  var cam=WeaponFeel.cam_pos(self)
@@ -291,7 +295,7 @@ func step_arrows(delta: float) -> void:
     if a.hits.has(e.crowd_id):continue
     if game.segment_distance(e.pos,prev,next)>a.hit_r+hit_reach(e):continue
     a.hits[e.crowd_id]=true # piercing: one hit per enemy per arrow, the arrow flies on
-    strike(e,a.damage,a.id,"arrow",a.dir,e.pos)
+    strike(e,a.damage,a.id,"arrow",a.dir,e.pos,a.hits.size()-1)
   a.pos=next
   if stopped or a.left<=0.0:
    psx.burst(next,5,[WeaponFeel.ARROW_DUST,WeaponFeel.ARROW_GLOW],3.5,0.15,0.3,6.0,1.5,Vector3.UP,1.2)
@@ -320,7 +324,7 @@ func fire_revolver(id: int,r: Dictionary) -> bool:
   var row=0.0 if k<4 else 0.3
   bullets.append({"pos":origin+dir*0.9+right*lane+Vector3.UP*row,"dir":dir,"speed":float(r.speed),"left":float(r.range),"damage":float(r.damage),"id":id,"bounces":int(r.bounces),"hits":{},"smoke":0.0,"bounced":false})
  WeaponFeel.revolver_muzzle(self,origin+dir*0.9,dir)
- game.audio.emit("weapon.revolver.fire",origin,1.0,1.0)
+ game.audio.emit("weapon.revolver.fire",origin,1.0,1.0);ElementAudio.attack(game,id,origin)
  return true
 func step_bullets(delta: float) -> void:
  var i=bullets.size()-1
@@ -382,8 +386,7 @@ func update_aura(id: int,state: Dictionary,delta: float) -> void:
    var a=rng.randf()*TAU;var d=radius*sqrt(rng.randf())*0.95
    var p=center+Vector3(cos(a)*d,0.1,sin(a)*d)
    psx.spark(p,Vector3(rng.randf_range(-0.2,0.2),rng.randf_range(0.8,1.5),rng.randf_range(-0.2,0.2)),WeaponFeel.AURA_MID,WeaponFeel.AURA_SMOKE,0.3,0.1,1.1)
- aura_hum-=delta
- if aura_hum<=0.0:aura_hum=2.6;game.audio.emit("weapon.aura.hum",origin_pos(),1.0,1.0)
+ game.audio.loop_start("aura","weapon.aura.hum",origin_pos());game.audio.loop_update("aura",1.0,origin_pos());ElementAudio.loop_sync(game,id,true,origin_pos())
  state.clock-=delta
  if state.clock>0.0:return
  state.clock=float(r.interval);count_cast(id)
@@ -393,7 +396,7 @@ func update_aura(id: int,state: Dictionary,delta: float) -> void:
   if Vector2(e.pos.x-center.x,e.pos.z-center.z).length()>radius+hit_reach(e):continue
   hit_any=true;strike(e,float(r.damage),id,"pulse",Vector3.ZERO,e.pos)
  psx.ring(center,radius*0.96,int(radius*7.0),WeaponFeel.AURA_LIGHT,0.2,0.3,3.5)
- game.audio.emit("weapon.aura.pulse",origin_pos(),1.0 if hit_any else 0.6,1.0)
+ game.audio.emit("weapon.aura.pulse",origin_pos(),1.0 if hit_any else 0.6,1.0);ElementAudio.attack(game,id,origin_pos());ElementAudio.hit(game,id,origin_pos())
 func draw_aura_circle(center: Vector3,radius: float,spin: float,flash: bool) -> void:
  var dark=WeaponFeel.AURA_FLASH if flash else WeaponFeel.AURA_MID
  var mid=WeaponFeel.AURA_LIGHT if flash else WeaponFeel.AURA_DARK
@@ -439,11 +442,12 @@ func fire_scythes(id: int,r: Dictionary) -> bool:
   if scythes.size()>=MAX_SCYTHES:break
   var d=yaw_dir(base,(float(k)-float(n-1)*0.5)*step)
   scythes.append({"pos":origin+d*0.8,"dir":d,"phase":0,"travel":0.0,"t":0.0,"life":0.0,"speed":float(r.speed),"return_speed":float(r.return_speed),"out_range":float(r.out_range),"damage":float(r.damage),"id":id,"scale":float(r.scale),"hit_r":float(r.hit_radius),"out_hits":{},"back_hits":{},"spin":rng.randf()*TAU,"curve":deg_to_rad(55.0)*(1.0 if k%2==0 else -1.0),"trail":0.0})
- game.audio.emit("weapon.scythes.throw",origin,1.0,1.0)
+ game.audio.emit("weapon.scythes.throw",origin,1.0,1.0);ElementAudio.attack(game,id,origin)
  return true
 func step_scythes(delta: float) -> void:
  var mm=scythe_view.multimesh
  var shown=0
+ loop_speed=0.0
  var i=scythes.size()-1
  var target_pos=game.player.position+Vector3.UP
  while i>=0:
@@ -451,12 +455,12 @@ func step_scythes(delta: float) -> void:
   s.t+=delta;s.life+=delta;s.spin+=delta*17.0
   var prev: Vector3=s.pos
   if s.phase==0:
-   var v=maxf(float(s.speed)*0.22,float(s.speed)*(1.0-float(s.travel)/float(s.out_range)))
+   var v=maxf(float(s.speed)*0.22,float(s.speed)*(1.0-float(s.travel)/float(s.out_range)));loop_speed=maxf(loop_speed,v)
    s.dir=yaw_dir(s.dir,s.curve*delta);s.pos=prev+s.dir*v*delta;s.travel+=v*delta
    if s.travel>=s.out_range or s.t>1.6:s.phase=1;s.t=0.0
   else:
    var to=target_pos-prev;var dist=to.length()
-   var v=minf(float(s.return_speed)*1.3,7.0+float(s.t)*float(s.return_speed)*1.8)
+   var v=minf(float(s.return_speed)*1.3,7.0+float(s.t)*float(s.return_speed)*1.8);loop_speed=maxf(loop_speed,v)
    if dist<=v*delta+float(WeaponStats.SCYTHES.catch) or s.life>float(WeaponStats.SCYTHES.max_life):
     WeaponFeel.scythe_dust(self,prev,4);game.audio.emit("weapon.scythes.catch",prev,0.8,1.0);scythes.remove_at(i);i-=1;continue
    s.pos=prev+to/dist*v*delta
@@ -480,6 +484,22 @@ func step_scythes(delta: float) -> void:
  mm.visible_instance_count=shown
 
 # SHOTGUN -----------------------------------------------------------------------------------
+# Flight loops (fireballs, scythes) and their element layers follow the projectiles; they stop the frame the last one is gone.
+func sync_loops() -> void:
+ var audio=game.audio
+ if not fireballs.is_empty():
+  var pos: Vector3=fireballs[0].pos;fireball_loop_id=int(fireballs[0].id)
+  if audio.loop_start("fireball_flight","weapon.fireball_flight_loop",pos):audio.loop_update("fireball_flight",1.0,pos)
+  ElementAudio.loop_sync(game,fireball_loop_id,true,pos)
+ elif fireball_loop_id>=0:
+  audio.loop_stop("fireball_flight");ElementAudio.loop_sync(game,fireball_loop_id,false,Vector3.INF);fireball_loop_id=-1
+ if not scythes.is_empty():
+  var pos: Vector3=scythes[0].pos;scythe_loop_id=int(scythes[0].id)
+  if audio.loop_start("scythe_spin","weapon.scythe_spin_loop",pos):audio.loop_update("scythe_spin",clampf(0.85+loop_speed*0.03,0.85,1.35),pos)
+  ElementAudio.loop_sync(game,scythe_loop_id,true,pos)
+ elif scythe_loop_id>=0:
+  audio.loop_stop("scythe_spin");ElementAudio.loop_sync(game,scythe_loop_id,false,Vector3.INF);scythe_loop_id=-1
+func pump_sound() -> void:game.audio.emit("weapon.shotgun_pump",origin_pos(),1.0,1.0)
 func fire_shotgun(id: int,r: Dictionary) -> bool:
  var range_=float(r.range)
  var target=game.nearest(game.player.position,range_)
@@ -508,5 +528,6 @@ func fire_shotgun(id: int,r: Dictionary) -> bool:
   if not victim.is_empty():
    hits_made+=1;strike(victim,float(r.damage),id,"pellet",d,origin+d*best_t)
  WeaponFeel.shotgun_blast(self,origin+dir*0.7,dir,half,n)
- game.audio.emit("weapon.shotgun.fire",origin,1.0,1.0)
+ game.audio.emit("weapon.shotgun.fire",origin,1.0,1.0);ElementAudio.attack(game,id,origin)
+ later(minf(0.3,float(r.interval)*0.3),pump_sound)
  return true

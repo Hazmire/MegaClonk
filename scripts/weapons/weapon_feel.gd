@@ -14,6 +14,7 @@ const DUST_LIGHT=Color("d9c79e");const DUST_MID=Color("b99a6a");const DUST_DARK=
 const SHOT_FLASH=Color("fff6c8");const SHOT_SPARK=Color("ffd24a");const SHOT_SMOKE=Color("7b7d82");const SHOT_SMOKE_DARK=Color("4c4e52")
 const CRIT=Color("fff0a0")
 # source id -> [hit sound event, crit sound event]
+const NO_SOUND=["",""]
 const AUDIO={
  "slash":["weapon.sword.hit","weapon.sword.crit"],
  "fireball":["weapon.firestaff.impact","weapon.firestaff.crit"],
@@ -31,9 +32,9 @@ static func cam_pos(rt: WeaponRuntime) -> Vector3:
  var camera=rt.game.get_viewport().get_camera_3d()
  return camera.global_position if camera!=null else rt.game.player.position+Vector3(0,6,8)
 # Called from Game.hit for every damaging weapon hit, after crit has been rolled.
-static func impact(rt: WeaponRuntime,id: int,source: String,pos: Vector3,dir: Vector3,critical: bool,e: Dictionary) -> void:
+static func impact(rt: WeaponRuntime,id: int,source: String,pos: Vector3,dir: Vector3,critical: bool,e: Dictionary,variant: int=-1) -> void:
  var psx=rt.psx
- var sound=AUDIO.get(source,["",""])
+ var sound=AUDIO.get(source,NO_SOUND)
  var home=rt.game.audio
  match source:
   "slash":
@@ -60,7 +61,8 @@ static func impact(rt: WeaponRuntime,id: int,source: String,pos: Vector3,dir: Ve
   psx.burst(pos+Vector3.UP*0.5,4,[CRIT,SLASH_WHITE],5.0,0.2,0.3,3.0,1.0,Vector3.UP,0.9)
  if home!=null:
   var event=str(sound[1] if critical else sound[0])
-  if event!="":home.emit(event,pos,1.0,1.0)
+  if event!="":home.emit(event,pos,1.0,1.0,variant)
+  if source!="pulse":ElementAudio.hit(rt.game,id,pos) # aura pulses emit their element hit once per pulse in update_aura
 static func fire_burst(rt: WeaponRuntime,pos: Vector3,dir: Vector3,power: float) -> void:
  var psx=rt.psx
  # flame burst (short lived), then embers that arc and extinguish (colour steps to dead brown)

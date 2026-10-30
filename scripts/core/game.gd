@@ -496,7 +496,7 @@ func _physics_process(delta: float) -> void:
  if is_instance_valid(combat_fx):
   combat_fx.intensity=settings.visual_intensity;combat_fx.reduced=settings.reduced;combat_fx.tick(delta,mode=="run")
  if mode != "run":
-  if is_instance_valid(audio):audio.stop_event("player.slide")
+  if is_instance_valid(audio):audio.stop_event("player.slide");audio.silence_loops()
   movement_audio.reset();return
  movement_audio.tick(self,delta)
  if health <= 0:
