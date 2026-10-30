@@ -6,22 +6,16 @@ var menu: Control
 var hud_root: Control
 var stopwatch_overlay: StopwatchOverlay
 var run_stage: RunStage
+var run_hud: RunHud
 var run_overlay: RunOverlay
 var tally=PickupTally.new()
-var tally_gold: Label
-var tally_xp: Label
 var gem_label: Label
 var gem_notice_left=0.0
-var loadout_label: Label
-var gold_label: Label
 var boss_panel: VBoxContainer
 var boss_fingerprint=""
 var boss_widgets: Array=[]
-var ultimate_badge: Label
-var xp_label: Label
 var event_label: Label
 var timer_label: Label
-var status_label: Label
 var minimap: RunMinimap
 var menu_camera: Camera3D
 var preview_mode="home"
@@ -33,11 +27,9 @@ var menu_world_instance=0
 var map_tick=0.0
 var settings_back: Callable
 var in_run=false
-const HEALTH_COLOR=Color("801421")
+const HEALTH_COLOR=FogPalette.RUST
 var health_text: Label
 var character_health: ProgressBar
-var loadout_icons: VBoxContainer
-var icon_fingerprint=""
 var active_tab="weapons"
 var shop_object: Dictionary={}
 var shop_offers: Array=[]
@@ -48,9 +40,9 @@ var reward_consumed=false
 var reward_focus: Dictionary={}
 var reward_tweens: Array=[]
 var map_return_to_pause=false
+var quest_tracker: Label # kept hidden and empty: quest tracking is not shown in gameplay (asserted by tests)
 var stage_banner: Control
 var quest_definitions: Array=[]
-var quest_tracker: Label
 var chest_skip: Callable
 
 func setup(owner_game: Node) -> void:
@@ -67,29 +59,15 @@ func setup(owner_game: Node) -> void:
  stopwatch_overlay=StopwatchOverlay.new();stopwatch_overlay.setup(hud_root);hud_root.add_child(stopwatch_overlay)
  game.ui=self
  game.hud=text("",hud_root,18);game.hud.hide()
- game.health_bar=ProgressBar.new();game.health_bar.position=Vector2(28,220);game.health_bar.size=Vector2(270,22);game.health_bar.show_percentage=false;hud_root.add_child(game.health_bar)
- game.xp_bar=ProgressBar.new();game.xp_bar.position=Vector2(0,698);game.xp_bar.size=Vector2(1280,22);game.xp_bar.show_percentage=false;hud_root.add_child(game.xp_bar)
- for pair in [[game.health_bar,HEALTH_COLOR],[game.xp_bar,Color("75cdb2")]]:
-  var fill=StyleBoxFlat.new();fill.bg_color=pair[1];pair[0].add_theme_stylebox_override("fill",fill)
- var hp_background=StyleBoxFlat.new();hp_background.bg_color=Color("26090f");hp_background.border_color=Color("13070a");hp_background.set_border_width_all(1);game.health_bar.add_theme_stylebox_override("background",hp_background)
- health_text=Label.new();health_text.name="HealthValue";health_text.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);health_text.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;health_text.vertical_alignment=VERTICAL_ALIGNMENT_CENTER;health_text.add_theme_font_size_override("font_size",15);health_text.mouse_filter=Control.MOUSE_FILTER_IGNORE;game.health_bar.add_child(health_text)
+ quest_tracker=text("",hud_root,13);quest_tracker.hide()
+ run_stage=RunStage.new();hud_root.add_child(run_stage)
+ run_hud=RunHud.new().setup(game,self);run_stage.stage.add_child(run_hud)
+ game.health_bar=run_hud.health_bar;game.xp_bar=run_hud.xp_bar;health_text=run_hud.health_text;minimap=run_hud.minimap;event_label=run_hud.event_label;timer_label=run_hud.timer_label
+ var hp_background=StyleBoxFlat.new();hp_background.bg_color=FogPalette.RUST_DEEP;hp_background.border_color=FogPalette.INK;hp_background.set_border_width_all(1)
  character_health=ProgressBar.new();character_health.name="CharacterHealth";character_health.size=Vector2(64,7);character_health.show_percentage=false;character_health.mouse_filter=Control.MOUSE_FILTER_IGNORE;character_health.add_theme_stylebox_override("background",hp_background.duplicate());var hp_fill=StyleBoxFlat.new();hp_fill.bg_color=HEALTH_COLOR;character_health.add_theme_stylebox_override("fill",hp_fill);character_health.add_theme_font_size_override("font_size",1);character_health.size=Vector2(64,7);hud_root.add_child(character_health)
- xp_label=text("",hud_root,14);xp_label.position=Vector2(450,698);xp_label.custom_minimum_size.x=380;xp_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
- loadout_label=text("",hud_root,14);loadout_label.position=Vector2(28,14)
- loadout_icons=VBoxContainer.new();loadout_icons.position=Vector2(28,38);loadout_icons.add_theme_constant_override("separation",5);hud_root.add_child(loadout_icons)
- gold_label=text("",hud_root,20);gold_label.position=Vector2(1010,25)
- timer_label=text("",hud_root,30);timer_label.position=Vector2(525,24);timer_label.custom_minimum_size.x=230;timer_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
- event_label=text("",hud_root,16);event_label.position=Vector2(380,62);event_label.custom_minimum_size.x=520;event_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
- tally_gold=text("",hud_root,20);tally_gold.add_theme_color_override("font_color",PickupTally.GOLD_COLOR);tally_gold.add_theme_color_override("font_shadow_color",Color(0,0,0,0.75));tally_gold.add_theme_constant_override("shadow_offset_x",1);tally_gold.add_theme_constant_override("shadow_offset_y",1);tally_gold.mouse_filter=Control.MOUSE_FILTER_IGNORE;tally_gold.hide()
- tally_xp=text("",hud_root,20);tally_xp.add_theme_color_override("font_color",PickupTally.XP_COLOR);tally_xp.add_theme_color_override("font_shadow_color",Color(0,0,0,0.75));tally_xp.add_theme_constant_override("shadow_offset_x",1);tally_xp.add_theme_constant_override("shadow_offset_y",1);tally_xp.mouse_filter=Control.MOUSE_FILTER_IGNORE;tally_xp.hide()
  gem_label=heading("",hud_root,26);gem_label.position=Vector2(240,112);gem_label.custom_minimum_size.x=800;gem_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;gem_label.add_theme_constant_override("outline_size",8);gem_label.add_theme_color_override("font_outline_color",Color(0,0,0,0.9));gem_label.hide()
  boss_panel=VBoxContainer.new();boss_panel.position=Vector2(415,95);boss_panel.custom_minimum_size.x=450;hud_root.add_child(boss_panel)
- status_label=text("",hud_root,16);status_label.position=Vector2(28,252)
- quest_tracker=text("",hud_root,13);quest_tracker.position=Vector2(28,375);quest_tracker.custom_minimum_size=Vector2(270,0);quest_tracker.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
- minimap=RunMinimap.new();minimap.game=game;minimap.position=Vector2(1040,450);minimap.size=Vector2(210,210);hud_root.add_child(minimap)
- var legend=text("YOU • PORTAL • TREASURE",hud_root,12);legend.position=Vector2(1040,670)
- game.notice=text("",root,18);game.notice.position=Vector2(350,646);game.notice.custom_minimum_size.x=590;game.notice.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
- run_stage=RunStage.new();root.add_child(run_stage)
+ game.notice=text("",root,18);game.notice.position=Vector2(350,560);game.notice.custom_minimum_size.x=590;game.notice.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
  run_overlay=RunOverlay.new();root.add_child(run_overlay);root.move_child(menu,root.get_child_count()-1) # order: HUD, run overlay, then pause/reward screens above
  hud_root.hide()
 func text(value: String, parent: Node, size_value: int = 18) -> Label:
@@ -210,7 +188,7 @@ func fade_celebrations() -> void:
 func enter_run() -> void:
  fade_celebrations();chest_skip=Callable()
  stop_reward_animations()
- in_run=true;icon_fingerprint=""
+ in_run=true
  menu.hide();hud_root.show();game.player.camera.current=true
 func gem_notice(element: String) -> void:
  gem_label.text="◆  %s GEM DISCOVERED  ◆"%Elements.display_name(element).to_upper()
@@ -226,20 +204,13 @@ func real_delta() -> float:
  var delta=0.0 if last_hud_msec<0 else clampf((now-last_hud_msec)/1000.0,0.0,0.25)
  last_hud_msec=now
  return delta
-func place_counter(label: Label,counter: PickupTally.Counter,text_value: String,at: Vector2) -> void:
- label.text=text_value;label.visible=text_value!="" and hud_root.visible
- label.pivot_offset=Vector2(0,label.size.y)
- label.scale=Vector2.ONE*(1.0+0.45*counter.bounce)
- label.position=at+Vector2(0,-counter.bounce*5.0)
- label.rotation=-counter.bounce*0.05
- label.modulate=Color(1,1,1,counter.alpha()).lerp(Color(1.6,1.6,1.6,counter.alpha()),clampf(counter.bounce*0.5,0.0,0.6))
 func update_tally(delta: float) -> void:
  tally.update(game,delta)
  var origin=Vector2(640,380)
  if is_instance_valid(game.player) and is_instance_valid(game.player.camera) and DisplayServer.get_name()!="headless" and not game.player.camera.is_position_behind(game.player.position):
   origin=game.player.camera.unproject_position(game.player.position+Vector3.UP*1.5)
- place_counter(tally_gold,tally.gold,tally.gold_text(),origin+Vector2(44,-16))
- place_counter(tally_xp,tally.xp,tally.xp_text(),origin+Vector2(44,10))
+ if tally.gold_gain_now>0:run_hud.gain("gold",tally.gold_gain_now,run_stage.from_screen(origin+Vector2(44,-16)))
+ if tally.xp_gain_now>0.0:run_hud.gain("xp",tally.xp_gain_now,run_stage.from_screen(origin+Vector2(44,10)))
  if gem_notice_left>0.0:
   gem_notice_left-=delta;gem_label.modulate.a=clampf(gem_notice_left,0.0,1.0)
   if gem_notice_left<=0.0:gem_label.hide()
@@ -248,44 +219,10 @@ func update_hud() -> void:
  if stopwatch_overlay:stopwatch_overlay.update_state(game.world_time,frame_delta)
  if run_overlay:run_overlay.sync(game,frame_delta)
  update_tally(frame_delta)
- var weapon_names: Array[String]=[]
- for id in game.weapons:weapon_names.append("%s %d"%[Catalog.weapon_name(id),game.weapons[id].level])
- var tome_names: Array[String]=[]
- for id in game.tomes:tome_names.append("%s %d"%[id,game.tomes[id]])
- loadout_label.text="ARSENAL %d/%d • TOMES %d/%d"%[game.weapons.size(),game.weapon_limit(),game.tomes.size(),game.tome_limit()]
- var equipment=[]
- for id in game.weapons:equipment.append(str(id)+":"+str(game.weapons[id].level)+":"+str(game.weapons[id].get("rarity","common"))+":"+str(game.weapons[id].get("sockets",{})))
- var fingerprint=str(equipment)+str(game.tomes)+str(game.tome_rarities)+str(game.weapon_limit())+str(game.tome_limit())+game.loadout_runtime.trait_id+game.loadout_runtime.ultimate_id
- if fingerprint!=icon_fingerprint:
-  icon_fingerprint=fingerprint
-  for child in loadout_icons.get_children():loadout_icons.remove_child(child);child.queue_free()
-  var equipment_rows=VBoxContainer.new();equipment_rows.name="EquippedItems";equipment_rows.add_theme_constant_override("separation",4);loadout_icons.add_child(equipment_rows)
-  var weapon_row=HBoxContainer.new();weapon_row.name="Weapons";weapon_row.add_theme_constant_override("separation",4);equipment_rows.add_child(weapon_row)
-  for id in game.weapons:
-   var meta=game.equipment_meta("weapons",id,int(game.weapons[id].level));var tile=RewardScreens.icon(self,weapon_row,"weapons",str(id),"Lv. %d"%int(game.weapons[id].level),Rarity.definition(meta.rarity).color,40);tile.tooltip_text=meta.name+"\n"+SocketScreens.tooltip(game.weapons[id]);tile.set_meta("equipment_uid",meta.uid);SocketScreens.add_pips(tile,game.weapons[id])
-  var tome_row=HBoxContainer.new();tome_row.name="Tomes";tome_row.add_theme_constant_override("separation",4);equipment_rows.add_child(tome_row)
-  for id in game.tomes:
-   var meta=game.equipment_meta("tomes",id,int(game.tomes[id]));var tile=RewardScreens.icon(self,tome_row,"tomes",str(id),"Lv. %d"%int(game.tomes[id]),Rarity.definition(meta.rarity).color,40);tile.tooltip_text=meta.name;tile.set_meta("equipment_uid",meta.uid)
-  var ability_row=HBoxContainer.new();loadout_icons.add_child(ability_row)
-  icon_tile(ability_row,"traits",game.loadout_runtime.trait_id,LoadoutCatalog.entry("traits",game.loadout_runtime.trait_id).get("name","Trait"),true)
-  icon_tile(ability_row,"ultimates",game.loadout_runtime.ultimate_id,LoadoutCatalog.entry("ultimates",game.loadout_runtime.ultimate_id).get("name","Ultimate"),true)
- gold_label.text="GOLD  %d\nCHESTS  %d"%[game.gold,game.chest_cost()]
- var left=maxf(0,game.STAGE_SECONDS-game.stage_time)
- timer_label.text="%02d:%02d"%[int(left)/60,int(left)%60] if left>0 else "00:00 • ENDLESS"
- timer_label.modulate=Color("f68c7a") if left<=0 else Color("f2e5c4")
- game.health_bar.max_value=game.stats.max_health;game.health_bar.value=game.health
- health_text.text="%d / %d"%[ceili(maxf(0,game.health)),ceili(game.stats.max_health)]
+ run_hud.update(frame_delta)
  character_health.max_value=game.stats.max_health;character_health.value=game.health
  update_character_health()
- xp_label.text="LEVEL %d • %.0f / %.0f XP"%[game.level,game.xp,Catalog.threshold(game.level)]
- if is_instance_valid(ultimate_badge):ultimate_badge.text="READY" if game.loadout_runtime.cooldown<=0 else str(ceili(game.loadout_runtime.cooldown))+"s"
- game.xp_bar.max_value=Catalog.threshold(game.level);game.xp_bar.value=game.xp;game.xp_bar.tooltip_text="Level %d • %.0f / %.0f XP"%[game.level,game.xp,Catalog.threshold(game.level)]
- status_label.text="HP %d/%d  •  LV %d  •  KILLS %d\nTab • Build & stats"%[maxf(0,game.health),game.stats.max_health,game.level,game.kills]
- status_label.text+="\n[%s] %s • %s"%[OS.get_keycode_string(game.bindings.ultimate),LoadoutCatalog.entry("ultimates",game.loadout_runtime.ultimate_id).get("name","Ultimate"),"READY" if game.loadout_runtime.cooldown<=0 else "%ds"%ceili(game.loadout_runtime.cooldown)]
- if game.loadout_runtime.remaining>0:status_label.text+="\nULTIMATE ACTIVE • %.1fs"%game.loadout_runtime.remaining
- quest_tracker.text="";quest_tracker.hide()
  update_boss_bars()
- if game.settings.fps:status_label.text+="\n%d FPS"%Engine.get_frames_per_second()
 func pause() -> void:
  RewardScreens.pause(self)
 func world_map(from_pause: bool=false) -> void:
@@ -336,8 +273,6 @@ func icon_tile(parent: Node, category: String, id: String, hint: String, golden:
  if golden and category!="traits":
   var border=ColorRect.new();border.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);border.mouse_filter=Control.MOUSE_FILTER_IGNORE
   var material=ShaderMaterial.new();material.shader=preload("res://shaders/gold_frame.gdshader");border.material=material;slot.add_child(border)
- if category=="ultimates":
-  ultimate_badge=text("",slot,11);ultimate_badge.position=Vector2(0,20);ultimate_badge.add_theme_color_override("font_shadow_color",Color.BLACK);ultimate_badge.add_theme_constant_override("shadow_offset_x",1);ultimate_badge.add_theme_constant_override("shadow_offset_y",1)
 func leave_settings() -> void:
  game.progress.data.settings=game.settings;game.progress.data.settings.bindings=game.bindings;game.progress.save()
  if settings_back.is_valid():settings_back.call()

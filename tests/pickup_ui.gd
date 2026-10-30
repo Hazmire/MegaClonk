@@ -99,13 +99,13 @@ func hud():
  game.weapons.clear();game.equip(0)
  game.frontend.update_hud()
  var found=0
- for n in RewardScreens.descendants(game.frontend.loadout_icons):
+ for n in RewardScreens.descendants(game.frontend.run_hud.build_box):
   if n is SocketPips:found+=1
  check(found==1,"The top-left weapon icon shows its socket diamonds")
  WeaponSockets.install(game.weapons[0],"fire")
  game.frontend.update_hud()
  var filled=false
- for n in RewardScreens.descendants(game.frontend.loadout_icons):
+ for n in RewardScreens.descendants(game.frontend.run_hud.build_box):
   if n is SocketPips and n.gems==["fire"]:filled=true
  check(filled,"The HUD socket diamond updates when a gem is installed")
  game.gems.reset();game.gold=0

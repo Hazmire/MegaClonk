@@ -9,8 +9,8 @@ func run():
  var audio=game.audio
  if not require(not audio.events.keys().any(func(e):return str(e).begins_with("enemy.")),"Compiled enemy sounds remain active"):return
  game.health=25;game.stats.max_health=100;game.tomes={"Wind":2};game.update_hud();await process_frame
- var rows=game.frontend.loadout_icons.get_node("EquippedItems")
- if not require(rows.get_node("Tomes").get_child_count()==1 and rows.get_node("Tomes").position.y>=rows.get_node("Weapons").size.y,"Compiled tome row missing or misplaced"):return
+ var hud_rows=game.frontend.run_hud.build_box
+ if not require(hud_rows.get_child(3).get_children().filter(func(n):return n.tooltip_text!="").size()==1 and hud_rows.get_child(3).position.y>=hud_rows.get_child(1).position.y+hud_rows.get_child(1).size.y,"Compiled tome row missing or misplaced"):return
  if not require(game.frontend.health_text.text=="25 / 100" and game.frontend.character_health.value==25 and game.frontend.character_health.size.y<=7.1,"Compiled health bars/numbers incorrect"):return
  if not require(audio.events.size()>=30 and audio.voices.size()==24,"Compiled audio registry/pool incomplete"):return
  for config in audio.events.values():

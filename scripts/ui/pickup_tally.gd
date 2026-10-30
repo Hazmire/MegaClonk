@@ -42,18 +42,21 @@ var xp=Counter.new()
 var last_gold=-1
 var last_xp=0.0
 var last_level=-1
+var gold_gain_now=0   # gains seen by the latest update() (PickupPopups reads these)
+var xp_gain_now=0.0
 
 func reset(game: Object) -> void:
  gold=Counter.new();xp=Counter.new()
  last_gold=int(game.gold);last_xp=float(game.xp);last_level=int(game.level)
 func update(game: Object,delta: float) -> void:
+ gold_gain_now=0;xp_gain_now=0.0
  if last_level<0 or int(game.level)<last_level:reset(game);return
  var gold_gain=int(game.gold)-last_gold
- if gold_gain>0:gold.add(gold_gain,WINDOW)
+ if gold_gain>0:gold.add(gold_gain,WINDOW);gold_gain_now=gold_gain
  last_gold=int(game.gold)
  var xp_gain=float(game.xp)-last_xp
  for l in range(last_level,int(game.level)):xp_gain+=Catalog.threshold(l) # levels completed since last frame
- if xp_gain>0.0:xp.add(xp_gain,WINDOW)
+ if xp_gain>0.0:xp.add(xp_gain,WINDOW);xp_gain_now=xp_gain
  last_xp=float(game.xp);last_level=int(game.level)
  gold.step(delta);xp.step(delta)
 func gold_text() -> String:

@@ -54,12 +54,18 @@ static func tomes(game: Node) -> Array:
   var meta=game.equipment_meta("tomes",id,int(game.tomes[id]))
   out.append({"id":str(id),"name":str(meta.name),"level":int(game.tomes[id]),"tier":tier_index(str(meta.rarity))})
  return out
+# Light rows only (name, stacks, tier): the HUD rebuilds these when the build changes, so the expensive text is looked up
+# on hover through item_description() instead of for every item every time.
 static func items(game: Node) -> Array:
  var out=[]
  for entry in game.items:
-  var meta=RewardCatalog.entry("items",str(entry.id),int(entry.stacks))
-  out.append({"id":str(entry.id),"name":str(meta.name),"stacks":int(entry.stacks),"tier":tier_index(str(meta.rarity)),"description":str(meta.get("description",""))})
+  var id=str(entry.id);var data: Dictionary=Catalog.ITEMS.get(id,{})
+  out.append({"id":id,"name":str(data.get("name",id)),"stacks":int(entry.stacks),"tier":tier_index(str(data.get("tier","common")))})
  return out
+static func item_description(id: String) -> String:return Catalog.item_description(id)
+# Sets tooltip_text only when the pointer arrives (tooltips show after a delay), so building a row costs no text work.
+static func lazy_tip(control: Control,text_for: Callable) -> void:
+ control.mouse_entered.connect(func():control.tooltip_text=str(text_for.call()))
 static func gem_counts(game: Node) -> Dictionary:
  var out={}
  for element in Elements.IDS:out[element]=game.gems.count(element)
@@ -67,14 +73,25 @@ static func gem_counts(game: Node) -> Dictionary:
 # Trait and ultimate for the Inventory panel and the HUD tiles. cooldown_left is seconds until Q is ready (0 = ready).
 static func loadout(game: Node) -> Dictionary:
  var l=game.loadout_runtime
- return {"trait":str(l.trait_id),"ultimate":str(l.ultimate_id),"cooldown":float(l.cooldown),"cooldown_left":maxf(0.0,float(l.cooldown)),"active":float(l.remaining)>0.0,"ready":float(l.cooldown)<=0.0 and float(l.remaining)<=0.0}
-# One cheap string that changes exactly when the build changes: panels and the HUD rebuild only when it does.
-static func build_signature(game: Node) -> String:
+ return {"trait":str(l.trait_id),"ultimate":str(l.ultimate_id),"cooldown":float(l.cooldown),"cooldown_left":maxf(0.0,float(l.cooldown)),"total":maxf(0.001,float(LoadoutCatalog.entry("ultimates",str(l.ultimate_id)).get("cooldown",1.0))),"active":float(l.remaining)>0.0,"ready":float(l.cooldown)<=0.0 and float(l.remaining)<=0.0}
+# Cheap strings that change exactly when a part of the build changes: panels and the HUD rebuild only that part.
+static func weapons_signature(game: Node) -> String:
  var parts=PackedStringArray()
  for id in game.weapons:
-  var s: Dictionary=game.weapons[id];parts.append("w%s:%d:%s:%s"%[id,int(s.level),str(s.get("rarity","")),",".join(PackedStringArray(WeaponSockets.gems(s)))+"/"+str(WeaponSockets.unlocked(s))])
+  var w: Dictionary=game.weapons[id];parts.append("w%s:%d:%s:%s"%[id,int(w.level),str(w.get("rarity","")),",".join(PackedStringArray(WeaponSockets.gems(w)))+"/"+str(WeaponSockets.unlocked(w))])
+ return "|".join(parts)+"#%d"%game.weapon_limit()
+static func tomes_signature(game: Node) -> String:
+ var parts=PackedStringArray()
  for id in game.tomes:parts.append("t%s:%d"%[id,int(game.tomes[id])])
+ return "|".join(parts)+"#%d#%s"%[game.tome_limit(),str(game.tome_rarities)]
+static func items_signature(game: Node) -> String:
+ var parts=PackedStringArray()
  for e in game.items:parts.append("i%s:%d"%[e.id,int(e.stacks)])
+ return "|".join(parts)
+static func gems_signature(game: Node) -> String:
+ var parts=PackedStringArray()
  for element in Elements.IDS:parts.append("g%d"%game.gems.count(element))
  parts.append("a%d"%game.amulets)
  return "|".join(parts)
+static func build_signature(game: Node) -> String:
+ return weapons_signature(game)+"@"+tomes_signature(game)+"@"+items_signature(game)+"@"+gems_signature(game)

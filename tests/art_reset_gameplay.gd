@@ -43,7 +43,7 @@ func run():
   if node is Control and node.tooltip_text.begins_with("Wall Climber"):trait_icon=node;break
  check(trait_icon!=null and not RewardScreens.descendants(trait_icon).any(func(n):return n is ColorRect and n.material is ShaderMaterial),"Build trait icon has no animated gold shader frame")
  game.frontend.enter_run();game.update_hud();await process_frame
- var trait_tile=game.frontend.loadout_icons.get_child(1).get_child(0)
+ var trait_tile=game.frontend.run_hud.trait_slot
  check(not RewardScreens.descendants(trait_tile).any(func(n):return n is ColorRect and n.material is ShaderMaterial),"HUD trait icon has no gold glow")
  game.player.active=false;game.player.position=game.map_layout.spawn;game.health=100;game.invulnerability=0;game.stats=Catalog.base_stats();game.enemies.clear();game.loadout_runtime.reset("climber","nova")
  var e=game.spawn_enemy(1,game.player.position+Vector3(1,0,0));e.variant=OrdinaryRoster.variant(1,0);e.detonated=false;e.damage=20;game.player.velocity=Vector3.ZERO

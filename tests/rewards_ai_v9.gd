@@ -92,10 +92,10 @@ func run():
  var facing=game.frontend.minimap.camera_facing();game.player.avatar.rotation.y+=2
  check(facing==game.frontend.minimap.camera_facing(),"Strafing/backwards avatar rotation does not change map facing")
  game.weapons.clear();game.equip(0);game.tomes={"Wind":3};game.update_hud();await process_frame
- var row=game.frontend.loadout_icons.get_node("EquippedItems")
- check(row.get_node("Weapons").get_child_count()==1 and row.get_node("Tomes").get_child_count()==1 and row.get_node("Weapons").get_child(0).get_meta("equipment_uid")=="weapons:0" and row.get_node("Tomes").get_child(0).get_meta("equipment_uid")=="tomes:Wind","Horizontal HUD shows only owned weapons/tomes with source inventory IDs")
+ var hud_rows=game.frontend.run_hud.build_box;var filled=func(row):return row.get_children().filter(func(n):return n.tooltip_text!="")
+ check(filled.call(hud_rows.get_child(1)).size()==1 and filled.call(hud_rows.get_child(3)).size()==1 and filled.call(hud_rows.get_child(1))[0].tooltip_text.begins_with(Catalog.weapon_name(0)) and filled.call(hud_rows.get_child(3))[0].tooltip_text.begins_with(Catalog.tome_name("Wind")),"Horizontal HUD shows only owned weapons/tomes")
  game.weapons[0].level=4;game.update_hud();await process_frame
- check(nodes(game.frontend.loadout_icons).any(func(n):return n is Label and n.text=="Lv. 4"),"Horizontal equipment levels update immediately")
+ check(nodes(game.frontend.run_hud.build_box).any(func(n):return n is Label and n.text=="LV 4"),"Horizontal equipment levels update immediately")
  var profile=game.progress.data.duplicate(true);game.progress.data.claimed=[];game.progress.data.kills=0;game.kills=0;game.frontend.in_run=true
  var q=LoadoutCatalog.quests()[0];game.update_hud()
  check(MetaProgress.quest_state(game.progress.data,q)=="active","Quest state distinguishes active")

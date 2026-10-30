@@ -27,8 +27,8 @@ func run():
  var count=game.item_total();game.frontend.chest_skip.call()
  if not require(image.texture==UIAssets.icon("items","hourglass_damned") and game.item_total()==count,"Compiled reveal mismatched or granted another item"):return
  game.resume();game.tomes={"Wind":2};game.update_hud();await process_frame
- var row=game.frontend.loadout_icons.get_node("EquippedItems")
- if not require(row.get_node("Weapons").get_child_count()==game.weapons.size() and row.get_node("Tomes").get_child_count()==game.tomes.size(),"Compiled HUD contains empty or missing equipment"):return
+ var hud_rows=game.frontend.run_hud.build_box
+ if not require(hud_rows.get_child(1).get_children().filter(func(n):return n.tooltip_text!="").size()==game.weapons.size() and hud_rows.get_child(3).get_children().filter(func(n):return n.tooltip_text!="").size()==game.tomes.size(),"Compiled HUD contains empty or missing equipment"):return
  game.player.camera.current=true;game.player.camera.global_rotation=Vector3(-0.7,0.8,0);game.player.avatar.rotation.y=-1
  var forward=-game.player.camera.global_basis.z
  if not require(game.frontend.minimap.camera_facing().distance_to(Vector2(forward.x,forward.z).normalized())<0.001,"Compiled minimap does not face camera"):return

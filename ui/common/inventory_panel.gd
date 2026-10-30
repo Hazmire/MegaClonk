@@ -29,14 +29,15 @@ func _section(caption: String) -> VBoxContainer:
  var s=VBoxContainer.new();s.add_theme_constant_override("separation",10);s.mouse_filter=Control.MOUSE_FILTER_IGNORE;column.add_child(s);s.add_child(_caption(caption));return s
 func _grid(parent: Node,columns: int,gap: int=10) -> GridContainer:
  var g=GridContainer.new();g.columns=columns;g.add_theme_constant_override("h_separation",gap);g.add_theme_constant_override("v_separation",gap);g.mouse_filter=Control.MOUSE_FILTER_IGNORE;parent.add_child(g);return g
-static func empty_cell(height: float) -> Control:
+static func empty_cell(height: float,line: Color=FogPalette.BORDER,fill: Color=Color(0,0,0,0)) -> Control:
  var c=Control.new();c.custom_minimum_size=Vector2(78,height);c.mouse_filter=Control.MOUSE_FILTER_IGNORE
  c.draw.connect(func():
   var r=Rect2(Vector2.ZERO,c.size).grow(-0.5);var dash=6.0
+  if fill.a>0.0:c.draw_rect(Rect2(Vector2.ZERO,c.size),fill)
   for x in range(0,int(r.size.x),int(dash*2)):
-   c.draw_line(r.position+Vector2(x,0),r.position+Vector2(mini(x+dash,r.size.x),0),FogPalette.BORDER);c.draw_line(r.position+Vector2(x,r.size.y),r.position+Vector2(mini(x+dash,r.size.x),r.size.y),FogPalette.BORDER)
+   c.draw_line(r.position+Vector2(x,0),r.position+Vector2(mini(x+dash,r.size.x),0),line);c.draw_line(r.position+Vector2(x,r.size.y),r.position+Vector2(mini(x+dash,r.size.x),r.size.y),line)
   for y in range(0,int(r.size.y),int(dash*2)):
-   c.draw_line(r.position+Vector2(0,y),r.position+Vector2(0,mini(y+dash,r.size.y)),FogPalette.BORDER);c.draw_line(r.position+Vector2(r.size.x,y),r.position+Vector2(r.size.x,mini(y+dash,r.size.y)),FogPalette.BORDER))
+   c.draw_line(r.position+Vector2(0,y),r.position+Vector2(0,mini(y+dash,r.size.y)),line);c.draw_line(r.position+Vector2(r.size.x,y),r.position+Vector2(r.size.x,mini(y+dash,r.size.y)),line))
  return c
 # Icon tile: rarity frame, 32px art at a whole-number scale, small caption under it.
 static func tile(category: String,id: String,tier: int,caption: String,box: Vector2,icon_px: int,tooltip: String="") -> Control:
@@ -85,9 +86,9 @@ func _items() -> void:
  items_scroll.custom_minimum_size=Vector2(0,186 if roomy else 120);items_scroll.size_flags_vertical=Control.SIZE_EXPAND_FILL;s.add_child(items_scroll)
  var g=_grid(items_scroll,4 if roomy else 6,10 if roomy else 8)
  for it in list:
-  var tip="%s ×%d\n%s"%[it.name,it.stacks,it.description]
-  if roomy:g.add_child(tile("items",it.id,it.tier,"×%d"%it.stacks,Vector2(78,88),64,tip))
-  else:g.add_child(_compact_item(it,tip))
+  var cell=tile("items",it.id,it.tier,"×%d"%it.stacks,Vector2(78,88),64,"-") if roomy else _compact_item(it,"-")
+  RunData.lazy_tip(cell,func():return "%s ×%d\n%s"%[it.name,it.stacks,RunData.item_description(it.id)])
+  g.add_child(cell)
 func _compact_item(it: Dictionary,tip: String) -> Control:
  var box=Vector2(52,52);var wrap=Control.new();wrap.custom_minimum_size=box;wrap.tooltip_text=tip;wrap.mouse_filter=Control.MOUSE_FILTER_STOP
  var slot=MenuStyle.spawn("rarity_slot") as RaritySlot;wrap.add_child(slot);slot.setup(it.tier,UIAssets.icon("items",it.id),32,box,true)

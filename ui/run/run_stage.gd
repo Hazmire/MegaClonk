@@ -11,3 +11,5 @@ func _ready() -> void:fit()
 func fit() -> void:
  var s=minf(size.x/MenuStyle.W,size.y/MenuStyle.H)
  stage.scale=Vector2(s,s);stage.position=((size-stage.size*s)*0.5).floor()
+# Window/viewport pixels -> design-stage pixels (used to place world-anchored popups).
+func from_screen(p: Vector2) -> Vector2:return (p-global_position-stage.position)/maxf(0.001,stage.scale.x)

@@ -5,7 +5,7 @@ extends FrameScreen
 # "Back" (Esc) saves, like the old "Save & back".
 const TABS=[{"id":"Display","label":"Display"},{"id":"Graphics","label":"Graphics"},{"id":"Audio","label":"Audio"},{"id":"Gameplay","label":"Gameplay"}]
 const RESOLUTIONS=[Vector2i(1280,720),Vector2i(1600,900),Vector2i(1920,1080)]
-const AUDIO_NAMES={"master":"Master volume","music":"Music volume","effects":"Sound effects volume","ui_volume":"UI volume","ambience":"Ambient volume"}
+const AUDIO_NAMES={"master":"Master volume","music":"Music volume","effects":"Sound effects volume","ui_volume":"UI volume","ambience":"Ambient volume","fps":"Debug: show FPS counter"}
 const KEYS={"Graphics":["render_scale","retro_scale","psx_warp","psx_snap","psx_dither","visual_intensity","reduced","numbers","shake","fps"],"Audio":["master","music","effects","ui_volume","ambience"],"Gameplay":["sensitivity","invert","focus_pause"]}
 static var last_tab="Display"
 var group="Display"
