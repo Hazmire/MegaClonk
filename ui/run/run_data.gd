@@ -156,3 +156,11 @@ static func shop_rows(game: Node,object: Dictionary) -> Array:
  for r in rows:
   r["gold"]=int(game.gold);r["need"]=maxi(0,int(r.price)-int(game.gold));r["affordable"]=int(game.gold)>=int(r.price)
  return rows
+# --- shrine ---------------------------------------------------------------------------------------------------------
+# One Dictionary per shrine choice: {index, stat, stat_name, bonus, description, tier, tier_name, before, after}; all from ShrineRewards.
+static func shrine_cards(reward: Dictionary) -> Array:
+ var out=[]
+ for i in reward.get("choices",[]).size():
+  var c: Dictionary=reward.choices[i];var tier=tier_index(str(c.rarity))
+  out.append({"index":i,"stat":str(c.stat),"stat_name":ShrineRewards.stat_name(str(c.stat)),"bonus":ShrineRewards.bonus_text(c),"description":str(c.description),"tier":tier,"tier_name":str(FogPalette.RARITY[tier]["name"]),"before":float(c.before),"after":float(c.after)})
+ return out

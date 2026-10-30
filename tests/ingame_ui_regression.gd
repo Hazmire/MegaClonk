@@ -24,6 +24,7 @@ func run() -> void:
  await pause_screen()
  await level_up()
  await shop_screen()
+ await shrine_screen()
  print("INGAME_UI: %d checks, %d failures"%[count,failures.size()])
  quit(1 if failures.size()>0 else 0)
 func foundation() -> void:
@@ -399,3 +400,37 @@ func shop_screen() -> void:
   if n is RunShop:s=n
  check(s.rows[0].focus_neighbor_bottom==s.rows[0].get_path_to(s.rows[1]) and s.rows[1].focus_neighbor_bottom==s.rows[1].get_path_to(s.leave_button),"Focus moves down the offers and on to Leave shop")
  game.resume();await process_frame
+func shrine_screen() -> void:
+ var fe=game.frontend;game.enemies.clear();game.mode="run";game.stats=Catalog.base_stats();game.stage=1
+ var rng=RandomNumberGenerator.new();rng.seed=77
+ var reward={"choices":ShrineRewards.generate(game.stats,rng,false),"golden":false}
+ game.active_shrine_reward=reward;RewardScreens.shrine(fe,reward);await process_frame
+ var s: RunShrine
+ for n in fe.menu.get_children():
+  if n is RunShrine:s=n
+ check(s!=null and game.mode=="shrine" and s.cards.size()==3,"Shrine opens RunShrine with the three real choices")
+ if s==null:return
+ var c0=reward.choices[0]
+ check(s.get_node("Stage/Content/Header/Title").text=="Choose one stat","Title is Choose one stat")
+ check(s.cards[0].data.bonus==ShrineRewards.bonus_text(c0) and s.cards[0].data.stat_name==ShrineRewards.stat_name(c0.stat),"Card 1 shows the real bonus and stat name (%s %s)"%[s.cards[0].data.bonus,s.cards[0].data.stat_name])
+ check(s.accept.label_text=="Accept: %s %s"%[s.cards[0].data.stat_name,s.cards[0].data.bonus],"Accept button names the focused choice (%s)"%s.accept.label_text)
+ s.cards[1].grab_focus();await process_frame
+ check(s.accept.label_text.begins_with("Accept: "+s.cards[1].data.stat_name),"Focusing card 2 retargets Accept")
+ check(s.cards[1].focus_neighbor_bottom==s.cards[1].get_path_to(s.cards[2]) and s.cards[2].focus_neighbor_bottom==s.cards[2].get_path_to(s.accept),"Focus runs down the cards and on to Accept")
+ var key=InputEventKey.new();key.keycode=KEY_3;key.pressed=true;s._unhandled_input(key);await process_frame
+ check(s.cards[2].has_focus(),"Key 3 focuses card 3")
+ var before=game.stats.duplicate();var ch=reward.choices[2];s.accept.chosen.emit();await process_frame
+ check(is_equal_approx(game.stats[ch.stat]-before[ch.stat],ch.amount) and game.active_shrine_reward.is_empty() and game.mode=="run","Accept grants exactly the displayed amount, clears the shrine and returns to the run")
+ # golden shrine: all legendary
+ var g={"choices":ShrineRewards.generate(game.stats,rng,true),"golden":true};game.active_shrine_reward=g;RewardScreens.shrine(fe,g);await process_frame
+ for n in fe.menu.get_children():
+  if n is RunShrine:s=n
+ check(s.cards.size()==3 and s.cards.all(func(c):return c.data.tier==FogPalette.Rarity.LEGENDARY),"Golden shrine cards are all Legendary")
+ game.active_shrine_reward={};game.resume();await process_frame
+ # capped: nothing to offer
+ var empty={"choices":[],"golden":false};game.mode="run";game.active_shrine_reward=empty;RewardScreens.shrine(fe,empty);await process_frame
+ for n in fe.menu.get_children():
+  if n is RunShrine:s=n
+ check(s.cards.is_empty() and s.accept.label_text=="Continue","With every stat capped the screen offers Continue only")
+ s.accept.chosen.emit();await process_frame
+ check(game.active_shrine_reward.is_empty() and game.mode=="run","Continue closes the empty shrine")

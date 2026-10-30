@@ -110,6 +110,19 @@ func run() -> void:
   await snap("shop-legendary",0.2)
   game.gold=113;game.frontend.shop({"tier":"Common","offers":["whetstone"],"sold":["whetstone"],"used":true});await create_timer(0.5).timeout;await snap("shop-sold",0.2)
   game.resume()
+ if want("shrine"):
+  late_build();game.mode="run";game.frontend.update_hud()
+  var rng=RandomNumberGenerator.new();rng.seed=5;var tries=0;var rw={}
+  while tries<60:
+   rw={"choices":ShrineRewards.generate(game.stats,rng,false),"golden":false};tries+=1
+   var tiers=rw.choices.map(func(c):return c.rarity)
+   if "legendary" in tiers and "rare" in tiers:break
+  game.active_shrine_reward=rw;RewardScreens.shrine(game.frontend,rw);await create_timer(0.7).timeout
+  await snap("shrine-legendary-focus",0.3)
+  var sc=game.frontend.menu.get_child(0);sc.cards[1].grab_focus();await snap("shrine-rare-selected",0.35)
+  game.active_shrine_reward={};game.resume();game.mode="run"
+  var gd={"choices":ShrineRewards.generate(game.stats,rng,true),"golden":true};game.active_shrine_reward=gd;RewardScreens.shrine(game.frontend,gd);await create_timer(0.7).timeout;await snap("shrine-golden",0.3)
+  game.active_shrine_reward={};game.resume()
  quit(0)
 func wait_phase(tq: RunToasts,phase: String,extra: float) -> void:
  var guard=0

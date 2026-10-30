@@ -199,17 +199,10 @@ static func reward(ui: FrontEnd,id: String) -> void:
  if game.settings.reduced:ui.chest_skip.call()
 
 static func shrine(ui: FrontEnd,reward: Dictionary) -> void:
- var game=ui.game;game.mode="shrine";var center=layout(ui,"GOLDEN SHRINE · Choose one" if reward.golden else "SHRINE · Choose one stat")
- ui.text("Choose exactly one permanent upgrade for this run.",center,15)
- celebration(ui,Color("ffbf45") if reward.golden else Color("70dcd7"),1.0 if reward.golden else 0.4)
- for i in reward.choices.size():
-  var choice=reward.choices[i];var tier=Rarity.definition(choice.rarity)
-  var card=button(ui,center,"%s   ·   %s\n%s  %s\n%s"%[tier.name.to_upper(),"STAT UPGRADE",ShrineRewards.stat_name(str(choice.stat)),ShrineRewards.bonus_text(choice),choice.description],func():ShrineRewards.select(game,i),tier.color.darkened(0.85))
-  card.name="ShrineChoice%d"%i;card.custom_minimum_size=Vector2(552,125);card.add_theme_stylebox_override("normal",style(tier.color,tier.color.darkened(0.90)));card.add_theme_stylebox_override("focus",style(tier.color.lightened(0.2),tier.color.darkened(0.82)));card.add_theme_font_size_override("font_size",19)
-  if i==0:card.grab_focus()
- if reward.choices.is_empty():
-  ui.paragraph("All eligible stats are capped. No invalid upgrade has been generated.",center,520)
-  button(ui,center,"CONTINUE",func():game.active_shrine_reward={};game.resume())
+ var game=ui.game
+ if game.mode=="run":ui.capture_pause_frame()
+ game.mode="shrine";ui.clear()
+ var screen=RunShrine.new();screen.reward=reward;MenuScreen.set_audio_owner(game);screen.bind(ui);ui.menu.add_child(screen)
 static func celebration(ui: FrontEnd,color: Color,strength: float) -> RewardCelebration:
  var effect=RewardCelebration.new();effect.rainbow=true;effect.tint=color;effect.strength=strength*ui.game.settings.visual_intensity;ui.menu.add_child(effect);ui.menu.move_child(effect,1)
  var local=RewardCelebration.new();local.set_meta("global_celebration",effect);local.confetti=false;local.rays=true;local.tint=color;local.strength=effect.strength;local.center=Vector2(288,262)
