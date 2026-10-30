@@ -317,7 +317,7 @@
    "short": "Every on-hit effect rolls one extra time",
    "full": "Every on-hit effect rolls one extra time.",
    "needs": null,
-   "unique": true,
+   "unique": false,
    "icon": "icons/items/saints_finger.png"
   },
   {
@@ -477,7 +477,7 @@
    "short": "1% execute on hit; each adds +1% damage",
    "full": "Hits have a 1% chance to execute a non-boss enemy; each execution adds +1% damage for the rest of the run.",
    "needs": null,
-   "unique": true,
+   "unique": false,
    "icon": "icons/items/headsmans_oath.png"
   },
   {
@@ -487,7 +487,7 @@
    "short": "First lethal hit: freeze time 5 s, heal to 50%",
    "full": "The first lethal hit freezes hostile time for 5 s and heals you to 50%; the hourglass then shatters.",
    "needs": null,
-   "unique": true,
+   "unique": false,
    "icon": "icons/items/hourglass_damned.png"
   },
   {
@@ -497,7 +497,7 @@
    "short": "Every upgrade and Imbue gains +1 stat",
    "full": "Every weapon upgrade and Imbue gains +1 extra stat.",
    "needs": null,
-   "unique": true,
+   "unique": false,
    "icon": "icons/items/anvil_first_forge.png"
   },
   {
@@ -597,7 +597,7 @@
    "short": "Each level-up: −5 max HP, +4% damage",
    "full": "Each level-up permanently trades 5 max HP for +4% damage.",
    "needs": null,
-   "unique": true,
+   "unique": false,
    "icon": "icons/items/devils_bargain.png"
   },
   {

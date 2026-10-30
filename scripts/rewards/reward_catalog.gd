@@ -9,11 +9,11 @@ static func entry(category: String,id: Variant,level: int=0) -> Dictionary:
  match category:
   "weapons":
    if not Catalog.weapon_exists(int(id)):return {}
-   var w=Catalog.WEAPONS[int(id)];name=w[0];description="%s • %.0f base damage • %.2fs cooldown"%[w[1],w[2],w[3]];rarity=WEAPON_RARITIES[int(id)];unlock=LoadoutCatalog.entry(category,str(id))
+   var w=Catalog.WEAPONS[int(id)];name=w[0];description="%s • %.0f base damage • %.2fs cooldown"%[w[1],w[2],w[3]];rarity=WEAPON_RARITIES[int(id)];maximum=Economy.WEAPON_MAX_LEVEL;unlock=LoadoutCatalog.entry(category,str(id))
    for attribute in WeaponUpgrades.pool(int(id)):effects[attribute]=WeaponUpgrades.STEPS[attribute]
   "tomes":
    if not Catalog.TOMES.has(str(id)):return {}
-   var t=Catalog.TOMES[str(id)];name=Catalog.tome_name(str(id));description=Catalog.tome_description(str(id));rarity=TOME_RARITIES.get(str(id),"common");effects={t[0]:t[1]}
+   var t=Catalog.TOMES[str(id)];name=Catalog.tome_name(str(id));description=Catalog.tome_description(str(id));rarity=TOME_RARITIES.get(str(id),"common");maximum=Economy.TOME_MAX_LEVEL;effects={t[0]:t[1]}
   "items":
    if not Catalog.item_exists(id):return {}
    var item=Catalog.ITEMS[str(id)];name=str(item.name);description=Catalog.item_description(str(id));rarity=str(item.tier);maximum=1 if bool(item.unique) else 0;cost=ShopSystem.price(str(id));unlock=LoadoutCatalog.entry(category,str(id))

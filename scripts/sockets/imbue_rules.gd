@@ -4,7 +4,7 @@ extends RefCounted
 # Imbue Station transaction rules. This is pure game logic with no UI, so the station
 # interface only has to call install() and show the returned reason.
 const COSTS=[500,1000,1500] # Stage 1, 2, 3. Later stages reuse the last entry.
-const SHOP_PRICE=250
+const SHOP_PRICE=250 # legacy; shop gems are now priced by Economy.gem_price(stage)
 
 static func cost(stage: int,discount: float=0.0) -> int:
  return maxi(1,int(round(float(COSTS[clampi(stage-1,0,COSTS.size()-1)])*(1.0-clampf(discount,0.0,0.9)))))

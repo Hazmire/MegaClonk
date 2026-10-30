@@ -104,9 +104,9 @@ func compute_mods() -> Dictionary:
 func mods_extra(m: Dictionary) -> void:
  m["speed"]=float(m.get("speed",0.0))+(ItemStats.v("mourners_veil","hurt_speed")*n("mourners_veil") if float(buffs.get("mourner",0.0))>0.0 else 0.0)
  m["damage"]=float(m.get("damage",0.0))+n("tax_ledger")*ItemStats.v("tax_ledger","per_chest")*float(counters.get("chests",0))
- m["damage"]=float(m.get("damage",0.0))+ItemStats.v("headsmans_oath","per_execution")*float(counters.get("executions",0))*float(1 if stacks.has("headsmans_oath") else 0)
+ m["damage"]=float(m.get("damage",0.0))+ItemStats.v("headsmans_oath","per_execution")*float(counters.get("executions",0))*float(n("headsmans_oath"))
  if stacks.has("devils_bargain"):
-  var trades=float(counters.get("bargain",0))
+  var trades=float(counters.get("bargain",0))*float(n("devils_bargain"))
   m["damage"]=float(m.get("damage",0.0))+ItemStats.v("devils_bargain","damage")*trades
   m["max_health_flat"]=float(m.get("max_health_flat",0.0))-ItemStats.v("devils_bargain","hp")*trades
  if float(buffs.get("shade",0.0))>0.0:
@@ -226,7 +226,9 @@ func roll_hit(id: String) -> bool:
  var p=chance(id)
  if p<=0.0:return false
  if rng.randf()<p:return true
- return stacks.has("saints_finger") and rng.randf()<p
+ for i in n("saints_finger")*int(ItemStats.v("saints_finger","extra_rolls")):
+  if rng.randf()<p:return true
+ return false
 
 # ---------------------------------------------------------------- Headsman's Oath / Powder Keg Heart
 func execute(e: Dictionary) -> void:
@@ -272,7 +274,7 @@ func on_level_up() -> void:
 # Anvil of the First Forge: one extra random stat from the weapon's own upgrade pool after an upgrade or an Imbue.
 func anvil_bonus(id: int) -> void:
  if not stacks.has("anvil_first_forge") or not game.weapons.has(id):return
- var extra=int(ItemStats.v("anvil_first_forge","extra"))
+ var extra=int(ItemStats.v("anvil_first_forge","extra"))*n("anvil_first_forge")
  for i in extra:
   var state: Dictionary=game.weapons[id]
   var proposal=WeaponUpgrades.proposal(id,rng,state)
@@ -293,7 +295,9 @@ func hourglass(final_damage: float) -> bool:
  game.invulnerability=1.5
  game.toast("THE HOURGLASS SHATTERS")
  for i in range(game.items.size()-1,-1,-1):
-  if game.items[i].id=="hourglass_damned":game.items.remove_at(i)
+  if game.items[i].id=="hourglass_damned":
+   if int(game.items[i].stacks)>1:game.items[i].stacks=int(game.items[i].stacks)-1
+   else:game.items.remove_at(i)
  counters["hourglass"]=1
  on_acquire("")
  return true

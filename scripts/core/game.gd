@@ -377,6 +377,9 @@ func build_stage() -> void:
  StageThemes.apply(self)
  ForestWorld.build(self)
  if world_content_version>=1 or OrdinaryRoster.SETTINGS.elite_statues>0:create_elite_statue()
+ var shop_count=0
+ if map_layout.has("poi_kinds"):shop_count=map_layout.poi_kinds.count("Shop")
+ var shop_types=Economy.roll_stage_shops(shop_count,rng,float(stats.luck));var shop_index=0
  for i in range(map_layout.pois.size()):
   var p: Vector3=map_layout.pois[i]
   var kind = map_layout.poi_kinds[i] if map_layout.has("poi_kinds") else ["Chest","Heal","Charge Shrine","Shop","Risk Shrine","Stat Shrine"][i % 6]
@@ -387,7 +390,8 @@ func build_stage() -> void:
   model.position = p
   GrimdarkObjects.populate(model,kind,stage)
   var object={"node":model,"kind":kind,"used":false,"charge":0.0}
-  if kind=="Shop":object.tier=ShopSystem.tier(rng)
+  if kind=="Shop":
+   object.tier=str(shop_types[shop_index]) if shop_index<shop_types.size() else "Common";shop_index+=1
   interactables.append(object)
  ShrineCharging.setup(self)
  ImbueStation.setup(self)
@@ -1025,13 +1029,13 @@ func on_level() -> void:
 func upgrade_pool() -> Array:
  var pool: Array = []
  for id in Catalog.ACTIVE_WEAPONS:
-  if (weapons.has(id) and weapons[id].level<10) or (not weapons.has(id) and weapons.size()<weapon_limit() and (sandbox or MetaProgress.enabled(progress.data,"weapons",str(id)))):
+  if (weapons.has(id) and weapons[id].level<Economy.WEAPON_MAX_LEVEL) or (not weapons.has(id) and weapons.size()<weapon_limit() and (sandbox or MetaProgress.enabled(progress.data,"weapons",str(id)))):
    if not "w%d"%id in banished:
     var choice={"type":"weapon","id":id,"key":"w%d"%id}
     if weapons.has(id):choice.merge(WeaponUpgrades.proposal(id,rng,weapons[id]));choice["expected_level"]=int(weapons[id].level)
     pool.append(choice)
  for name in Catalog.ACTIVE_TOMES:
-  if (tomes.has(name) and tomes[name]<10) or (not tomes.has(name) and tomes.size()<tome_limit() and (sandbox or MetaProgress.enabled(progress.data,"tomes",name))):
+  if (tomes.has(name) and tomes[name]<Economy.TOME_MAX_LEVEL) or (not tomes.has(name) and tomes.size()<tome_limit() and (sandbox or MetaProgress.enabled(progress.data,"tomes",name))):
    if not name in banished: pool.append({"type":"tome","id":name,"key":name})
  if pool.is_empty():
   for i in 3:pool.append({"type":"supply","id":str(i),"key":"supply"+str(i)})
@@ -1042,10 +1046,29 @@ func upgrade_pool() -> Array:
   choice["metadata"]=RewardCatalog.entry(category,choice.id,rank)
   if rank==0:choice.metadata.rarity="common";choice["acquisition"]=true
  return pool
+# Economy Rework: every weapon and tome can be offered at any tier. Candidates are drawn evenly, then each card rolls its tier
+# (luck shifts the odds, with diminishing returns); the tier only scales how big the upgrade is.
 func upgrade_choices(count: int=3) -> Array:
  var candidates=upgrade_pool()
  if not candidates.is_empty() and candidates[0].type=="supply":return candidates.slice(0,count)
- return RewardSelector.draw(candidates,count,rng)
+ var picked=[]
+ while picked.size()<count and not candidates.is_empty():picked.append(candidates.pop_at(rng.randi_range(0,candidates.size()-1)))
+ var base={}
+ for id in Rarity.IDS:base[id]=float(Rarity.TIERS[id].weight)
+ var weights=Economy.tier_weights(base,float(stats.luck))
+ for choice in picked:
+  var tier="common" if choice.get("acquisition",false) and choice.type=="weapon" else roll_tier(weights)
+  choice["tier"]=tier;choice.metadata["rarity"]=tier
+  if choice.type=="weapon" and choice.has("attribute"):choice["step"]=WeaponUpgrades.step_for(str(choice.attribute),tier)
+ return picked
+func roll_tier(weights: Dictionary) -> String:
+ var total=0.0
+ for id in Rarity.IDS:total+=maxf(0.0,float(weights.get(id,0.0)))
+ var roll=rng.randf()*total
+ for id in Rarity.IDS:
+  roll-=maxf(0.0,float(weights.get(id,0.0)))
+  if roll<0.0:return id
+ return "common"
 func show_upgrades() -> void:
  frontend.upgrades()
  play_sound("level")
@@ -1055,10 +1078,10 @@ func apply_upgrade(choice: Dictionary) -> void:
  if choice.type=="weapon":
   var id=int(choice.id)
   if weapons.has(id):
-   if int(weapons[id].level)>=10 or int(choice.get("expected_level",weapons[id].level))!=int(weapons[id].level):return
-   var proposal=choice if choice.has("attribute") else WeaponUpgrades.proposal(id,rng,weapons[id])
+   if int(weapons[id].level)>=Economy.WEAPON_MAX_LEVEL or int(choice.get("expected_level",weapons[id].level))!=int(weapons[id].level):return
+   var proposal=choice if choice.has("attribute") else WeaponUpgrades.proposal(id,rng,weapons[id],str(choice.get("tier","common")))
    if WeaponUpgrades.apply(id,weapons[id],proposal):
-    weapons[id].level+=1;weapons[id]["rarity"]=choice.get("metadata",{}).get("rarity",weapons[id].get("rarity","common"))
+    weapons[id].level+=1;weapons[id]["rarity"]=choice.get("tier",choice.get("metadata",{}).get("rarity",weapons[id].get("rarity","common")))
     irt.anvil_bonus(id)
   elif id in Catalog.ACTIVE_WEAPONS and (sandbox or MetaProgress.enabled(progress.data,"weapons",str(id))) and weapons.size()<weapon_limit():equip(id)
  else:
@@ -1066,13 +1089,16 @@ func apply_upgrade(choice: Dictionary) -> void:
   if not Catalog.TOMES.has(name):return
   if not tomes.has(name) and not sandbox and (name not in Catalog.ACTIVE_TOMES or not MetaProgress.enabled(progress.data,"tomes",name)):return
   if not tomes.has(name) and tomes.size()>=tome_limit():return
-  if int(tomes.get(name,0))>=10:return
-  tome_rarities[name]="common" if not tomes.has(name) else choice.get("metadata",{}).get("rarity",tome_rarities.get(name,"common"))
+  if int(tomes.get(name,0))>=Economy.TOME_MAX_LEVEL:return
+  var tier=str(choice.get("tier","common"))
+  if not Rarity.valid(tier):tier="common"
+  tome_rarities[name]=tier
   tomes[name]=tomes.get(name,0)+1
   var stat=Catalog.TOMES[name][0]
-  stats[stat]+=Catalog.TOMES[name][1]
+  var amount=Economy.scaled(float(Catalog.TOMES[name][1]),tier,stat=="count")
+  stats[stat]+=amount
   if stat=="slide_friction":stats[stat]=maxf(0.15,stats[stat])
-  if stat=="max_health": health+=Catalog.TOMES[name][1]
+  if stat=="max_health": health+=amount
 func award_item() -> String:
  var id=ItemDrops.roll_chest(self)
  if id!="":grant_item(id)
@@ -1506,7 +1532,7 @@ func weapon_limit() -> int:
  return 4 if sandbox else maxi(legacy_weapon_slots,int(progress.data.get("weapon_slots",2)))
 func tome_limit() -> int:
  return 4 if sandbox else maxi(legacy_tome_slots,int(progress.data.get("tome_slots",2)))
-func chest_cost() -> int:return 15+chests_opened*5
+func chest_cost() -> int:return Economy.chest_cost(chests_opened)
 func available_items() -> Array:return ItemDrops.available(self)
 func item_total() -> int:
  var t=0
@@ -1522,7 +1548,6 @@ func grant_item(id: Variant,quiet: bool=false) -> bool:
  if not Catalog.item_exists(id):return false
  if Catalog.item_consumable(id):
   if id=="imbued_amulet":
-   if amulets_found>=int(Elements.TUNING.amulet.max_per_run):return false
    amulets+=1;amulets_found+=1
   else:return false
   if not quiet:
@@ -1543,7 +1568,7 @@ func grant_item(id: Variant,quiet: bool=false) -> bool:
 func buy_shop(object: Dictionary, id: Variant, price: int) -> bool:
  id=str(id)
  if mode!="shop" or object.get("used",false) or not id in object.get("offers",[]) or id in object.get("sold",[]) or gold<price or not id in available_items():return false
- if price!=ShopSystem.price(id):return false
+ if price!=ShopSystem.price(id,stage):return false
  gold-=price;grant_item(id);object.used=true
  if not object.has("sold"):object.sold=[]
  object.sold.append(id)

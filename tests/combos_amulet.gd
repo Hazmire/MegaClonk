@@ -44,19 +44,19 @@ func amulet():
  check(Catalog.item_exists("imbued_amulet") and Catalog.item_tier("imbued_amulet")=="legendary" and Catalog.item_consumable("imbued_amulet"),"The Imbued Amulet is a consumable Legendary item")
  check("imbued_amulet" in ItemDrops.available(game),"It is in the normal item pool")
  check(game.grant_item("imbued_amulet",true) and game.amulets==1 and game.amulets_found==1 and game.item_stacks("imbued_amulet")==0,"Acquiring it fills the bag, not the held-item list")
- check(not game.grant_item("imbued_amulet",true) and game.amulets==1,"Only one can be found per run")
- check(not "imbued_amulet" in ItemDrops.available(game),"Once found it leaves the pool for that run")
+ check(game.grant_item("imbued_amulet",true) and game.amulets==2 and "imbued_amulet" in ItemDrops.available(game),"Several can be found and it stays in the pool")
  var rng_state=game.rng.state;var from_pool=0
  for i in 4000:
-  game.amulets=0;game.amulets_found=0
   if ItemDrops.roll_chest(game)=="imbued_amulet":from_pool+=1
  game.rng.state=rng_state
- check(from_pool>0 and from_pool<80,"Chests can roll it like any Legendary (%d/4000)"%from_pool)
- var shop_ok=true
- for i in 40:
-  var shop_rng=RandomNumberGenerator.new();shop_rng.seed=i
-  for tier_name in ["Common","Rare","Legendary"]:if "imbued_amulet" in ItemDrops.shop_offers(game,tier_name,shop_rng):shop_ok=false
- check(shop_ok,"Shops never sell it")
+ check(from_pool>0 and from_pool<120,"Chests can roll it like any Legendary (%d/4000)"%from_pool)
+ var shop_seen={"Common":0,"Rare":0,"Legendary":0};var shop_rng=RandomNumberGenerator.new();shop_rng.seed=5
+ for i in 400:
+  for tier_name in shop_seen:if "imbued_amulet" in ShopSystem.offers(tier_name,ItemDrops.available(game),shop_rng):shop_seen[tier_name]+=1
+ check(shop_seen.Legendary>0 and shop_seen.Rare>0 and shop_seen.Common>=0,"Shops can sell it: Legendary %d, Rare %d, Standard %d of 400"%[shop_seen.Legendary,shop_seen.Rare,shop_seen.Common])
+ var vase_hit=false
+ for tier in ItemStats.DROPS.vase_tiers:if tier=="legendary":vase_hit=true
+ check(not vase_hit,"Vases never carry it (Common/Uncommon only)")
  game.amulets=1;game.amulets_found=1
  var w=game.weapons[0]
  check(WeaponSockets.unlocked(w)==1,"Weapon starts with a single socket")

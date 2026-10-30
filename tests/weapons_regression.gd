@@ -88,11 +88,11 @@ func run():
  check(not leaked,"Upgrade pool never offers a removed weapon")
  # --- acquisition / max level ---------------------------------------------------------------------
  fresh();game.equip(15)
- for i in 12:
+ for i in Economy.WEAPON_MAX_LEVEL+2:
   var choice=game.upgrade_pool().filter(func(c):return c.type=="weapon" and c.id==15)
   if choice.is_empty():break
   game.apply_upgrade(choice[0])
- check(game.weapons[15].level==10,"Weapon stops at max level 10")
+ check(game.weapons[15].level==Economy.WEAPON_MAX_LEVEL,"Weapon stops at its max level (40)")
  check(game.upgrade_pool().filter(func(c):return c.type=="weapon" and c.id==15).is_empty(),"A maxed weapon leaves the upgrade pool")
  var cap_ok=true
  for id in ROSTER:

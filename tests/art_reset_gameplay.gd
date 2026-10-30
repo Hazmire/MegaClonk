@@ -21,18 +21,18 @@ func run():
  for i in 1000:
   for choice in game.upgrade_choices():
    if choice.type=="supply":continue
-   if choice.metadata.rarity!="common":acquisition=false
+   if choice.type=="weapon" and choice.get("acquisition",false) and choice.metadata.rarity!="common":acquisition=false
    if choice.type=="weapon" and not int(choice.id) in Catalog.ACTIVE_WEAPONS:excluded=true
- check(acquisition and not excluded,"One thousand reward rolls contain only Common new acquisitions and no excluded weapons")
+ check(acquisition and not excluded,"One thousand reward rolls: new weapons are always Common and no excluded weapon appears")
  var lightning=game.upgrade_pool().filter(func(c):return c.type=="weapon" and c.id==2)[0]
  game.apply_upgrade(lightning);game.apply_upgrade({"type":"tome","id":"Vampire"})
  check(game.weapons[2].rarity=="common" and game.tome_rarities.Vampire=="common","Newly acquired weapon and Legendary-base tome store Common tier")
  var owned=game.upgrade_pool().filter(func(c):return c.type=="weapon" and c.id==2)[0]
  check(owned.metadata.rarity=="rare","Existing weapon upgrades retain supported base rarity")
- game.apply_upgrade(owned)
+ owned["tier"]="rare";game.apply_upgrade(owned)
  var tome=game.upgrade_pool().filter(func(c):return c.type=="tome" and c.id=="Vampire")[0]
  check(tome.metadata.rarity=="legendary","Existing tome upgrades retain Legendary support")
- game.apply_upgrade(tome)
+ tome["tier"]="legendary";game.apply_upgrade(tome)
  check(game.equipment_meta("weapons",2).rarity=="rare" and game.equipment_meta("tomes","Vampire").rarity=="legendary","Displayed equipment tiers follow applied upgrades")
  game.equip(15)
  check(game.save_run("user://art-reset-legacy.json") and game.load_run("user://art-reset-legacy.json") and game.weapons.has(15) and game.weapons[2].rarity=="rare" and game.tome_rarities.Vampire=="legendary","Owned weapon rarity and tome state survive an old-style loadout checkpoint")

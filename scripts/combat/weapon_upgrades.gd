@@ -4,7 +4,15 @@ extends RefCounted
 # Weapon-specific upgrade pools (Weapon Overhaul 2.0). Internal keys stay save-stable:
 # damage, haste (Attack Speed), crit, crit_damage, count (Projectile Count), velocity (Projectile Speed),
 # ricochet (Projectile Bounces), radius (Size). Only the stats listed per weapon can ever be offered.
-const STEPS={"damage":0.15,"haste":0.1,"crit":0.05,"crit_damage":0.25,"count":1.0,"velocity":0.2,"ricochet":1.0,"radius":0.15}
+# STEPS are the Common-tier sizes. Economy Rework: any upgrade can roll any tier and the tier scales the step (Economy.TIER_SCALE);
+# whole-number stats (count, ricochet) are never scaled. Weapons now level to Economy.WEAPON_MAX_LEVEL, so the steps are smaller than before.
+const STEPS={"damage":0.06,"haste":0.04,"crit":0.02,"crit_damage":0.10,"count":1.0,"velocity":0.08,"ricochet":1.0,"radius":0.06}
+const WHOLE=["count","ricochet"]
+static func step_for(key: String,tier: String) -> float:return Economy.scaled(float(STEPS[key]),tier,key in WHOLE)
+static func tier_of_step(key: String,step: float) -> String:
+ for tier in Rarity.IDS:
+  if is_equal_approx(step,step_for(key,tier)):return tier
+ return ""
 const POOLS={
  0:["count","radius","damage","haste"],
  1:["velocity","count","damage","radius"],
@@ -36,25 +44,25 @@ static func count_base(id: int) -> int:
  return {0:WeaponStats.SWORD.base_count,1:WeaponStats.FIRESTAFF.base_count,2:WeaponStats.LIGHTNING.base_count,6:WeaponStats.BOW.base_count,7:WeaponStats.REVOLVER.base_count,9:WeaponStats.SCYTHES.base_count,15:WeaponStats.SHOTGUN.base_pellets}.get(id,1)
 static func count_cap(id: int) -> int:
  return {0:WeaponStats.SWORD.max_count,1:WeaponStats.FIRESTAFF.max_count,2:WeaponStats.LIGHTNING.max_count,6:WeaponStats.BOW.max_count,7:WeaponStats.REVOLVER.max_count,9:WeaponStats.SCYTHES.max_count,15:WeaponStats.SHOTGUN.max_pellets}.get(id,1)
-static func proposal(id: int,rng: RandomNumberGenerator,state: Dictionary={}) -> Dictionary:
+static func proposal(id: int,rng: RandomNumberGenerator,state: Dictionary={},tier: String="common") -> Dictionary:
  var keys=open_keys(id,state)
  if keys.is_empty():keys=["damage"]
  var key=keys[rng.randi_range(0,keys.size()-1)]
- return {"attribute":key,"step":STEPS[key]}
+ return {"attribute":key,"step":step_for(key,tier),"tier":tier}
 static func value(state: Dictionary,key: String) -> float:return float(state.get("upgrades",{}).get(key,0))
 static func damage(id: int,state: Dictionary) -> float:return float(Catalog.WEAPONS[id][2])*(1+value(state,"damage"))*float(state.get("legacy_damage",1))
 static func apply(id: int,state: Dictionary,proposal: Dictionary) -> bool:
  var key=str(proposal.get("attribute",""))
- if not key in pool(id) or not STEPS.has(key) or not is_equal_approx(float(proposal.get("step",0)),float(STEPS[key])):return false
+ if not key in pool(id) or not STEPS.has(key) or tier_of_step(key,float(proposal.get("step",0)))=="":return false
  if not key in open_keys(id,state):return false
  if not state.has("upgrades"):state.upgrades={}
- state.upgrades[key]=value(state,key)+float(STEPS[key]);return true
+ state.upgrades[key]=value(state,key)+float(proposal.step);return true
 # "current -> new" card text, always computed from WeaponStats so it matches what combat then uses.
-static func description(id: int,state: Dictionary,attribute: String,game: Object=null) -> String:
+static func description(id: int,state: Dictionary,attribute: String,game: Object=null,step: float=-1.0) -> String:
  var now=WeaponStats.resolve(game,id,state)
  var next_state=state.duplicate(true)
  if not next_state.has("upgrades"):next_state.upgrades={}
- next_state.upgrades[attribute]=value(state,attribute)+float(STEPS[attribute])
+ next_state.upgrades[attribute]=value(state,attribute)+(float(STEPS[attribute]) if step<0.0 else step)
  var later=WeaponStats.resolve(game,id,next_state)
  return "%s: %s → %s"%[label(id,attribute),format_value(id,attribute,now),format_value(id,attribute,later)]
 static func format_value(id: int,key: String,r: Dictionary) -> String:

@@ -2,10 +2,14 @@ class_name ShrineRewards
 extends RefCounted
 const TABLE=preload("res://assets/config/stat_rewards.tres")
 const DESCRIPTIONS={"damage":"Increases damage dealt by all weapons.","speed":"Increases movement speed.","max_health":"Increases maximum health and heals the added amount.","crit":"Increases critical hit chance, capped at 100%.","haste":"Increases weapon attack speed.","pickup":"Increases the XP attraction radius.","xp":"Increases experience gained.","armor":"Reduces incoming damage through existing armour rules.","regen":"Restores additional health per second."}
-static func roll_tier(rng: RandomNumberGenerator) -> String:
- var roll=rng.randf()*100
+static func roll_tier(rng: RandomNumberGenerator,luck: float=0.0) -> String:
+ var base={}
+ for tier in Rarity.IDS:base[tier]=float(Rarity.TIERS[tier].weight)
+ var weights=Economy.tier_weights(base,luck);var total=0.0
+ for tier in Rarity.IDS:total+=float(weights[tier])
+ var roll=rng.randf()*total
  for tier in Rarity.IDS:
-  roll-=Rarity.TIERS[tier].weight
+  roll-=float(weights[tier])
   if roll<0:return tier
  return "legendary"
 static func generate(stats: Dictionary,rng: RandomNumberGenerator,golden: bool=false) -> Array:
@@ -13,7 +17,7 @@ static func generate(stats: Dictionary,rng: RandomNumberGenerator,golden: bool=f
  for stat in TABLE.bonuses:
   if stats.has(stat) and float(stats[stat])<float(TABLE.caps.get(stat,INF))-0.000001:available.append(stat)
  for i in mini(3,available.size()):
-  var index=rng.randi_range(0,available.size()-1);var stat=available.pop_at(index);var tier="legendary" if golden else roll_tier(rng)
+  var index=rng.randi_range(0,available.size()-1);var stat=available.pop_at(index);var tier="legendary" if golden else roll_tier(rng,float(stats.get("luck",0.0)))
   var amount=minf(float(TABLE.bonuses[stat][Rarity.IDS.find(tier)]),float(TABLE.caps.get(stat,INF))-float(stats[stat]))
   result.append({"stat":stat,"amount":amount,"rarity":tier,"description":DESCRIPTIONS.get(stat,"Increases "+str(stat)),"before":float(stats[stat]),"after":float(stats[stat])+amount})
  return result

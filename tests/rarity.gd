@@ -48,7 +48,7 @@ func run():
  check(candidates==original,"Selector does not mutate caller data")
  var game=load("res://scenes/main/main.tscn").instantiate();root.add_child(game);await process_frame
  game.sandbox=true;game.map_seed_override=9;game.begin_run();game.mode="pause";game.player.active=false
- game.weapons.clear();game.tomes.clear();game.equip(0);game.weapons[0].level=10;game.tomes.Might=10
+ game.weapons.clear();game.tomes.clear();game.equip(0);game.weapons[0].level=Economy.WEAPON_MAX_LEVEL;game.tomes.Might=Economy.TOME_MAX_LEVEL
  var pool=game.upgrade_pool();var exclusions=true
  for choice in pool:exclusions=exclusions and choice.key!="w0" and choice.key!="Might"
  check(exclusions,"Real level-up pool excludes maxed weapons/tomes")
@@ -63,20 +63,20 @@ func run():
  game.banished=["Haste"]
  check(game.upgrade_choices().all(func(c):return c.key!="Haste"),"Banish eligibility retained")
  game.tomes.clear();var damage=game.stats.damage;game.apply_upgrade({"type":"tome","id":"Might"})
- check(is_equal_approx(game.stats.damage,damage+0.15) and game.tomes.Might==1,"Existing tome power unchanged")
- game.weapons[0].level=1;var before=WeaponUpgrades.damage(0,game.weapons[0]);game.apply_upgrade({"type":"weapon","id":0,"attribute":"damage","step":0.15,"expected_level":1})
- check(game.weapons[0].level==2 and is_equal_approx(WeaponUpgrades.damage(0,game.weapons[0]),before*1.15),"Existing weapon upgrade unchanged")
+ check(is_equal_approx(game.stats.damage,damage+0.06) and game.tomes.Might==1,"Existing tome power unchanged")
+ game.weapons[0].level=1;var before=WeaponUpgrades.damage(0,game.weapons[0]);game.apply_upgrade({"type":"weapon","id":0,"attribute":"damage","step":0.06,"expected_level":1})
+ check(game.weapons[0].level==2 and is_equal_approx(WeaponUpgrades.damage(0,game.weapons[0]),before*1.06),"Existing weapon upgrade unchanged")
  var snapshot=[game.weapons[0].level,game.tomes.Might,game.stats.damage,game.items.duplicate()]
  check(game.save_run("user://rarity-run.json") and game.load_run("user://rarity-run.json"),"Unchanged version-2 run save round trip")
  check(int(snapshot[0])==int(game.weapons[0].level) and int(snapshot[1])==int(game.tomes.Might) and is_equal_approx(snapshot[2],game.stats.damage) and snapshot[3]==game.items,"Saved levels/stats/items preserved; rarity derived")
  var price_ok=true
- for id in Catalog.ITEM_IDS:price_ok=price_ok and ShopSystem.price(id)==int(ItemStats.DROPS.shop_price[Catalog.item_tier(id)])
- check(price_ok,"Shop prices come from the ItemStats tier table")
+ for id in Catalog.ITEM_IDS:price_ok=price_ok and ShopSystem.price(id)==Economy.item_price(Catalog.item_tier(id),1) and ShopSystem.price(id,3)>ShopSystem.price(id,1)
+ check(price_ok,"Shop prices come from Economy and grow with stage")
  for tier in ["Common","Rare","Legendary"]:
   var offers=ShopSystem.offers(tier,Catalog.ITEM_IDS,rng);var seen={};var valid=true
   for id in offers:
    valid=valid and not seen.has(id);seen[id]=true
-   valid=valid and (Catalog.item_tier(id) in (["common","uncommon"] if tier=="Common" else ["rare","epic"] if tier=="Rare" else ["epic"]))
+   valid=valid and (Catalog.item_tier(id) in Economy.SHOP_ITEM_TIERS[tier])
   check(valid and not offers.is_empty(),"Seller tier eligibility and unique offers: "+tier)
  game.queue_free();await process_frame;await process_frame
  print("RARITY: %d checks, %d failures"%[checks,failures.size()]);quit(0 if failures.is_empty() else 1)

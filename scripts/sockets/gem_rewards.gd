@@ -4,7 +4,7 @@ extends RefCounted
 # Where gems come from besides vases: shop offers and a chance on chest rewards.
 const TUNING={
  "chest_chance":0.12,        # GUESS: not specified, kept modest because gems are also sold and dropped by vases
- "shop_slot_chance":0.25,    # GUESS: chance that each of a shop's three offers is a gem instead of an item
+ # Shop gems no longer have their own slot chance: they are stocked as Rare-tier offers (ShopSystem.candidates).
  "shop_seed_offset":7100113,
  "chest_seed_offset":3300217
 }
@@ -23,27 +23,15 @@ static func has_code(list: Variant,code: int) -> bool:
  for value in list:
   if int(value)==code:return true
  return false
-# Turns some of a freshly drawn offers array into gem slots (deterministic per shop).
-static func mix_offers(game: Node,object: Dictionary) -> void:
- if game.world_content_version<2 or not object.get("offers") is Array:return
- var offers: Array=object.offers
- var rng=RandomNumberGenerator.new()
- rng.seed=int(game.run_seed)*31+game.stage*977+game.interactables.find(object)*131+int(TUNING.shop_seed_offset)
- var taken=[]
- for i in offers.size():
-  if rng.randf()>=float(TUNING.shop_slot_chance):continue
-  var pool=Elements.IDS.filter(func(e): return not e in taken)
-  if pool.is_empty():break
-  var element=str(pool[rng.randi_range(0,pool.size()-1)]);taken.append(element)
-  offers[i]=offer_code(element)
 # Buys a gem slot. The shop keeps its one-purchase-per-seller rule, like item purchases.
 static func buy_offer(game: Node,object: Dictionary,code: int) -> Dictionary:
  if game.mode!="shop" or object.get("used",false):return {"ok":false,"reason":"sold"}
  if not is_gem_offer(code) or not has_code(object.get("offers",[]),code):return {"ok":false,"reason":"not_offered"}
  if has_code(object.get("sold",[]),code):return {"ok":false,"reason":"sold"}
- if int(game.gold)<ImbueRules.SHOP_PRICE:return {"ok":false,"reason":"not_enough_gold"}
+ var price=ShopSystem.gem_price(game.stage)
+ if int(game.gold)<price:return {"ok":false,"reason":"not_enough_gold"}
  var element=offer_element(code)
- game.gold-=ImbueRules.SHOP_PRICE
+ game.gold-=price
  game.gems.add(element)
  object["used"]=true
  if not object.has("sold"):object["sold"]=[]

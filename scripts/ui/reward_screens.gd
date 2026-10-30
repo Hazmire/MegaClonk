@@ -162,10 +162,10 @@ static func upgrades(ui: FrontEnd) -> void:
   var description=choice.metadata.description
   var card_meta=choice.metadata
   if choice.type=="weapon" and rank>0:
-   description=WeaponUpgrades.description(int(choice.id),game.weapons[choice.id],choice.attribute,game)
+   description=WeaponUpgrades.description(int(choice.id),game.weapons[choice.id],choice.attribute,game,float(choice.get("step",-1.0)))
    card_meta=choice.metadata.duplicate();card_meta["name"]="%s — %s"%[Catalog.weapon_name(int(choice.id)),WeaponUpgrades.label(int(choice.id),choice.attribute)]
   elif choice.type=="tome":
-   var stat=Catalog.TOMES[choice.id][0];description=stat.replace("_"," ").capitalize()+": "+BuildStats.value(stat,game.stats[stat])+" → "+BuildStats.value(stat,game.stats[stat]+Catalog.TOMES[choice.id][1])
+   var stat=Catalog.TOMES[choice.id][0];description=stat.replace("_"," ").capitalize()+": "+BuildStats.value(stat,game.stats[stat])+" → "+BuildStats.value(stat,game.stats[stat]+Economy.scaled(float(Catalog.TOMES[choice.id][1]),str(choice.get("tier","common")),stat=="count"))
   var button=offer(ui,center,category,choice.id,rank,description,func():game.apply_upgrade(choice);game.resume(),"",card_meta)
   button.focus_entered.connect(func():ui.reward_focus=choice)
   button.mouse_entered.connect(func():ui.reward_focus=choice)
@@ -190,7 +190,7 @@ static func inventory(ui: FrontEnd) -> void:
 static func imbue_station(ui: FrontEnd,object: Dictionary) -> void:
  SocketScreens.imbue_station(ui,object)
 static func gem_offer(ui: FrontEnd,center: Node,object: Dictionary,code: int) -> void:
- var game=ui.game;var element=GemRewards.offer_element(code);var price=ImbueRules.SHOP_PRICE
+ var game=ui.game;var element=GemRewards.offer_element(code);var price=ShopSystem.gem_price(game.stage)
  var sold=GemRewards.has_code(object.get("sold",[]),code) or object.get("used",false)
  var meta={"rarity":"rare","name":Elements.display_name(element)+" Socket Gem","uid":"gem_"+element}
  var button=offer(ui,center,"gems",element,0,Elements.summary(element)+"\nSocket it into a weapon at an Imbue Station.",func():
@@ -199,10 +199,9 @@ static func gem_offer(ui: FrontEnd,center: Node,object: Dictionary,code: int) ->
 static func shop(ui: FrontEnd,object: Dictionary) -> void:
  var game=ui.game;game.mode="shop";ui.shop_object=object
  if not object.has("offers"):
-  object.offers=ShopSystem.offers(object.get("tier","Common"),game.available_items(),game.rng)
-  GemRewards.mix_offers(game,object)
+  object.offers=ShopSystem.offers(object.get("tier","Common"),game.available_items(),game.rng,float(game.stats.luck),game.world_content_version>=2)
  ui.shop_offers=object.offers
- var center=layout(ui,object.get("tier","Common")+" shop · Gold %d"%game.gold)
+ var center=layout(ui,Economy.shop_display_name(object.get("tier","Common"))+" shop · Gold %d"%game.gold)
  ui.text("One purchase per seller",center,15)
  for id_value in object.offers:
   if not id_value is String:
@@ -210,7 +209,7 @@ static func shop(ui: FrontEnd,object: Dictionary) -> void:
    if GemRewards.is_gem_offer(code):gem_offer(ui,center,object,code)
    continue
   var id=str(id_value)
-  var price=ShopSystem.price(id);var sold=id in object.get("sold",[])
+  var price=ShopSystem.price(id,game.stage);var sold=id in object.get("sold",[])
   var button=offer(ui,center,"items",id,game.item_stacks(id),Catalog.item_description(id,false),func():
    if not game.buy_shop(object,id,price):ui.reward_consumed=false;game.toast("Purchase unavailable"),"SOLD" if sold or object.get("used",false) else "NEED %d gold"%price if game.gold<price else "BUY · %d gold"%price)
   button.tooltip_text=Catalog.item_description(id)

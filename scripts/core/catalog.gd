@@ -50,24 +50,28 @@ static func tome_name(id: String) -> String:return TOME_NAMES.get(id,id+" Tome")
 static func tome_description(id: String) -> String:
  if not TOMES.has(id):return ""
  var data=TOMES[id]
- if id=="Multishot":return "+1 total weapon projectile per level."
- if id=="Vitality":return "+20 maximum HP per level."
+ if id=="Multishot":return "+1 total weapon projectile per level (any tier)."
+ var low=float(data[1]);var high=Economy.scaled(low,"legendary")
+ if id=="Vitality":return "+%s to +%s maximum HP per level, by tier."%[_num(low),_num(high)]
  var labels={"Precision":"critical-hit chance","Might":"damage","Colossus":"attack size","Haste":"attack speed","Wind":"movement speed","Vampire":"lifesteal","Wisdom":"XP gain","Greed":"gold gain"}
  if not TOME_NAMES.has(id):return "%s %+.2f per level"%[str(data[0]).replace("_"," "),data[1]]
- return "+%.0f%% %s per level."%[float(data[1])*100,labels.get(id,str(data[0]).replace("_"," "))]
+ return "+%s%% to +%s%% %s per level, by tier."%[_num(low*100.0),_num(high*100.0),labels.get(id,str(data[0]).replace("_"," "))]
+static func _num(value: float) -> String:
+ var text=String.num(value,1);return text.rstrip("0").rstrip(".") if text.contains(".") else text
 const TOMES = {
- "Might": ["damage", 0.15], "Haste": ["haste", 0.12],
- "Precision": ["crit", 0.06], "Ruin": ["crit_damage", 0.25],
- "Vitality": ["max_health", 20.0], "Recovery": ["regen", 0.5],
+ # Economy Rework: Common-tier size per level for the ten active tomes (a tome now levels to 80; the tier scales each upgrade up to x2.33).
+ "Might": ["damage", 0.06], "Haste": ["haste", 0.05],
+ "Precision": ["crit", 0.025], "Ruin": ["crit_damage", 0.25],
+ "Vitality": ["max_health", 8.0], "Recovery": ["regen", 0.5],
  "Iron": ["armor", 2.0], "Dodge": ["evasion", 0.04],
- "Wind": ["speed", 0.1], "Feather": ["jump", 0.12],
- "Magnet": ["pickup", 0.25], "Wisdom": ["xp", 0.15],
+ "Wind": ["speed", 0.04], "Feather": ["jump", 0.12],
+ "Magnet": ["pickup", 0.25], "Wisdom": ["xp", 0.06],
  "Fortune": ["luck", 0.1], "Multishot": ["count", 1.0],
- "Velocity": ["projectile_speed", 0.15], "Colossus": ["size", 0.15],
+ "Velocity": ["projectile_speed", 0.15], "Colossus": ["size", 0.06],
  "Persistence": ["duration", 0.2], "Force": ["knockback", 0.2],
- "Briar": ["thorns", 3.0], "Vampire": ["lifesteal", 0.01],
+ "Briar": ["thorns", 3.0], "Vampire": ["lifesteal", 0.004],
  "Thermal": ["glide",0.15], "Gecko": ["climb",0.15], "Air Step": ["air_jumps",1.0], "Skater": ["slide_speed",0.15], "Wax": ["slide_friction",-0.08],
- "Greed": ["gold_gain", 0.2], "Curse": ["difficulty", 0.15]
+ "Greed": ["gold_gain", 0.08], "Curse": ["difficulty", 0.15]
 }
 # Item Overhaul: the 60 relics live in res://data/items.json (copied from the UI handoff) and nowhere else.
 # Ids are stable strings. Every name, tier, effect text, unique flag and gem requirement is read from here;

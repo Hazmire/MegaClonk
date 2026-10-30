@@ -51,9 +51,9 @@ func run():
  check(not game.player.avatar.flashing,"Player overlay restores without changing base materials")
  game.elapsed+=11;check(game.measured_dps(7)==0,"Measured DPS decays to zero after inactive window")
  var state=game.weapons[7];var previous=WeaponUpgrades.damage(7,state)
- game.apply_upgrade({"type":"weapon","id":7,"attribute":"damage","step":0.15,"expected_level":1})
+ game.apply_upgrade({"type":"weapon","id":7,"attribute":"damage","step":0.06,"expected_level":1})
  check(WeaponUpgrades.damage(7,state)>previous and state.level==2,"Damage upgrade applies immediately")
- game.apply_upgrade({"type":"weapon","id":7,"attribute":"damage","step":0.15,"expected_level":1})
+ game.apply_upgrade({"type":"weapon","id":7,"attribute":"damage","step":0.06,"expected_level":1})
  check(state.level==2,"Stale upgrade card cannot apply twice")
  check(game.weapon_tooltip(7).contains("Measured DPS") and game.weapon_tooltip(7).contains("Estimated"),"Build tooltip distinguishes actual and estimated DPS")
  check(not WeaponUpgrades.apply(0,{}, {"attribute":"ricochet","step":1}),"Impossible weapon upgrade rejected")
@@ -91,8 +91,10 @@ func run():
  game.mode="shop"
  check(not game.buy_shop(shop,"salted_pork",ShopSystem.price("salted_pork")) and game.gold==1000-ShopSystem.price("whetstone"),"One-purchase rule covers all items at seller")
  var offer=ShopSystem.offers("Common",game.available_items(),random);var valid=true
- for id in offer:valid=valid and Catalog.item_tier(id) in ["common","uncommon"]
- check(valid and not offer.is_empty(),"Common shop stock obeys tier")
+ var seen_tiers={}
+ for i in 200:
+  for id in ShopSystem.offers("Common",game.available_items(),random):seen_tiers[Catalog.item_tier(id)]=true
+ check(offer.size()==3 and seen_tiers.size()==5,"Standard shop can stock every tier ("+str(seen_tiers.keys())+")")
  game.mode="pause";game.player.active=false
  check(BuildStats.value("damage",1.35)=="+35%" and not BuildStats.help("armor").is_empty(),"Stat percentages and explanatory tooltips")
  var before_count=game.combat_fx.active.size()

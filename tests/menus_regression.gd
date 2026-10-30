@@ -48,7 +48,7 @@ func run() -> void:
  check(counts.all==61 and counts.common==19 and counts.uncommon==17 and counts.rare==13 and counts.epic==7 and counts.legendary==5,"Rarity filter counts are 61 / 19 / 17 / 13 / 7 / 5 from the catalogue")
  check(MenuData.drop_weight_text("common")=="50%" and MenuData.drop_weight_text("legendary")=="2%","Drop weights come from ItemStats.TIER_WEIGHTS")
  check(MenuData.sources_text("whetstone")=="Appears in vases, chests and shops" and MenuData.sources_text("hex_penny")=="Appears in vases, chests and shops","Common items list vases, chests and shops")
- check(MenuData.sources_text("headsmans_oath")=="Appears in chests only","Legendary items are chest-only")
+ check(MenuData.sources_text("headsmans_oath")=="Appears in chests and shops" and MenuData.sources_text("imbued_amulet")=="Appears in chests and shops","Legendary items appear in chests and shops, never vases")
  var rare_id=String(Catalog.ITEM_IDS.filter(func(x):return Catalog.item_tier(x)=="rare")[0])
  check(MenuData.sources_text(rare_id)=="Appears in chests and shops" and MenuData.sources_text("tinder_pouch")=="Appears in vases, chests and shops","Rare items skip vases; Uncommon items do not")
  var gem_items=Catalog.ITEM_IDS.filter(func(i):return MenuData.needs_element(String(i))!="")
@@ -160,7 +160,9 @@ func run() -> void:
  unlocks.tiles["whetstone"].grab_focus();await process_frame
  check(unlocks.memo.find_child("NeedsBox",true,false)==null and unlocks.memo.find_child("UniqueStamp",true,false)==null,"Plain item has no gem box and no Unique stamp")
  unlocks.tiles["saints_finger"].grab_focus();await process_frame
- check(unlocks.memo.find_child("UniqueStamp",true,false)!=null,"Unique items show the Unique stamp")
+ check(unlocks.memo.find_child("UniqueStamp",true,false)==null,"Stackable items show no stamp")
+ unlocks.tiles["imbued_amulet"].grab_focus();await process_frame
+ check(unlocks.memo.find_child("UniqueStamp",true,false)!=null,"The consumable Amulet shows its stamp")
  MenuData.debug_locked_items=["hex_penny"]
  unlocks.tab_bar.select("weapons");unlocks.tab_bar.select("items");await process_frame
  unlocks.tiles["hex_penny"].grab_focus();await process_frame

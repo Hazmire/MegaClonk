@@ -44,7 +44,7 @@ func catalog_tests():
  for id in Catalog.ITEM_IDS:tiers[Catalog.item_tier(id)]=int(tiers.get(Catalog.item_tier(id),0))+1
  check(tiers=={"common":19,"uncommon":17,"rare":13,"epic":7,"legendary":5},"Tier counts match the roster (%s)"%str(tiers))
  var uniques=Catalog.ITEM_IDS.filter(func(i):return Catalog.item_unique(i))
- check(uniques.size()==5 and "saints_finger" in uniques and Catalog.ITEM_IDS.filter(func(i):return Catalog.item_tier(i)=="legendary" and Catalog.item_consumable(i)==false).all(func(i):return i in uniques) and Catalog.item_consumable("imbued_amulet"),"Saint's Finger and the 4 permanent Legendaries are Unique; the Imbued Amulet is a consumable Legendary")
+ check(uniques.is_empty() and Catalog.item_consumable("imbued_amulet"),"No item is Unique any more (every item stacks); the Imbued Amulet is the one consumable")
  var icons_ok=true;var filter_ok=true
  for id in Catalog.ITEM_IDS:
   var path="res://assets/icons/items/%s.png"%id
@@ -75,8 +75,8 @@ func catalog_tests():
  for i in 2000:
   var id=ItemDrops.roll_chest(game)
   if id=="saints_finger" or id=="headsmans_oath":dup=true
- check(not dup and not "saints_finger" in game.available_items(),"Owned Uniques never drop again")
- check(game.grant_item("saints_finger",true)==false and game.item_stacks("saints_finger")==1,"Unique items cannot be granted twice")
+ check(game.available_items().size()==Catalog.ITEM_IDS.size(),"Owning an item never removes it from the pool: everything can drop again")
+ check(game.grant_item("saints_finger",true) and game.item_stacks("saints_finger")==2,"Former Uniques now stack")
  var vase_ok=true;var vase_hits=0
  game.rng.seed=5
  for i in 6000:
@@ -89,8 +89,8 @@ func catalog_tests():
  var shop_rng=RandomNumberGenerator.new();shop_rng.seed=3
  for t in ["Common","Rare","Legendary"]:
   for i in 50:
-   for id in ShopSystem.offers(t,game.available_items(),shop_rng):if Catalog.item_tier(id)=="legendary":shop_ok=false
- check(shop_ok,"Shops never sell Legendary items")
+   for id in ShopSystem.offers(t,game.available_items(),shop_rng):if not Catalog.item_tier(id) in Economy.SHOP_ITEM_TIERS[t]:shop_ok=false
+ check(shop_ok,"Every shop type only stocks its own tiers (Standard all, Rare Rare+, Legendary Legendary only)")
  # disabled items never drop
  fresh();game.sandbox=false
  var profile=game.progress.data

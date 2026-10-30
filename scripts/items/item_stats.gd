@@ -10,8 +10,7 @@ const TIER_WEIGHTS={"common":0.50,"uncommon":0.28,"rare":0.15,"epic":0.05,"legen
 const DROPS={
  "vase_item_chance":0.04,           # GUESS: chance a smashed vase also yields a Common/Uncommon item
  "vase_tiers":["common","uncommon"], # SPEC
- "shop_tiers":["common","uncommon","rare","epic"], # SPEC: every tier except Legendary
- "shop_price":{"common":15,"uncommon":25,"rare":40,"epic":65,"legendary":150}, # GUESS: carried over from the old shop prices
+ "shop_tiers":["common","uncommon","rare","epic","legendary"], # Economy Rework: shops can stock every tier (Standard: all, Rare: Rare+, Legendary: Legendary only); prices live in Economy
  "rng_seed_offset":6100417          # item RNG stream, separate from game.rng so gem/weapon rolls are untouched
 }
 

@@ -119,26 +119,25 @@ func shop_and_chests():
  for obj in game.interactables:
   if obj.kind=="Shop":shop=obj;break
  game.gold=1000;game.gems.reset()
- # Gems are ordinary slots in the shop's randomised offers.
+ # Gems are Rare-tier candidates in the shop's offers (stocked like Rare items).
  var mixed_slots=0;var shops=0;var all_valid=true
  for stage_number in [1,2,3]:
   for seed_value in [9,3,17,42]:
    rebuild(stage_number,seed_value)
    for obj in game.interactables:
     if obj.kind!="Shop":continue
-    obj.erase("offers");obj.erase("sold");obj.used=false
-    obj.offers=ShopSystem.offers(obj.get("tier","Common"),game.available_items(),game.rng)
-    var before=obj.offers.duplicate()
-    GemRewards.mix_offers(game,obj)
-    shops+=1
-    if obj.offers.size()!=before.size():all_valid=false
-    var seen=[]
-    for code in obj.offers:
-     if GemRewards.is_gem_offer(code):
-      mixed_slots+=1
-      if GemRewards.offer_element(int(code)) in seen:all_valid=false
-      seen.append(GemRewards.offer_element(int(code)))
-     elif not (code is String and Catalog.item_exists(code)):all_valid=false
+    for rep in 12:
+     obj.erase("offers");obj.erase("sold");obj.used=false
+     obj.offers=ShopSystem.offers("Rare" if rep%2==0 else obj.get("tier","Common"),game.available_items(),game.rng,0.0,true)
+     shops+=1
+     if obj.offers.size()!=3:all_valid=false
+     var seen=[]
+     for code in obj.offers:
+      if GemRewards.is_gem_offer(code):
+       mixed_slots+=1
+       if GemRewards.offer_element(int(code)) in seen:all_valid=false
+       seen.append(GemRewards.offer_element(int(code)))
+      elif not (code is String and Catalog.item_exists(code)):all_valid=false
  check(shops>=10 and mixed_slots>0 and mixed_slots<shops*3,"Some, but not all, shop slots become gems (%d of %d slots)"%[mixed_slots,shops*3])
  check(all_valid,"Gem slots are valid and distinct within a shop")
  rebuild(1,9)
@@ -149,12 +148,12 @@ func shop_and_chests():
  game.mode="shop"
  var gold_before=game.gold
  var result=GemRewards.buy_offer(game,shop,GemRewards.offer_code("ice"))
- check(result.ok and game.gold==gold_before-250 and game.gems.count("ice")==1,"Buying a gem slot costs 250 and adds it to the inventory (not installed)")
+ check(result.ok and game.gold==gold_before-ShopSystem.gem_price(game.stage) and game.gems.count("ice")==1,"Buying a gem slot costs the Epic-tier stage price and adds it to the inventory (not installed)")
  check(shop.used and GemRewards.has_code(shop.sold,GemRewards.offer_code("ice")),"A gem purchase uses the shop's one purchase")
  game.mode="shop"
  check(not GemRewards.buy_offer(game,shop,GemRewards.offer_code("ice")).ok and game.gems.count("ice")==1,"A sold gem slot cannot be bought twice")
- shop.used=false;shop.sold=[];game.mode="shop";game.gold=100
- check(not GemRewards.buy_offer(game,shop,GemRewards.offer_code("ice")).ok and game.gold==100,"Insufficient gold buys nothing")
+ shop.used=false;shop.sold=[];game.mode="shop";game.gold=ShopSystem.gem_price(game.stage)-1
+ check(not GemRewards.buy_offer(game,shop,GemRewards.offer_code("ice")).ok and game.gold==ShopSystem.gem_price(game.stage)-1,"Insufficient gold buys nothing")
  game.gold=1000
  check(not GemRewards.buy_offer(game,shop,GemRewards.offer_code("fire")).ok and game.gold==1000,"A gem not on offer is refused")
  game.mode="run"
