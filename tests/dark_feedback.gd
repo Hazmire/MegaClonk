@@ -32,6 +32,6 @@ func run():
  game.frontend.update_character_health();var target=game.player.camera.unproject_position(game.player.global_position+Vector3.UP*.05)+Vector2(-32,12)
  check(game.frontend.character_health.position.distance_to(target)<.01,"Small bar projects just beneath the character's feet")
  game.mode="pause";game.frontend.update_character_health();check(not game.frontend.character_health.visible,"Character bar hides outside gameplay")
- check(game.audio.events["weapon.revolver.fire"].base_pitch<1 and game.audio.events["weapon.aura.pulse"].base_pitch<1,"Darker audio pitches preserve distinct event pools")
+ check(is_equal_approx(float(game.audio.events["weapon.revolver.fire"].base_pitch),1.0) and is_equal_approx(float(game.audio.events["weapon.aura.pulse"].base_pitch),1.0) and game.audio.events["weapon.revolver.fire"].files!=game.audio.events["weapon.aura.pulse"].files,"Finished Fog samples play at original pitch (no dark pass) with distinct event pools")
  game.queue_free();await process_frame;await process_frame
  print("DARK FEEDBACK: %d checks, %d failures"%[checks,failures.size()]);quit(0 if failures.is_empty() else 1)
