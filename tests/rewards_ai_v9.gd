@@ -132,7 +132,7 @@ func run():
  var reveal=screen.card
  check(screen.is_revealed() and reveal!=null and reveal.data.id=="salted_pork" and game.items==items,"Fast-forward reveals the predetermined item without awarding again")
  check(str(game.rng.state)==reward_rng,"Reel animation and skipping leave the gameplay reward RNG unchanged")
- check(game.sound_bank.has("applause") and game.sound_bank.has("legendary"),"Original applause and distinctive Legendary audio are loaded")
+ check(game.sound_bank.has("applause") and game.audio.events.has("ui.reveal_legendary") and game.audio.streams.has(game.audio.events["ui.reveal_legendary"].files[0]),"Original applause and the Fog legendary reveal are loaded")
  game.resume();await create_timer(0.5).timeout
  game.frontend.reward("salted_pork");await process_frame
  for n in game.frontend.menu.get_children():
