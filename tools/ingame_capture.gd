@@ -54,6 +54,25 @@ func run() -> void:
   game.gems.add("ice");game.gem_discovered("ice");await create_timer(0.25).timeout;await snap("toast-burst",0.0)
   await wait_phase(tq,"idle",0.0)
   game.announce("ELITE ENCOUNTER • Obsidian Sentinels");game.frontend.event_label.text=game.announcement;game.frontend.update_hud();await snap("banner-elite",0.4)
+
+ if want("boss"):
+  game.enemies.clear();var bb=game.frontend.run_hud.bosses
+  var sp=func(kind,off):
+   var e=game.spawn_enemy(kind,game.player.position+off);e.speed=0.0;return e
+  var b1=sp.call(8,Vector3(0,0,-14));game.frontend.update_hud();bb.refresh_now();await snap("boss-stage",0.5)
+  var b2=sp.call(8,Vector3(60,0,60));var m1=sp.call(9,Vector3(-8,0,-10));var m2=sp.call(10,Vector3(40,0,-70))
+  game.frontend.update_hud();bb.refresh_now();await snap("boss-two-plus-minis-pointer",0.6)
+  b1.hp=b1.max_hp*0.18;game.frontend.update_hud();await snap("boss-enraged",0.6)
+  b1.hp=0.0;game.frontend.update_hud();await snap("boss-slain",0.45)
+  game.enemies.clear()
+ if want("pause"):
+  late_build();game.gold=1840;game.kills=412;game.elapsed=754.0;game.frontend.update_hud();await snap("hud-late-for-pause",0.3)
+  game.pause_menu();await create_timer(0.6).timeout;await snap("pause",0.3)
+  var ps=game.frontend.menu.get_child(0);ps.items["settings"].grab_focus();await snap("pause-settings-focus",0.2)
+  ps.abandon.grab_focus();ps.abandon.holding=true;await create_timer(0.5).timeout;await snap("pause-abandon-hold",0.0)
+  ps.abandon.holding=false
+  game.frontend.settings(game.pause_menu);await create_timer(0.6).timeout;await snap("pause-settings",0.2)
+  game.frontend.leave_settings();game.resume()
  quit(0)
 func wait_phase(tq: RunToasts,phase: String,extra: float) -> void:
  var guard=0

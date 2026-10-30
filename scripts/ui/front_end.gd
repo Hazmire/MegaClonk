@@ -181,7 +181,7 @@ func fade_celebrations() -> void:
 func enter_run() -> void:
  fade_celebrations();chest_skip=Callable()
  stop_reward_animations()
- in_run=true
+ in_run=true;pause_frame=null
  menu.hide();hud_root.show();game.player.camera.current=true
 # Pickup notifications (RunToasts): where the item/gem was picked up is where the player stands, so the burst starts at the head.
 func player_head_stage() -> Vector2:
@@ -218,8 +218,25 @@ func update_hud() -> void:
  run_hud.update(frame_delta)
  character_health.max_value=game.stats.max_health;character_health.value=game.health
  update_character_health()
+# Frozen gameplay frame behind RunPause (and Settings opened from it); null when nothing could be captured (headless).
+var pause_frame: Texture2D
+func capture_pause_frame() -> void:
+ pause_frame=null
+ if DisplayServer.get_name()=="headless" or not is_instance_valid(hud_root):return
+ var was_visible=hud_root.visible;hud_root.hide() # the clean world, as in the mockup, not the HUD
+ var banner_was=is_instance_valid(stage_banner) and stage_banner.visible;if banner_was:stage_banner.hide()
+ var notice_was=game.notice.visible;game.notice.hide()
+ RenderingServer.force_draw(false,0.0)
+ var image=get_viewport().get_texture().get_image()
+ if was_visible:hud_root.show()
+ if banner_was:stage_banner.show()
+ if notice_was:game.notice.show()
+ if image!=null and not image.is_empty():pause_frame=ImageTexture.create_from_image(image)
+func settings_from_pause() -> bool:return pause_frame!=null and settings_back.is_valid() and settings_back==Callable(game,"pause_menu")
 func pause() -> void:
- RewardScreens.pause(self)
+ if game.mode=="run":capture_pause_frame()
+ game.mode="pause";clear()
+ var screen=RunPause.new();MenuScreen.set_audio_owner(game);screen.bind(self);menu.add_child(screen)
 func world_map(from_pause: bool=false) -> void:
  RewardScreens.world_map(self,from_pause)
 func inventory() -> void:

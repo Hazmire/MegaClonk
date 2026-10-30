@@ -61,7 +61,19 @@ func build() -> void:pass
 func fit_stage() -> void:
  var s=minf(size.x/MenuStyle.W,size.y/MenuStyle.H)
  stage.scale=Vector2(s,s);stage.position=((size-stage.size*s)*0.5).floor()
+# The frozen, blurred gameplay frame captured when the run was paused (RunPause, and Settings opened from it).
+func frozen_backdrop(extra_dim: float=0.0) -> bool:
+ var tex: Texture2D=frontend.pause_frame if frontend!=null else null
+ if tex==null:return false
+ var r=TextureRect.new();r.name="FrozenFrame";r.texture=tex;r.stretch_mode=TextureRect.STRETCH_SCALE;r.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;r.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);r.mouse_filter=Control.MOUSE_FILTER_IGNORE
+ r.material=MenuStyle.shader_material("res://ui/shaders/pause_frame.gdshader",{"blur_px":6.0*float(tex.get_width())/MenuStyle.W});backdrop.add_child(r)
+ if extra_dim>0.0:
+  var dim=ColorRect.new();dim.color=Color(0.039,0.043,0.039,extra_dim);dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);dim.mouse_filter=Control.MOUSE_FILTER_IGNORE;backdrop.add_child(dim)
+ return true
 func _build_backdrop() -> void:
+ if backdrop_kind=="frozen":
+  if frozen_backdrop():return
+  backdrop_kind="fog" # no captured frame (headless, or the run was loaded straight into pause): the fog backdrop stands in
  if backdrop_kind=="fog":
   var fog=TextureRect.new();fog.texture=MenuStyle.checker(Color("8F9A92"),Color("87928A"),8);fog.stretch_mode=TextureRect.STRETCH_TILE;fog.texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST
   fog.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);fog.mouse_filter=Control.MOUSE_FILTER_IGNORE;backdrop.add_child(fog)

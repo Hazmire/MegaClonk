@@ -16,23 +16,6 @@ static func button(ui: FrontEnd,parent: Node,label: String,callback: Callable,ti
   box.set_corner_radius_all(2);box.border_width_bottom=5;box.shadow_size=2
   control.add_theme_stylebox_override(state,box)
  return control
-static func pause(ui: FrontEnd) -> void:
- var game=ui.game;game.mode="pause";ui.clear()
- var shade=ColorRect.new();shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);shade.color=Color(0.005,0.025,0.04,0.72);shade.mouse_filter=Control.MOUSE_FILTER_IGNORE;ui.menu.add_child(shade)
- equipment(ui,frame(ui,Vector2(24,80),Vector2(300,600),"Inventory"))
- statistics(ui,frame(ui,Vector2(938,80),Vector2(318,600),"Stats"))
- var title=ui.heading("PAUSED",ui.menu,48);title.position=Vector2(340,28);title.custom_minimum_size.x=560;title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
- var center=VBoxContainer.new();center.position=Vector2(490,110);center.custom_minimum_size.x=260;center.add_theme_constant_override("separation",12);ui.menu.add_child(center)
- var summary=ui.heading("FOREST · STAGE %d"%game.stage,center,26);summary.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
- var details=ui.text("Level %d · %d kills · %d gold"%[game.level,game.kills,game.gold],center,16);details.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
- button(ui,center,"RESUME",game.resume).grab_focus()
- button(ui,center,"MAP",func():ui.world_map(true))
- button(ui,center,"INSPECT BUILD",game.show_build)
- button(ui,center,"SETTINGS",func():game.settings_menu(game.pause_menu))
- button(ui,center,"SAVE RUN",func():game.toast("Run saved" if game.save_run() else "Save failed"))
- if game.sandbox:button(ui,center,"SANDBOX TOOLS",game.sandbox_menu)
- button(ui,center,"RESTART RUN",game.begin_run)
- button(ui,center,"ABANDON RUN",func():game.finish_run(false),Color("783c38"))
 static func world_map(ui: FrontEnd,from_pause: bool) -> void:
  var game=ui.game;game.mode="map";ui.clear();ui.map_return_to_pause=from_pause;ui.minimap.reveal(game.player.position)
  var shade=ColorRect.new();shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);shade.color=Color(0.005,0.025,0.04,0.45);shade.mouse_filter=Control.MOUSE_FILTER_IGNORE;ui.menu.add_child(shade)

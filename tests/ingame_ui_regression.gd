@@ -21,6 +21,7 @@ func run() -> void:
  await hud()
  await notifications()
  await boss_bars()
+ await pause_screen()
  print("INGAME_UI: %d checks, %d failures"%[count,failures.size()])
  quit(1 if failures.size()>0 else 0)
 func foundation() -> void:
@@ -206,3 +207,44 @@ func boss_bars() -> void:
  check(clear,"Pointers stay on screen and clear of the minimap and the health / ultimate block from every direction")
  game.enemies.clear();bb.refresh_now()
  check(bb.shown_bars().is_empty() or bb.shown_bars().all(func(b):return b.slain_t>=0.0 or not b.lit),"Bars with no boss left are released")
+func pause_screen() -> void:
+ var fe=game.frontend;game.enemies.clear();game.mode="run";game.level=7;game.kills=123;game.gold=456;game.elapsed=754.0
+ game.pause_menu();await process_frame
+ var screen: RunPause
+ for n in fe.menu.get_children():
+  if n is RunPause:screen=n
+ check(screen!=null and game.mode=="pause","Pause opens the RunPause screen and sets mode pause")
+ if screen==null:return
+ check(screen.inventory_panel.size==Vector2(420,870) and screen.stats_panel.size==Vector2(420,870),"Pause carries the 420x870 Inventory and Stats panels (%s, %s)"%[screen.inventory_panel.size,screen.stats_panel.size])
+ check(screen.inventory_panel.position.x<screen.items["resume"].global_position.x and screen.stats_panel.position.x>screen.inventory_panel.position.x+420,"Inventory sits left of the menu, Stats right")
+ check((screen.get_node("Stage/Content/Title") as Label).text=="Paused" and (screen.get_node("Stage/Content/Title") as Label).get_theme_font_size("font_size")==104,"Header reads Paused in 104px serif")
+ var line=screen.get_node("Stage/Content/StageLine").text.to_lower()
+ check(line.contains("stage %d"%game.stage) and line.contains(StageThemes.config(game.stage).title.to_lower()),"Stage line carries the real stage number and name (%s)"%line)
+ var want=RunPause.counter_values(game)
+ check(want[0][1]=="7" and want[1][1]=="12:34" and want[2][1]=="123" and want[3][1]=="456","Counter values come from the game (%s)"%str(want))
+ var shown=[]
+ for k in ["level","time","kills","gold"]:shown.append(screen.counters[k].text)
+ check(shown==["7","12:34","123","456"],"Level, Time, Kills and Gold counters show them (%s)"%str(shown))
+ var names=[]
+ for k in screen.order:names.append(k.label_text if k is MenuItem else "ABANDON")
+ var expected=["Resume","Map","Inspect build","Settings","Save & quit","Restart run","ABANDON"]
+ if game.sandbox:expected.insert(5,"Sandbox tools")
+ check(names==expected,"Menu entries in the specified order, Abandon apart at the end (%s)"%str(names))
+ check(screen.items["resume"].has_focus() and screen.items["resume"].find_next_valid_focus()==screen.items["map"],"Resume is focused first and Down moves to Map")
+ var last=screen.order[screen.order.size()-2];check(last.find_next_valid_focus()==screen.abandon,"Down from Restart run reaches Abandon run")
+ check(screen.items["resume"].hint_text=="ESC" and screen.items["map"].hint_text=="M" and screen.items["inspect"].hint_text=="TAB","Resume / Map / Inspect carry their key chips")
+ # hold-to-confirm
+ var b=AbandonButton.new();root.add_child(b);var fired=[0];b.confirmed.connect(func():fired[0]+=1)
+ b.step(2.0);check(fired[0]==0 and b.progress==0.0,"Abandon does nothing without a hold")
+ b.holding=true;b.step(0.5);check(fired[0]==0 and absf(b.progress-0.5)<0.001,"Half a second of holding fills half and does not abandon")
+ b.holding=false;b.step(0.1);check(b.progress<0.5 and fired[0]==0,"Letting go drains the fill")
+ b.progress=0.0;b.holding=true;b.step(0.6);b.step(0.6);check(fired[0]==1 and b.progress>=1.0,"A full 1 s hold abandons exactly once")
+ b.step(0.5);check(fired[0]==1,"Holding on does not fire again")
+ b.holding=false;b.step(1.0);b.holding=true;b.step(1.1);check(fired[0]==2,"A second full hold fires again after release")
+ b.queue_free()
+ check(screen.abandon.confirmed.get_connections().size()==1 and screen.abandon.progress==0.0,"The screen's Abandon is wired to end the run and starts empty")
+ # Esc resumes (Game's own handler)
+ var elapsed=game.elapsed;await process_frame
+ check(game.elapsed==elapsed,"Gameplay time does not advance while paused")
+ game.resume();await process_frame
+ check(game.mode=="run" and fe.pause_frame==null,"Resume returns to the run and drops the frozen frame")

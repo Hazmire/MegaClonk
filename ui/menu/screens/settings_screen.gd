@@ -13,6 +13,9 @@ var scroll: ScrollContainer
 var list: VBoxContainer
 var binding_buttons: Dictionary={}
 var quit_button: MenuItem
+func _build_backdrop() -> void:
+ if frontend!=null and frontend.settings_from_pause() and frozen_backdrop(0.55):return
+ super._build_backdrop()
 func build() -> void:
  group=last_tab
  build_frame("Settings","Changes apply at once",TABS,group,false,"Back")

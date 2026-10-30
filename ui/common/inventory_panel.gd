@@ -71,9 +71,9 @@ func _gem_cell(color: Color,count: String,short: String,lit: bool,tooltip: Strin
  var c=Control.new();c.custom_minimum_size=Vector2(60,70);c.tooltip_text=tooltip;c.mouse_filter=Control.MOUSE_FILTER_STOP;c.modulate=Color.WHITE if lit else Color(1,1,1,0.4)
  c.draw.connect(func():
   var r=Rect2(Vector2.ZERO,c.size);c.draw_rect(r,Color("1C1E1B"));c.draw_rect(r.grow(-0.5),color if lit else FogPalette.BORDER,false,1.0)
-  var ctr=Vector2(c.size.x*0.5-12,24.0);var d=PackedVector2Array([ctr+Vector2(0,-8),ctr+Vector2(8,0),ctr+Vector2(0,8),ctr+Vector2(-8,0)])
+  var ctr=Vector2(18.0,26.0);var d=PackedVector2Array([ctr+Vector2(0,-8),ctr+Vector2(8,0),ctr+Vector2(0,8),ctr+Vector2(-8,0)])
   c.draw_colored_polygon(d,Color(color.r,color.g,color.b,0.35));c.draw_polyline(d+PackedVector2Array([d[0]]),color,2.0))
- var n=MenuStyle.label(count,MenuStyle.sans(800,0,20),20,FogPalette.BONE_BRIGHT if lit else FogPalette.ASH_FAINT,0,c);n.position=Vector2(c.size.x*0.5-2,10)
+ var n=MenuStyle.label(count,MenuStyle.sans(800,0,20),20,FogPalette.BONE_BRIGHT if lit else FogPalette.ASH_FAINT,0,c);n.position=Vector2(32,13)
  var s=MenuStyle.label(short,MenuStyle.sans(800,0.2,10),10,color,0,c);s.position=Vector2(0,50);s.size=Vector2(c.size.x,14);s.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
  return c
 func _items() -> void:

@@ -66,14 +66,11 @@ func run():
  event=InputEventAction.new();event.action="ui_accept";event.pressed=false;root.push_input(event);await process_frame
  check(game.mode=="run","Keyboard/controller UI-accept applies the focused offer")
  game.pending_upgrades=0;game.pause_menu();await process_frame
- var pause_labels=[]
- for node in descendants(game.frontend.menu):
-  if node is Label:pause_labels.append(node.text)
- check("PAUSED" in pause_labels and "Inventory" in pause_labels and "Stats" in pause_labels,"Reference pause shows inventory and real stats sidebars")
- var map_button: Button
- for node in descendants(game.frontend.menu):
-  if node is Button and node.text=="MAP":map_button=node
- map_button.pressed.emit();await process_frame
+ var pause_screen: RunPause
+ for node in game.frontend.menu.get_children():
+  if node is RunPause:pause_screen=node
+ check(pause_screen!=null and pause_screen.inventory_panel!=null and pause_screen.stats_panel!=null,"Pause shows the Inventory and Stats panels")
+ pause_screen.items["map"].chosen.emit();await process_frame
  var expanded: RunMinimap
  for node in descendants(game.frontend.menu):
   if node is RunMinimap:expanded=node

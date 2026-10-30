@@ -19,7 +19,7 @@ func refresh() -> void:
  rows.clear()
  column=VBoxContainer.new();column.add_theme_constant_override("separation",18);column.mouse_filter=Control.MOUSE_FILTER_IGNORE;add_child(column)
  column.add_child(_heading("Stats"))
- var sections=VBoxContainer.new();sections.add_theme_constant_override("separation",12);sections.mouse_filter=Control.MOUSE_FILTER_IGNORE;column.add_child(sections)
+ var sections=VBoxContainer.new();sections.add_theme_constant_override("separation",8);sections.mouse_filter=Control.MOUSE_FILTER_IGNORE;column.add_child(sections)
  for section in RunData.stat_sections(game):
   if section.rows.is_empty():continue
   var block=VBoxContainer.new();block.add_theme_constant_override("separation",3);block.mouse_filter=Control.MOUSE_FILTER_IGNORE;sections.add_child(block)
