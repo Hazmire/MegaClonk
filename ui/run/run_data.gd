@@ -191,3 +191,20 @@ static func chest_data(game: Node,id: String) -> Dictionary:
  var tier=tier_index(Catalog.item_tier(id))
  return {"id":id,"name":Catalog.item_name(id),"tier":tier,"tier_name":str(FogPalette.RARITY[tier]["name"]),"description":Catalog.item_description(id,false),"consumable":Catalog.item_consumable(id),
   "strip":strip,"win_index":WIN_INDEX,"land_offset":rng.randf_range(-60.0,60.0),"chest_number":int(game.chests_opened),"stack":int(game.item_stacks(id))}
+# --- imbue station ----------------------------------------------------------------------------------------------------
+# Everything the Imbue Station shows, from the live game: gem tray, one entry per owned weapon with its sockets, and the price.
+# Socket entry: {kind: "gem"|"empty"|"locked", element, name}. Whether a held element may go into a weapon is decided by ImbueRules.problem().
+static func imbue(game: Node) -> Dictionary:
+ var cost=ImbueRules.cost(game.stage,game.irt.imbue_discount())
+ var tray=[]
+ for element in Elements.IDS:tray.append({"element":element,"name":Elements.display_name(element),"count":int(game.gems.count(element)),"color":Elements.color(element)})
+ var weapons=[]
+ for id in game.weapons:
+  var state: Dictionary=game.weapons[id];var gems=WeaponSockets.gems(state);var open=WeaponSockets.unlocked(state);var sockets=[]
+  for i in WeaponSockets.MAX_SOCKETS:
+   if i<gems.size():sockets.append({"kind":"gem","element":str(gems[i]),"name":Elements.display_name(str(gems[i]))})
+   elif i<open:sockets.append({"kind":"empty","element":"","name":""})
+   else:sockets.append({"kind":"locked","element":"","name":""})
+  var combo=WeaponSockets.combo(state)
+  weapons.append({"id":int(id),"name":str(Catalog.WEAPONS[id][0]),"level":int(state.level),"open":open,"used":gems.size(),"sockets":sockets,"combo":str(combo.get("name","")),"can_unlock_second":WeaponSockets.can_unlock_second(state)})
+ return {"cost":cost,"gold":int(game.gold),"amulets":int(game.amulets),"tray":tray,"weapons":weapons}

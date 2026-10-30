@@ -89,10 +89,11 @@ func amulet_ui():
  if station.is_empty():station={"node":Node3D.new(),"kind":"Imbue Station","used":false,"charge":0.0}
  game.frontend.imbue_station(station)
  await process_frame
- var button: Button
- for n in RewardScreens.descendants(game.frontend.menu):
-  if n is Button and n.text.begins_with("Use Imbued Amulet") and not n.disabled:button=n;break
- check(button!=null,"Station offers an enabled amulet button for a single-socket weapon")
+ var screen: RunImbue
+ for n in game.frontend.menu.get_children():
+  if n is RunImbue:screen=n
+ var button=screen.slots.get("Slot_0_1") if screen!=null else null
+ check(button!=null and not button.disabled,"Station offers an enabled amulet slot for a single-socket weapon")
  if button:
   button.pressed.emit()
   await process_frame

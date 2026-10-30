@@ -137,6 +137,16 @@ func run() -> void:
   game.resume();game.mode="run";game.chests_opened=14
   game.frontend.reward("whetstone");cs=game.frontend.menu.get_child(0);cs.skip();await create_timer(1.6).timeout;await snap("chest-reveal-common",0.0)
   game.resume()
+ if want("imbue"):
+  late_build();game.mode="run";game.gold=1240;game.gems.reset();game.gems.add("corrosive",1);game.gems.add("ice",1);game.gems.add("electricity",1);game.amulets=1;game.frontend.update_hud()
+  var st={"node":Node3D.new(),"kind":"Imbue Station","used":false,"charge":0.0}
+  game.frontend.imbue_station(st);var sc=game.frontend.menu.get_child(0);await create_timer(0.6).timeout;await snap("imbue-idle",0.2)
+  sc.pick_gem("ice");await create_timer(0.5).timeout;await snap("imbue-held",0.2)
+  var wid=int(sc.data.weapons[0].id);sc.pick_socket(wid,0);await create_timer(0.4).timeout;await snap("imbue-confirm",0.2)
+  sc.fuse();await create_timer(0.45).timeout;await snap("imbue-fusing",0.0)
+  await create_timer(0.8).timeout;await snap("imbue-done",0.3)
+  game.gold=100;sc.pick_gem("corrosive");await create_timer(0.3).timeout;sc.data=RunData.imbue(game);sc.pick_socket(int(sc.data.weapons[1].id),0);await create_timer(0.3).timeout;await snap("imbue-poor",0.2)
+  game.resume()
  quit(0)
 func wait_phase(tq: RunToasts,phase: String,extra: float) -> void:
  var guard=0

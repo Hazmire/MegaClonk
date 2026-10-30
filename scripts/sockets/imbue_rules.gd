@@ -16,6 +16,9 @@ static func problem(game: Object, weapon_id: int, element: String) -> String:
  if game.gems.count(element)<1:return "no_gem"
  if game.gold<cost(game.stage,game.irt.imbue_discount()):return "insufficient_gold"
  return ""
+# Same as problem(), for the screen: whether this element could go into this weapon at all, ignoring whether you can afford it is
+# reported separately as insufficient_gold (so the screen can still offer the socket and then say why it cannot be fused).
+static func problem_for_slot(game: Object, weapon_id: int, element: String) -> String:return problem(game,weapon_id,element)
 # Atomic: either the gem is installed, one gem is consumed and the gold is deducted once,
 # or nothing changes at all.
 static func install(game: Object, weapon_id: int, element: String) -> Dictionary:

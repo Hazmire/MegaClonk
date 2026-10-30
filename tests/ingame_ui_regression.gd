@@ -26,6 +26,7 @@ func run() -> void:
  await shop_screen()
  await shrine_screen()
  await chest_screen()
+ await imbue_screen()
  print("INGAME_UI: %d checks, %d failures"%[count,failures.size()])
  quit(1 if failures.size()>0 else 0)
 func foundation() -> void:
@@ -472,3 +473,47 @@ func chest_screen() -> void:
  check(s.is_revealed() and s.headline.text=="The bells toll" and s.reveal_layer.get_node("FindCaption").text.to_upper()=="A LEGENDARY FIND","Reduced motion goes straight to the reveal; Legendary reads A legendary find / The bells toll")
  check(not s.card.data.description.contains("Unique") and not s.card.data.description.contains("UNIQUE"),"No Unique label")
  game.settings.reduced=false;game.resume();await process_frame
+func imbue_screen() -> void:
+ var fe=game.frontend;game.enemies.clear();game.mode="run";game.stage=1;game.weapons.clear();game.equip(0);game.equip(6);game.gems.reset();game.amulets=0
+ game.gems.add("fire",2);game.gems.add("ice",1);game.gold=2000
+ var station={"node":Node3D.new(),"kind":"Imbue Station","used":false,"charge":0.0}
+ fe.imbue_station(station);await process_frame
+ var s: RunImbue
+ for n in fe.menu.get_children():
+  if n is RunImbue:s=n
+ check(s!=null and game.mode=="imbue" and s.slots.size()==4,"Imbue Station opens RunImbue with two socket slots per owned weapon")
+ if s==null:return
+ var cost=ImbueRules.cost(game.stage,game.irt.imbue_discount())
+ check(s.get_node("Stage/Content/Imbue/Header/Price").text.begins_with("%d gold per gem"%cost),"Price line shows the real station cost (%s)"%s.get_node("Stage/Content/Imbue/Header/Price").text)
+ check(s.tiles["fire"].count==2 and s.tiles["corrosive"].count==0,"The tray shows real gem counts")
+ s.tiles["corrosive"].pressed.emit();await process_frame
+ check(s.held=="","An empty gem cannot be picked up")
+ s.tiles["fire"].pressed.emit();await process_frame
+ var w0=int(s.data.weapons[0].id);var w1=int(s.data.weapons[1].id)
+ check(s.held=="fire" and s.slots["Slot_%d_0"%w0].state=="ready" and s.slots["Slot_%d_1"%w0].state=="locked","Holding a gem lights the open sockets and leaves the second socket locked")
+ check(s.slots["Slot_%d_1"%w0].disabled,"The locked second socket is disabled without an amulet")
+ s.slots["Slot_%d_0"%w0].pressed.emit();await process_frame
+ check(s.phase=="confirm" and s.fuse_button!=null and s.slots["Slot_%d_0"%w0].state=="target","Choosing a socket asks to confirm")
+ s.cancel_button.chosen.emit();await process_frame
+ check(s.phase=="idle" and game.gold==2000 and game.gems.count("fire")==2,"Cancel changes nothing")
+ s.slots["Slot_%d_0"%w0].pressed.emit();await process_frame;s.fuse_button.chosen.emit();await create_timer(RunImbue.FUSE_TIME+0.4).timeout
+ check(game.gold==2000-cost and game.gems.count("fire")==1 and WeaponSockets.gems(game.weapons[w0])==["fire"] and s.phase=="done","Fuse costs exactly the price, consumes one gem and fills the socket")
+ check(s.action_box.find_child("Done",true,false)!=null,"Done message is shown")
+ # filled single-socket weapon cannot take another gem; duplicate rule on second socket
+ s.tiles["fire"].pressed.emit();await process_frame
+ check(s.slots["Slot_%d_0"%w0].state=="gem" and s.slots["Slot_%d_0"%w1].state=="ready","A filled socket stays filled; the other weapon's socket glows")
+ game.amulets=1;game.weapons[w1]["sockets"]={"unlocked":2,"gems":["fire"]};s.held="fire";s.build_dynamic();await process_frame
+ check(s.slots["Slot_%d_1"%w1].state=="blocked","A second socket refuses the same element and says so")
+ s.held="ice";s.build_dynamic();await process_frame
+ check(s.slots["Slot_%d_1"%w1].state=="ready","A different element may go in the second socket")
+ # poor
+ game.gold=cost-1;s.held="ice";s.data=RunData.imbue(game);s.build_dynamic();await process_frame
+ s.slots["Slot_%d_1"%w1].pressed.emit();await process_frame
+ check(s.phase=="poor" and game.gems.count("ice")==1,"Too little gold says so and spends nothing")
+ # amulet
+ s.held="";s.phase="idle";game.gold=2000;game.weapons[w1]["sockets"]={"unlocked":1,"gems":["fire"]};s.build_dynamic();await process_frame
+ check(not s.slots["Slot_%d_1"%w1].disabled,"With an amulet the locked slot is usable")
+ s.slots["Slot_%d_1"%w1].pressed.emit();await process_frame
+ check(WeaponSockets.unlocked(game.weapons[w1])==2 and game.amulets==0,"Using the amulet unlocks the second socket and spends it")
+ s.leave_button.chosen.emit();await process_frame
+ check(game.mode=="run","Leave resumes the run")

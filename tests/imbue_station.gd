@@ -89,20 +89,20 @@ func station_ui():
  game.frontend.imbue_station(station)
  await process_frame
  check(game.mode=="imbue","Station opens its screen and pauses the game")
- var buttons=[]
- for n in RewardScreens.descendants(game.frontend.menu):
-  if n is Button and (n.text.begins_with("Fire") or n.text.begins_with("Ice") or n.text.begins_with("Corrosive") or n.text.begins_with("Electric")):buttons.append(n)
- check(buttons.size()==8,"Every owned weapon lists all four elements (%d buttons)"%buttons.size())
- var enabled=0
- for b in buttons:
-  if not b.disabled:enabled+=1
- check(enabled==4,"Only elements the player holds are enabled (%d)"%enabled)
- var fire_button: Button
- for b in buttons:
-  if b.text.begins_with("Fire") and not b.disabled:fire_button=b;break
- fire_button.pressed.emit()
- await process_frame
- check(game.gold==1500 and game.gems.count("fire")==1,"Button installs once: costs 500 and consumes one gem")
+ var screen: RunImbue
+ for n in game.frontend.menu.get_children():
+  if n is RunImbue:screen=n
+ check(screen!=null and screen.tiles.size()==4 and screen.data.weapons.size()==2,"The screen lists every element and every owned weapon")
+ var held_count=0
+ for e in screen.tiles:
+  if screen.tiles[e].count>0:held_count+=1
+ check(held_count==2,"Only elements the player holds can be picked up (%d)"%held_count)
+ screen.tiles["fire"].pressed.emit();await process_frame
+ var wid=int(screen.data.weapons[0].id)
+ screen.slots["Slot_%d_0"%wid].pressed.emit();await process_frame
+ check(screen.phase=="confirm" and game.gold==2000,"Choosing a socket asks to confirm and spends nothing yet")
+ screen.fuse_button.chosen.emit();await create_timer(RunImbue.FUSE_TIME+0.4).timeout
+ check(game.gold==1500 and game.gems.count("fire")==1 and screen.phase=="done","Fuse installs once: costs 500 and consumes one gem")
  var installed=0
  for id in game.weapons:installed+=WeaponSockets.gems(game.weapons[id]).size()
  check(installed==1,"Exactly one gem installed")
