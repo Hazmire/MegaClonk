@@ -261,8 +261,10 @@ func _rebuild_trait() -> void:
 func slot_for(entry: Dictionary) -> Control:
  var d: Dictionary=entry.get("data",{})
  if d.is_empty():return null
- if d.kind=="gem":return gems_row.get_child(maxi(0,Elements.IDS.find(str(d.element))))
- if d.kind=="amulet":return gems_row.get_child(Elements.IDS.size())
+ if d.kind in ["gem","amulet"]:
+  var index=Elements.IDS.size() if d.kind=="amulet" else maxi(0,Elements.IDS.find(str(d.element)))
+  if gems_row==null or not is_instance_valid(gems_row) or index>=gems_row.get_child_count():return items_flow # the row is rebuilt a moment later
+  return gems_row.get_child(index)
  for e in item_pool:
   if e.wrap.visible and not e.item.is_empty() and str(e.item.id)==str(d.id):return e.wrap
  return items_flow
