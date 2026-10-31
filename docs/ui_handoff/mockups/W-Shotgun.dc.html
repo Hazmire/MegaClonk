@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Shotgun — effect draft</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English&amp;family=Overpass:wght@400;600;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+@keyframes sgCone{0%{opacity:0;transform:scaleX(.15)}2%{opacity:1;transform:scaleX(.7)}8%{opacity:.55;transform:scaleX(1)}16%{opacity:0;transform:scaleX(1.05)}100%{opacity:0;transform:scaleX(1.05)}}
+@keyframes sgFlash{0%{opacity:1;transform:scale(.8) rotate(0deg)}6%{opacity:0;transform:scale(1.7) rotate(20deg)}100%{opacity:0}}
+@keyframes sgPelA{0%{opacity:1;transform:translateX(0)}14%{opacity:1;transform:translateX(310px)}18%{opacity:0;transform:translateX(330px)}100%{opacity:0;transform:translateX(330px)}}
+@keyframes sgPelB{0%{opacity:1;transform:translateX(0)}12%{opacity:1;transform:translateX(250px)}16%{opacity:0;transform:translateX(265px)}100%{opacity:0;transform:translateX(265px)}}
+@keyframes sgHit{0%,5%{filter:none;transform:translateX(0)}6%{filter:brightness(0) invert(1);transform:translateX(26px)}14%{filter:none;transform:translateX(18px)}40%{transform:translateX(0)}100%{filter:none;transform:translateX(0)}}
+@keyframes sgRecoil{0%{transform:translateX(0)}4%{transform:translateX(-8px)}14%{transform:translateX(0)}100%{transform:translateX(0)}}
+@keyframes sgSmoke{0%,6%{opacity:0;transform:translate(0,0) scale(.5)}10%{opacity:.6}45%{opacity:0;transform:translate(20px,-40px) scale(2.6)}100%{opacity:0}}
+</style>
+</helmet>
+<div style="width: {{rootW}}px; height: {{rootH}}px; box-sizing: border-box; padding: {{pad}}px; background: #0E0F0E; color: #E8E2D0; font-family: 'Overpass', sans-serif; display: flex; gap: 36px">
+
+<div style="position: relative; flex: 0 0 auto; width: 720px; height: 640px; overflow: hidden; background-color: #7E8982; background-image: repeating-conic-gradient(#818C85 0 25%, #7A857E 0 50%); background-size: 16px 16px; border: 1px solid #3A3D38">
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; bottom: 0; height: 340px; background-color: #1F2620; background-image: repeating-conic-gradient(#222922 0 25%, #1C221D 0 50%); background-size: 16px 16px"></div>
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 250px; height: 120px; background: linear-gradient(180deg, rgba(126,137,130,0) 0%, rgba(126,137,130,0.9) 50%, rgba(126,137,130,0) 100%)"></div>
+
+<img src="../reference/vfx_player_stand_in.png" alt="Player" style="position: absolute; left: 100px; top: 370px; width: 60px; height: 100px; image-rendering: pixelated; animation: sgRecoil 1.4s ease-out infinite">
+<img src="../reference/vfx_enemy_stand_in.png" alt="Enemy" style="position: absolute; left: 330px; top: 372px; width: 60px; height: 85px; image-rendering: pixelated; animation: sgHit 1.4s ease-out infinite">
+<img src="../reference/vfx_enemy_stand_in.png" alt="Enemy" style="position: absolute; left: 380px; top: 430px; width: 60px; height: 85px; image-rendering: pixelated; animation: sgHit 1.4s ease-out infinite">
+<img src="../reference/vfx_enemy_stand_in.png" alt="Enemy out of range" style="position: absolute; left: 610px; top: 390px; width: 60px; height: 85px; image-rendering: pixelated">
+
+<div aria-hidden="true" style="position: absolute; left: 165px; top: 285px; width: 320px; height: 260px; clip-path: polygon(0 50%, 100% 0, 100% 100%); transform-origin: 0 50%; background: linear-gradient(90deg, rgba(255,241,194,0.95) 0%, rgba(242,154,58,0.6) 35%, rgba(201,70,26,0) 100%); animation: sgCone 1.4s ease-out infinite"></div>
+
+<div aria-hidden="true" style="position: absolute; left: 165px; top: 415px; width: 1px; height: 1px; transform: rotate(-21deg)"><span style="position: absolute; left: 0; top: -3px; width: 7px; height: 7px; background: #FFE08A; animation: sgPelB 1.4s linear infinite"></span></div>
+<div aria-hidden="true" style="position: absolute; left: 165px; top: 415px; width: 1px; height: 1px; transform: rotate(-16deg)"><span style="position: absolute; left: 0; top: -3px; width: 6px; height: 6px; background: #FFF1C2; animation: sgPelA 1.4s linear infinite"></span></div>
+<div aria-hidden="true" style="position: absolute; left: 165px; top: 415px; width: 1px; height: 1px; transform: rotate(-11deg)"><span style="position: absolute; left: 0; top: -3px; width: 7px; height: 7px; background: #F29A3A; animation: sgPelB 1.4s linear infinite"></span></div>
+<div aria-hidden="true" style="position: absolute; left: 165px; top: 415px; width: 1px; height: 1px; transform: rotate(-6deg)"><span style="position: absolute; left: 0; top: -3px; width: 6px; height: 6px; background: #FFE08A; animation: sgPelA 1.4s linear infinite"></span></div>
+<div aria-hidden="true" style="position: absolute; left: 165px; top: 415px; width: 1px; height: 1px; transform: rotate(-2deg)"><span style="position: absolute; left: 0; top: -3px; width: 7px; height: 7px; background: #FFF1C2; animation: sgPelB 1.4s linear infinite"></span></div>
+<div aria-hidden="true" style="position: absolute; left: 165px; top: 415px; width: 1px; height: 1px; transform: rotate(3deg)"><span style="position: absolute; left: 0; top: -3px; width: 6px; height: 6px; background: #F29A3A; animation: sgPelA 1.4s linear infinite"></span></div>
+<div aria-hidden="true" style="position: absolute; left: 165px; top: 415px; width: 1px; height: 1px; transform: rotate(8deg)"><span style="position: absolute; left: 0; top: -3px; width: 7px; height: 7px; background: #FFE08A; animation: sgPelB 1.4s linear infinite"></span></div>
+<div aria-hidden="true" style="position: absolute; left: 165px; top: 415px; width: 1px; height: 1px; transform: rotate(13deg)"><span style="position: absolute; left: 0; top: -3px; width: 6px; height: 6px; background: #FFF1C2; animation: sgPelA 1.4s linear infinite"></span></div>
+<div aria-hidden="true" style="position: absolute; left: 165px; top: 415px; width: 1px; height: 1px; transform: rotate(18deg)"><span style="position: absolute; left: 0; top: -3px; width: 7px; height: 7px; background: #F29A3A; animation: sgPelB 1.4s linear infinite"></span></div>
+<div aria-hidden="true" style="position: absolute; left: 165px; top: 415px; width: 1px; height: 1px; transform: rotate(22deg)"><span style="position: absolute; left: 0; top: -3px; width: 6px; height: 6px; background: #FFE08A; animation: sgPelA 1.4s linear infinite"></span></div>
+
+<svg aria-hidden="true" style="position: absolute; left: 130px; top: 380px; animation: sgFlash 1.4s ease-out infinite" width="72" height="72" viewBox="0 0 72 72"><polygon points="36,0 43,26 72,36 43,46 36,72 29,46 0,36 29,26" fill="#F29A3A"></polygon><polygon points="36,12 40,30 58,36 40,42 36,60 32,42 14,36 32,30" fill="#FFE08A"></polygon><circle cx="36" cy="36" r="8" fill="#FFF1C2"></circle></svg>
+<span aria-hidden="true" style="position: absolute; left: 170px; top: 395px; width: 26px; height: 26px; border-radius: 50%; background: rgba(150,155,150,0.6); filter: blur(3px); animation: sgSmoke 1.4s ease-out infinite"></span>
+
+<span style="position: absolute; left: 520px; top: 486px; display: {{noteDisplay}}; font-weight: 800; font-size: 11px; letter-spacing: 0.18em; color: #E8E2D0; background: rgba(14,15,14,0.7); padding: 3px 6px 1px">OUT OF RANGE</span>
+
+<div aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 50% 55%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.55) 100%)"></div>
+<div aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.14) 0px, rgba(0,0,0,0.14) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px)"></div>
+<span style="position: absolute; left: 16px; top: 14px; display: {{noteDisplay}}; font-weight: 800; font-size: 12px; letter-spacing: 0.26em; color: #0E0F0E; background: rgba(232,226,208,0.85); padding: 4px 8px 2px">EFFECT PREVIEW · LOOP</span>
+</div>
+
+<sc-if value="{{full}}" hint-placeholder-val="{{ true }}">
+<div style="flex: 1; display: flex; flex-direction: column; gap: 22px">
+<div style="display: flex; align-items: center; gap: 18px">
+<div style="display: flex; align-items: center; justify-content: center; width: 112px; height: 112px; background: #1A1C19; border: 1px solid #5A5D56"><img src="../icons_4x/weapons/shotgun.png" alt="Shotgun icon" style="width: 96px; height: 96px; image-rendering: pixelated"></div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.28em; color: #E07B83">NEW WEAPON · DRAFT</span>
+<h1 style="margin: 0; font-family: 'IM Fell English', serif; font-weight: 400; font-size: 40px; line-height: 1">Shotgun</h1>
+</div>
+</div>
+<section style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-weight: 800; font-size: 13px; letter-spacing: 0.28em; color: #8D9188">LOOK</h2>
+<ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 16px; line-height: 1.4; color: #B9BAB1">
+<li>A big star-shaped muzzle flash plus a short cone of hot light that fades from white to orange to nothing.</li>
+<li>A spray of bright pellets flies out across the cone, followed by a puff of gun smoke.</li>
+<li>The player recoils slightly; enemies in the cone flash white and get knocked back.</li>
+</ul>
+</section>
+<section style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-weight: 800; font-size: 13px; letter-spacing: 0.28em; color: #8D9188">BEHAVIOUR</h2>
+<ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 16px; line-height: 1.4; color: #B9BAB1">
+<li>Short-range cone blast aimed at the closest enemy; anything past the cone is untouched.</li>
+<li>Size makes the cone wider and longer. Projectile count adds pellets.</li>
+</ul>
+</section>
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-weight: 800; font-size: 13px; letter-spacing: 0.28em; color: #8D9188">LEVEL-UP POOL</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">ATTACK SPEED</span>
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">SIZE</span>
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">DAMAGE</span>
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">CRIT CHANCE</span>
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">CRIT DAMAGE</span>
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">PROJECTILE COUNT</span>
+</div>
+</section>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"stageOnly":{"editor":"boolean","default":false},"$preview":{"width":1200,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var so = !!this.props.stageOnly;
+    return { full: !so, rootW: so ? 720 : 1200, rootH: so ? 640 : 720, pad: so ? 0 : 40, noteDisplay: so ? 'none' : 'block' };
+  }
+}
+</script>
+</body>
+</html>

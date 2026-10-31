@@ -128,3 +128,8 @@ Pixel Combat remains CC BY4.0 / Helton Yan, with the same source and licence lin
 
 - Ten original grimdark tome illustrations generated for this project with OpenAI image generation, composed as a transparent5×2 atlas. `assets/ui/tomes/dusk_tomes.png`; used via distinct Godot AtlasTexture regions. No third-party icon pack is claimed as their source.
 - Current menu/game music: user uploads `main menu track.mp3` and `ingame music track.mp3`; embedded artist metadata `alphalambenterprises_101`. Exact MP3 copies under `assets/audio/music/current/`, configured as the only active playlist entries. Supplied for this personal game; no invented blanket CC0 claim. Earlier four-track credits remain historical.
+
+## Elemental sockets update
+- **PSX Modular Medieval — terracotta vase models** (`assets/grimdark/medieval/terracotta_vase*.glb`), from the user-supplied `psx-assets` release; use authorized by the user for this personal game. Baked to `assets/grimdark/baked/props/` by `tools/bake_socket_props.gd`.
+- **Socket/vase/power-up/status sound effects** (`assets/audio/sfx/sockets/`): original, procedurally synthesised by `tools/generate_socket_audio.py`. Power-up, gem and coin meshes are original procedural geometry.
+- **PSX Modular Medieval — stone_square_half_1m, wood_support_metal_ring** (Imbue Station forge), same supplied release and authorization as above; baked by `tools/bake_socket_props.gd`.

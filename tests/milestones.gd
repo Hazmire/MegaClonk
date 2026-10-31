@@ -26,7 +26,7 @@ func run():
  check(all_reachable,"30 forest seeds have connected portal/objective regions")
  check(smooth,"Broad planar terrain has no steep internal noise spikes")
  var random=RandomNumberGenerator.new();random.seed=25
- for id in Catalog.WEAPONS.size():
+ for id in Catalog.ACTIVE_WEAPONS:
   var proposals={}
   for i in 40:proposals[WeaponUpgrades.proposal(id,random).attribute]=true
   check(proposals.size()>=3,"Weapon %d has meaningful distinct upgrade attributes"%id)
@@ -35,8 +35,8 @@ func run():
  game=load("res://scenes/main/main.tscn").instantiate();root.add_child(game);await process_frame
  game.progress=Progress.new();game.progress.storage_path="user://milestone-profile.json";game.selected_weapon=7;game.next_run_seed=453;game.selected_trait="momentum";game.map_seed_override=9;game.begin_run();game.terrain_version=3;game.build_stage();game.resume();game.mode="pause";game.player.active=false;game.enemies.clear();game.stats.crit=0
  check(ImportedArt.mesh("res://assets/quaternius/nature/CommonTree_1.gltf",7).get_surface_count()>0,"Supplied forest model loads and batches")
- check(UIAssets.icon("weapons","0").resource_path.contains("vendor/weapons"),"Undead skill icon is used")
- check(UIAssets.icon("items","0").resource_path.contains("vendor/items"),"Undead loot icon is used")
+ check(UIAssets.icon("weapons","0").resource_path.contains("assets/icons/weapons"),"Undead skill icon is used")
+ check(UIAssets.icon("items","whetstone").resource_path=="res://assets/icons/items/whetstone.png","Final item art is used")
  check(game.sound_bank.has("hit") and game.sound_bank.has("level"),"Supplied sound events load")
  for id in ["blood_burst","impact_concrete","explosion_small","smoke_puff","sparks_shower","fire_torch","muzzle_front"]:
   check(CombatFX.sprite_frames(id).get_frame_count("default")>1,"PSX flipbook imports: "+id)
@@ -51,9 +51,9 @@ func run():
  check(not game.player.avatar.flashing,"Player overlay restores without changing base materials")
  game.elapsed+=11;check(game.measured_dps(7)==0,"Measured DPS decays to zero after inactive window")
  var state=game.weapons[7];var previous=WeaponUpgrades.damage(7,state)
- game.apply_upgrade({"type":"weapon","id":7,"attribute":"damage","step":0.15,"expected_level":1})
+ game.apply_upgrade({"type":"weapon","id":7,"attribute":"damage","step":0.06,"expected_level":1})
  check(WeaponUpgrades.damage(7,state)>previous and state.level==2,"Damage upgrade applies immediately")
- game.apply_upgrade({"type":"weapon","id":7,"attribute":"damage","step":0.15,"expected_level":1})
+ game.apply_upgrade({"type":"weapon","id":7,"attribute":"damage","step":0.06,"expected_level":1})
  check(state.level==2,"Stale upgrade card cannot apply twice")
  check(game.weapon_tooltip(7).contains("Measured DPS") and game.weapon_tooltip(7).contains("Estimated"),"Build tooltip distinguishes actual and estimated DPS")
  check(not WeaponUpgrades.apply(0,{}, {"attribute":"ricochet","step":1}),"Impossible weapon upgrade rejected")
@@ -82,18 +82,20 @@ func run():
   if boss.state=="waves":
    var before=game.projectiles.size();Encounters.step(game,boss,0.1);check(game.projectiles.size()>before,"Soul barrage emits damaging projectiles")
  game.frontend.update_hud()
- check(game.frontend.boss_widgets.size()>=3,"Main and miniboss health bars coexist")
+ game.frontend.run_hud.bosses.refresh_now()
+ check(game.frontend.run_hud.bosses.stage_bars[0].lit and game.frontend.run_hud.bosses.shown_bars().size()>=3,"Main and miniboss health bars coexist")
  var ghost=game.spawn_enemy(11,game.player.position+Vector3(20,0,0));game.stage_time=720;Encounters.step(game,ghost,0.1)
  check(ghost.speed>5.5 and ghost.speed<=10,"Endless ghost speed escalates within bounds")
  game.gold=1000;game.mode="shop"
- var shop={"tier":"Legendary","offers":[10,11,12],"sold":[],"used":false}
- check(game.buy_shop(shop,10,150) and shop.used and game.mode=="run","Shop consumes itself and closes only after a valid purchase")
+ var shop={"tier":"Common","offers":["whetstone","salted_pork","knucklebone"],"sold":[],"used":false}
+ check(game.buy_shop(shop,"whetstone",ShopSystem.price("whetstone")) and shop.used and game.mode=="run" and game.item_stacks("whetstone")==1,"Shop consumes itself and closes only after a valid purchase")
  game.mode="shop"
- check(not game.buy_shop(shop,11,150) and game.gold==850,"One-purchase rule covers all items at seller")
- check(game.stats.revives==1,"Legendary Phoenix grants functional revival charge")
+ check(not game.buy_shop(shop,"salted_pork",ShopSystem.price("salted_pork")) and game.gold==1000-ShopSystem.price("whetstone"),"One-purchase rule covers all items at seller")
  var offer=ShopSystem.offers("Common",game.available_items(),random);var valid=true
- for id in offer:valid=valid and Catalog.ITEMS[id][1]=="common"
- check(valid and not offer.is_empty(),"Common shop stock obeys tier")
+ var seen_tiers={}
+ for i in 200:
+  for id in ShopSystem.offers("Common",game.available_items(),random):seen_tiers[Catalog.item_tier(id)]=true
+ check(offer.size()==3 and seen_tiers.size()==5,"Standard shop can stock every tier ("+str(seen_tiers.keys())+")")
  game.mode="pause";game.player.active=false
  check(BuildStats.value("damage",1.35)=="+35%" and not BuildStats.help("armor").is_empty(),"Stat percentages and explanatory tooltips")
  var before_count=game.combat_fx.active.size()
@@ -125,8 +127,8 @@ func run():
  var seller={}
  for object in game.interactables:
   if object.kind=="Shop":seller=object;break
- seller.used=false;seller.offers=[1];seller.sold=[];game.gold=100;game.mode="shop"
- check(game.buy_shop(seller,1,15) and not seller.node.visible,"Actual seller disappears after purchase")
+ seller.used=false;seller.offers=["whetstone"];seller.sold=[];game.gold=100;game.mode="shop"
+ check(game.buy_shop(seller,"whetstone",15) and not seller.node.visible,"Actual seller disappears after purchase")
  game.mode="pause";game.player.active=false
  check(game.save_run("user://milestone-run.json") and game.load_run("user://milestone-run.json"),"New encounters, weapon attributes and shops serialize together")
  game.mode="pause";game.player.active=false
@@ -134,10 +136,7 @@ func run():
  for object in game.interactables:
   if object.kind=="Shop" and object.used:consumed=consumed or not object.node.visible
  check(consumed,"Consumed seller remains absent after save/load")
- game.mode="run";game.enemies.clear();game.stats.revives=1;game.health=0;game._physics_process(0)
- check(game.health==game.stats.max_health and game.stats.revives==0,"Phoenix Seal actually revives exactly once")
- game.loadout_runtime.cooldown=90;game.stats.ultimate_haste=0.25;game._physics_process(1)
- check(is_equal_approx(game.loadout_runtime.cooldown,88.75),"Timekeeper actually accelerates cooldown recovery")
+ check(not game.stats.has("revives") and not game.stats.has("ultimate_haste"),"Retired Phoenix Seal / Timekeeper stats no longer exist")
  game.mode="pause";game.player.active=false
  if FileAccess.file_exists("user://milestone-run.json"):DirAccess.remove_absolute("user://milestone-run.json")
  game.queue_free();await process_frame;await process_frame

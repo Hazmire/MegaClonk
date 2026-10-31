@@ -1,0 +1,74 @@
+{
+	"0": {
+		"columns": 6,
+		"fps": 12,
+		"frames": 29,
+		"h": 408,
+		"name": "sword",
+		"source": "W-Sword.dc.html",
+		"w": 460
+	},
+	"1": {
+		"columns": 6,
+		"fps": 12,
+		"frames": 26,
+		"h": 408,
+		"name": "firestaff",
+		"source": "W-Firestaff.dc.html",
+		"w": 460
+	},
+	"10": {
+		"columns": 6,
+		"fps": 12,
+		"frames": 43,
+		"h": 408,
+		"name": "aura",
+		"source": "W-Aura.dc.html",
+		"w": 460
+	},
+	"15": {
+		"columns": 6,
+		"fps": 12,
+		"frames": 17,
+		"h": 408,
+		"name": "shotgun",
+		"source": "W-Shotgun.dc.html",
+		"w": 460
+	},
+	"2": {
+		"columns": 6,
+		"fps": 12,
+		"frames": 29,
+		"h": 408,
+		"name": "lightning",
+		"source": "W-Lightning.dc.html",
+		"w": 460
+	},
+	"6": {
+		"columns": 6,
+		"fps": 12,
+		"frames": 22,
+		"h": 408,
+		"name": "bow",
+		"source": "W-Bow.dc.html",
+		"w": 460
+	},
+	"7": {
+		"columns": 6,
+		"fps": 12,
+		"frames": 19,
+		"h": 408,
+		"name": "revolver",
+		"source": "W-Revolver.dc.html",
+		"w": 460
+	},
+	"9": {
+		"columns": 6,
+		"fps": 12,
+		"frames": 29,
+		"h": 408,
+		"name": "scythes",
+		"source": "W-Scythes.dc.html",
+		"w": 460
+	}
+}

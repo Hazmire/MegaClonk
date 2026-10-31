@@ -1,0 +1,637 @@
+{
+  "auditioned": false,
+  "note": "selected by waveform screening only; not listened to",
+  "kept_from_earlier_curation": [
+    "weapon.sword.swing",
+    "weapon.firestaff.cast",
+    "weapon.lightning.strike",
+    "weapon.bow.fire",
+    "weapon.revolver.fire",
+    "weapon.aura.pulse",
+    "weapon.scythes.throw"
+  ],
+  "new_clips": [
+    {
+      "event": "weapon.sword.hit",
+      "file": "sword/hit_00.wav",
+      "source": "FGHTImpt_HIT-Smack_HY_PC.wav",
+      "source_start": 20.735,
+      "source_end": 20.98,
+      "sha256": "b57347e9cf6ccc0a49975a0df01172a4974d214b8a95807af87c781beccea1c0"
+    },
+    {
+      "event": "weapon.sword.hit",
+      "file": "sword/hit_01.wav",
+      "source": "FGHTImpt_HIT-Smack_HY_PC.wav",
+      "source_start": 8.745,
+      "source_end": 8.98,
+      "sha256": "5e71edfb5e3f1d3b4ed05128b1092fa5d96982b5a2ce5982142e13db80cf50bb"
+    },
+    {
+      "event": "weapon.sword.hit",
+      "file": "sword/hit_02.wav",
+      "source": "FGHTImpt_MELEE-Swish Hit_HY_PC.wav",
+      "source_start": 0.685,
+      "source_end": 0.985,
+      "sha256": "627a73214a5b2a1ce8a2b4d2b70a438f14e38d5a341672ff0717723c13b2c5d9"
+    },
+    {
+      "event": "weapon.sword.hit",
+      "file": "sword/hit_03.wav",
+      "source": "FGHTImpt_HIT-Smack_HY_PC.wav",
+      "source_start": 0.475,
+      "source_end": 0.73,
+      "sha256": "1262fec4f76a1bee03d2979ffb1123d7daa0ce1c72b00c6ec3d316b31efb2545"
+    },
+    {
+      "event": "weapon.sword.crit",
+      "file": "sword/crit_00.wav",
+      "source": "DSGNTonl_MELEE-Sword Critical_HY_PC.wav",
+      "source_start": 16.795,
+      "source_end": 17.295,
+      "sha256": "dab76163e00341a6031d1a72f8ca8f2071c621384a2e3f8b542daa12cf36925b"
+    },
+    {
+      "event": "weapon.sword.crit",
+      "file": "sword/crit_01.wav",
+      "source": "DSGNTonl_MELEE-Sword Critical_HY_PC.wav",
+      "source_start": 8.795,
+      "source_end": 9.295,
+      "sha256": "742ce54d75306e4b52b201653e67d09230c25384255a0e5be5fc15642a0a4aad"
+    },
+    {
+      "event": "weapon.sword.crit",
+      "file": "sword/crit_02.wav",
+      "source": "DSGNTonl_MELEE-Sword Critical_HY_PC.wav",
+      "source_start": 20.795,
+      "source_end": 21.295,
+      "sha256": "d4d0c9a3da05d3d7527e9a388d7f06f8554a54a1324b2fa4dde86ab3f59ae57c"
+    },
+    {
+      "event": "weapon.firestaff.impact",
+      "file": "firestaff/impact_00.wav",
+      "source": "DSGNImpt_EXPLOSION-Small Flare_HY_PC.wav",
+      "source_start": 8.785,
+      "source_end": 9.285,
+      "sha256": "4ac7fe679aef4a8b2c40bdbb43623e6eb07cb9987cc3edbb9abc3ac3b73859a5"
+    },
+    {
+      "event": "weapon.firestaff.impact",
+      "file": "firestaff/impact_01.wav",
+      "source": "DSGNImpt_EXPLOSION-Small Flare_HY_PC.wav",
+      "source_start": 0.655,
+      "source_end": 1.155,
+      "sha256": "0612ef9981ca80e5ca1e01083240c71f90296bf5a5bb7c5c41aa7d50a78b3e0a"
+    },
+    {
+      "event": "weapon.firestaff.impact",
+      "file": "firestaff/impact_02.wav",
+      "source": "DSGNImpt_EXPLOSION-Small Flare_HY_PC.wav",
+      "source_start": 4.775,
+      "source_end": 5.275,
+      "sha256": "6d76e6cce3a42250d1f3e85c8cd2a2a86349662a562c3e76eeabd2f74538164d"
+    },
+    {
+      "event": "weapon.firestaff.impact",
+      "file": "firestaff/impact_03.wav",
+      "source": "DSGNImpt_EXPLOSION-Small Flare_HY_PC.wav",
+      "source_start": 20.785,
+      "source_end": 21.285,
+      "sha256": "943d97b33c3f0e2bb6fca13ede23bc6302d881830098a1a13fe6ef8ab27686e9"
+    },
+    {
+      "event": "weapon.firestaff.crit",
+      "file": "firestaff/crit_00.wav",
+      "source": "DSGNImpt_EXPLOSION-Pyro Burst_HY_PC.wav",
+      "source_start": 16.495,
+      "source_end": 17.095,
+      "sha256": "6ec4cc720aba3b7fcddfe92ddd68b0af13276ddf0f63bdf3d8edac2eb0cf6067"
+    },
+    {
+      "event": "weapon.firestaff.crit",
+      "file": "firestaff/crit_01.wav",
+      "source": "DSGNImpt_EXPLOSION-Pyro Burst_HY_PC.wav",
+      "source_start": 8.495,
+      "source_end": 9.095,
+      "sha256": "45c453e4bc4780710ab74771d3412241e0f4f774963479f6f33e5eb80fe04945"
+    },
+    {
+      "event": "weapon.firestaff.crit",
+      "file": "firestaff/crit_02.wav",
+      "source": "DSGNImpt_EXPLOSION-Pyro Burst_HY_PC.wav",
+      "source_start": 0.495,
+      "source_end": 1.095,
+      "sha256": "7c48cde357a0639301a18b8462ccbbe311bc146e583bb0144e4aeaaca3a0b8cb"
+    },
+    {
+      "event": "weapon.lightning.thunder",
+      "file": "lightning/thunder_00.wav",
+      "source": "DSGNImpt_EXPLOSION-Thud_HY_PC.wav",
+      "source_start": 20.745,
+      "source_end": 21.645,
+      "sha256": "10ac1d3d7f0c038c8424a3295fa6956e510252471f4b8439ed62350e03087c0b"
+    },
+    {
+      "event": "weapon.lightning.thunder",
+      "file": "lightning/thunder_01.wav",
+      "source": "DSGNImpt_EXPLOSION-Thud_HY_PC.wav",
+      "source_start": 12.745,
+      "source_end": 13.49,
+      "sha256": "625d8e0970282907ffa4ac17f17eaa8743cd7207e0c2049dd11381f0e320d48a"
+    },
+    {
+      "event": "weapon.lightning.thunder",
+      "file": "lightning/thunder_02.wav",
+      "source": "DSGNImpt_EXPLOSION-Thud_HY_PC.wav",
+      "source_start": 16.745,
+      "source_end": 17.645,
+      "sha256": "d13e715fd06a79f107780ba42aaa78697bcacc0c2ab731a5042d82f63b000159"
+    },
+    {
+      "event": "weapon.lightning.chain",
+      "file": "lightning/chain_00.wav",
+      "source": "DSGNMisc_HIT-Zap Clap_HY_PC.wav",
+      "source_start": 4.775,
+      "source_end": 5.125,
+      "sha256": "6bb5a6f01cad219e8faaf832a65178210de2a0eb972f87fa42d9249f4dca4eef"
+    },
+    {
+      "event": "weapon.lightning.chain",
+      "file": "lightning/chain_01.wav",
+      "source": "MAGSpel_CAST-Wet Electricity_HY_PC.wav",
+      "source_start": 8.495,
+      "source_end": 8.845,
+      "sha256": "2e2df08916aa42e716be27675fd6fb7bd1debc930f46be3faf914671b9944735"
+    },
+    {
+      "event": "weapon.lightning.chain",
+      "file": "lightning/chain_02.wav",
+      "source": "DSGNMisc_HIT-Zap Clap_HY_PC.wav",
+      "source_start": 20.775,
+      "source_end": 21.125,
+      "sha256": "aaf460d1d1672ebe26219c600ce72ada37152efa460af475b927c54968257964"
+    },
+    {
+      "event": "weapon.lightning.chain",
+      "file": "lightning/chain_03.wav",
+      "source": "MAGSpel_CAST-Wet Electricity_HY_PC.wav",
+      "source_start": 0.495,
+      "source_end": 0.845,
+      "sha256": "a8757b9fb6c84ac436151b19de2da870f882327f32fb63b7ec24ca59177b9af0"
+    },
+    {
+      "event": "weapon.lightning.crit",
+      "file": "lightning/crit_00.wav",
+      "source": "DSGNMisc_SKILL IMPACT-Jacobs Ladder_HY_PC.wav",
+      "source_start": 12.745,
+      "source_end": 13.445,
+      "sha256": "6c43d33e1712583f35d89b9714b6628bc8170341708d44823d5db197153b371d"
+    },
+    {
+      "event": "weapon.lightning.crit",
+      "file": "lightning/crit_01.wav",
+      "source": "DSGNMisc_SKILL IMPACT-Jacobs Ladder_HY_PC.wav",
+      "source_start": 16.745,
+      "source_end": 17.445,
+      "sha256": "94c5fc3bb3d503c15bd334229d370f2975d481982e3c0698e5aa7ff144d17a99"
+    },
+    {
+      "event": "weapon.lightning.crit",
+      "file": "lightning/crit_02.wav",
+      "source": "DSGNMisc_SKILL IMPACT-Jacobs Ladder_HY_PC.wav",
+      "source_start": 0.495,
+      "source_end": 1.195,
+      "sha256": "02aede704dc3f43e30beffa5100ff1279a3a00d04a5246c82dc3c98ef20efdd0"
+    },
+    {
+      "event": "weapon.bow.hit",
+      "file": "bow/hit_00.wav",
+      "source": "FGHTImpt_HIT-Strong Smack_HY_PC.wav",
+      "source_start": 0.495,
+      "source_end": 0.74,
+      "sha256": "a9a1e79b26a8f403213331bd790bae48ae11356560b69568da60c2de92b14c1a"
+    },
+    {
+      "event": "weapon.bow.hit",
+      "file": "bow/hit_01.wav",
+      "source": "FGHTImpt_HIT-Strong Smack_HY_PC.wav",
+      "source_start": 20.735,
+      "source_end": 21.02,
+      "sha256": "b20d69fa11f0d56ce86d022315d9f1432c5feb5beed87f969a8088d420fd7705"
+    },
+    {
+      "event": "weapon.bow.hit",
+      "file": "bow/hit_02.wav",
+      "source": "FGHTImpt_HIT-Strong Smack_HY_PC.wav",
+      "source_start": 12.725,
+      "source_end": 13.01,
+      "sha256": "0d81159df264c39ac9b72a747cf3f773c34b29ac4b878b3ea6a1ee97081e8688"
+    },
+    {
+      "event": "weapon.bow.hit",
+      "file": "bow/hit_03.wav",
+      "source": "FGHTImpt_HIT-Strong Smack_HY_PC.wav",
+      "source_start": 16.745,
+      "source_end": 17.03,
+      "sha256": "9013bd42b655de17160dd8099c1a9f8d3998e71a12724891f626e11a9e4f35a3"
+    },
+    {
+      "event": "weapon.bow.crit",
+      "file": "bow/crit_00.wav",
+      "source": "DSGNMisc_SKILL IMPACT-Critical Strike_HY_PC.wav",
+      "source_start": 16.735,
+      "source_end": 17.235,
+      "sha256": "7bac97df684468ef5965c03e555ac5ac20c9027ab077192a80797df612302693"
+    },
+    {
+      "event": "weapon.bow.crit",
+      "file": "bow/crit_01.wav",
+      "source": "DSGNMisc_SKILL IMPACT-Critical Strike_HY_PC.wav",
+      "source_start": 20.745,
+      "source_end": 21.245,
+      "sha256": "d74d1d4c8dfb077d0cfe4bce12acac725697f5ddd60a4c421662140d0260a9e9"
+    },
+    {
+      "event": "weapon.bow.crit",
+      "file": "bow/crit_02.wav",
+      "source": "DSGNMisc_SKILL IMPACT-Critical Strike_HY_PC.wav",
+      "source_start": 0.495,
+      "source_end": 0.995,
+      "sha256": "ceacc3a37d8a583270145adfeffc07dbc5755a34998ab87468d4a505706b7a4e"
+    },
+    {
+      "event": "weapon.revolver.hit",
+      "file": "revolver/hit_00.wav",
+      "source": "DSGNMisc_HIT-Hit Rattle_HY_PC.wav",
+      "source_start": 12.745,
+      "source_end": 13.045,
+      "sha256": "f48279adaac71f74810cdd98ab2d494d639e60f5be47dd9cf7a9522e208d7f70"
+    },
+    {
+      "event": "weapon.revolver.hit",
+      "file": "revolver/hit_01.wav",
+      "source": "DSGNMisc_HIT-Hit Rattle_HY_PC.wav",
+      "source_start": 20.745,
+      "source_end": 21.045,
+      "sha256": "39acc48fceb8ac40df8b33cbef3d29b23f984188c4ea2ac61182c47b4a6346b4"
+    },
+    {
+      "event": "weapon.revolver.hit",
+      "file": "revolver/hit_02.wav",
+      "source": "DSGNMisc_HIT-Hit Rattle_HY_PC.wav",
+      "source_start": 16.745,
+      "source_end": 16.95,
+      "sha256": "214693cf1d48964cf025216345f1a0c48cd55deb7a183cd97d07da39d85c8ff9"
+    },
+    {
+      "event": "weapon.revolver.hit",
+      "file": "revolver/hit_03.wav",
+      "source": "DSGNMisc_HIT-Hit Rattle_HY_PC.wav",
+      "source_start": 0.495,
+      "source_end": 0.795,
+      "sha256": "508b6b6ff4f9edc2fad505afa1c2abc44e779e3d05730ad26894256cebe90cd5"
+    },
+    {
+      "event": "weapon.revolver.ricochet",
+      "file": "revolver/ricochet_00.wav",
+      "source": "DSGNTonl_SKILL RELEASE-Ricochet 2_HY_PC.wav",
+      "source_start": 4.915,
+      "source_end": 5.415,
+      "sha256": "8b49007cc47d7cccf02b2a691eb308c7f93580cbab3b450c3d2b6f65705bae6f"
+    },
+    {
+      "event": "weapon.revolver.ricochet",
+      "file": "revolver/ricochet_01.wav",
+      "source": "DSGNTonl_SKILL RELEASE-Ricochet 1_HY_PC.wav",
+      "source_start": 4.915,
+      "source_end": 5.4,
+      "sha256": "844ed0dff5230273ba1daf8bb0747da23f704c1be6474415bcf916387ad9807e"
+    },
+    {
+      "event": "weapon.revolver.ricochet",
+      "file": "revolver/ricochet_02.wav",
+      "source": "DSGNTonl_SKILL RELEASE-Ricochet 1_HY_PC.wav",
+      "source_start": 12.915,
+      "source_end": 13.39,
+      "sha256": "7d9d22ab9ba607bbda70d457f97008f23944dba6a258688ad640b63f59a3bccc"
+    },
+    {
+      "event": "weapon.revolver.ricochet",
+      "file": "revolver/ricochet_03.wav",
+      "source": "DSGNTonl_SKILL RELEASE-Ricochet 1_HY_PC.wav",
+      "source_start": 20.905,
+      "source_end": 21.405,
+      "sha256": "bc2682723be6b215e0a2453990f4fac6541190e0d3a493c9c5e970285f4b3c31"
+    },
+    {
+      "event": "weapon.revolver.crit",
+      "file": "revolver/crit_00.wav",
+      "source": "FGHTImpt_MELEE-Kick Critical_HY_PC.wav",
+      "source_start": 16.745,
+      "source_end": 17.16,
+      "sha256": "7a01511cee02c492614d1f4bee20fe8442f7990b627c8d1308cf63a87da6a08d"
+    },
+    {
+      "event": "weapon.revolver.crit",
+      "file": "revolver/crit_01.wav",
+      "source": "FGHTImpt_MELEE-Kick Critical_HY_PC.wav",
+      "source_start": 20.745,
+      "source_end": 21.12,
+      "sha256": "bdd23e886c17a74ae6a5f6af613f3dcaffeaaeaac26283b26802decc647661d9"
+    },
+    {
+      "event": "weapon.revolver.crit",
+      "file": "revolver/crit_02.wav",
+      "source": "FGHTImpt_MELEE-Kick Critical_HY_PC.wav",
+      "source_start": 8.745,
+      "source_end": 9.12,
+      "sha256": "c0ad85e84d6170690c9f7a0329bdc2e6b82d1bcfadd893972f3a6bd1f4917809"
+    },
+    {
+      "event": "weapon.aura.hum",
+      "file": "aura/hum_00.wav",
+      "source": "MAGSpel_CAST-Underwater_HY_PC.wav",
+      "source_start": 12.495,
+      "source_end": 13.95,
+      "sha256": "0e74753abf6f597ef939812c62580ba75910c05cc31b94c036b9ee2a63761532"
+    },
+    {
+      "event": "weapon.aura.hum",
+      "file": "aura/hum_01.wav",
+      "source": "MAGSpel_CAST-Underwater_HY_PC.wav",
+      "source_start": 4.495,
+      "source_end": 6.04,
+      "sha256": "bf7f38a9f1127ca7114f58316acc1a85f4167bddceb8c291d8a02e609dd98d8b"
+    },
+    {
+      "event": "weapon.aura.crit",
+      "file": "aura/crit_00.wav",
+      "source": "MAGSpel_CAST-Weirdness_HY_PC.wav",
+      "source_start": 4.505,
+      "source_end": 5.105,
+      "sha256": "9d59b4e6796c3e2c3eb7acabed9620d37523d462d16baedf943261c6d87d1c74"
+    },
+    {
+      "event": "weapon.aura.crit",
+      "file": "aura/crit_01.wav",
+      "source": "MAGSpel_CAST-Weirdness_HY_PC.wav",
+      "source_start": 20.505,
+      "source_end": 21.105,
+      "sha256": "9d22e179295f365783de35f187fbfbef4b13b1e01f644775ace5043d69441058"
+    },
+    {
+      "event": "weapon.scythes.hit",
+      "file": "scythes/hit_00.wav",
+      "source": "DSGNMisc_HIT-Swish Clap_HY_PC.wav",
+      "source_start": 12.605,
+      "source_end": 12.955,
+      "sha256": "5ce2d71a9f5e6f532b7e0bfff25c5da0333f8251c84f03e08bfb914f6ce0ed59"
+    },
+    {
+      "event": "weapon.scythes.hit",
+      "file": "scythes/hit_01.wav",
+      "source": "DSGNMisc_HIT-Sweep Hit_HY_PC.wav",
+      "source_start": 16.895,
+      "source_end": 17.245,
+      "sha256": "39810b712fea5426b77077925fb12fe1d27fdd75cffdf8b846b259e57f8bb0ba"
+    },
+    {
+      "event": "weapon.scythes.hit",
+      "file": "scythes/hit_02.wav",
+      "source": "DSGNMisc_HIT-Swish Clap_HY_PC.wav",
+      "source_start": 16.615,
+      "source_end": 16.965,
+      "sha256": "0345bb8459a0f8508e8327540dc14eeb53c67bc840721d8221c4c58c8675e763"
+    },
+    {
+      "event": "weapon.scythes.hit",
+      "file": "scythes/hit_03.wav",
+      "source": "DSGNMisc_HIT-Swish Clap_HY_PC.wav",
+      "source_start": 8.605,
+      "source_end": 8.955,
+      "sha256": "48529803523fec7ec4ba9ad7033013b0f2082ccc701d16210507f8486d80da74"
+    },
+    {
+      "event": "weapon.scythes.catch",
+      "file": "scythes/catch_00.wav",
+      "source": "DSGNMisc_HIT-Fleeting Hit_HY_PC.wav",
+      "source_start": 0.655,
+      "source_end": 0.955,
+      "sha256": "01694a2bf675d8ed6a5281efd9be3143bd31590f50406be24ba4316a3c5c0003"
+    },
+    {
+      "event": "weapon.scythes.catch",
+      "file": "scythes/catch_01.wav",
+      "source": "DSGNMisc_HIT-Fleeting Hit_HY_PC.wav",
+      "source_start": 16.915,
+      "source_end": 17.215,
+      "sha256": "0c671e04fecdf24604252e3de19ff575e60d1140f77ae5edf2b0cd517c2764dc"
+    },
+    {
+      "event": "weapon.scythes.catch",
+      "file": "scythes/catch_02.wav",
+      "source": "DSGNMisc_HIT-Fleeting Hit_HY_PC.wav",
+      "source_start": 4.915,
+      "source_end": 5.215,
+      "sha256": "ae01c4caa83e119cd1eac3ec92f19a5cfa852f649d83ecb1d674b328e3062d0e"
+    },
+    {
+      "event": "weapon.scythes.crit",
+      "file": "scythes/crit_00.wav",
+      "source": "DSGNImpt_MELEE-Homerunner_HY_PC.wav",
+      "source_start": 0.495,
+      "source_end": 1.095,
+      "sha256": "972812b89caeeabda8b70b2ffd40ac22b7f221a05db2e2b2b93e255515dcf31b"
+    },
+    {
+      "event": "weapon.scythes.crit",
+      "file": "scythes/crit_01.wav",
+      "source": "DSGNImpt_MELEE-Homerunner_HY_PC.wav",
+      "source_start": 8.745,
+      "source_end": 9.345,
+      "sha256": "c42efba0720fedc975c29c6a0f866bdc504649e0377f743723473c6d519a9804"
+    },
+    {
+      "event": "weapon.scythes.crit",
+      "file": "scythes/crit_02.wav",
+      "source": "DSGNImpt_MELEE-Homerunner_HY_PC.wav",
+      "source_start": 12.745,
+      "source_end": 13.345,
+      "sha256": "dc47c9b9c03b50a7ffb7a47856e383af9d79b5885dadb1e24cb4d1c281f7cedb"
+    },
+    {
+      "event": "weapon.shotgun.fire",
+      "file": "shotgun/fire_00.wav",
+      "source": "DSGNImpt_EXPLOSION-Mecha Engine Blast_HY_PC.wav",
+      "source_start": 20.495,
+      "source_end": 21.395,
+      "sha256": "592ec92ccf36a042ab99a8a6465a2d968c41147cb0a0d12a80a965d3f3710ed7"
+    },
+    {
+      "event": "weapon.shotgun.fire",
+      "file": "shotgun/fire_01.wav",
+      "source": "DSGNImpt_EXPLOSION-Mecha Engine Blast_HY_PC.wav",
+      "source_start": 12.495,
+      "source_end": 13.395,
+      "sha256": "0e2a937c3be9161a898401148b822acc03ba0fbf462341863c6c0f42e16d9a3e"
+    },
+    {
+      "event": "weapon.shotgun.fire",
+      "file": "shotgun/fire_02.wav",
+      "source": "DSGNImpt_EXPLOSION-Mecha Engine Blast_HY_PC.wav",
+      "source_start": 4.495,
+      "source_end": 5.395,
+      "sha256": "21ba6670a1fb1b61cf22e0074a0b00281ae8ec98e54f491f68dca7ef1fb194d2"
+    },
+    {
+      "event": "weapon.shotgun.fire",
+      "file": "shotgun/fire_03.wav",
+      "source": "DSGNImpt_EXPLOSION-Eruption_HY_PC.wav",
+      "source_start": 4.495,
+      "source_end": 5.395,
+      "sha256": "8b85e371fbad051768121308d62004e0d70da5820ad51cf0906a40bac37de481"
+    },
+    {
+      "event": "weapon.shotgun.fire",
+      "file": "shotgun/fire_04.wav",
+      "source": "DSGNImpt_EXPLOSION-Eruption_HY_PC.wav",
+      "source_start": 12.495,
+      "source_end": 13.395,
+      "sha256": "d3ea510792b09fc8b1a1fbd36811c45dc3557c94628fcdf55cabdb831d713bc0"
+    },
+    {
+      "event": "weapon.shotgun.hit",
+      "file": "shotgun/hit_00.wav",
+      "source": "FGHTImpt_HIT-Strong Punch_HY_PC.wav",
+      "source_start": 12.745,
+      "source_end": 13.045,
+      "sha256": "f5ce4eb02e6a9dfd1659f5c093a44b7cd2a2208e0c95653c421385fe48103aee"
+    },
+    {
+      "event": "weapon.shotgun.hit",
+      "file": "shotgun/hit_01.wav",
+      "source": "FGHTImpt_HIT-Strong Punch_HY_PC.wav",
+      "source_start": 16.745,
+      "source_end": 17.045,
+      "sha256": "347b6a93eb33e738b0307a33450e00ab3454fb632f9b4237a468e39e4087d702"
+    },
+    {
+      "event": "weapon.shotgun.hit",
+      "file": "shotgun/hit_02.wav",
+      "source": "FGHTImpt_HIT-Strong Punch_HY_PC.wav",
+      "source_start": 20.745,
+      "source_end": 21.045,
+      "sha256": "b0df26a7d8f5f37f6afef5437634c8ed15a672fa68a42e94e4fe9c22aeabcee5"
+    },
+    {
+      "event": "weapon.shotgun.hit",
+      "file": "shotgun/hit_03.wav",
+      "source": "FGHTImpt_HIT-Strong Punch_HY_PC.wav",
+      "source_start": 0.495,
+      "source_end": 0.795,
+      "sha256": "354df346d20df664a5409d0671b8d1225d4651296fd38192bfa50747f900ccea"
+    },
+    {
+      "event": "weapon.shotgun.crit",
+      "file": "shotgun/crit_00.wav",
+      "source": "DSGNImpt_EXPLOSION-Mecha Piercing Punch_HY_PC.wav",
+      "source_start": 16.495,
+      "source_end": 16.995,
+      "sha256": "1025dad1bc9cd47d4bba970cdb93ec0f79bf0f9c28db92a7102cc5f052dc20d9"
+    },
+    {
+      "event": "weapon.shotgun.crit",
+      "file": "shotgun/crit_01.wav",
+      "source": "DSGNImpt_EXPLOSION-Mecha Piercing Punch_HY_PC.wav",
+      "source_start": 4.495,
+      "source_end": 4.995,
+      "sha256": "e722c244a3bd58223da922368fce36000b2ef0a120a5348b86747c1ede20f31f"
+    },
+    {
+      "event": "weapon.shotgun.crit",
+      "file": "shotgun/crit_02.wav",
+      "source": "DSGNImpt_EXPLOSION-Mecha Piercing Punch_HY_PC.wav",
+      "source_start": 0.495,
+      "source_end": 0.995,
+      "sha256": "1459092bae060febae06f7b82ae1d211422fb6d8b9b10c923cc01ca38a9ebc1c"
+    }
+  ],
+  "retired_by_fog_pack": {
+    "note": "Fog audio pack integration (feature/audio-integration, step 6): these curated Pixel Combat weapon clips were replaced by assets/audio/fog and deleted. Crit events and status/vase/powerup/pickup/ambience sounds keep their Pixel Combat or legacy clips.",
+    "files_removed": [
+      "assets/audio/sfx/weapon/aura/hum_00.wav",
+      "assets/audio/sfx/weapon/aura/hum_01.wav",
+      "assets/audio/sfx/weapon/aura/pulse_00.wav",
+      "assets/audio/sfx/weapon/aura/pulse_01.wav",
+      "assets/audio/sfx/weapon/aura/pulse_02.wav",
+      "assets/audio/sfx/weapon/bow/fire_00.wav",
+      "assets/audio/sfx/weapon/bow/fire_01.wav",
+      "assets/audio/sfx/weapon/bow/fire_02.wav",
+      "assets/audio/sfx/weapon/bow/hit_00.wav",
+      "assets/audio/sfx/weapon/bow/hit_01.wav",
+      "assets/audio/sfx/weapon/bow/hit_02.wav",
+      "assets/audio/sfx/weapon/bow/hit_03.wav",
+      "assets/audio/sfx/weapon/firestaff/cast_00.wav",
+      "assets/audio/sfx/weapon/firestaff/cast_01.wav",
+      "assets/audio/sfx/weapon/firestaff/cast_02.wav",
+      "assets/audio/sfx/weapon/firestaff/cast_03.wav",
+      "assets/audio/sfx/weapon/firestaff/impact_00.wav",
+      "assets/audio/sfx/weapon/firestaff/impact_01.wav",
+      "assets/audio/sfx/weapon/firestaff/impact_02.wav",
+      "assets/audio/sfx/weapon/firestaff/impact_03.wav",
+      "assets/audio/sfx/weapon/lightning/chain_00.wav",
+      "assets/audio/sfx/weapon/lightning/chain_01.wav",
+      "assets/audio/sfx/weapon/lightning/chain_02.wav",
+      "assets/audio/sfx/weapon/lightning/chain_03.wav",
+      "assets/audio/sfx/weapon/lightning/strike_00.wav",
+      "assets/audio/sfx/weapon/lightning/strike_01.wav",
+      "assets/audio/sfx/weapon/lightning/strike_02.wav",
+      "assets/audio/sfx/weapon/lightning/strike_03.wav",
+      "assets/audio/sfx/weapon/lightning/strike_04.wav",
+      "assets/audio/sfx/weapon/lightning/thunder_00.wav",
+      "assets/audio/sfx/weapon/lightning/thunder_01.wav",
+      "assets/audio/sfx/weapon/lightning/thunder_02.wav",
+      "assets/audio/sfx/weapon/revolver/fire_00.wav",
+      "assets/audio/sfx/weapon/revolver/fire_01.wav",
+      "assets/audio/sfx/weapon/revolver/fire_02.wav",
+      "assets/audio/sfx/weapon/revolver/fire_03.wav",
+      "assets/audio/sfx/weapon/revolver/fire_04.wav",
+      "assets/audio/sfx/weapon/revolver/fire_05.wav",
+      "assets/audio/sfx/weapon/revolver/hit_00.wav",
+      "assets/audio/sfx/weapon/revolver/hit_01.wav",
+      "assets/audio/sfx/weapon/revolver/hit_02.wav",
+      "assets/audio/sfx/weapon/revolver/hit_03.wav",
+      "assets/audio/sfx/weapon/revolver/ricochet_00.wav",
+      "assets/audio/sfx/weapon/revolver/ricochet_01.wav",
+      "assets/audio/sfx/weapon/revolver/ricochet_02.wav",
+      "assets/audio/sfx/weapon/revolver/ricochet_03.wav",
+      "assets/audio/sfx/weapon/scythes/catch_00.wav",
+      "assets/audio/sfx/weapon/scythes/catch_01.wav",
+      "assets/audio/sfx/weapon/scythes/catch_02.wav",
+      "assets/audio/sfx/weapon/scythes/hit_00.wav",
+      "assets/audio/sfx/weapon/scythes/hit_01.wav",
+      "assets/audio/sfx/weapon/scythes/hit_02.wav",
+      "assets/audio/sfx/weapon/scythes/hit_03.wav",
+      "assets/audio/sfx/weapon/scythes/throw_00.wav",
+      "assets/audio/sfx/weapon/scythes/throw_01.wav",
+      "assets/audio/sfx/weapon/scythes/throw_02.wav",
+      "assets/audio/sfx/weapon/shotgun/fire_00.wav",
+      "assets/audio/sfx/weapon/shotgun/fire_01.wav",
+      "assets/audio/sfx/weapon/shotgun/fire_02.wav",
+      "assets/audio/sfx/weapon/shotgun/fire_03.wav",
+      "assets/audio/sfx/weapon/shotgun/fire_04.wav",
+      "assets/audio/sfx/weapon/shotgun/hit_00.wav",
+      "assets/audio/sfx/weapon/shotgun/hit_01.wav",
+      "assets/audio/sfx/weapon/shotgun/hit_02.wav",
+      "assets/audio/sfx/weapon/shotgun/hit_03.wav",
+      "assets/audio/sfx/weapon/sword/hit_00.wav",
+      "assets/audio/sfx/weapon/sword/hit_01.wav",
+      "assets/audio/sfx/weapon/sword/hit_02.wav",
+      "assets/audio/sfx/weapon/sword/hit_03.wav",
+      "assets/audio/sfx/weapon/sword/swing_00.wav",
+      "assets/audio/sfx/weapon/sword/swing_01.wav",
+      "assets/audio/sfx/weapon/sword/swing_02.wav",
+      "assets/audio/sfx/weapon/sword/swing_03.wav"
+    ]
+  }
+}

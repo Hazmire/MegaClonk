@@ -11,7 +11,7 @@ func run():
  game.pause_menu();await process_frame
  game.frontend.inventory();await process_frame
  game.gold=100;game.frontend.shop({"tier":"Common","offers":[1],"used":false,"sold":[]});await process_frame
- game.frontend.reward(Catalog.ITEMS[10]);await create_timer(0.2).timeout
+ game.frontend.reward("hourglass_damned");await create_timer(0.2).timeout
  game.frontend.chest_skip.call();await process_frame
  game.grant_red_level();game.resume();await process_frame
  game.queue_free();await process_frame;await process_frame

@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Megaclonk — Unlocks: items</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&amp;family=IM+Fell+English&amp;family=Overpass:wght@400;600;800&amp;family=Special+Elite&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#8D9188}a:hover{color:#F4EFE2}
+</style>
+</helmet>
+<div style="width: 1920px; height: 1080px; position: relative; overflow: hidden; font-family: 'Overpass', sans-serif; color: #E8E2D0; background-color: #8C978F; background-image: repeating-conic-gradient(#8F9A92 0 25%, #87928A 0 50%); background-size: 16px 16px">
+
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; bottom: 0; height: 520px; background-color: #1F2620; background-image: repeating-conic-gradient(#212821 0 25%, #1C221D 0 50%); background-size: 16px 16px"></div>
+<div aria-hidden="true" style="position: absolute; inset: 0; background: rgba(10,11,10,0.86)"></div>
+<div aria-hidden="true" style="position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.6) 100%)"></div>
+
+<header style="position: absolute; left: 120px; right: 110px; top: 72px; display: flex; align-items: flex-end; justify-content: space-between">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<h1 style="margin: 0; font-family: 'IM Fell English', serif; font-weight: 400; font-size: 72px; line-height: 1; text-shadow: 3px 3px 0 #050505">Unlocks &amp; collection</h1>
+<div style="display: flex; align-items: center; gap: 16px">
+<div aria-hidden="true" style="width: 48px; height: 6px; background: #7E1820"></div>
+<span style="font-weight: 600; font-size: 17px; letter-spacing: 0.3em; color: #A9ADA4">ENABLED ENTRIES CAN APPEAR IN RUNS</span>
+</div>
+</div>
+<div style="display: flex; align-items: center; gap: 40px">
+<div style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px">
+<span style="font-weight: 600; font-size: 15px; letter-spacing: 0.3em; color: #8D9188">SILVER</span>
+<span style="font-weight: 800; font-size: 42px; line-height: 1; font-variant-numeric: tabular-nums; color: #F4EFE2">452</span>
+</div>
+<button type="button" style="display: flex; align-items: center; gap: 16px; height: 60px; padding: 0 22px; border: 1px solid #4A4D47; background: transparent; cursor: pointer; font-family: 'IM Fell English', serif; font-size: 30px; color: #D9D4C4">Home<span style="font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 14px; letter-spacing: 0.2em; color: #8D9188">ESC</span></button>
+</div>
+</header>
+
+<nav aria-label="Collection categories" style="position: absolute; left: 120px; top: 232px; display: flex; gap: 40px; border-bottom: 1px solid #3A3D38; width: 1690px">
+<a href="Fog-Unlocks-Weapons.dc.html" style="display: flex; align-items: center; height: 52px; box-sizing: border-box; border-bottom: 4px solid transparent; text-decoration: none; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 18px; letter-spacing: 0.26em">WEAPONS</a>
+<a href="Fog-Unlocks.dc.html" style="display: flex; align-items: center; height: 52px; box-sizing: border-box; border-bottom: 4px solid transparent; text-decoration: none; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 18px; letter-spacing: 0.26em">TOMES</a>
+<button type="button" style="height: 52px; padding: 0; border: none; border-bottom: 4px solid transparent; background: transparent; cursor: pointer; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 18px; letter-spacing: 0.26em; color: #8D9188">TRAITS</button>
+<span aria-current="page" style="display: flex; align-items: center; height: 52px; box-sizing: border-box; border-bottom: 4px solid #7E1820; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 18px; letter-spacing: 0.26em; color: #F4EFE2">ITEMS</span>
+<button type="button" style="height: 52px; padding: 0; border: none; border-bottom: 4px solid transparent; background: transparent; cursor: pointer; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 18px; letter-spacing: 0.26em; color: #8D9188">ULTIMATES</button>
+<span style="margin-left: auto; display: flex; align-items: center; gap: 10px; height: 52px; font-weight: 800; font-size: 15px; letter-spacing: 0.2em; color: #8D9188">FOUND <b style="font-size: 22px; color: #F4EFE2; font-variant-numeric: tabular-nums">{{foundCount}}</b> / 60</span>
+</nav>
+
+<div style="position: absolute; left: 120px; top: 312px; width: 1000px; display: flex; flex-direction: column; gap: 18px">
+<div role="group" aria-label="Filter by tier" style="display: flex; gap: 8px; flex-wrap: wrap">
+<sc-for list="{{filters}}" as="f" hint-placeholder-count="6">
+<button type="button" onClick="{{f.pick}}" aria-pressed="{{f.on}}" style="display: flex; align-items: center; gap: 8px; height: 38px; padding: 0 12px; cursor: pointer; background: {{f.bg}}; border: 1px solid {{f.border}}; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 13px; letter-spacing: 0.16em; color: {{f.color}}"><span aria-hidden="true" style="width: 10px; height: 10px; background: {{f.dot}}"></span>{{f.label}}<span style="color: {{f.countColor}}">{{f.count}}</span></button>
+</sc-for>
+</div>
+<div style="display: grid; grid-template-columns: repeat(10, 88px); gap: 12px; align-content: start">
+<sc-for list="{{items}}" as="it" hint-placeholder-count="60">
+<button type="button" onClick="{{it.pick}}" aria-pressed="{{it.selected}}" aria-label="{{it.n}}" title="{{it.n}}" style="position: relative; width: 88px; height: 88px; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; background: {{it.bg}}; border: {{it.border}}; box-shadow: {{it.shadow}}">
+<img src="{{it.src}}" alt="" style="width: 64px; height: 64px; image-rendering: pixelated; filter: {{it.filter}}; opacity: {{it.opacity}}">
+<span aria-hidden="true" style="position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: {{it.tierColor}}; opacity: {{it.barOpacity}}"></span>
+<sc-if value="{{it.l}}" hint-placeholder-val="{{ false }}"><svg aria-hidden="true" style="position: absolute; right: 5px; top: 5px" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8D9188" stroke-width="2.5"><rect x="5" y="11" width="14" height="10"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg></sc-if>
+<sc-if value="{{it.isOff}}" hint-placeholder-val="{{ false }}"><span style="position: absolute; right: 4px; top: 4px; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 9px; letter-spacing: 0.14em; padding: 2px 4px 0; border: 1px solid #6A6D66; color: #A9ADA4; background: #0E0F0E">OFF</span></sc-if>
+</button>
+</sc-for>
+</div>
+<div style="display: flex; gap: 24px; font-weight: 600; font-size: 13px; letter-spacing: 0.16em; color: #6E726A">
+<span style="display: flex; align-items: center; gap: 8px"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="11" width="14" height="10"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>LOCKED</span>
+<span>BAR COLOUR = RARITY</span>
+</div>
+</div>
+
+<section aria-live="polite" aria-label="Selected item" style="position: absolute; left: 1180px; top: 320px; width: 630px; min-height: 560px; box-sizing: border-box; padding: 36px 40px 32px; background: #D3CBB2; color: #1C1A15; font-family: 'Special Elite', monospace; transform: rotate(0.7deg); box-shadow: 6px 8px 0 rgba(0,0,0,0.55); display: flex; flex-direction: column; gap: 18px">
+<div aria-hidden="true" style="position: absolute; top: -14px; left: 50%; width: 96px; height: 28px; margin-left: -48px; background: rgba(232,226,208,0.7); transform: rotate(-3deg)"></div>
+<div style="display: flex; align-items: center; gap: 24px">
+<div style="flex: none; width: 152px; height: 152px; display: flex; align-items: center; justify-content: center; background: #0E0F0E; border: 4px solid {{sel.tierColor}}; box-shadow: {{sel.glow}}"><img src="{{sel.src}}" alt="" style="width: 128px; height: 128px; image-rendering: pixelated; filter: {{sel.filter}}"></div>
+<div style="display: flex; flex-direction: column; gap: 10px; min-width: 0">
+<div style="display: flex; gap: 8px; flex-wrap: wrap">
+<span style="font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 12px; letter-spacing: 0.24em; padding: 4px 8px 2px; background: {{sel.tierColor}}; color: {{sel.tierOn}}">{{sel.tierLabel}}</span>
+</div>
+<h2 style="margin: 0; font-weight: 400; font-size: 36px; line-height: 1.05">{{sel.n}}</h2>
+<span style="font-family: 'Overpass', sans-serif; font-weight: 600; font-size: 13px; letter-spacing: 0.18em; color: #5A5446">{{sel.weight}} DROP WEIGHT</span>
+</div>
+</div>
+<p style="margin: 0; font-size: 20px; line-height: 1.45; color: #2E2A22">{{sel.f}}</p>
+<sc-if value="{{sel.hasNeeds}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 2px dashed {{sel.needColor}}; font-size: 16px; color: #2E2A22"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16"><path d="M8 1 15 8 8 15 1 8z" fill="{{sel.needColor}}"></path></svg>Does nothing until you own the {{sel.needText}}.</div>
+</sc-if>
+<sc-if value="{{sel.u}}" hint-placeholder-val="{{ false }}"><span style="align-self: flex-start; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 16px; letter-spacing: 0.24em; color: #8A5A0E; border: 3px solid #8A5A0E; padding: 5px 12px 3px; transform: rotate(-3deg)">UNIQUE · ONCE PER RUN</span></sc-if>
+<div style="height: 0; border-top: 1px dashed #8F876F"></div>
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 12px">
+<sc-if value="{{sel.l}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<span style="align-self: flex-start; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 18px; letter-spacing: 0.24em; color: #8E1B22; border: 3px solid #8E1B22; padding: 5px 14px 3px; transform: rotate(-4deg)">LOCKED</span>
+<p style="margin: 0; font-size: 17px; color: #4A453A">To unlock: [UNLOCK CONDITION OR SILVER COST]</p>
+</div>
+</sc-if>
+<sc-if value="{{sel.unlocked}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 20px">
+<span style="font-size: 18px; color: #4A453A">Appears in vases, chests and shops</span>
+<button type="button" onClick="{{toggle}}" aria-pressed="{{sel.isOn}}" style="display: flex; padding: 0; border: 2px solid #1C1A15; background: transparent; cursor: pointer; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 15px; letter-spacing: 0.22em">
+<span style="padding: 10px 16px 8px; background: {{sel.onBg}}; color: {{sel.onColor}}">ON</span>
+<span style="padding: 10px 16px 8px; background: {{sel.offBg}}; color: {{sel.offColor}}">OFF</span>
+</button>
+</div>
+</sc-if>
+</div>
+</section>
+
+<div style="position: absolute; right: 110px; bottom: 32px; display: flex; gap: 32px; font-weight: 600; font-size: 15px; letter-spacing: 0.18em; color: #8D9188">
+<span><b style="color: #E8E2D0">Q / E</b>  CATEGORY</span>
+<span><b style="color: #E8E2D0">TAB</b>  RARITY</span>
+<span><b style="color: #E8E2D0">ENTER</b>  TOGGLE</span>
+<span><b style="color: #E8E2D0">ESC</b>  HOME</span>
+</div>
+
+<div aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.16) 0px, rgba(0,0,0,0.16) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px)"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1920,"height":1080}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { sel: 'tinder_pouch', filter: 'all', off: { bitter_wine: true, mourners_veil: true } };
+  }
+  renderVals() {
+    var B = '';
+    var DATA = [{"id": "whetstone", "n": "Whetstone", "t": "common", "f": "+10% damage.", "nd": "", "u": false, "i": "../icons_4x/items/whetstone.png", "l": false}, {"id": "pilgrims_sandals", "n": "Pilgrim's Sandals", "t": "common", "f": "+8% movement speed.", "nd": "", "u": false, "i": "../icons_4x/items/pilgrims_sandals.png", "l": false}, {"id": "knucklebone", "n": "Gambler's Knucklebone", "t": "common", "f": "+5% crit chance.", "nd": "", "u": false, "i": "../icons_4x/items/knucklebone.png", "l": false}, {"id": "salted_pork", "n": "Salted Pork", "t": "common", "f": "+20 max HP.", "nd": "", "u": false, "i": "../icons_4x/items/salted_pork.png", "l": false}, {"id": "tallow_candle", "n": "Tallow Candle", "t": "common", "f": "+2 HP regen per second.", "nd": "", "u": false, "i": "../icons_4x/items/tallow_candle.png", "l": false}, {"id": "flagellants_cord", "n": "Flagellant's Cord", "t": "common", "f": "+10% attack speed.", "nd": "", "u": false, "i": "../icons_4x/items/flagellants_cord.png", "l": false}, {"id": "tithe_purse", "n": "Tithe Purse", "t": "common", "f": "+15% gold from kills.", "nd": "", "u": false, "i": "../icons_4x/items/tithe_purse.png", "l": false}, {"id": "bone_reliquary", "n": "Bone Reliquary", "t": "common", "f": "+8% XP gain.", "nd": "", "u": false, "i": "../icons_4x/items/bone_reliquary.png", "l": false}, {"id": "crowsfoot_charm", "n": "Crowsfoot Charm", "t": "common", "f": "+12% evasion, with diminishing returns.", "nd": "", "u": false, "i": "../icons_4x/items/crowsfoot_charm.png", "l": false}, {"id": "executioners_hood", "n": "Executioner's Hood", "t": "common", "f": "+20% damage to enemies above 90% HP.", "nd": "", "u": false, "i": "../icons_4x/items/executioners_hood.png", "l": false}, {"id": "bounty_writ", "n": "Bounty Writ", "t": "common", "f": "+15% damage to elites and bosses.", "nd": "", "u": false, "i": "../icons_4x/items/bounty_writ.png", "l": false}, {"id": "rusted_key", "n": "Rusted Key", "t": "common", "f": "10% chance to open a chest for free.", "nd": "", "u": false, "i": "../icons_4x/items/rusted_key.png", "l": false}, {"id": "hermits_ember", "n": "Hermit's Ember", "t": "common", "f": "Standing still for 1 s heals 3% max HP per second.", "nd": "", "u": false, "i": "../icons_4x/items/hermits_ember.png", "l": false}, {"id": "mourners_veil", "n": "Mourner's Veil", "t": "common", "f": "+5% movement speed; +25% more for 2 s after taking damage.", "nd": "", "u": false, "i": "../icons_4x/items/mourners_veil.png", "l": false}, {"id": "gravediggers_spade", "n": "Gravedigger's Spade", "t": "common", "f": "Smashing a vase has a 15% chance to drop an extra pickup.", "nd": "", "u": false, "i": "../icons_4x/items/gravediggers_spade.png", "l": false}, {"id": "cracked_hourglass", "n": "Cracked Hourglass", "t": "common", "f": "Stopwatch power-up lasts +2 s.", "nd": "", "u": false, "i": "../icons_4x/items/cracked_hourglass.png", "l": false}, {"id": "rosary_teeth", "n": "Rosary of Teeth", "t": "common", "f": "+5% crit chance, +10% crit damage.", "nd": "", "u": false, "i": "../icons_4x/items/rosary_teeth.png", "l": false}, {"id": "grave_salt", "n": "Grave Salt", "t": "common", "f": "+15 max HP, +5% armour.", "nd": "", "u": false, "i": "../icons_4x/items/grave_salt.png", "l": false}, {"id": "hex_penny", "n": "Hex Penny", "t": "common", "f": "+20% gold from smashed vases.", "nd": "", "u": false, "i": "../icons_4x/items/hex_penny.png", "l": false}, {"id": "tinder_pouch", "n": "Tinder Pouch", "t": "uncommon", "f": "Burning enemies take +15% damage from all sources.", "nd": "FIRE GEM", "u": false, "i": "../icons_4x/items/tinder_pouch.png", "l": false}, {"id": "rime_shard", "n": "Rime Shard", "t": "uncommon", "f": "Chill lasts 50% longer and Shatter radius +1 m.", "nd": "ICE GEM", "u": false, "i": "../icons_4x/items/rime_shard.png", "l": false}, {"id": "lepers_bell", "n": "Leper's Bell", "t": "uncommon", "f": "Corrosion stacks deal +20% damage.", "nd": "CORROSIVE GEM", "u": false, "i": "../icons_4x/items/lepers_bell.png", "l": false}, {"id": "lodestone", "n": "Lodestone", "t": "uncommon", "f": "Stunned enemies take +25% damage.", "nd": "ELECTRICITY GEM", "u": false, "i": "../icons_4x/items/lodestone.png", "l": false}, {"id": "plague_mask", "n": "Plague Doctor's Mask", "t": "uncommon", "f": "+20% damage to enemies suffering any status.", "nd": "", "u": false, "i": "../icons_4x/items/plague_mask.png", "l": false}, {"id": "brutes_gauntlet", "n": "Brute's Gauntlet", "t": "uncommon", "f": "+20% damage to enemies within close range.", "nd": "", "u": false, "i": "../icons_4x/items/brutes_gauntlet.png", "l": false}, {"id": "tax_ledger", "n": "Tax Collector's Ledger", "t": "uncommon", "f": "+2.5% damage for the rest of the run each time you open a chest.", "nd": "", "u": false, "i": "../icons_4x/items/tax_ledger.png", "l": false}, {"id": "bitter_wine", "n": "Skin of Bitter Wine", "t": "uncommon", "f": "+20% damage, −10% max HP.", "nd": "", "u": false, "i": "../icons_4x/items/bitter_wine.png", "l": false}, {"id": "hangmans_noose", "n": "Hangman's Noose", "t": "uncommon", "f": "Curses one non-boss enemy at a time, dealing 25% of its max HP per second.", "nd": "", "u": false, "i": "../icons_4x/items/hangmans_noose.png", "l": false}, {"id": "pyre_ashes", "n": "Pyre Ashes", "t": "uncommon", "f": "Kills have a 3% chance to drop roast meat that heals 15% HP.", "nd": "", "u": false, "i": "../icons_4x/items/pyre_ashes.png", "l": false}, {"id": "thunderstruck_nail", "n": "Thunderstruck Nail", "t": "uncommon", "f": "Taking damage releases a shock that stuns nearby enemies.", "nd": "", "u": false, "i": "../icons_4x/items/thunderstruck_nail.png", "l": false}, {"id": "restless_bones", "n": "Restless Bones", "t": "uncommon", "f": "Opening a chest or smashing a vase summons 2 wraiths that hunt enemies for 8 s.", "nd": "", "u": false, "i": "../icons_4x/items/restless_bones.png", "l": false}, {"id": "forgemasters_tongs", "n": "Forgemaster's Tongs", "t": "uncommon", "f": "Imbue Station costs 20% less gold.", "nd": "", "u": false, "i": "../icons_4x/items/forgemasters_tongs.png", "l": false}, {"id": "leaden_heart", "n": "Leaden Heart", "t": "uncommon", "f": "Heart power-up also grants +10% damage for 15 s.", "nd": "", "u": false, "i": "../icons_4x/items/leaden_heart.png", "l": false}, {"id": "ouija_planchette", "n": "Ouija Planchette", "t": "uncommon", "f": "3% chance a hit deals 10× damage.", "nd": "", "u": false, "i": "../icons_4x/items/ouija_planchette.png", "l": false}, {"id": "black_candle", "n": "Black Candle", "t": "uncommon", "f": "Enemies within 3 m take 5 damage per second.", "nd": "", "u": false, "i": "../icons_4x/items/black_candle.png", "l": false}, {"id": "bloodletting_knife", "n": "Bloodletting Knife", "t": "uncommon", "f": "+25% damage, −15 max HP.", "nd": "", "u": false, "i": "../icons_4x/items/bloodletting_knife.png", "l": false}, {"id": "pilgrims_pack", "n": "Pilgrim's Pack", "t": "rare", "f": "+1 projectile for all weapons.", "nd": "", "u": false, "i": "../icons_4x/items/pilgrims_pack.png", "l": false}, {"id": "saints_finger", "n": "Saint's Finger", "t": "rare", "f": "Every on-hit effect rolls one extra time.", "nd": "", "u": true, "i": "../icons_4x/items/saints_finger.png", "l": false}, {"id": "butchers_hook", "n": "Butcher's Hook", "t": "rare", "f": "Crits have a 15% chance to become Brutal Crits (a further ×2).", "nd": "", "u": false, "i": "../icons_4x/items/butchers_hook.png", "l": false}, {"id": "blood_chalice", "n": "Blood Chalice", "t": "rare", "f": "Crits have a 20% chance to heal 2% max HP.", "nd": "", "u": false, "i": "../icons_4x/items/blood_chalice.png", "l": false}, {"id": "shade_cloak", "n": "Shade Cloak", "t": "rare", "f": "After evading, your next hit deals ×2 damage and you gain attack and move speed for 3 s.", "nd": "", "u": false, "i": "../icons_4x/items/shade_cloak.png", "l": false}, {"id": "soul_lantern", "n": "Soul Lantern", "t": "rare", "f": "12% chance for a kill to drop an extra XP gem.", "nd": "", "u": false, "i": "../icons_4x/items/soul_lantern.png", "l": false}, {"id": "mire_flask", "n": "Mire Flask", "t": "rare", "f": "Hits on Corroded enemies have a 15% chance to leave a corrosive puddle.", "nd": "CORROSIVE GEM", "u": false, "i": "../icons_4x/items/mire_flask.png", "l": false}, {"id": "hound_whistle", "n": "Grave Hound Whistle", "t": "rare", "f": "Every 15 m you travel, a skeletal hound charges forward through enemies.", "nd": "", "u": false, "i": "../icons_4x/items/hound_whistle.png", "l": false}, {"id": "gem_loupe", "n": "Gem Cutter's Loupe", "t": "rare", "f": "Statuses from socketed gems last 30% longer and hit 30% harder.", "nd": "", "u": false, "i": "../icons_4x/items/gem_loupe.png", "l": true}, {"id": "alchemist_retort", "n": "Alchemist's Retort", "t": "rare", "f": "Elemental combos get +30% radius and 25% shorter cooldowns.", "nd": "", "u": false, "i": "../icons_4x/items/alchemist_retort.png", "l": true}, {"id": "cartographers_candle", "n": "Cartographer's Candle", "t": "rare", "f": "Reveals every vase, chest and the Imbue Station on the minimap.", "nd": "", "u": false, "i": "../icons_4x/items/cartographers_candle.png", "l": false}, {"id": "witch_bottle", "n": "Witch Bottle", "t": "rare", "f": "20% chance to ignore incoming damage entirely.", "nd": "", "u": false, "i": "../icons_4x/items/witch_bottle.png", "l": true}, {"id": "goat_skull", "n": "Goat Skull", "t": "rare", "f": "Killing a burning enemy has a 10% chance to Ignite every enemy within 3 m.", "nd": "", "u": false, "i": "../icons_4x/items/goat_skull.png", "l": false}, {"id": "witch_hunters_brand", "n": "Witch-Hunter's Brand", "t": "epic", "f": "Gain armour and lifesteal for every enemy currently burning.", "nd": "", "u": false, "i": "../icons_4x/items/witch_hunters_brand.png", "l": false}, {"id": "martyrs_shroud", "n": "Martyr's Shroud", "t": "epic", "f": "Damage rises as your HP falls, up to +60%.", "nd": "", "u": false, "i": "../icons_4x/items/martyrs_shroud.png", "l": true}, {"id": "shattered_codex", "n": "Shattered Codex", "t": "epic", "f": "XP gems slice through enemies as they fly to you; pairs with the Magnet power-up.", "nd": "", "u": false, "i": "../icons_4x/items/shattered_codex.png", "l": false}, {"id": "reapers_sickle", "n": "Reaper's Sickle", "t": "epic", "f": "Kills release 2 homing souls that strike other enemies.", "nd": "", "u": false, "i": "../icons_4x/items/reapers_sickle.png", "l": false}, {"id": "powder_keg_heart", "n": "Powder Keg Heart", "t": "epic", "f": "Hits have a 25% chance to explode for 65% damage around the target.", "nd": "", "u": false, "i": "../icons_4x/items/powder_keg_heart.png", "l": true}, {"id": "heretics_prism", "n": "Heretic's Prism", "t": "epic", "f": "Combos deal +50% damage and heal you 1 HP each.", "nd": "", "u": false, "i": "../icons_4x/items/heretics_prism.png", "l": false}, {"id": "coven_sigil", "n": "Coven Sigil", "t": "epic", "f": "+15% damage to an enemy for each different status it carries, up to +60%.", "nd": "", "u": false, "i": "../icons_4x/items/coven_sigil.png", "l": true}, {"id": "headsmans_oath", "n": "Headsman's Oath", "t": "legendary", "f": "Hits have a 1% chance to execute a non-boss enemy; each execution adds +1% damage for the rest of the run.", "nd": "", "u": true, "i": "../icons_4x/items/headsmans_oath.png", "l": true}, {"id": "hourglass_damned", "n": "Hourglass of the Damned", "t": "legendary", "f": "The first lethal hit freezes hostile time for 5 s and heals you to 50%; the hourglass then shatters.", "nd": "", "u": true, "i": "../icons_4x/items/hourglass_damned.png", "l": false}, {"id": "anvil_first_forge", "n": "Anvil of the First Forge", "t": "legendary", "f": "Every weapon upgrade and Imbue gains +1 extra stat.", "nd": "", "u": true, "i": "../icons_4x/items/anvil_first_forge.png", "l": true}, {"id": "devils_bargain", "n": "Devil's Bargain", "t": "legendary", "f": "Each level-up permanently trades 5 max HP for +4% damage.", "nd": "", "u": true, "i": "../icons_4x/items/devils_bargain.png", "l": true}];
+    var TIER = {
+      common: { label: 'COMMON', color: '#8F876F', on: '#F4EFE2', w: '50%' },
+      uncommon: { label: 'UNCOMMON', color: '#33772F', on: '#F1F7EE', w: '28%' },
+      rare: { label: 'RARE', color: '#2B6CB5', on: '#F2F6FB', w: '15%' },
+      epic: { label: 'EPIC', color: '#7B3FB3', on: '#F7F1FC', w: '5%' },
+      legendary: { label: 'LEGENDARY', color: '#C9861A', on: '#1C1A15', w: '2%' }
+    };
+    var GEM = { 'FIRE GEM': '#C4552A', 'ICE GEM': '#3F86A6', 'CORROSIVE GEM': '#4E8A36', 'ELECTRICITY GEM': '#7A5CB8' };
+    var self = this, st = this.state;
+    var fdefs = [
+      { id: 'all', label: 'ALL', dot: '#E8E2D0' },
+      { id: 'common', label: 'COMMON', dot: TIER.common.color },
+      { id: 'uncommon', label: 'UNCOMMON', dot: TIER.uncommon.color },
+      { id: 'rare', label: 'RARE', dot: TIER.rare.color },
+      { id: 'epic', label: 'EPIC', dot: TIER.epic.color },
+      { id: 'legendary', label: 'LEGENDARY', dot: TIER.legendary.color }
+    ];
+    function match(d, f) { return f === 'all' ? true : d.t === f; }
+    var filters = fdefs.map(function (f) {
+      var on = st.filter === f.id;
+      var n = DATA.filter(function (d) { return match(d, f.id); }).length;
+      return { label: f.label, dot: f.dot, count: String(n), on: on,
+        bg: on ? '#221616' : 'rgba(14,15,14,0.85)', border: on ? '#B3363F' : '#3A3D38',
+        color: on ? '#F4EFE2' : '#A9ADA4', countColor: on ? '#E07B83' : '#6E726A',
+        pick: function () { self.setState({ filter: f.id }); } };
+    });
+    var shown = DATA.filter(function (d) { return match(d, st.filter); });
+    var items = shown.map(function (d) {
+      var T = TIER[d.t]; var selected = st.sel === d.id; var isOn = !d.l && !st.off[d.id];
+      return { n: d.n, src: B + d.i, l: d.l, isOff: !d.l && !isOn, selected: selected,
+        tierColor: T.color, barOpacity: d.l ? '0.35' : '1',
+        bg: selected ? '#221616' : (d.l ? 'rgba(14,15,14,0.6)' : 'rgba(14,15,14,0.88)'),
+        border: selected ? '2px solid #B3363F' : (d.l ? '1px dashed #3A3D38' : '1px solid ' + (d.t === 'legendary' ? '#8A5A0E' : '#3A3D38')),
+        shadow: selected ? '0 0 0 3px rgba(179,54,63,0.35)' : (d.t === 'legendary' && !d.l ? '0 0 12px rgba(242,193,78,0.35)' : 'none'),
+        filter: d.l ? 'grayscale(1) brightness(0.45)' : 'none', opacity: (!d.l && !isOn) ? '0.45' : '1',
+        pick: function () { self.setState({ sel: d.id }); } };
+    });
+    var cur = DATA.filter(function (d) { return d.id === st.sel; })[0] || DATA[0];
+    var CT = TIER[cur.t]; var curOn = !cur.l && !st.off[cur.id];
+    var found = DATA.filter(function (d) { return !d.l; }).length;
+    return {
+      filters: filters, items: items, foundCount: String(found),
+      sel: { n: cur.n, f: cur.f, src: B + cur.i, l: cur.l, unlocked: !cur.l, u: cur.u, isOn: curOn,
+        tierLabel: CT.label + (cur.u ? ' · UNIQUE' : ''), tierColor: CT.color, tierOn: CT.on, weight: CT.w,
+        glow: cur.t === 'legendary' ? '0 0 22px 4px rgba(242,193,78,0.55)' : 'none',
+        filter: cur.l ? 'grayscale(1) brightness(0.5)' : 'none',
+        hasNeeds: !!cur.nd, needText: cur.nd ? cur.nd.charAt(0) + cur.nd.slice(1, -4).toLowerCase() + ' socket gem' : '', needColor: GEM[cur.nd] || '#5A5446',
+        onBg: curOn ? '#1C1A15' : 'transparent', onColor: curOn ? '#D3CBB2' : '#1C1A15',
+        offBg: curOn ? 'transparent' : '#1C1A15', offColor: curOn ? '#1C1A15' : '#D3CBB2' },
+      toggle: function () { var off = Object.assign({}, st.off); off[cur.id] = !off[cur.id]; self.setState({ off: off }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

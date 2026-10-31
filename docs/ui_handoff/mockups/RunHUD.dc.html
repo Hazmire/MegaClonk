@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Megaclonk — In-run HUD</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&amp;family=IM+Fell+English&amp;family=Overpass:wght@400;600;800&amp;family=Special+Elite&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+@keyframes hudFloat{0%{transform:translateY(14px) scale(.6);opacity:0}12%{transform:translateY(0) scale(1.15);opacity:1}22%{transform:translateY(-4px) scale(1)}75%{opacity:1}100%{transform:translateY(-46px) scale(1);opacity:0}}
+@keyframes hudTick{0%,8%{transform:translateY(6px);opacity:0}18%,70%{transform:translateY(0);opacity:1}100%{transform:translateY(-6px);opacity:0}}
+@keyframes hudPulse{0%,100%{opacity:.55}50%{opacity:1}}
+@keyframes hudStatic{0%{transform:translateX(0)}25%{transform:translateX(-2px)}50%{transform:translateX(1px)}75%{transform:translateX(2px)}100%{transform:translateX(0)}}
+@keyframes hudReady{0%,100%{box-shadow:0 0 0 2px #B3363F,0 0 14px 2px rgba(179,54,63,.5)}50%{box-shadow:0 0 0 2px #E07B83,0 0 24px 6px rgba(224,123,131,.65)}}
+</style>
+</helmet>
+<div style="width: 1920px; height: 1080px; position: relative; overflow: hidden; font-family: 'Overpass', sans-serif; color: #E8E2D0; background: #1F2620">
+<img src="../reference/hud_background.jpg" alt="Gameplay: the player stands in a foggy field surrounded by pale shambling enemies" style="position: absolute; inset: 0; width: 1920px; height: 1080px; filter: {{bgFilter}}">
+<div aria-hidden="true" style="position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 52%, rgba(0,0,0,0) 46%, rgba(0,0,0,0.58) 100%)"></div>
+<sc-if value="{{stopwatch}}" hint-placeholder-val="{{ false }}"><div aria-hidden="true" style="position: absolute; inset: 0; background: rgba(90,130,170,0.22); mix-blend-mode: multiply"></div><div aria-hidden="true" style="position: absolute; inset: 0; box-shadow: inset 0 0 180px 40px rgba(127,196,255,0.35)"></div></sc-if>
+<sc-if value="{{lowHp}}" hint-placeholder-val="{{ false }}"><div aria-hidden="true" style="position: absolute; inset: 0; box-shadow: inset 0 0 220px 60px rgba(126,24,32,0.85); animation: hudPulse 1.1s ease-in-out infinite"></div></sc-if>
+
+<!-- WORLD · pickup pop-ups -->
+<div aria-hidden="true" style="position: absolute; left: 1010px; top: 500px; display: flex; align-items: center; gap: 6px; animation: hudFloat 2.4s cubic-bezier(.2,.8,.3,1) infinite">
+<span style="width: 14px; height: 14px; background: #F2C14E; border: 2px solid #0E0F0E; box-shadow: inset -3px -3px 0 #C9861A"></span>
+<span style="font-weight: 800; font-size: 30px; line-height: 1; color: #FFE08A; text-shadow: 2px 0 0 #0E0F0E, -2px 0 0 #0E0F0E, 0 2px 0 #0E0F0E, 0 -2px 0 #0E0F0E, 3px 4px 0 #0E0F0E">+22</span>
+</div>
+<div aria-hidden="true" style="position: absolute; left: 1046px; top: 548px; display: flex; align-items: center; gap: 5px; animation: hudFloat 2.4s cubic-bezier(.2,.8,.3,1) 0.35s infinite">
+<svg width="14" height="14" viewBox="0 0 16 16"><path d="M8 1 15 8 8 15 1 8z" fill="#7FC4FF" stroke="#0E0F0E" stroke-width="2"></path></svg>
+<span style="font-weight: 800; font-size: 22px; line-height: 1; color: #DDF1FF; text-shadow: 2px 0 0 #0E0F0E, -2px 0 0 #0E0F0E, 0 2px 0 #0E0F0E, 0 -2px 0 #0E0F0E, 2px 3px 0 #0E0F0E">+4</span>
+</div>
+
+<!-- TOP LEFT · build -->
+<section aria-label="Build" style="position: absolute; left: 40px; top: 32px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.28em; color: #C9CEC8; text-shadow: 2px 2px 0 #050505">WEAPONS · 1/4</span>
+<div style="display: flex; gap: 8px">
+<div style="position: relative; width: 84px; height: 84px; box-sizing: border-box; background: rgba(14,15,14,0.88); border: 2px solid #B3363F; display: flex; align-items: center; justify-content: center">
+<img src="../icons_4x/weapons/firestaff.png" alt="Firestaff" style="width: 64px; height: 64px; image-rendering: pixelated">
+<span style="position: absolute; left: -2px; bottom: -2px; font-weight: 800; font-size: 11px; letter-spacing: 0.1em; padding: 2px 5px 0; background: #7E1820; color: #F4EFE2">LV 1</span>
+<svg aria-label="Empty socket" style="position: absolute; right: 4px; bottom: 4px" width="12" height="12" viewBox="0 0 16 16"><path d="M8 1 15 8 8 15 1 8z" fill="none" stroke="#A9ADA4" stroke-width="2"></path></svg>
+</div>
+<div style="width: 84px; height: 84px; box-sizing: border-box; border: 1px dashed rgba(201,206,200,0.35); background: rgba(14,15,14,0.35)"></div>
+<div style="width: 84px; height: 84px; box-sizing: border-box; border: 1px dashed rgba(201,206,200,0.35); background: rgba(14,15,14,0.35)"></div>
+<div style="width: 84px; height: 84px; box-sizing: border-box; border: 1px dashed rgba(201,206,200,0.35); background: rgba(14,15,14,0.35)"></div>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.28em; color: #C9CEC8; text-shadow: 2px 2px 0 #050505">TOMES · 0/4</span>
+<div style="display: flex; gap: 8px">
+<div style="width: 56px; height: 56px; box-sizing: border-box; border: 1px dashed rgba(201,206,200,0.35); background: rgba(14,15,14,0.35)"></div>
+<div style="width: 56px; height: 56px; box-sizing: border-box; border: 1px dashed rgba(201,206,200,0.35); background: rgba(14,15,14,0.35)"></div>
+<div style="width: 56px; height: 56px; box-sizing: border-box; border: 1px dashed rgba(201,206,200,0.35); background: rgba(14,15,14,0.35)"></div>
+<div style="width: 56px; height: 56px; box-sizing: border-box; border: 1px dashed rgba(201,206,200,0.35); background: rgba(14,15,14,0.35)"></div>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.28em; color: #C9CEC8; text-shadow: 2px 2px 0 #050505">ITEMS</span>
+<div style="display: flex; gap: 6px">
+<sc-for list="{{items}}" as="it" hint-placeholder-count="3">
+<div style="position: relative; width: 44px; height: 44px; box-sizing: border-box; background: rgba(14,15,14,0.85); border: 1px solid {{it.color}}; border-bottom: 3px solid {{it.color}}; display: flex; align-items: center; justify-content: center">
+<img src="{{it.src}}" alt="{{it.name}}" style="width: 36px; height: 36px; image-rendering: pixelated">
+<sc-if value="{{it.stack}}" hint-placeholder-val="{{ false }}"><span style="position: absolute; right: -4px; top: -6px; font-weight: 800; font-size: 11px; padding: 1px 4px 0; background: #E8E2D0; color: #1C1A15">{{it.count}}</span></sc-if>
+</div>
+</sc-for>
+</div>
+</div>
+</section>
+
+<!-- TOP CENTRE · timer -->
+<div style="position: absolute; left: 660px; width: 600px; top: 26px; display: flex; flex-direction: column; align-items: center; gap: 4px">
+<span style="font-family: 'IM Fell English', serif; font-size: 68px; line-height: 1; color: #F4EFE2; text-shadow: 3px 3px 0 #050505, 0 0 24px rgba(0,0,0,0.6); font-variant-numeric: tabular-nums">09:30</span>
+<div style="display: flex; align-items: center; gap: 12px">
+<div aria-hidden="true" style="width: 28px; height: 3px; background: #B3363F"></div>
+<span style="font-weight: 800; font-size: 13px; letter-spacing: 0.32em; color: #D9D4C4; text-shadow: 2px 2px 0 #050505">STAGE 1 · THE VERDANT HOLLOW</span>
+<div aria-hidden="true" style="width: 28px; height: 3px; background: #B3363F"></div>
+</div>
+<sc-if value="{{elite}}" hint-placeholder-val="{{ false }}">
+<div role="alert" style="margin-top: 14px; display: flex; align-items: center; gap: 14px; padding: 10px 20px 8px; background: rgba(14,15,14,0.9); border: 1px solid #B3363F; animation: hudStatic 0.18s steps(2) infinite">
+<svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E07B83" stroke-width="2.5"><rect x="3" y="9" width="18" height="12"></rect><path d="M7 9l10-6"></path><path d="M7 15h4"></path></svg>
+<span style="font-family: 'Special Elite', monospace; font-size: 18px; color: #E8E2D0">The radio crackles… something large approaches.</span>
+</div>
+</sc-if>
+</div>
+
+<!-- TOP RIGHT · run stats -->
+<div role="status" aria-label="Run status" style="position: absolute; right: 44px; top: 34px; display: flex; gap: 34px">
+<div style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px"><span style="font-weight: 600; font-size: 12px; letter-spacing: 0.3em; color: #C9CEC8; text-shadow: 2px 2px 0 #050505">KILLS</span><span style="font-weight: 800; font-size: 34px; line-height: 1; font-variant-numeric: tabular-nums; text-shadow: 3px 3px 0 #050505">22</span></div>
+<div style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px"><span style="font-weight: 600; font-size: 12px; letter-spacing: 0.3em; color: #C9CEC8; text-shadow: 2px 2px 0 #050505">CHEST COST</span><span style="font-weight: 800; font-size: 34px; line-height: 1; font-variant-numeric: tabular-nums; text-shadow: 3px 3px 0 #050505">15</span></div>
+<div style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px"><span style="font-weight: 600; font-size: 12px; letter-spacing: 0.3em; color: #F2C14E; text-shadow: 2px 2px 0 #050505">GOLD</span><span style="font-weight: 800; font-size: 34px; line-height: 1; font-variant-numeric: tabular-nums; color: #FFF1C2; text-shadow: 3px 3px 0 #050505">22</span><span aria-hidden="true" style="margin-top: 4px; font-weight: 800; font-size: 15px; color: #F2C14E; text-shadow: 2px 2px 0 #050505; animation: hudTick 2.4s ease-out 0.5s infinite">+22</span></div>
+</div>
+
+<!-- BOTTOM LEFT · health, ultimate, trait -->
+<div style="position: absolute; left: 40px; bottom: 62px; display: flex; align-items: flex-end; gap: 18px">
+<div style="display: flex; flex-direction: column; gap: 8px; width: 480px">
+<span style="font-weight: 800; font-size: 13px; letter-spacing: 0.26em; color: #C9CEC8; text-shadow: 2px 2px 0 #050505">HEALTH</span>
+<div role="meter" aria-label="Health" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{hp}}" style="position: relative; height: 30px; box-sizing: border-box; background: #2A1416; border: 2px solid #050505; box-shadow: 0 0 0 1px #5A1418">
+<div style="width: {{hpPct}}; height: 100%; background-color: {{hpColor}}; background-image: repeating-conic-gradient(rgba(255,255,255,0.06) 0 25%, rgba(0,0,0,0.06) 0 50%); background-size: 4px 4px"></div>
+<span style="position: absolute; left: 12px; top: 0; bottom: 0; display: flex; align-items: center; font-weight: 800; font-size: 16px; color: #F4EFE2; text-shadow: 1px 1px 0 #050505; font-variant-numeric: tabular-nums">{{hp}} / 100</span>
+</div>
+<span style="font-weight: 600; font-size: 12px; letter-spacing: 0.2em; color: #A9ADA4; text-shadow: 1px 1px 0 #050505"><b style="color: #E8E2D0">TAB</b>  BUILD &amp; STATS</span>
+</div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px">
+<div style="position: relative; width: 96px; height: 96px; box-sizing: border-box; background: #1C1E1B; border: 2px solid #B3363F; display: flex; align-items: center; justify-content: center; animation: hudReady 1.6s ease-in-out infinite">
+<img src="../icons_4x/ultimates/cataclysm.png" alt="Cataclysm ultimate" style="width: 84px; height: 84px; image-rendering: pixelated">
+<span style="position: absolute; left: -10px; top: -10px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; background: #E8E2D0; color: #1C1A15; box-shadow: 2px 2px 0 #050505">Q</span>
+</div>
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.22em; padding: 3px 8px 1px; background: #7E1820; color: #F4EFE2">READY</span>
+</div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px">
+<div style="width: 64px; height: 64px; box-sizing: border-box; background: rgba(14,15,14,0.85); border: 1px solid #5A5D56; display: flex; align-items: center; justify-content: center">
+<img src="../icons_4x/traits/cartographer.png" alt="Cartographer trait" style="width: 56px; height: 56px; image-rendering: pixelated">
+</div>
+<span style="font-weight: 800; font-size: 11px; letter-spacing: 0.22em; color: #A9ADA4; text-shadow: 1px 1px 0 #050505">TRAIT</span>
+</div>
+</div>
+
+<!-- BOTTOM RIGHT · map -->
+<section aria-label="Map" style="position: absolute; right: 40px; bottom: 58px; width: 316px; box-sizing: border-box; padding: 10px 10px 8px; background: #D3CBB2; box-shadow: 5px 6px 0 rgba(0,0,0,0.5); transform: rotate(1.2deg)">
+<div aria-hidden="true" style="position: absolute; top: -10px; left: 50%; width: 72px; height: 20px; margin-left: -36px; background: rgba(232,226,208,0.75); transform: rotate(-4deg)"></div>
+<div style="position: relative; width: 296px; height: 260px; overflow: hidden; background-color: #1E2723; background-image: repeating-conic-gradient(#212B26 0 25%, #1B231F 0 50%); background-size: 8px 8px">
+<div aria-hidden="true" style="position: absolute; left: 70px; top: 70px; width: 120px; height: 66px; background: #33423A"></div>
+<div aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 296px; height: 46px; background: #2B3731"></div>
+<div aria-hidden="true" style="position: absolute; left: 0; top: 214px; width: 296px; height: 46px; background: #2B3731"></div>
+<sc-for list="{{marks}}" as="m" hint-placeholder-count="30">
+<span aria-hidden="true" style="position: absolute; left: {{m.x}}px; top: {{m.y}}px; width: {{m.s}}px; height: {{m.s}}px; background: {{m.c}}; transform: {{m.r}}; border: {{m.b}}; box-sizing: border-box"></span>
+</sc-for>
+<span aria-hidden="true" style="position: absolute; left: 66px; top: 6px; width: 16px; height: 16px; border: 3px solid #E07B83; border-radius: 50%; box-sizing: border-box"></span>
+<svg aria-label="You" style="position: absolute; left: 242px; top: 186px" width="16" height="18" viewBox="0 0 16 18"><path d="M8 0 16 18 8 13 0 18z" fill="#F4EFE2" stroke="#0E0F0E" stroke-width="1.5"></path></svg>
+<div aria-hidden="true" style="position: absolute; inset: 0; box-shadow: inset 0 0 30px 6px rgba(140,151,143,0.35)"></div>
+</div>
+<div style="display: flex; justify-content: space-between; padding: 8px 2px 0; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 10px; letter-spacing: 0.14em; color: #3A352A">
+<span style="display: flex; align-items: center; gap: 4px"><svg aria-hidden="true" width="9" height="10" viewBox="0 0 16 18"><path d="M8 0 16 18 8 13 0 18z" fill="#1C1A15"></path></svg>YOU</span>
+<span style="display: flex; align-items: center; gap: 4px"><span style="width: 8px; height: 8px; border: 2px solid #8E1B22; border-radius: 50%; box-sizing: border-box"></span>PORTAL</span>
+<span style="display: flex; align-items: center; gap: 4px"><span style="width: 8px; height: 5px; background: #C9861A"></span>CHEST</span>
+<span style="display: flex; align-items: center; gap: 4px"><span style="width: 7px; height: 7px; background: #7B3FB3; transform: rotate(45deg)"></span>IMBUE</span>
+<span style="display: flex; align-items: center; gap: 4px"><span style="width: 9px; height: 9px; box-sizing: border-box; background: #E8E2D0; border: 2px solid #33772F"></span>SHOP</span>
+</div>
+</section>
+
+<!-- BOTTOM · experience -->
+<div style="position: absolute; left: 40px; right: 40px; bottom: 18px; display: flex; align-items: center; gap: 16px">
+<span style="font-family: 'IM Fell English', serif; font-size: 26px; line-height: 1; color: #F4EFE2; text-shadow: 2px 2px 0 #050505; white-space: nowrap">Level 1</span>
+<div role="meter" aria-label="Experience" aria-valuemin="0" aria-valuemax="18" aria-valuenow="{{xp}}" style="position: relative; flex: 1; height: 16px; box-sizing: border-box; background: rgba(14,15,14,0.85); border: 1px solid #050505">
+<div style="width: {{xpPct}}; height: 100%; background-color: #5C9FD6; background-image: repeating-conic-gradient(rgba(221,241,255,0.18) 0 25%, rgba(0,0,0,0) 0 50%); background-size: 4px 4px; box-shadow: 0 0 10px rgba(127,196,255,0.6)"></div>
+<div aria-hidden="true" style="position: absolute; inset: 0; background: repeating-linear-gradient(90deg, rgba(0,0,0,0) 0, rgba(0,0,0,0) calc(10% - 2px), rgba(5,5,5,0.85) calc(10% - 2px), rgba(5,5,5,0.85) 10%)"></div>
+</div>
+<span style="position: relative; font-weight: 800; font-size: 13px; letter-spacing: 0.18em; color: #DDF1FF; text-shadow: 2px 2px 0 #050505; white-space: nowrap; font-variant-numeric: tabular-nums">{{xp}} / 18 XP<span aria-hidden="true" style="position: absolute; right: 0; bottom: 22px; font-size: 15px; letter-spacing: 0.06em; color: #7FC4FF; animation: hudTick 2.4s ease-out 0.85s infinite">+4 XP</span></span>
+</div>
+
+<div aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.12) 0px, rgba(0,0,0,0.12) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px)"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"hp":{"editor":"int","default":100,"min":0,"max":100},"xp":{"editor":"int","default":14,"min":0,"max":18},"eliteWarning":{"editor":"boolean","default":false},"stopwatch":{"editor":"boolean","default":false},"$preview":{"width":1920,"height":1080}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var B = '';
+    var hp = Math.max(0, Math.min(100, Number(this.props.hp ?? 100)));
+    var xp = Math.max(0, Math.min(18, Number(this.props.xp ?? 14)));
+    var low = hp <= 30;
+    var items = [
+      { name: 'Whetstone', src: B + '../icons_4x/items/whetstone.png', color: '#8F876F', count: '×2', stack: true },
+      { name: "Pilgrim's Sandals", src: B + '../icons_4x/items/pilgrims_sandals.png', color: '#8F876F', count: '', stack: false },
+      { name: 'Tinder Pouch', src: B + '../icons_4x/items/tinder_pouch.png', color: '#33772F', count: '', stack: false }
+    ];
+    var marks = [];
+    var chests = [[218,8],[240,8],[262,8],[14,62],[262,78],[150,110],[176,118],[32,160],[132,160],[160,196],[40,232],[62,240],[150,236]];
+    chests.forEach(function (p) { marks.push({ x: p[0], y: p[1], s: 9, c: '#C9861A', r: 'none', b: '1px solid #0E0F0E' }); });
+    var shops = [[46,104],[126,30],[226,150]];
+    shops.forEach(function (p) { marks.push({ x: p[0], y: p[1], s: 12, c: '#E8E2D0', r: 'none', b: '3px solid #33772F' }); });
+    marks.push({ x: 108, y: 92, s: 10, c: '#7B3FB3', r: 'rotate(45deg)', b: '1px solid #F7F1FC' });
+    for (var i = 0; i < 34; i++) {
+      var x = 196 + ((i * 37) % 86), y = 86 + ((i * 53) % 150);
+      marks.push({ x: x, y: y, s: 4, c: '#E07B83', r: 'none', b: 'none' });
+    }
+    return {
+      hp: String(hp), hpPct: hp + '%', hpColor: low ? '#B3363F' : '#7E1820', lowHp: low,
+      xp: String(xp), xpPct: (xp / 18 * 100).toFixed(1) + '%',
+      elite: !!this.props.eliteWarning, stopwatch: !!this.props.stopwatch,
+      bgFilter: this.props.stopwatch ? 'saturate(0.5) contrast(1.05)' : 'none',
+      items: items, marks: marks
+    };
+  }
+}
+</script>
+</body>
+</html>

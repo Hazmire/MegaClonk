@@ -11,7 +11,7 @@ func run():
  game.weapons.clear()
  for id in [0,1,6,7]:game.equip(id);game.weapons[id].level=3
  for id in ["Might","Haste","Wisdom","Wind"]:game.apply_upgrade({"type":"tome","id":id})
- for id in [0,1,2,6,8,10]:game.apply_item(id)
+ for id in ["whetstone","salted_pork","knucklebone","rusted_key","coven_sigil","tax_ledger"]:game.grant_item(id,true)
  game.gold=245;game.level=12;game.elapsed=149;game.health=83
  var rng=RandomNumberGenerator.new();rng.seed=327
  var normal={"choices":ShrineRewards.generate(game.stats,rng),"golden":false}
@@ -23,7 +23,7 @@ func run():
   await create_timer(0.5).timeout;await capture("hud"+suffix)
   game.active_shrine_reward=normal;RewardScreens.shrine(game.frontend,normal);await create_timer(0.4).timeout;await capture("shrine"+suffix)
   game.active_shrine_reward=golden;RewardScreens.shrine(game.frontend,golden);await create_timer(0.4).timeout;await capture("golden"+suffix)
-  game.active_shrine_reward={};game.frontend.reward(Catalog.ITEMS[10]);await create_timer(0.5).timeout
+  game.active_shrine_reward={};game.frontend.reward("hourglass_damned");await create_timer(0.5).timeout
   if size.x==1280:await capture("icon_cycling")
   game.frontend.chest_skip.call();await create_timer(0.2).timeout;await capture("chest"+suffix)
  root.size=Vector2i(1280,720);DisplayServer.window_set_size(root.size)

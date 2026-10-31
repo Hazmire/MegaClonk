@@ -36,7 +36,7 @@ func run():
    if Vector2(main_bosses[i].pos.x-main_bosses[j].pos.x,main_bosses[i].pos.z-main_bosses[j].pos.z).length()<4:separate=false
  check(separate and main_bosses.all(func(e):return game.forest_navigation.reachable(e.pos)),"Multiple bosses use separate valid reachable locations")
  check(not game.activate_portal(),"Active main encounter cannot be summoned twice")
- game.frontend.update_boss_bars();check(game.frontend.boss_widgets.size()==4,"Five bosses use a bounded compact four-row health display")
+ game.frontend.run_hud.bosses.refresh_now();check(game.frontend.run_hud.bosses.shown_bars().size()<=4 and game.frontend.run_hud.bosses.more_label.visible,"Five bosses use at most 2+2 bars plus a +n more line health display")
  check(game.save_run("user://multiboss.json") and game.load_run("user://multiboss.json"),"Boss modifier and active encounters save/load")
  var restored=true;main_bosses=[]
  for e in game.enemies:

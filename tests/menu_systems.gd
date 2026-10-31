@@ -54,8 +54,9 @@ func run() -> void:
  game.progress=Progress.new();MetaProgress.migrate(game.progress.data);game.progress.storage_path="user://menu-game-test.json"
  game.frontend.home()
  check(game.mode=="menu" and is_instance_valid(game.frontend.menu_camera),"Main menu uses a real map camera")
- check(widgets(game.frontend.menu,"Button").size()==4,"Main menu contains exactly four action buttons")
- check(widgets(game.frontend.menu,"ProgressBar").size()==4,"Main menu shows four closest unlock progress bars")
+ var main_screen=game.frontend.menu.get_child(game.frontend.menu.get_child_count()-1)
+ check(main_screen is MainMenuScreen and main_screen.items.has("play") and main_screen.items.has("unlocks") and main_screen.items.has("quests") and main_screen.items.has("settings"),"Main menu has the four menu rows")
+ check(main_screen.reach_cards.size()==4,"Main menu shows the four quests closest to completion")
  var old_camera=game.frontend.menu_camera.position
  game.frontend._process(0.5)
  check(old_camera!=game.frontend.menu_camera.position,"Main menu map camera rotates")
@@ -113,10 +114,10 @@ func run() -> void:
  game.frontend.minimap.reset(true)
  check(game.frontend.minimap.visible_at(Vector3(80,0,80)),"Seer reveals the entire minimap")
  game.gold=30;game.mode="shop"
- var shop={"offers":[1],"sold":[]}
- check(game.buy_shop(shop,1,15) and game.gold==15 and shop.sold==[1],"Shop purchase applies item and deducts gold")
- check(not game.buy_shop(shop,1,15) and game.gold==15,"Shop stock cannot be purchased twice")
- check(not game.buy_shop({"offers":[1]},1,1),"Shop validates configured price")
+ var shop={"offers":["whetstone"],"sold":[]}
+ check(game.buy_shop(shop,"whetstone",15) and game.gold==15 and shop.sold==["whetstone"] and game.item_stacks("whetstone")==1,"Shop purchase applies item and deducts gold")
+ check(not game.buy_shop(shop,"whetstone",15) and game.gold==15,"Shop stock cannot be purchased twice")
+ check(not game.buy_shop({"offers":["whetstone"]},"whetstone",1),"Shop validates configured price")
  check(game.terrain_height(106,0)>18 and game.terrain_height(-106,0)>18 and game.terrain_height(0,106)>18,"Forest cliff boundary covers world edges")
  game.loadout_runtime.reset("seer","ghost");game.loadout_runtime.cooldown=42;game.selected_trait="seer";game.selected_ultimate="ghost";game.frontend.minimap.reset(true)
  check(game.save_run("user://menu-loadout-run.json"),"Run saves loadout and ultimate state")
@@ -125,9 +126,9 @@ func run() -> void:
  game.mode="pause";game.player.active=false
  game.frontend.unlocks();check(game.mode=="unlocks","Unlock browser opens")
  game.frontend.active_tab="weapons";game.frontend.unlocks()
- for button in widgets(game.frontend.menu,"Button"):
-  if button.text.begins_with(Catalog.WEAPONS[16][0]):button.pressed.emit();break
- check(screen_text().contains("Unlock:") and not screen_text().contains(LoadoutCatalog.entry("weapons","16").description),"Locked detail reveals requirements without revealing effect")
+ var unlock_screen=game.frontend.menu.get_child(game.frontend.menu.get_child_count()-1)
+ await process_frame;await process_frame;unlock_screen.tiles["15"].grab_focus();await process_frame;if unlock_screen.selected_id!="15":unlock_screen.select("15")
+ check(screen_text().to_lower().contains("to unlock:") and unlock_screen.memo.find_child("Requirement",true,false)!=null,"Locked weapon detail shows how to unlock it")
  game.frontend.quests();check(game.mode=="quests","Categorized quest screen opens")
  game.frontend.settings(game.frontend.home);check(game.mode=="settings","Grouped settings open")
  game.frontend.inventory();check(game.mode=="build","Stats and item inventory open")

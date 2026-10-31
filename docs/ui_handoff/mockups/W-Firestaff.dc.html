@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Firestaff — effect draft</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English&amp;family=Overpass:wght@400;600;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+@keyframes fsFly{0%{transform:translate(0,0);opacity:1}27%{transform:translate(360px,18px);opacity:1}28%{transform:translate(360px,18px);opacity:0}100%{transform:translate(360px,18px);opacity:0}}
+@keyframes fsFlick{from{transform:scale(.9) rotate(0deg)}to{transform:scale(1.12) rotate(14deg)}}
+@keyframes fsEmber{0%{opacity:0;transform:translate(0,0) scale(1)}1%{opacity:1}22%{opacity:0;transform:translate(-12px,-34px) scale(.4)}100%{opacity:0;transform:translate(-12px,-34px) scale(.4)}}
+@keyframes fsShunt{0%,27%{filter:none;transform:translateX(0)}28%{filter:brightness(0) invert(1);transform:translateX(24px)}33%{filter:sepia(1) saturate(4) hue-rotate(-20deg) brightness(1.1);transform:translateX(30px)}55%{filter:none;transform:translateX(30px)}85%{transform:translateX(30px)}100%{filter:none;transform:translateX(0)}}
+@keyframes fsBoom{0%,27%{opacity:0;transform:scale(.3)}28%{opacity:1;transform:scale(1)}36%{opacity:0;transform:scale(2.2)}100%{opacity:0;transform:scale(2.2)}}
+@keyframes fsP1{0%,27%{opacity:0;transform:translate(0,0) scale(1)}28%{opacity:1}40%{transform:translate(-50px,-72px)}62%{opacity:1;transform:translate(-82px,58px) scale(1)}74%{opacity:0;transform:translate(-86px,58px) scale(.2)}100%{opacity:0;transform:translate(-86px,58px) scale(.2)}}
+@keyframes fsP2{0%,27%{opacity:0;transform:translate(0,0) scale(1)}28%{opacity:1}41%{transform:translate(-8px,-94px)}63%{opacity:1;transform:translate(-18px,58px) scale(1)}75%{opacity:0;transform:translate(-20px,58px) scale(.2)}100%{opacity:0;transform:translate(-20px,58px) scale(.2)}}
+@keyframes fsP3{0%,27%{opacity:0;transform:translate(0,0) scale(1)}28%{opacity:1}40%{transform:translate(42px,-78px)}61%{opacity:1;transform:translate(72px,58px) scale(1)}73%{opacity:0;transform:translate(76px,58px) scale(.2)}100%{opacity:0;transform:translate(76px,58px) scale(.2)}}
+@keyframes fsP4{0%,27%{opacity:0;transform:translate(0,0) scale(1)}28%{opacity:1}38%{transform:translate(72px,-40px)}58%{opacity:1;transform:translate(112px,58px) scale(1)}70%{opacity:0;transform:translate(116px,58px) scale(.2)}100%{opacity:0;transform:translate(116px,58px) scale(.2)}}
+@keyframes fsP5{0%,27%{opacity:0;transform:translate(0,0) scale(1)}28%{opacity:1}38%{transform:translate(-72px,-36px)}58%{opacity:1;transform:translate(-112px,58px) scale(1)}70%{opacity:0;transform:translate(-116px,58px) scale(.2)}100%{opacity:0;transform:translate(-116px,58px) scale(.2)}}
+</style>
+</helmet>
+<div style="width: {{rootW}}px; height: {{rootH}}px; box-sizing: border-box; padding: {{pad}}px; background: #0E0F0E; color: #E8E2D0; font-family: 'Overpass', sans-serif; display: flex; gap: 36px">
+
+<div style="position: relative; flex: 0 0 auto; width: 720px; height: 640px; overflow: hidden; background-color: #7E8982; background-image: repeating-conic-gradient(#818C85 0 25%, #7A857E 0 50%); background-size: 16px 16px; border: 1px solid #3A3D38">
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; bottom: 0; height: 340px; background-color: #1F2620; background-image: repeating-conic-gradient(#222922 0 25%, #1C221D 0 50%); background-size: 16px 16px"></div>
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 250px; height: 120px; background: linear-gradient(180deg, rgba(126,137,130,0) 0%, rgba(126,137,130,0.9) 50%, rgba(126,137,130,0) 100%)"></div>
+
+<img src="../reference/vfx_player_stand_in.png" alt="Player" style="position: absolute; left: 100px; top: 370px; width: 60px; height: 100px; image-rendering: pixelated">
+<img src="../reference/vfx_enemy_stand_in.png" alt="Enemy" style="position: absolute; left: 515px; top: 385px; width: 60px; height: 85px; image-rendering: pixelated; animation: fsShunt 2.2s linear infinite">
+
+<span aria-hidden="true" style="position: absolute; left: 210px; top: 400px; width: 8px; height: 8px; background: #F29A3A; animation: fsEmber 2.2s ease-out 0.08s infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 260px; top: 404px; width: 6px; height: 6px; background: #FFE08A; animation: fsEmber 2.2s ease-out 0.16s infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 320px; top: 405px; width: 8px; height: 8px; background: #C9461A; animation: fsEmber 2.2s ease-out 0.26s infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 380px; top: 408px; width: 6px; height: 6px; background: #F29A3A; animation: fsEmber 2.2s ease-out 0.36s infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 440px; top: 410px; width: 8px; height: 8px; background: #FFE08A; animation: fsEmber 2.2s ease-out 0.46s infinite"></span>
+
+<div aria-hidden="true" style="position: absolute; left: 150px; top: 378px; width: 44px; height: 44px; animation: fsFly 2.2s cubic-bezier(.35,0,.9,.6) infinite">
+<span style="position: absolute; inset: -10px; border-radius: 50%; background: radial-gradient(circle, rgba(242,154,58,0.55) 0%, rgba(201,70,26,0) 70%)"></span>
+<span style="position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 45% 45%, #FFF1C2 0%, #FFE08A 25%, #F29A3A 55%, #C9461A 80%, rgba(126,24,32,0) 100%); box-shadow: 0 0 24px 8px rgba(242,154,58,0.7); animation: fsFlick 0.12s ease-in-out infinite alternate"></span>
+</div>
+
+<span aria-hidden="true" style="position: absolute; left: 500px; top: 365px; width: 80px; height: 80px; border-radius: 50%; background: radial-gradient(circle, #FFF1C2 0%, #F29A3A 45%, rgba(201,70,26,0) 72%); animation: fsBoom 2.2s ease-out infinite"></span>
+
+<span aria-hidden="true" style="position: absolute; left: 540px; top: 404px; width: 9px; height: 9px; background: #F29A3A; animation: fsP1 2.2s ease-in infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 540px; top: 404px; width: 9px; height: 9px; background: #FFE08A; animation: fsP2 2.2s ease-in infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 540px; top: 404px; width: 9px; height: 9px; background: #C9461A; animation: fsP3 2.2s ease-in infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 540px; top: 404px; width: 9px; height: 9px; background: #F29A3A; animation: fsP4 2.2s ease-in infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 540px; top: 404px; width: 9px; height: 9px; background: #FFE08A; animation: fsP5 2.2s ease-in infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 546px; top: 398px; width: 6px; height: 6px; background: #FFF1C2; animation: fsP1 2.2s ease-in 0.05s infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 546px; top: 398px; width: 6px; height: 6px; background: #C9461A; animation: fsP2 2.2s ease-in 0.06s infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 546px; top: 398px; width: 6px; height: 6px; background: #FFE08A; animation: fsP3 2.2s ease-in 0.04s infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 546px; top: 398px; width: 6px; height: 6px; background: #FFF1C2; animation: fsP4 2.2s ease-in 0.07s infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 546px; top: 398px; width: 6px; height: 6px; background: #F29A3A; animation: fsP5 2.2s ease-in 0.05s infinite"></span>
+
+<span style="position: absolute; left: 470px; top: 520px; display: {{noteDisplay}}; font-weight: 800; font-size: 11px; letter-spacing: 0.18em; color: #FFE08A; background: rgba(14,15,14,0.7); padding: 3px 6px 1px">SHUNT + FLAME SPRAY</span>
+
+<div aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 50% 55%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.55) 100%)"></div>
+<div aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.14) 0px, rgba(0,0,0,0.14) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px)"></div>
+<span style="position: absolute; left: 16px; top: 14px; display: {{noteDisplay}}; font-weight: 800; font-size: 12px; letter-spacing: 0.26em; color: #0E0F0E; background: rgba(232,226,208,0.85); padding: 4px 8px 2px">EFFECT PREVIEW · LOOP</span>
+</div>
+
+<sc-if value="{{full}}" hint-placeholder-val="{{ true }}">
+<div style="flex: 1; display: flex; flex-direction: column; gap: 22px">
+<div style="display: flex; align-items: center; gap: 18px">
+<div style="display: flex; align-items: center; justify-content: center; width: 112px; height: 112px; background: #1A1C19; border: 1px solid #5A5D56"><img src="../icons_4x/weapons/firestaff.png" alt="Firestaff icon" style="width: 96px; height: 96px; image-rendering: pixelated"></div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.28em; color: #8D9188">WEAPON · DRAFT</span>
+<h1 style="margin: 0; font-family: 'IM Fell English', serif; font-weight: 400; font-size: 40px; line-height: 1">Firestaff</h1>
+</div>
+</div>
+<section style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-weight: 800; font-size: 13px; letter-spacing: 0.28em; color: #8D9188">LOOK</h2>
+<ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 16px; line-height: 1.4; color: #B9BAB1">
+<li>A hot, flickering fireball: white core, then yellow, orange and deep red, with a soft glow around it.</li>
+<li>Embers peel off behind it, rise a little and fade.</li>
+<li>On impact a burst flashes, the enemy turns white then scorched orange, and flame bits spray up, fall to the ground and shrink out.</li>
+</ul>
+</section>
+<section style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-weight: 800; font-size: 13px; letter-spacing: 0.28em; color: #8D9188">BEHAVIOUR</h2>
+<ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 16px; line-height: 1.4; color: #B9BAB1">
+<li>The fireball speeds up as it flies, and the hit shunts the enemy back a short distance.</li>
+<li>Size grows the fireball and the flame spray.</li>
+</ul>
+</section>
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-weight: 800; font-size: 13px; letter-spacing: 0.28em; color: #8D9188">LEVEL-UP POOL</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">PROJECTILE VELOCITY</span>
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">PROJECTILE COUNT</span>
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">DAMAGE</span>
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">SIZE</span>
+</div>
+</section>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"stageOnly":{"editor":"boolean","default":false},"$preview":{"width":1200,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var so = !!this.props.stageOnly;
+    return { full: !so, rootW: so ? 720 : 1200, rootH: so ? 640 : 720, pad: so ? 0 : 40, noteDisplay: so ? 'none' : 'block' };
+  }
+}
+</script>
+</body>
+</html>

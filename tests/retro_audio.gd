@@ -22,13 +22,13 @@ func run():
  check(audio.voices.size()==24 and audio.music_players.size()==2,"Bounded 24 SFX/UI voices and two music crossfade players")
  for name in ["Master","Music","SFX","UI","Ambience"]:check(AudioServer.get_bus_index(name)>=0,"Independent native audio bus: "+name)
  check(audio.events.size()>=30 and audio.streams.size()>100,"Only curated/preloaded event resources registered")
- for event in ["weapon.revolver.fire","weapon.lightning.zap","weapon.chunkers.impact","weapon.aegis.impact","player.damage","player.footstep.grass","player.footstep.rock","player.slide","pickup.xp","combat.explosion"]:
+ for event in ["weapon.revolver.fire","weapon.lightning.strike","weapon.shotgun.fire","weapon.scythes.hit","player.damage","player.footstep.grass","player.footstep.rock","player.slide","pickup.xp","combat.explosion"]:
   var files=audio.events[event].files;var previous="";var varied=true
   for i in 200:
    var sample=audio.choose(event)
    if not sample in files or sample==previous:varied=false
    previous=sample
-  check(files.size()>=3 and varied,"Appropriate variation pool avoids immediate repeats: "+event)
+  check(files.size()>=2 and varied,"Appropriate variation pool avoids immediate repeats: "+event)
  var byte_count=0
  for path in audio.streams:
   check(ResourceLoader.exists(path),"Selected audio dependency loads: "+path.get_file())
@@ -36,7 +36,7 @@ func run():
  check(byte_count>0 and not DirAccess.dir_exists_absolute("res://assets/audio/sfx/library"),"Source library stays outside project; curated byte count="+str(byte_count))
  audio.volumes({"master":0,"music":.2,"effects":.8,"ui_volume":.4,"ambience":.3})
  check(AudioServer.is_bus_mute(0),"Master zero mutes exactly")
- check(absf(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Music"))-linear_to_db(.2))<.01,"Music gain converts linear slider to decibels")
+ check(absf(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Music"))-(linear_to_db(.2)+RetroAudio.MUSIC_OFFSET_DB))<.01,"Music gain (with its -8 dB offset) converts linear slider to decibels")
  check(absf(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("SFX"))-linear_to_db(.8))<.01,"SFX gain independent from music")
  audio.volumes(game.settings)
  game.progress.storage_path="user://retro-audio-settings-test.json";var old=game.progress.data.settings.duplicate(true);game.settings.ui_volume=.25;game.settings.ambience=.45;game.progress.data.settings=game.settings.duplicate(true);game.progress.save()
@@ -64,7 +64,7 @@ func run():
  check(e.hit_time>0 and e.hit_time<=.12 and game.combat_fx.bursts_created>burst,"Damage immediately sets brief flash and pooled impact particles")
  check(audio.accepted==accepted,"Enemy ordinary damage triggers no generic pain/hit audio")
  var shader=FileAccess.get_file_as_string("res://shaders/enemy_feedback.gdshader")
- check(shader.contains("vec3(1.0),damage_flash") and not shader.contains("vec3(1.0,0.025,0.015)"),"Shared textured enemy feedback mixes to white")
+ check(shader.contains("mix(vec3(1.0),vec3(0.45,1.0,0.35),flash_tint)") and not shader.contains("vec3(1.0,0.025,0.015)"),"Shared textured enemy feedback mixes to white (light green only for Aura hits)")
  e.hit_time=0;game.enemy_view.begin_frame();game.enemy_view.draw_enemy(e,game.player.position);game.enemy_view.end_frame()
  var restored_flash=true
  for batch in game.enemy_view.batches.values():
@@ -78,15 +78,15 @@ func run():
  check(game.player.velocity==velocity and game.health==health,"Invulnerability prevents repeated damage and shunt stacking")
  game.player.launch(Vector3.LEFT,18,13)
  check(game.player.velocity.y>=13 and absf(game.player.velocity.x)>12,"Explosion launch remains substantially stronger than contact shunt")
- check(WeaponVFX.sound(4)=="" and WeaponVFX.sound(8)=="","Orbiting stone/Aegis audio occurs on impact rather than duplicate activation")
- var identity=[]
- for id in Catalog.ACTIVE_WEAPONS:
-  var key="weapon.chunkers.impact" if id==4 else WeaponVFX.sound(id);identity.append(key)
- check(identity.size()==10 and identity.all(func(k):return audio.events.has(k)),"All ten active weapons map to appropriate registered identities")
- check(audio.tracks.size()==1 and not audio.menu_track.is_empty(),"Exactly one supplied looping menu and game track configured")
- var track=audio.current_track;var slot=audio.music_slot;audio.music_stage(game.stage)
- check(audio.current_track==track and audio.music_slot==slot,"Same-stage music does not restart")
- audio.music_stage(2);check(audio.current_track==track and audio.music_slot==slot,"Stage transitions preserve the same looping game track")
+ var required=["weapon.sword.swing","weapon.sword.hit","weapon.sword.crit","weapon.firestaff.cast","weapon.firestaff.impact","weapon.firestaff.crit","weapon.lightning.strike","weapon.lightning.chain","weapon.lightning.crit","weapon.bow.fire","weapon.bow.hit","weapon.bow.crit","weapon.revolver.fire","weapon.revolver.hit","weapon.revolver.ricochet","weapon.revolver.crit","weapon.aura.hum","weapon.aura.pulse","weapon.aura.crit","weapon.scythes.throw","weapon.scythes.hit","weapon.scythes.catch","weapon.scythes.crit","weapon.shotgun.fire","weapon.shotgun.hit","weapon.shotgun.crit"]
+ check(required.all(func(k):return audio.events.has(k)),"Every Weapon Overhaul attack/hit/crit/special event is registered")
+ check(audio.events.keys().all(func(k):return not (k.begins_with("weapon.") and (k.contains("chunkers") or k.contains("bone") or k.contains("bananarang") or k.contains("mines") or k.contains("aegis")))),"No audio events remain for removed weapons")
+ check(audio.events["weapon.shotgun.fire"].files!=audio.events["weapon.revolver.fire"].files and is_equal_approx(float(audio.events["weapon.shotgun.fire"].base_pitch),1.0) and is_equal_approx(float(audio.events["weapon.revolver.fire"].base_pitch),1.0),"Shotgun and revolver use their own finished samples, played at original pitch (no dark pass)")
+ check(audio.events["weapon.aura.hum"].max_voices==1 and audio.events["weapon.aura.hum"].cooldown>=1.5,"Aura hum is a single slow voice (no per-frame sound)")
+ check(audio.events.keys().filter(func(k):return audio.events[k].get("music",false)).size()==10,"All ten Fog music tracks are registered as music events")
+ audio.music_stage(game.stage);var track=audio.current_track;var slot=audio.music_slot;audio.music_stage(game.stage)
+ check(audio.current_track==track and audio.music_slot==slot and track==audio.stage_track(game.stage,0),"Same-stage music does not restart and a stage starts on its A track")
+ audio.music_stage(2);check(audio.current_track=="music.stage2_a_red_canopy" and audio.music_slot!=slot,"A new stage starts on its own A track")
  var probe=MotionProbe.new();root.add_child(probe);var motion_game=MotionGame.new();motion_game.player=probe;motion_game.audio=audio;var motion=MovementAudio.new()
  for voice in audio.voices:voice.until=0
  audio.clock+=10;audio.last_events.clear();accepted=audio.accepted;probe.velocity=Vector3.ZERO
@@ -105,12 +105,13 @@ func run():
  probe.posture="standing";motion.tick(motion_game,.01)
  probe.queue_free();motion_game.free()
  audio.stop_event("player.slide");check(not audio.voices.any(func(v):return v.event=="player.slide" and v.until>audio.clock),"Slide stop silences its pooled voices")
- game.frontend.settings(game.frontend.home);await process_frame
  var sliders=0
- for n in RewardScreens.descendants(game.frontend.menu):
-  if n is HSlider:sliders+=1
- check(sliders>=7,"Settings retain graphics/gameplay controls and all five audio sliders")
- game.frontend.reward(Catalog.ITEMS[10]);await process_frame;audio.clock+=2;audio.last_events.clear();accepted=audio.accepted;var skip=game.frontend.chest_skip;skip.call();var after=audio.accepted
+ for tab in ["Display","Graphics","Audio","Gameplay"]:
+  SettingsScreen.last_tab=tab;game.frontend.settings(game.frontend.home);await process_frame
+  for n in RewardScreens.descendants(game.frontend.menu):
+   if n is HSlider:sliders+=1
+ check(sliders>=7,"Settings (all four tabs) retain graphics/gameplay controls and all five audio sliders")
+ game.frontend.reward("hourglass_damned");await process_frame;audio.clock+=2;audio.last_events.clear();accepted=audio.accepted;var skip=game.frontend.chest_skip;skip.call();var after=audio.accepted
  check(after>accepted and not audio.voices.any(func(v):return v.event=="reward.chest.tick" and v.until>audio.clock),"Chest skip stops cycling and plays predetermined reveal celebration")
  skip.call();check(audio.accepted==after,"Repeated reveal callback cannot play another celebration")
  check(not game.frontend.chest_skip.is_valid(),"Reveal closure clears skip action to prevent duplicate celebration")

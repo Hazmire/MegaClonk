@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Megaclonk main menu — Fog County</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&amp;family=IM+Fell+English&amp;family=Overpass:wght@400;600;800&amp;family=Special+Elite&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#E8E2D0}a:hover{color:#FFFFFF}
+</style>
+</helmet>
+<div style="width: 1920px; height: 1080px; position: relative; overflow: hidden; font-family: 'Overpass', sans-serif; color: #E8E2D0; background-color: #8C978F; background-image: repeating-conic-gradient(#8F9A92 0 25%, #87928A 0 50%); background-size: 16px 16px">
+
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; bottom: 0; height: 560px; background-color: #1F2620; background-image: repeating-conic-gradient(#212821 0 25%, #1C221D 0 50%); background-size: 16px 16px"></div>
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 400px; height: 260px; background: linear-gradient(180deg, rgba(140,151,143,0) 0%, rgba(140,151,143,0.85) 45%, rgba(140,151,143,0) 100%)"></div>
+<div aria-hidden="true" style="position: absolute; right: 380px; top: 330px; width: 260px; height: 400px; border: 2px dashed rgba(14,15,14,0.35); display: flex; align-items: center; justify-content: center; text-align: center; font-size: 17px; letter-spacing: 0.08em; color: rgba(14,15,14,0.55)">IN-GAME SCENE<br>+ CHARACTER</div>
+<div aria-hidden="true" style="position: absolute; inset: 0; background: linear-gradient(90deg, rgba(10,11,10,0.94) 0%, rgba(10,11,10,0.8) 28%, rgba(10,11,10,0) 56%)"></div>
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; bottom: 0; height: 400px; background: linear-gradient(0deg, rgba(10,11,10,0.95) 0%, rgba(10,11,10,0.65) 55%, rgba(10,11,10,0) 100%)"></div>
+<div aria-hidden="true" style="position: absolute; inset: 0; background: radial-gradient(ellipse at 60% 45%, rgba(0,0,0,0) 45%, rgba(0,0,0,0.55) 100%)"></div>
+
+<header style="position: absolute; left: 120px; top: 96px; display: flex; flex-direction: column; gap: 18px">
+<h1 style="margin: 0; font-family: 'IM Fell English SC', serif; font-weight: 400; font-size: 150px; line-height: 0.85; letter-spacing: 0.02em; color: #E8E2D0; text-shadow: 4px 4px 0 #050505">Megaclonk</h1>
+<div style="display: flex; align-items: center; gap: 16px">
+<div aria-hidden="true" style="width: 64px; height: 6px; background: {{accent}}"></div>
+<span style="font-family: 'Overpass', sans-serif; font-weight: 600; font-size: 18px; letter-spacing: 0.32em; color: #A9ADA4">[TAGLINE OR COUNTY NAME]</span>
+</div>
+</header>
+
+<nav aria-label="Main menu" style="position: absolute; left: 120px; top: 380px; width: 480px; display: flex; flex-direction: column; gap: 6px">
+<button type="button" style="display: flex; align-items: center; gap: 18px; height: 76px; padding: 0 24px; border: none; cursor: pointer; text-align: left; font-family: 'IM Fell English', serif; font-size: 48px; color: #F4EFE2; background: {{accent}}">
+<span aria-hidden="true" style="width: 14px; height: 14px; background: #F4EFE2"></span>
+<span>Play</span>
+</button>
+<button type="button" style="display: flex; align-items: center; gap: 18px; height: 64px; padding: 0 24px 0 56px; border: none; cursor: pointer; text-align: left; font-family: 'IM Fell English', serif; font-size: 38px; color: #B9BAB1; background: transparent">Unlocks</button>
+<button type="button" style="display: flex; align-items: center; gap: 18px; height: 64px; padding: 0 24px 0 56px; border: none; cursor: pointer; text-align: left; font-family: 'IM Fell English', serif; font-size: 38px; color: #B9BAB1; background: transparent">Quests</button>
+<button type="button" style="display: flex; align-items: center; gap: 18px; height: 64px; padding: 0 24px 0 56px; border: none; cursor: pointer; text-align: left; font-family: 'IM Fell English', serif; font-size: 38px; color: #B9BAB1; background: transparent">Settings</button>
+</nav>
+
+<div style="position: absolute; right: 96px; top: 84px; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; font-family: 'Overpass', sans-serif">
+<span style="font-weight: 600; font-size: 16px; letter-spacing: 0.3em; color: #2A2F2B">SILVER</span>
+<span style="font-weight: 800; font-size: 44px; line-height: 1; font-variant-numeric: tabular-nums; color: #F4EFE2; text-shadow: 3px 3px 0 #1A1D1A">452</span>
+</div>
+
+<section aria-labelledby="reach-h" style="position: absolute; left: 120px; right: 96px; bottom: 92px; display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; align-items: baseline; justify-content: space-between">
+<h2 id="reach-h" style="margin: 0; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 18px; letter-spacing: 0.32em; color: #A9ADA4">WITHIN REACH</h2>
+<button type="button" style="border: none; background: transparent; cursor: pointer; font-family: 'Overpass', sans-serif; font-weight: 600; font-size: 16px; letter-spacing: 0.24em; color: #E8E2D0; padding: 10px 0">ALL QUESTS ›</button>
+</div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; align-items: start">
+
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 20px 22px 22px; background: #D3CBB2; color: #1C1A15; font-family: 'Special Elite', monospace; transform: rotate(-1deg); box-shadow: 4px 6px 0 rgba(0,0,0,0.45)">
+<h3 style="margin: 0; font-weight: 400; font-size: 22px">Scythes mastery</h3>
+<p style="margin: 0; font-size: 17px; color: #4A453A">100 kills using Scythes</p>
+<div style="display: flex; align-items: center; gap: 12px; margin-top: 4px">
+<div style="flex: 1; height: 8px; background: #B2A98E"><div style="width: 63%; height: 100%; background: #1C1A15"></div></div>
+<span style="font-size: 17px; font-variant-numeric: tabular-nums">63/100</span>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 20px 22px 22px; background: #CFC7AD; color: #1C1A15; font-family: 'Special Elite', monospace; transform: rotate(0.8deg); box-shadow: 4px 6px 0 rgba(0,0,0,0.45)">
+<h3 style="margin: 0; font-weight: 400; font-size: 22px">Chunkers mastery</h3>
+<p style="margin: 0; font-size: 17px; color: #4A453A">100 kills using Chunkers</p>
+<div style="display: flex; align-items: center; gap: 12px; margin-top: 4px">
+<div style="flex: 1; height: 8px; background: #B2A98E"><div style="width: 49%; height: 100%; background: #1C1A15"></div></div>
+<span style="font-size: 17px; font-variant-numeric: tabular-nums">49/100</span>
+</div>
+</div>
+
+<div style="position: relative; display: flex; flex-direction: column; gap: 10px; padding: 20px 22px 22px; background: #D3CBB2; color: #1C1A15; font-family: 'Special Elite', monospace; transform: rotate(-0.6deg); box-shadow: 4px 6px 0 rgba(0,0,0,0.45)">
+<h3 style="margin: 0; font-weight: 400; font-size: 22px">Before the fifth bell</h3>
+<p style="margin: 0; font-size: 17px; color: #4A453A">Clear the forest in under five minutes</p>
+<span style="align-self: flex-start; margin-top: 2px; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 15px; letter-spacing: 0.22em; color: #8E1B22; border: 2px solid #8E1B22; padding: 3px 10px 1px; transform: rotate(-4deg)">NOT YET</span>
+</div>
+
+<div style="position: relative; display: flex; flex-direction: column; gap: 10px; padding: 20px 22px 22px; background: #CFC7AD; color: #1C1A15; font-family: 'Special Elite', monospace; transform: rotate(1.1deg); box-shadow: 4px 6px 0 rgba(0,0,0,0.45)">
+<h3 style="margin: 0; font-weight: 400; font-size: 22px">After the final bell</h3>
+<p style="margin: 0; font-size: 17px; color: #4A453A">Survive until endless mode</p>
+<span style="align-self: flex-start; margin-top: 2px; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 15px; letter-spacing: 0.22em; color: #8E1B22; border: 2px solid #8E1B22; padding: 3px 10px 1px; transform: rotate(3deg)">NOT YET</span>
+</div>
+
+</div>
+</section>
+
+<div style="position: absolute; left: 120px; bottom: 32px; display: flex; gap: 32px; font-family: 'Overpass', sans-serif; font-weight: 600; font-size: 15px; letter-spacing: 0.18em; color: #8D9188">
+<span><b style="color: #E8E2D0">↑↓</b>  NAVIGATE</span>
+<span><b style="color: #E8E2D0">ENTER</b>  SELECT</span>
+</div>
+
+<div aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.16) 0px, rgba(0,0,0,0.16) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px)"></div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#7E1820","options":["#7E1820","#8E3A1C","#3F4A2E","#2B3A4A"]},"$preview":{"width":1920,"height":1080}}'>
+class Component extends DCLogic {
+renderVals() {
+return { accent: this.props.accent ?? '#7E1820' };
+}
+}
+</script>
+</body>
+</html>

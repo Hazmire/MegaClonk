@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Megaclonk rarity tiers</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English&amp;family=Overpass:wght@400;600;800&amp;family=Special+Elite&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1440px; height: 820px; box-sizing: border-box; padding: 64px 80px; background: #0E0F0E; color: #E8E2D0; font-family: 'Overpass', sans-serif; display: flex; flex-direction: column; gap: 44px">
+
+<div style="display: flex; align-items: baseline; justify-content: space-between">
+<h1 style="margin: 0; font-family: 'IM Fell English', serif; font-weight: 400; font-size: 60px; line-height: 1">Rarity tiers</h1>
+<span style="font-weight: 600; font-size: 15px; letter-spacing: 0.24em; color: #8D9188">THE RARER IT IS, THE LOUDER IT GETS</span>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 28px; padding-top: 14px">
+<sc-for list="{{tiers}}" as="t" hint-placeholder-count="5">
+<div style="display: flex; flex-direction: column; gap: 22px">
+<div style="position: relative; display: flex; flex-direction: column; height: 300px; box-sizing: border-box; border: {{t.frame}}; background: {{t.paper}}; color: #1C1A15; font-family: 'Special Elite', monospace; box-shadow: {{t.glow}}">
+<div style="display: flex; align-items: center; gap: 6px; padding: 8px 12px 6px; background: {{t.fill}}; color: {{t.onFill}}; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 13px; letter-spacing: 0.22em">
+<sc-if value="{{t.star}}" hint-placeholder-val="{{ true }}"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1l3 8 8 3-8 3-3 8-3-8-8-3 8-3z"></path></svg></sc-if>{{t.name}}
+</div>
+<div style="flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 10px; padding: 18px">
+<span style="font-size: 50px; line-height: 1; color: {{t.ink}}">{{t.value}}</span>
+<span style="font-size: 18px">Damage</span>
+<span style="font-size: 14px; color: #4A453A">[EXAMPLE VALUE]</span>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 14px; background: #1A1C19; border: 1px solid #3A3D38">
+<span style="align-self: flex-start; display: flex; align-items: center; gap: 5px; font-weight: 800; font-size: 12px; letter-spacing: 0.22em; padding: 4px 8px 2px; background: {{t.fill}}; color: {{t.onFill}}">{{t.name}}</span>
+<span style="font-size: 14px; color: #A9ADA4">{{t.rule}}</span>
+<span style="font-size: 13px; color: #6E726A">{{t.hex}}</span>
+</div>
+</div>
+</sc-for>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":820}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      tiers: [
+        { name: 'COMMON', star: false, fill: '#8F876F', onFill: '#F4EFE2', ink: '#1C1A15', paper: '#D3CBB2', frame: '1px solid #8F876F', glow: '5px 7px 0 rgba(0,0,0,0.5)', value: '+5%', rule: 'Plain paper, no frame.', hex: '#8F876F' },
+        { name: 'UNCOMMON', star: false, fill: '#33772F', onFill: '#F1F7EE', ink: '#2B6327', paper: '#D2D3BA', frame: '2px solid #33772F', glow: '0 0 16px 3px rgba(90,180,80,0.35), 5px 7px 0 rgba(0,0,0,0.5)', value: '+8%', rule: 'Thin frame, faint glow.', hex: '#33772F' },
+        { name: 'RARE', star: true, fill: '#2B6CB5', onFill: '#F2F6FB', ink: '#1F5A9C', paper: '#D5D6CB', frame: '4px solid #2B6CB5', glow: '0 0 28px 6px rgba(70,140,220,0.5), 5px 7px 0 rgba(0,0,0,0.5)', value: '+12%', rule: 'Thick frame, star, glow.', hex: '#2B6CB5' },
+        { name: 'EPIC', star: true, fill: '#7B3FB3', onFill: '#F7F1FC', ink: '#6A2FA3', paper: '#D6D0CF', frame: '4px double #A26DD8', glow: '0 0 34px 10px rgba(160,100,230,0.55), 5px 7px 0 rgba(0,0,0,0.5)', value: '+18%', rule: 'Double frame, stronger glow.', hex: '#7B3FB3' },
+        { name: 'LEGENDARY', star: true, fill: '#C9861A', onFill: '#1C1A15', ink: '#9A5F00', paper: '#E2D3AC', frame: '4px solid #E0A33A', glow: '0 0 0 3px #3A2600, 0 0 44px 14px rgba(240,170,60,0.65), 5px 7px 0 rgba(0,0,0,0.5)', value: '+25%', rule: 'Sodium-lamp gold, biggest glow. Add a shimmer in-engine.', hex: '#C9861A' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

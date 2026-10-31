@@ -9,9 +9,9 @@ func _initialize():call_deferred("run")
 func run():
  var game=load("res://scenes/main/main.tscn").instantiate();root.add_child(game);await process_frame
  game.sandbox=true;game.settings.focus_pause=false;game.settings.invincible=false;game.next_run_seed=923;game.map_seed_override=9;game.begin_run();game.set_physics_process(false);game.player.active=false;game.enemies.clear()
- check(Catalog.ACTIVE_WEAPONS.size()==10,"Exactly ten stable active weapon IDs")
+ check(Catalog.ACTIVE_WEAPONS.size()==8,"Exactly eight stable active weapon IDs")
  var entries=LoadoutCatalog.entries("weapons")
- check(entries.size()==10 and entries.all(func(e):return int(e.id) in Catalog.ACTIVE_WEAPONS),"Loadouts and unlocks expose only ten active weapons")
+ check(entries.size()==8 and entries.all(func(e):return int(e.id) in Catalog.ACTIVE_WEAPONS),"Loadouts and unlocks expose only eight active weapons")
  var regions=[]
  for id in Catalog.ACTIVE_WEAPONS:
   var texture=UIAssets.icon("weapons",str(id));var identity=str(texture.region) if texture is AtlasTexture else texture.resource_path
@@ -21,29 +21,29 @@ func run():
  for i in 1000:
   for choice in game.upgrade_choices():
    if choice.type=="supply":continue
-   if choice.metadata.rarity!="common":acquisition=false
+   if choice.type=="weapon" and choice.get("acquisition",false) and choice.metadata.rarity!="common":acquisition=false
    if choice.type=="weapon" and not int(choice.id) in Catalog.ACTIVE_WEAPONS:excluded=true
- check(acquisition and not excluded,"One thousand reward rolls contain only Common new acquisitions and no excluded weapons")
+ check(acquisition and not excluded,"One thousand reward rolls: new weapons are always Common and no excluded weapon appears")
  var lightning=game.upgrade_pool().filter(func(c):return c.type=="weapon" and c.id==2)[0]
  game.apply_upgrade(lightning);game.apply_upgrade({"type":"tome","id":"Vampire"})
  check(game.weapons[2].rarity=="common" and game.tome_rarities.Vampire=="common","Newly acquired weapon and Legendary-base tome store Common tier")
  var owned=game.upgrade_pool().filter(func(c):return c.type=="weapon" and c.id==2)[0]
  check(owned.metadata.rarity=="rare","Existing weapon upgrades retain supported base rarity")
- game.apply_upgrade(owned)
+ owned["tier"]="rare";game.apply_upgrade(owned)
  var tome=game.upgrade_pool().filter(func(c):return c.type=="tome" and c.id=="Vampire")[0]
  check(tome.metadata.rarity=="legendary","Existing tome upgrades retain Legendary support")
- game.apply_upgrade(tome)
- check(game.equipment_meta("weapons",2).rarity=="rare" and game.equipment_meta("tomes","Vampire").rarity=="legendary","Displayed equipment tiers follow applied upgrades")
- game.equip(13)
- check(game.save_run("user://art-reset-legacy.json") and game.load_run("user://art-reset-legacy.json") and game.weapons.has(13) and game.weapons[2].rarity=="rare" and game.tome_rarities.Vampire=="legendary","Archived weapon implementations and owned rarity state survive old-style loadout checkpoint")
- check(not game.upgrade_pool().any(func(c):return c.type=="weapon" and c.id==13),"Owned archived weapon does not reappear in new reward pool")
+ tome["tier"]="legendary";game.apply_upgrade(tome)
+ check(game.equipment_meta("weapons",2).rarity=="common" and game.equipment_meta("tomes","Vampire").rarity=="common","Displayed equipment tiers keep the rarity from first pick (upgrades do not recolour them)")
+ game.equip(15)
+ check(game.save_run("user://art-reset-legacy.json") and game.load_run("user://art-reset-legacy.json") and game.weapons.has(15) and game.weapons[2].rarity=="common" and game.tome_rarities.Vampire=="common","Owned weapon rarity and tome state survive an old-style loadout checkpoint")
+ check(not game.upgrade_pool().any(func(c):return c.type=="weapon" and not int(c.id) in Catalog.ACTIVE_WEAPONS),"Removed weapons never appear in the reward pool")
  game.mode="pause";game.frontend.inventory();await process_frame
  var trait_icon: Control
  for node in RewardScreens.descendants(game.frontend.menu):
-  if node is Control and node.tooltip_text.begins_with("Wall Climber"):trait_icon=node;break
+  if node is Control and node.tooltip_text.begins_with("Trait:"):trait_icon=node;break
  check(trait_icon!=null and not RewardScreens.descendants(trait_icon).any(func(n):return n is ColorRect and n.material is ShaderMaterial),"Build trait icon has no animated gold shader frame")
  game.frontend.enter_run();game.update_hud();await process_frame
- var trait_tile=game.frontend.loadout_icons.get_child(1).get_child(0)
+ var trait_tile=game.frontend.run_hud.trait_slot
  check(not RewardScreens.descendants(trait_tile).any(func(n):return n is ColorRect and n.material is ShaderMaterial),"HUD trait icon has no gold glow")
  game.player.active=false;game.player.position=game.map_layout.spawn;game.health=100;game.invulnerability=0;game.stats=Catalog.base_stats();game.enemies.clear();game.loadout_runtime.reset("climber","nova")
  var e=game.spawn_enemy(1,game.player.position+Vector3(1,0,0));e.variant=OrdinaryRoster.variant(1,0);e.detonated=false;e.damage=20;game.player.velocity=Vector3.ZERO

@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Megaclonk Fog County UI kit</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&amp;family=IM+Fell+English&amp;family=Overpass:wght@400;600;800&amp;family=Special+Elite&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#E8E2D0}a:hover{color:#FFFFFF}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1080px; box-sizing: border-box; padding: 64px 80px; background: #0E0F0E; color: #E8E2D0; font-family: 'Overpass', sans-serif; display: flex; flex-direction: column; gap: 44px; position: relative; overflow: hidden">
+
+<div style="display: flex; align-items: baseline; justify-content: space-between">
+<h1 style="margin: 0; font-family: 'IM Fell English SC', serif; font-weight: 400; font-size: 64px; line-height: 1">Fog County kit</h1>
+<span style="font-weight: 600; font-size: 15px; letter-spacing: 0.28em; color: #8D9188">MENU · MEMOS · HUD TIE-IN · TOKENS</span>
+</div>
+
+<section style="display: flex; flex-direction: column; gap: 18px">
+<h2 style="margin: 0; font-weight: 800; font-size: 16px; letter-spacing: 0.3em; color: #8D9188">MENU ITEM</h2>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<button type="button" style="display: flex; align-items: center; height: 60px; padding: 0 20px 0 48px; border: none; text-align: left; font-family: 'IM Fell English', serif; font-size: 34px; color: #B9BAB1; background: transparent">Quests</button>
+<span style="font-size: 15px; color: #8D9188">Default — ash grey, indented</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<button type="button" style="display: flex; align-items: center; gap: 16px; height: 60px; padding: 0 20px; border: none; text-align: left; font-family: 'IM Fell English', serif; font-size: 34px; color: #F4EFE2; background: #7E1820"><span aria-hidden="true" style="width: 12px; height: 12px; background: #F4EFE2"></span>Quests</button>
+<span style="font-size: 15px; color: #8D9188">Selected — HP-bar red, square cursor</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<button type="button" style="display: flex; align-items: center; gap: 16px; height: 60px; padding: 0 20px; border: none; text-align: left; font-family: 'IM Fell English', serif; font-size: 34px; color: #7E1820; background: #E8E2D0"><span aria-hidden="true" style="width: 12px; height: 12px; background: #7E1820"></span>Quests</button>
+<span style="font-size: 15px; color: #8D9188">Pressed — one-frame invert flash</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<button type="button" disabled="disabled" style="display: flex; align-items: center; height: 60px; padding: 0 20px 0 48px; border: none; text-align: left; font-family: 'IM Fell English', serif; font-size: 34px; color: #6A6D66; background: transparent; text-decoration: line-through">Quests</button>
+<span style="font-size: 15px; color: #8D9188">Locked — struck through</span>
+</div>
+</div>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 18px">
+<h2 style="margin: 0; font-weight: 800; font-size: 16px; letter-spacing: 0.3em; color: #8D9188">QUEST MEMO</h2>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; align-items: start">
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 20px 22px; background: #D3CBB2; color: #1C1A15; font-family: 'Special Elite', monospace; box-shadow: 4px 6px 0 rgba(0,0,0,0.5)">
+<h3 style="margin: 0; font-weight: 400; font-size: 22px">Scythes mastery</h3>
+<p style="margin: 0; font-size: 17px; color: #4A453A">100 kills using Scythes</p>
+<div style="display: flex; align-items: center; gap: 12px"><div style="flex: 1; height: 8px; background: #B2A98E"><div style="width: 63%; height: 100%; background: #1C1A15"></div></div><span style="font-size: 17px">63/100</span></div>
+</div>
+<span style="font-size: 15px; color: #8D9188">Counted — ink bar + typed count</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 20px 22px; background: #D3CBB2; color: #1C1A15; font-family: 'Special Elite', monospace; box-shadow: 4px 6px 0 rgba(0,0,0,0.5)">
+<h3 style="margin: 0; font-weight: 400; font-size: 22px">Before the fifth bell</h3>
+<p style="margin: 0; font-size: 17px; color: #4A453A">Clear the forest in under five minutes</p>
+<span style="align-self: flex-start; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 15px; letter-spacing: 0.22em; color: #8E1B22; border: 2px solid #8E1B22; padding: 3px 10px 1px; transform: rotate(-4deg)">NOT YET</span>
+</div>
+<span style="font-size: 15px; color: #8D9188">Pass/fail — red rubber stamp</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 20px 22px; background: #D3CBB2; color: #1C1A15; font-family: 'Special Elite', monospace; box-shadow: 4px 6px 0 rgba(0,0,0,0.5)">
+<h3 style="margin: 0; font-weight: 400; font-size: 22px; text-decoration: line-through; text-decoration-color: #8E1B22; text-decoration-thickness: 2px">Chunkers mastery</h3>
+<p style="margin: 0; font-size: 17px; color: #4A453A">100 kills using Chunkers</p>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+<span style="font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 15px; letter-spacing: 0.22em; color: #F4EFE2; background: #8E1B22; padding: 4px 10px 2px; transform: rotate(-3deg)">DONE</span>
+<button type="button" style="border: 2px solid #1C1A15; background: transparent; cursor: pointer; font-family: 'Overpass', sans-serif; font-weight: 800; font-size: 14px; letter-spacing: 0.18em; color: #1C1A15; padding: 8px 12px 6px">CLAIM [REWARD]</button>
+</div>
+</div>
+<span style="font-size: 15px; color: #8D9188">Complete — struck title, solid stamp</span>
+</div>
+</div>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 18px">
+<h2 style="margin: 0; font-weight: 800; font-size: 16px; letter-spacing: 0.3em; color: #8D9188">HUD TIE-IN — SAME TOKENS IN-GAME</h2>
+<div style="display: flex; align-items: center; gap: 48px; padding: 24px 28px; background: #6E7A72">
+<div style="display: flex; flex-direction: column; gap: 6px; width: 360px">
+<span style="font-weight: 800; font-size: 14px; letter-spacing: 0.28em; color: #1A1D1A">HP</span>
+<div style="height: 22px; background: #2A1416; border: 2px solid #1A1D1A; display: flex; align-items: center"><div style="width: 100%; height: 100%; background: #7E1820; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; color: #F4EFE2; letter-spacing: 0.1em">100 / 100</div></div>
+</div>
+<span style="font-weight: 800; font-size: 52px; line-height: 1; color: #F4EFE2; font-variant-numeric: tabular-nums; text-shadow: 3px 3px 0 #1A1D1A">09:53</span>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-weight: 600; font-size: 14px; letter-spacing: 0.3em; color: #1A1D1A">GOLD</span>
+<span style="font-weight: 800; font-size: 34px; line-height: 1; color: #F4EFE2; text-shadow: 3px 3px 0 #1A1D1A">4</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-weight: 600; font-size: 14px; letter-spacing: 0.3em; color: #1A1D1A">CHESTS</span>
+<span style="font-weight: 800; font-size: 34px; line-height: 1; color: #F4EFE2; text-shadow: 3px 3px 0 #1A1D1A">15</span>
+</div>
+</div>
+</section>
+
+<section style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px">
+<div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 56px; background: #0E0F0E; border: 1px solid #3A3D38"></div><span style="font-size: 13px">Night<br><span style="color: #8D9188">#0E0F0E</span></span></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 56px; background: #8C978F"></div><span style="font-size: 13px">Fog<br><span style="color: #8D9188">#8C978F</span></span></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 56px; background: #B9BAB1"></div><span style="font-size: 13px">Ash<br><span style="color: #8D9188">#B9BAB1</span></span></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 56px; background: #E8E2D0"></div><span style="font-size: 13px">Bone<br><span style="color: #8D9188">#E8E2D0</span></span></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 56px; background: #D3CBB2"></div><span style="font-size: 13px">Memo<br><span style="color: #8D9188">#D3CBB2</span></span></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 56px; background: #7E1820"></div><span style="font-size: 13px">Rust red<br><span style="color: #8D9188">#7E1820</span></span></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; align-items: baseline; gap: 16px"><span style="font-family: 'IM Fell English', serif; font-size: 34px">Settings</span><span style="font-size: 14px; color: #8D9188">IM Fell English — title, menu</span></div>
+<div style="display: flex; align-items: baseline; gap: 16px"><span style="font-weight: 800; font-size: 22px; letter-spacing: 0.24em">SILVER 452</span><span style="font-size: 14px; color: #8D9188">Overpass (Highway Gothic) — labels, HUD, numbers</span></div>
+<div style="display: flex; align-items: baseline; gap: 16px"><span style="font-family: 'Special Elite', monospace; font-size: 22px">Survive until endless mode</span><span style="font-size: 14px; color: #8D9188">Special Elite — memos only</span></div>
+</div>
+</section>
+
+<div aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.14) 0px, rgba(0,0,0,0.14) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px)"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1080}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

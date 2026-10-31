@@ -14,12 +14,13 @@ func tick(game: Node,delta: float):
  if slide:
   scrape_clock-=delta
   if not sliding or scrape_clock<=0:game.audio.stop_event("player.slide");game.audio.emit("player.slide",player.position,0.65);scrape_clock=0.65
- elif sliding:game.audio.stop_event("player.slide");scrape_clock=0
+ elif sliding:game.audio.stop_event("player.slide");scrape_clock=0;game.audio.emit("movement.slide_recover",player.position,0.8)
  if on_ground and not slide and speed>0.5:
   distance+=speed*delta
   if distance>=2.1:
    distance=fmod(distance,2.1)
    var rock=game.player.get_floor_normal().y<0.92
-   game.audio.emit("player.footstep.rock" if rock else "player.footstep.grass",player.position,0.75 if player.posture=="standing" else 0.4)
+   # Surfaces: steep ground is stone, stage 1 is grass, every later stage is dirt (stages have no ground-material data).
+   game.audio.emit("player.footstep.rock" if rock else ("player.footstep.grass" if int(game.get("stage") if game.get("stage")!=null else 1)==1 else "movement.step_dirt"),player.position,0.75 if player.posture=="standing" else 0.4)
  else:distance=0
  grounded=on_ground;sliding=slide

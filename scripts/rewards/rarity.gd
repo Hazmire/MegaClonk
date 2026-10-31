@@ -15,6 +15,6 @@ static func definition(id: String) -> Dictionary:
 # Preserve the existing chest luck influence while using the new tier selector.
 # Zero luck gives the prescribed weights; positive luck favors higher tiers.
 static func reward_weights(luck: float=0.0) -> Dictionary:
- var boost=clampf(luck*0.2,0,0.4);var result={}
- for id in IDS:result[id]=float(TIERS[id].weight)*(1-boost if id=="common" else 1+boost)
- return result
+ var base={}
+ for id in IDS:base[id]=float(TIERS[id].weight)
+ return Economy.tier_weights(base,luck)

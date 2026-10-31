@@ -39,11 +39,32 @@ static func visual(game: Node,object: Dictionary,inside: bool) -> void:
  if object.get("golden",false):text="GOLDEN · "+text;label.modulate=Color("ffe08a")
  if object.used and object.node.has_node("GoldenParticles"):object.node.get_node("GoldenParticles").emitting=false
  if label.text!=text:label.text=text
+# Charge audio: a loop whose pitch rises 1.0 -> 1.25 with progress, one ordered tick per 20 %, a cancel when the player
+# leaves a partly charged shrine. State lives here (keyed by shrine index), never in the shrine object, so saves are untouched.
+const LOOP_KEY="shrine_charge"
+static var audio_state: Dictionary={}
+static func audio(game: Node,object: Dictionary,inside: bool) -> void:
+ if not is_instance_valid(game.audio):return
+ var index=int(object.get("shrine_index",0));var state=audio_state.get(index)
+ if state==null:state={"inside":false,"step":0}
+ var fraction=clampf(float(object.charge)/SETTINGS.shrine_seconds,0,1);var step=int(fraction*5.0+0.0001)
+ var pos: Vector3=object.node.position
+ if inside and not object.used:
+  if game.audio.loop_start(LOOP_KEY,"world.shrine_charge_loop",pos):game.audio.loop_update(LOOP_KEY,1.0+0.25*fraction,pos)
+  if step>int(state.step):game.audio.emit("world.shrine_charge_tick",pos,1.0,1.0,step-1)
+ elif bool(state.inside) and fraction<1.0:
+  game.audio.loop_stop(LOOP_KEY)
+  if fraction>0.0:game.audio.emit("world.shrine_charge_cancel",pos)
+ if fraction>=1.0:game.audio.loop_stop(LOOP_KEY)
+ if step<int(state.step) or inside:state.step=step
+ state.inside=inside
+ audio_state[index]=state
 static func tick(game: Node,object: Dictionary,distance: float,delta: float) -> void:
  if object.used or game.health<=0:return
  var inside=distance<=SETTINGS.shrine_radius
  if inside:object.charge=minf(SETTINGS.shrine_seconds,float(object.charge)+delta)
  elif SETTINGS.shrine_decay>0:object.charge=maxf(0,float(object.charge)-SETTINGS.shrine_decay*SETTINGS.shrine_seconds*delta)
+ audio(game,object,inside)
  if object.charge>=SETTINGS.shrine_seconds:
   object.used=true
   var choices=ShrineRewards.generate(game.stats,game.rng,object.get("golden",false))
@@ -51,7 +72,7 @@ static func tick(game: Node,object: Dictionary,distance: float,delta: float) -> 
   game.shrine_reward_queue.append({"choices":choices,"golden":object.get("golden",false)})
   game.run_metrics["shrines"]=int(game.run_metrics.get("shrines",0))+1
   game.combat_fx.burst("sparks_shower",object.node.position,2 if object.get("golden",false) else 1)
-  game.flash(object.node.position,Color("ffd04d") if object.get("golden",false) else Color("8affcc"),SETTINGS.shrine_radius);game.play_sound("level")
+  game.flash(object.node.position,Color("ffd04d") if object.get("golden",false) else Color("8affcc"),SETTINGS.shrine_radius);game.play_sound("world.shrine_complete")
   if game.mode=="run":ShrineRewards.present_next(game)
  elif inside:game.notice.text="Shrine · %d%% · stay inside the orb"%int(float(object.charge)/SETTINGS.shrine_seconds*100)
  visual(game,object,inside)

@@ -9,15 +9,13 @@ This update builds on the existing v9 gameplay and imports supplied archives fro
 | Sword | 0 | Close-range sweeping attacks |
 | Firestaff | 1 | Fire projectiles and impact flame |
 | Lightning Staff | 2 | Chained electrical hits |
-| Chunkers | 4 | Orbiting rocks with stone debris |
-| Bone | 5 | Bouncing bone projectile |
 | Bow | 6 | Long-range piercing arrows |
 | Revolver | 7 | Direct bullets, muzzle flashes and original shot audio |
-| Bananarang | 9 | Returning curved projectile |
-| Aura | 10 | Local magical area damage |
-| Mines | 16 | Planted mechanical charges and explosions |
+| Scythes | 9 | Spinning blades that return to the player (temporary placeholder mesh) |
+| Aura | 10 | Pulsing dark-green occult circle |
+| Shotgun | 15 | Single blast of independent pellets |
 
-These are existing MEGACLONK equivalents, not a claim of verified original Megabonk naming or balance. The public weapons reference was unavailable (HTTP503). Archived implementations remain for save compatibility; old equipped weapons can continue, but no excluded IDs enter new loadouts, unlock browsers, sandbox selection or upgrade pools. Chests and shops remain item rewards.
+These are existing MEGACLONK equivalents, not a claim of verified original Megabonk naming or balance. The public weapons reference was unavailable (HTTP503). Weapon Overhaul 2.0 removed Chunkers, Mines, Bone and the other retired weapons entirely: old saves drop them (socketed gems are refunded) and they never enter loadouts, unlock browsers, sandbox selection or upgrade pools. See WEAPON_OVERHAUL_REPORT.md. Chests and shops remain item rewards.
 
 First-time weapon/tome level-up rewards are Common in generated metadata, stored ownership state and card/HUD presentation. Existing-item upgrades retain the established supported registry tier. Weapon and tome ownership rarity is saved. Legacy saves without rarity fields keep compatible derived display defaults. Item/shrine rarity probabilities are unchanged.
 

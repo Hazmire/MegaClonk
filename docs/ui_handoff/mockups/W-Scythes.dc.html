@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Scythes — effect draft</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English&amp;family=Overpass:wght@400;600;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+@keyframes scThrow{0%{transform:translate(0,0);opacity:1;animation-timing-function:cubic-bezier(.2,.7,.4,1)}45%{transform:translate(430px,-30px);opacity:1;animation-timing-function:cubic-bezier(.6,0,.8,.3)}90%{transform:translate(0,0);opacity:1}91%{opacity:0}100%{transform:translate(0,0);opacity:0}}
+@keyframes scSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes scDust{0%{opacity:0;transform:translate(0,0)}1%{opacity:1}28%{opacity:0;transform:translate(-8px,52px)}100%{opacity:0;transform:translate(-8px,52px)}}
+@keyframes scHitA{0%,14.5%{filter:none;transform:none}15%{filter:brightness(0) invert(1);transform:translateX(8px)}19%{filter:none;transform:none}74.5%{filter:none;transform:none}75%{filter:brightness(0) invert(1);transform:translateX(-8px)}79%{filter:none;transform:none}100%{filter:none}}
+@keyframes scHitB{0%,40%{filter:none;transform:none}41%{filter:brightness(0) invert(1);transform:translateX(8px)}45%{filter:none;transform:none}100%{filter:none}}
+@keyframes scCatch{0%,89%{opacity:0;transform:scale(.4)}90%{opacity:1;transform:scale(1)}96%{opacity:0;transform:scale(1.8)}100%{opacity:0}}
+</style>
+</helmet>
+<div style="width: {{rootW}}px; height: {{rootH}}px; box-sizing: border-box; padding: {{pad}}px; background: #0E0F0E; color: #E8E2D0; font-family: 'Overpass', sans-serif; display: flex; gap: 36px">
+
+<div style="position: relative; flex: 0 0 auto; width: 720px; height: 640px; overflow: hidden; background-color: #7E8982; background-image: repeating-conic-gradient(#818C85 0 25%, #7A857E 0 50%); background-size: 16px 16px; border: 1px solid #3A3D38">
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; bottom: 0; height: 340px; background-color: #1F2620; background-image: repeating-conic-gradient(#222922 0 25%, #1C221D 0 50%); background-size: 16px 16px"></div>
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 250px; height: 120px; background: linear-gradient(180deg, rgba(126,137,130,0) 0%, rgba(126,137,130,0.9) 50%, rgba(126,137,130,0) 100%)"></div>
+
+<img src="../reference/vfx_player_stand_in.png" alt="Player" style="position: absolute; left: 100px; top: 370px; width: 60px; height: 100px; image-rendering: pixelated">
+<img src="../reference/vfx_enemy_stand_in.png" alt="Enemy" style="position: absolute; left: 450px; top: 385px; width: 60px; height: 85px; image-rendering: pixelated; animation: scHitA 2.4s linear infinite">
+<img src="../reference/vfx_enemy_stand_in.png" alt="Enemy" style="position: absolute; left: 565px; top: 380px; width: 60px; height: 85px; image-rendering: pixelated; animation: scHitB 2.4s linear infinite">
+
+<span aria-hidden="true" style="position: absolute; left: 290px; top: 410px; width: 8px; height: 8px; background: #7A5232; animation: scDust 2.4s ease-in 0.108s infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 300px; top: 418px; width: 6px; height: 6px; background: #5A3A22; animation: scDust 2.4s ease-in 0.12s infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 385px; top: 406px; width: 8px; height: 8px; background: #9A7048; animation: scDust 2.4s ease-in 0.216s infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 395px; top: 414px; width: 6px; height: 6px; background: #5A3A22; animation: scDust 2.4s ease-in 0.23s infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 455px; top: 402px; width: 8px; height: 8px; background: #7A5232; animation: scDust 2.4s ease-in 0.324s infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 520px; top: 400px; width: 6px; height: 6px; background: #9A7048; animation: scDust 2.4s ease-in 0.486s infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 560px; top: 398px; width: 8px; height: 8px; background: #5A3A22; animation: scDust 2.4s ease-in 0.648s infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 565px; top: 400px; width: 8px; height: 8px; background: #7A5232; animation: scDust 2.4s ease-in 1.404s infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 509px; top: 404px; width: 6px; height: 6px; background: #9A7048; animation: scDust 2.4s ease-in 1.62s infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 414px; top: 408px; width: 8px; height: 8px; background: #5A3A22; animation: scDust 2.4s ease-in 1.836s infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 424px; top: 416px; width: 6px; height: 6px; background: #7A5232; animation: scDust 2.4s ease-in 1.85s infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 315px; top: 412px; width: 8px; height: 8px; background: #9A7048; animation: scDust 2.4s ease-in 2s infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 229px; top: 414px; width: 6px; height: 6px; background: #7A5232; animation: scDust 2.4s ease-in 2.106s infinite"></span>
+
+<div aria-hidden="true" style="position: absolute; left: 125px; top: 360px; width: 80px; height: 80px; animation: scThrow 2.4s infinite">
+<img src="../icons_4x/weapons/scythes.png" alt="" style="width: 80px; height: 80px; image-rendering: pixelated; animation: scSpin 0.32s linear infinite">
+</div>
+<span aria-hidden="true" style="position: absolute; left: 145px; top: 380px; width: 40px; height: 40px; border-radius: 50%; border: 3px solid #E8DFC8; box-sizing: border-box; animation: scCatch 2.4s linear infinite"></span>
+
+<span style="position: absolute; left: 330px; top: 486px; display: {{noteDisplay}}; font-weight: 800; font-size: 11px; letter-spacing: 0.18em; color: #E8E2D0; background: rgba(14,15,14,0.7); padding: 3px 6px 1px">HITS GOING OUT AND COMING BACK</span>
+
+<div aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 50% 55%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.55) 100%)"></div>
+<div aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.14) 0px, rgba(0,0,0,0.14) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px)"></div>
+<span style="position: absolute; left: 16px; top: 14px; display: {{noteDisplay}}; font-weight: 800; font-size: 12px; letter-spacing: 0.26em; color: #0E0F0E; background: rgba(232,226,208,0.85); padding: 4px 8px 2px">EFFECT PREVIEW · LOOP</span>
+</div>
+
+<sc-if value="{{full}}" hint-placeholder-val="{{ true }}">
+<div style="flex: 1; display: flex; flex-direction: column; gap: 22px">
+<div style="display: flex; align-items: center; gap: 18px">
+<div style="display: flex; align-items: center; justify-content: center; width: 112px; height: 112px; background: #1A1C19; border: 1px solid #5A5D56"><img src="../icons_4x/weapons/scythes.png" alt="Scythes icon" style="width: 96px; height: 96px; image-rendering: pixelated"></div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.28em; color: #8D9188">WEAPON · DRAFT · WAS BANANARANG</span>
+<h1 style="margin: 0; font-family: 'IM Fell English', serif; font-weight: 400; font-size: 40px; line-height: 1">Scythes</h1>
+</div>
+</div>
+<section style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-weight: 800; font-size: 13px; letter-spacing: 0.28em; color: #8D9188">LOOK</h2>
+<ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 16px; line-height: 1.4; color: #B9BAB1">
+<li>The scythe spins fast end over end the whole time it is in the air (placeholder sprite until your asset is ready).</li>
+<li>Brown flecks shed along its path and fall to the ground, showing its speed and arc.</li>
+<li>A small bone-coloured ring flashes at the hand when it is caught.</li>
+</ul>
+</section>
+<section style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-weight: 800; font-size: 13px; letter-spacing: 0.28em; color: #8D9188">BEHAVIOUR</h2>
+<ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 16px; line-height: 1.4; color: #B9BAB1">
+<li>Thrown out, slows at the far point, then accelerates back to the owner.</li>
+<li>Can hit the same enemy on the way out and on the way back.</li>
+</ul>
+</section>
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-weight: 800; font-size: 13px; letter-spacing: 0.28em; color: #8D9188">LEVEL-UP POOL</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">ATTACK SPEED</span>
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">DAMAGE</span>
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">PROJECTILE COUNT</span>
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">PROJECTILE SPEED</span>
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">SIZE</span>
+</div>
+</section>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"stageOnly":{"editor":"boolean","default":false},"$preview":{"width":1200,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var so = !!this.props.stageOnly;
+    return { full: !so, rootW: so ? 720 : 1200, rootH: so ? 640 : 720, pad: so ? 0 : 40, noteDisplay: so ? 'none' : 'block' };
+  }
+}
+</script>
+</body>
+</html>

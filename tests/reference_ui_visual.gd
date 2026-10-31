@@ -12,8 +12,8 @@ func run():
  game.weapons.clear()
  for id in [0,1,2,6]:game.equip(id);game.weapons[id].level=3
  for id in ["Might","Haste","Wisdom","Iron"]:game.apply_upgrade({"type":"tome","id":id})
- for id in Catalog.ITEMS.size():game.apply_item(id)
- game.apply_item(1);game.apply_item(1);game.apply_item(2)
+ for id in Catalog.ITEM_IDS:game.grant_item(id,true)
+ game.grant_item("salted_pork");game.grant_item("salted_pork")
  for x in range(-72,73,24):
   for z in [-48,-24,0]:game.frontend.minimap.reveal(Vector3(x,0,z))
  game.gold=245;game.level=12;game.elapsed=149;game.health=83
@@ -25,7 +25,7 @@ func run():
   game.frontend.world_map(true);await capture("map_"+str(size.x))
  root.size=Vector2i(1280,720);DisplayServer.window_set_size(Vector2i(1280,720))
  game.frontend.shop({"tier":"Rare","offers":[0,6,8],"sold":[],"used":false});await capture("shop")
- game.frontend.reward(Catalog.ITEMS[10]);await create_timer(0.4).timeout;await capture("icon_cycling");await create_timer(3.3).timeout;await capture("legendary_reveal")
+ game.frontend.reward("hourglass_damned");await create_timer(0.4).timeout;await capture("icon_cycling");await create_timer(3.3).timeout;await capture("legendary_reveal")
  game.add_xp_drop(game.player.position+Vector3(2,0.7,1),5);game.add_red_gem(game.player.position+Vector3(-2,0.7,1))
  game.pending_upgrades=0;game.resume();game.set_physics_process(false);game.player.active=false;await capture("gems")
  game.queue_free();await process_frame;await process_frame;await process_frame;quit()

@@ -15,7 +15,7 @@ func clear_case():
  for effect in game.effects:
   if effect.node.has_meta("pool_key"):game.pool.release(effect.node)
   else:effect.node.queue_free()
- game.effects.clear();game.projectiles.clear();game.fields.clear();game.weapons.clear()
+ game.effects.clear();game.projectiles.clear();game.weapons.clear()
  game.mode="run";game.frontend.enter_run();game.player.active=false
 func step():
  game.update_enemies(1.0/60);game.rebuild_grid();game.combat_fx.tick(1.0/60,true);game.update_effects(1.0/60);game.update_hud();game.portal_wind._process(1.0/60)
@@ -55,7 +55,7 @@ func run():
   var metrics=await measure(12 if rendered else 120);metrics.enemies=game.enemies.size();metrics.requested=count
   result.swarms.append(metrics);print("SWARM PROFILE "+JSON.stringify(metrics))
  clear_case()
- for id in [1,2,4,7]:game.equip(id)
+ for id in [1,2,7,15]:game.equip(id)
  for i in 80:game.spawn_enemy(-1,center+Vector3(cos(i)*12,0,sin(i)*12))
  for i in 60:
   game.update_weapons(1.0/60);game.update_projectiles(1.0/60);step()

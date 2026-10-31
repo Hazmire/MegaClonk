@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lightning Staff — effect draft</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English&amp;family=Overpass:wght@400;600;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+@keyframes lzBolt{0%{opacity:0}1%{opacity:1}4%{opacity:.35}6%{opacity:1}12%{opacity:0}100%{opacity:0}}
+@keyframes lzHit{0%,1%{filter:none}2%{filter:brightness(0) invert(1)}11%{filter:brightness(0) invert(1)}14%{filter:none}100%{filter:none}}
+@keyframes lzRing{0%{transform:scale(.2);opacity:0}1%{opacity:1}14%{transform:scale(2.4);opacity:0}100%{opacity:0}}
+@keyframes lzSky{0%{opacity:0}1%{opacity:.5}8%{opacity:0}100%{opacity:0}}
+</style>
+</helmet>
+<div style="width: {{rootW}}px; height: {{rootH}}px; box-sizing: border-box; padding: {{pad}}px; background: #0E0F0E; color: #E8E2D0; font-family: 'Overpass', sans-serif; display: flex; gap: 36px">
+
+<div style="position: relative; flex: 0 0 auto; width: 720px; height: 640px; overflow: hidden; background-color: #7E8982; background-image: repeating-conic-gradient(#818C85 0 25%, #7A857E 0 50%); background-size: 16px 16px; border: 1px solid #3A3D38">
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; bottom: 0; height: 340px; background-color: #1F2620; background-image: repeating-conic-gradient(#222922 0 25%, #1C221D 0 50%); background-size: 16px 16px"></div>
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 250px; height: 120px; background: linear-gradient(180deg, rgba(126,137,130,0) 0%, rgba(126,137,130,0.9) 50%, rgba(126,137,130,0) 100%)"></div>
+<div aria-hidden="true" style="position: absolute; inset: 0; background: #BEE1FF; animation: lzSky 2.4s linear 0s infinite"></div>
+<div aria-hidden="true" style="position: absolute; inset: 0; background: #BEE1FF; animation: lzSky 2.4s linear 0.6s infinite"></div>
+<div aria-hidden="true" style="position: absolute; inset: 0; background: #BEE1FF; animation: lzSky 2.4s linear 1.2s infinite"></div>
+
+<img src="../reference/vfx_player_stand_in.png" alt="Player" style="position: absolute; left: 100px; top: 370px; width: 60px; height: 100px; image-rendering: pixelated">
+<img src="../reference/vfx_enemy_stand_in.png" alt="Enemy" style="position: absolute; left: 400px; top: 385px; width: 60px; height: 85px; image-rendering: pixelated; animation: lzHit 2.4s linear 0s infinite">
+<img src="../reference/vfx_enemy_stand_in.png" alt="Enemy" style="position: absolute; left: 510px; top: 405px; width: 60px; height: 85px; image-rendering: pixelated; animation: lzHit 2.4s linear 0.6s infinite">
+<img src="../reference/vfx_enemy_stand_in.png" alt="Enemy" style="position: absolute; left: 620px; top: 380px; width: 60px; height: 85px; image-rendering: pixelated; animation: lzHit 2.4s linear 1.2s infinite">
+
+<svg aria-hidden="true" style="position: absolute; left: 400px; top: 0; animation: lzBolt 2.4s linear 0s infinite; filter: drop-shadow(0 0 8px #7FC4FF)" width="60" height="395" viewBox="0 0 60 400" preserveAspectRatio="none"><polyline points="34,0 16,70 42,130 20,200 40,270 24,330 30,400" fill="none" stroke="#3D7FD6" stroke-width="12" vector-effect="non-scaling-stroke" stroke-linejoin="miter"></polyline><polyline points="34,0 16,70 42,130 20,200 40,270 24,330 30,400" fill="none" stroke="#DDF1FF" stroke-width="4" vector-effect="non-scaling-stroke"></polyline><polyline points="16,70 2,110" fill="none" stroke="#7FC4FF" stroke-width="3" vector-effect="non-scaling-stroke"></polyline></svg>
+<svg aria-hidden="true" style="position: absolute; left: 510px; top: 0; animation: lzBolt 2.4s linear 0.6s infinite; filter: drop-shadow(0 0 8px #7FC4FF)" width="60" height="415" viewBox="0 0 60 400" preserveAspectRatio="none"><polyline points="26,0 44,60 18,140 40,210 22,280 36,340 30,400" fill="none" stroke="#3D7FD6" stroke-width="12" vector-effect="non-scaling-stroke"></polyline><polyline points="26,0 44,60 18,140 40,210 22,280 36,340 30,400" fill="none" stroke="#DDF1FF" stroke-width="4" vector-effect="non-scaling-stroke"></polyline><polyline points="40,210 58,250" fill="none" stroke="#7FC4FF" stroke-width="3" vector-effect="non-scaling-stroke"></polyline></svg>
+<svg aria-hidden="true" style="position: absolute; left: 620px; top: 0; animation: lzBolt 2.4s linear 1.2s infinite; filter: drop-shadow(0 0 8px #7FC4FF)" width="60" height="390" viewBox="0 0 60 400" preserveAspectRatio="none"><polyline points="30,0 14,80 40,150 18,220 42,290 22,350 30,400" fill="none" stroke="#3D7FD6" stroke-width="12" vector-effect="non-scaling-stroke"></polyline><polyline points="30,0 14,80 40,150 18,220 42,290 22,350 30,400" fill="none" stroke="#DDF1FF" stroke-width="4" vector-effect="non-scaling-stroke"></polyline></svg>
+<svg aria-hidden="true" style="position: absolute; left: 545px; top: 395px; animation: lzBolt 2.4s linear 0.72s infinite; filter: drop-shadow(0 0 6px #7FC4FF)" width="110" height="40" viewBox="0 0 110 40"><polyline points="0,20 20,6 38,30 58,8 76,28 94,10 110,4" fill="none" stroke="#3D7FD6" stroke-width="8"></polyline><polyline points="0,20 20,6 38,30 58,8 76,28 94,10 110,4" fill="none" stroke="#DDF1FF" stroke-width="3"></polyline></svg>
+
+<span aria-hidden="true" style="position: absolute; left: 400px; top: 365px; width: 60px; height: 60px; box-sizing: border-box; border-radius: 50%; border: 4px solid #DDF1FF; animation: lzRing 2.4s linear 0s infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 510px; top: 385px; width: 60px; height: 60px; box-sizing: border-box; border-radius: 50%; border: 4px solid #DDF1FF; animation: lzRing 2.4s linear 0.6s infinite"></span>
+<span aria-hidden="true" style="position: absolute; left: 620px; top: 360px; width: 60px; height: 60px; box-sizing: border-box; border-radius: 50%; border: 4px solid #DDF1FF; animation: lzRing 2.4s linear 1.2s infinite"></span>
+
+<span style="position: absolute; left: 555px; top: 455px; display: {{noteDisplay}}; font-weight: 800; font-size: 11px; letter-spacing: 0.18em; color: #DDF1FF; background: rgba(14,15,14,0.7); padding: 3px 6px 1px">BOUNCE</span>
+
+<div aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 50% 55%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.55) 100%)"></div>
+<div aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.14) 0px, rgba(0,0,0,0.14) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px)"></div>
+<span style="position: absolute; left: 16px; top: 14px; display: {{noteDisplay}}; font-weight: 800; font-size: 12px; letter-spacing: 0.26em; color: #0E0F0E; background: rgba(232,226,208,0.85); padding: 4px 8px 2px">EFFECT PREVIEW · LOOP</span>
+</div>
+
+<sc-if value="{{full}}" hint-placeholder-val="{{ true }}">
+<div style="flex: 1; display: flex; flex-direction: column; gap: 22px">
+<div style="display: flex; align-items: center; gap: 18px">
+<div style="display: flex; align-items: center; justify-content: center; width: 112px; height: 112px; background: #1A1C19; border: 1px solid #5A5D56"><img src="../icons_4x/weapons/lightning.png" alt="Lightning Staff icon" style="width: 96px; height: 96px; image-rendering: pixelated"></div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.28em; color: #8D9188">WEAPON · DRAFT</span>
+<h1 style="margin: 0; font-family: 'IM Fell English', serif; font-weight: 400; font-size: 40px; line-height: 1">Lightning Staff</h1>
+</div>
+</div>
+<section style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-weight: 800; font-size: 13px; letter-spacing: 0.28em; color: #8D9188">LOOK</h2>
+<ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 16px; line-height: 1.4; color: #B9BAB1">
+<li>Blue bolts drop from the sky straight onto enemies' heads — a dark-blue outer stroke around a near-white core.</li>
+<li>Struck enemies flash pure white for a few frames, with a pale ring at the head and a brief blue tint over the whole screen.</li>
+<li>Bounces arc sideways from the struck enemy to the next one.</li>
+</ul>
+</section>
+<section style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-weight: 800; font-size: 13px; letter-spacing: 0.28em; color: #8D9188">BEHAVIOUR</h2>
+<ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 16px; line-height: 1.4; color: #B9BAB1">
+<li>No travel time: the strike lands on the target instantly.</li>
+<li>Size widens the strike so one bolt can hit a whole cluster.</li>
+</ul>
+</section>
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-weight: 800; font-size: 13px; letter-spacing: 0.28em; color: #8D9188">LEVEL-UP POOL</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">PROJECTILE COUNT</span>
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">DAMAGE</span>
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">SIZE</span>
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">BOUNCES</span>
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.16em; padding: 6px 10px 4px; border: 1px solid #5A5D56">ATTACK SPEED</span>
+</div>
+</section>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"stageOnly":{"editor":"boolean","default":false},"$preview":{"width":1200,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var so = !!this.props.stageOnly;
+    return { full: !so, rootW: so ? 720 : 1200, rootH: so ? 640 : 720, pad: so ? 0 : 40, noteDisplay: so ? 'none' : 'block' };
+  }
+}
+</script>
+</body>
+</html>

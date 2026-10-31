@@ -34,5 +34,5 @@ static func draw(candidates: Array,count: int,rng: RandomNumberGenerator,weights
  return result
 static func items(ids: Array) -> Array:
  var result=[]
- for id in ids:result.append({"id":int(id),"metadata":RewardCatalog.entry("items",id)})
+ for id in ids:result.append({"id":str(id),"metadata":RewardCatalog.entry("items",str(id))})
  return result

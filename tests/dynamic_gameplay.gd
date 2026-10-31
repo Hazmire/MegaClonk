@@ -44,7 +44,7 @@ func run():
  verify(game.enemies[0].variant.id==saved_choice and str(game.spawn_rng.state)==saved_rng,"Checkpoint preserves exact visual choice and dedicated spawn RNG")
  game.enemies.clear();game.health=100;game.invulnerability=0;game.player.position=Vector3.ZERO
  var boss=game.spawn_enemy(8,Vector3(12,0,0));Encounters.initialize(game,boss,"chunkus");boss.ability_clock=0.01
- game.frontend.update_boss_bars();verify(game.frontend.boss_widgets[0].label.text.contains("Big Chunkus"),"Chunkus name and health appear on boss UI")
+ game.frontend.run_hud.bosses.refresh_now();verify(game.frontend.run_hud.bosses.stage_bars[0].boss_name.contains("Big Chunkus"),"Chunkus name and health appear on boss UI")
  verify(not game.activate_portal(),"Portal refuses a duplicate active main boss")
  Encounters.step(game,boss,0.02);var captured=boss.target
  verify(boss.aoe_remaining==1.5 and boss.ability_clock>9.9,"Chunkus captures a 1.5 second AOE on ten second cadence")
@@ -56,7 +56,7 @@ func run():
  verify(game.health==60,"Chunkus deals configured forty damage at detonation")
  boss.hp=0;game.kill_enemy(game.enemies.find(boss));verify(game.boss_dead and game.portal_state=="exit","New boss death preserves portal progression")
  game.enemies.clear();boss=game.spawn_enemy(8,Vector3(15,0,0));Encounters.initialize(game,boss,"rock_golem")
- game.frontend.update_boss_bars();verify(game.frontend.boss_widgets[0].label.text.contains("Rock Golem"),"Rock Golem name appears on boss UI")
+ game.frontend.run_hud.bosses.refresh_now();verify(game.frontend.run_hud.bosses.stage_bars[0].boss_name.contains("Rock Golem"),"Rock Golem name appears on boss UI")
  for wave in 6:boss.ability_clock=0;Encounters.step(game,boss,0.01)
  verify(boss.ability_clock>11.9,"Rock Golem resets a twelve-second summon cadence")
  var summoned=[]

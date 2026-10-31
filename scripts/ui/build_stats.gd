@@ -3,7 +3,7 @@ extends RefCounted
 const HELP={
  "damage":"Multiplies weapon damage. Higher increases damage before critical hits and trait/ultimate multipliers.",
  "haste":"Multiplies attacks per second; higher reduces cooldown. Per-weapon haste multiplies this bonus.",
- "crit":"Chance per hit to critically strike. Higher is better; effective chance is bounded at 100%.",
+ "crit":"Chance per hit to critically strike. Higher is better. Chance above 100% is a chance of a megacrit (1.5x a normal critical hit).",
  "crit_damage":"Damage multiplier of a critical hit. 100% bonus means a critical hit deals twice normal damage.",
  "armor":"Armour points: incoming damage is multiplied by 100 / (100 + 5 × armour). Higher reduces damage; Berserker then multiplies incoming damage by 0.70.",
  "evasion":"Chance to dodge all damage from a hit, bounded at 75%. Higher is better.",
@@ -14,14 +14,11 @@ const HELP={
  "slide_friction":"Multiplies friction during a slide; lower retains momentum longer. Minimum 15% of default friction.",
  "xp":"Multiplies XP collected from orbs. Higher levels the player faster.",
  "glide":"Reduces glide descent speed and gravity; higher gives more airtime without upward flight.",
- "climb":"Multiplies wall climbing speed for Wall Climber. Higher climbs faster; outer boundaries remain forbidden.",
- "revives":"Remaining Phoenix revivals. Each restores full health and grants 3 seconds of protection.",
- "storm":"Thunder Covenant stacks: periodic nearby lightning, 45 base damage per stack.",
- "ultimate_haste":"Additional cooldown recovery per active gameplay second. Higher readies ultimates faster."}
+ "climb":"Multiplies wall climbing speed for Wall Climber. Higher climbs faster; outer boundaries remain forbidden."}
 static func value(key: String, number: float) -> String:
- if key in ["max_health","armor","count","air_jumps","thorns","revives","storm"]:return "%.0f"%number
+ if key in ["max_health","armor","count","air_jumps","thorns"]:return "%.0f"%number
  if key=="regen":return "%.1f HP/s"%number
- if key in ["crit","evasion","luck","lifesteal","ultimate_haste"]:return "%.0f%%"%(number*100)
+ if key in ["crit","evasion","luck","lifesteal"]:return "%.0f%%"%(number*100)
  if key=="crit_damage":return "+%.0f%%"%((number-1)*100)
  return "%+.0f%%"%((number-1)*100)
 static func help(key: String) -> String:

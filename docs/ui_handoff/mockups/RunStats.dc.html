@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Run stats panel</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English&amp;family=Overpass:wght@400;600;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<section aria-labelledby="stats-h" style="width: 420px; height: 870px; box-sizing: border-box; padding: 28px 30px; background: rgba(14,15,14,0.92); border: 1px solid #3A3D38; font-family: 'Overpass', sans-serif; color: #E8E2D0; display: flex; flex-direction: column; gap: 18px">
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<h2 id="stats-h" style="margin: 0; font-family: 'IM Fell English', serif; font-weight: 400; font-size: 38px; line-height: 1">Stats</h2>
+<div aria-hidden="true" style="width: 40px; height: 4px; background: #7E1820"></div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 12px">
+<sc-for list="{{sections}}" as="s" hint-placeholder-count="5">
+<div style="display: flex; flex-direction: column; gap: 3px">
+<span style="font-weight: 800; font-size: 12px; letter-spacing: 0.28em; color: #8D9188; padding-bottom: 3px; border-bottom: 1px solid #2E302C">{{s.title}}</span>
+<sc-for list="{{s.rows}}" as="r" hint-placeholder-count="5">
+<div style="display: flex; align-items: center; justify-content: space-between; height: 20px; padding: 0 6px; margin: 0 -6px; background: {{r.bg}}">
+<span style="font-size: 15px; color: {{r.labelColor}}">{{r.label}}</span>
+<span style="font-size: 15px; font-weight: {{r.weight}}; font-variant-numeric: tabular-nums; color: {{r.valueColor}}">{{r.value}}</span>
+</div>
+</sc-for>
+</div>
+</sc-for>
+</div>
+
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"damage":{"editor":"text","default":"+0%"},"previewKey":{"editor":"text","default":""},"previewTo":{"editor":"text","default":""},"$preview":{"width":420,"height":870}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var dmg = this.props.damage ?? '+0%';
+    var pk = this.props.previewKey ?? '';
+    var pt = this.props.previewTo ?? '';
+    var data = [
+      ['SURVIVAL', [['maxhp', 'Max health', '100'], ['regen', 'Regen', '0.2 HP/s'], ['armor', 'Armor', '0'], ['evasion', 'Evasion', '0%'], ['lifesteal', 'Lifesteal', '0%'], ['thorns', 'Thorns', '0']]],
+      ['COMBAT', [['damage', 'Damage', dmg], ['crit', 'Crit', '5%'], ['critdmg', 'Crit damage', '+100%'], ['haste', 'Haste', '+0%'], ['count', 'Count', '1'], ['size', 'Size', '+0%'], ['projspeed', 'Projectile speed', '+0%'], ['duration', 'Duration', '+0%'], ['knockback', 'Knockback', '+0%']]],
+      ['MOVEMENT', [['speed', 'Speed', '+0%'], ['airjumps', 'Air jumps', '0'], ['jump', 'Jump', '+0%'], ['slidespeed', 'Slide speed', '+0%'], ['slidefric', 'Slide friction', '+0%']]],
+      ['REWARDS', [['pickup', 'Pickup', '+0%'], ['xp', 'XP', '+0%'], ['gold', 'Gold gain', '+25%'], ['luck', 'Luck', '0%'], ['difficulty', 'Difficulty', '+0%']]],
+      ['OTHER MODIFIERS', [['glide', 'Glide', '+0%'], ['climb', 'Climb', '+0%'], ['traitdmg', 'Trait / ultimate damage', '×1.00']]]
+    ];
+    var neutral = { '0': 1, '+0%': 1, '0%': 1, '×1.00': 1 };
+    var sections = data.map(function (s) {
+      return {
+        title: s[0],
+        rows: s[1].map(function (r) {
+          var isPrev = pk && r[0] === pk;
+          var isNeutral = !!neutral[r[2]];
+          return {
+            label: r[1],
+            value: isPrev ? r[2] + '  →  ' + pt : r[2],
+            bg: isPrev ? '#7E1820' : 'transparent',
+            labelColor: isPrev ? '#F4EFE2' : '#B9BAB1',
+            valueColor: isPrev ? '#F4EFE2' : (isNeutral ? '#7E827A' : '#E8E2D0'),
+            weight: isPrev || !isNeutral ? 800 : 400
+          };
+        })
+      };
+    });
+    return { sections: sections };
+  }
+}
+</script>
+</body>
+</html>

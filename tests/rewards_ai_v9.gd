@@ -92,10 +92,10 @@ func run():
  var facing=game.frontend.minimap.camera_facing();game.player.avatar.rotation.y+=2
  check(facing==game.frontend.minimap.camera_facing(),"Strafing/backwards avatar rotation does not change map facing")
  game.weapons.clear();game.equip(0);game.tomes={"Wind":3};game.update_hud();await process_frame
- var row=game.frontend.loadout_icons.get_node("EquippedItems")
- check(row.get_node("Weapons").get_child_count()==1 and row.get_node("Tomes").get_child_count()==1 and row.get_node("Weapons").get_child(0).get_meta("equipment_uid")=="weapons:0" and row.get_node("Tomes").get_child(0).get_meta("equipment_uid")=="tomes:Wind","Horizontal HUD shows only owned weapons/tomes with source inventory IDs")
+ var hud_rows=game.frontend.run_hud.build_box;var filled=func(row):return row.get_children().filter(func(n):return n.tooltip_text!="")
+ check(filled.call(hud_rows.get_child(1)).size()==1 and filled.call(hud_rows.get_child(3)).size()==1 and filled.call(hud_rows.get_child(1))[0].tooltip_text.begins_with(Catalog.weapon_name(0)) and filled.call(hud_rows.get_child(3))[0].tooltip_text.begins_with(Catalog.tome_name("Wind")),"Horizontal HUD shows only owned weapons/tomes")
  game.weapons[0].level=4;game.update_hud();await process_frame
- check(nodes(game.frontend.loadout_icons).any(func(n):return n is Label and n.text=="Lv. 4"),"Horizontal equipment levels update immediately")
+ check(nodes(game.frontend.run_hud.build_box).any(func(n):return n is Label and n.text=="LV 4"),"Horizontal equipment levels update immediately")
  var profile=game.progress.data.duplicate(true);game.progress.data.claimed=[];game.progress.data.kills=0;game.kills=0;game.frontend.in_run=true
  var q=LoadoutCatalog.quests()[0];game.update_hud()
  check(MetaProgress.quest_state(game.progress.data,q)=="active","Quest state distinguishes active")
@@ -107,47 +107,39 @@ func run():
  game.progress.data.kills=100000;game.progress.data.best=100000
  for quest in LoadoutCatalog.quests():game.progress.data.quest_metrics[quest.metric]=100000
  game.frontend.quests();await process_frame
- var tabs: TabContainer
- for n in nodes(game.frontend.menu):
-  if n is TabContainer:tabs=n;break
- tabs.current_tab=3;var scroll=tabs.get_child(3);scroll.scroll_vertical=30;await process_frame;var scroll_before=scroll.scroll_vertical
+ var quest_screen=game.frontend.menu.get_child(game.frontend.menu.get_child_count()-1)
+ quest_screen.tab_bar.select("Exploration");await process_frame
  var claim: Button
- for n in nodes(scroll):
-  if n is Button and not n.disabled:claim=n;break
+ for n in nodes(quest_screen.grid):
+  if n is Button and n.name=="Claim":claim=n;break
  check(claim!=null,"Quest menu retains a claimable completed quest")
  if claim:
-  var id=claim.get_meta("quest_id");claim.pressed.emit();await process_frame
-  check(is_instance_valid(tabs) and tabs.current_tab==3 and scroll.scroll_vertical==scroll_before,"Claim preserves the existing tab container, selected category and scroll")
-  check(id in game.progress.data.claimed and claim.disabled and claim.text=="Claimed","Claim state updates in place and remains visible")
+  var card=claim.get_parent()
+  while not card is MemoCard:card=card.get_parent()
+  var id=String(card.name).trim_prefix("Quest_");claim.pressed.emit();await process_frame
+  check(quest_screen.category=="Exploration" and id in game.progress.data.claimed,"Claim keeps the selected category and records the claim")
+  var again=quest_screen.grid.get_node("Quest_"+id)
+  check(nodes(again).any(func(n):return n is Label and n.text=="Reward claimed") and again.claim_button==null,"Claimed quest stays visible as a DONE memo without a claim button")
  game.progress.data=profile;game.progress.save();game.shrine_reward_queue.clear();game.active_shrine_reward={};game.frontend.in_run=true
- game.active_reward=-1;game.reward_queue.clear();game.mode="run";var items=game.items.duplicate();var reward_rng=str(game.rng.state);game.frontend.reward(Catalog.ITEMS[1]);await process_frame
- var icon: TextureRect;var reveal: Control;var celebration: RewardCelebration
- for n in nodes(game.frontend.menu):
-  if n.name=="CyclingIcon":icon=n
-  if n.name=="ChestReveal":reveal=n
-  if n is RewardCelebration and n.confetti:celebration=n
- check(icon!=null and reveal!=null and not nodes(game.frontend.menu).any(func(n):return n is HBoxContainer and n.get_child_count()>20),"Chest uses a single cycling icon with no roulette strip")
- var first_texture=icon.texture;await create_timer(0.15).timeout
- check(icon.texture!=first_texture or int(reveal.get_meta("tick",0))>0,"Central chest icon cycles over time")
- var count=celebration.particles.size();celebration._process(15)
- check(celebration.is_processing() and celebration.particles.size()==count and celebration.age>15,"Confetti remains active after fifteen seconds with a bounded particle pool")
+ game.active_reward="";game.reward_queue.clear();game.mode="run";var items=game.items.duplicate();var reward_rng=str(game.rng.state);game.frontend.reward("salted_pork");await process_frame
+ var screen: RunChest
+ for n in game.frontend.menu.get_children():
+  if n is RunChest:screen=n
+ check(screen!=null and screen.phase=="closed" and screen.reel.strip.size()==RunData.STRIP_LENGTH and screen.reel.strip[screen.reel.win_index].id=="salted_pork","Chest opens closed with a reel whose winning card is the item already decided")
+ screen.open_chest();await create_timer(1.2).timeout
+ check(screen.phase=="spinning" and screen.reel.progress>0.0,"The reel turns after the chest opens")
  game.frontend.chest_skip.call();await process_frame
- check(reveal.get_meta("revealed",false) and icon.texture==UIAssets.icon("items","1") and game.items==items,"Fast-forward reveals the predetermined item without awarding again")
- check(str(game.rng.state)==reward_rng,"Icon animation and skipping leave the gameplay reward RNG unchanged")
- check(game.sound_bank.has("applause") and game.sound_bank.has("legendary"),"Original applause and distinctive Legendary audio are loaded")
+ var reveal=screen.card
+ check(screen.is_revealed() and reveal!=null and reveal.data.id=="salted_pork" and game.items==items,"Fast-forward reveals the predetermined item without awarding again")
+ check(str(game.rng.state)==reward_rng,"Reel animation and skipping leave the gameplay reward RNG unchanged")
+ check(game.sound_bank.has("applause") and game.audio.events.has("ui.reveal_legendary") and game.audio.streams.has(game.audio.events["ui.reveal_legendary"].files[0]),"Original applause and the Fog legendary reveal are loaded")
  game.resume();await create_timer(0.5).timeout
- game.frontend.reward(Catalog.ITEMS[1]);await process_frame
- var natural: Control
- for n in nodes(game.frontend.menu):
-  if n.name=="ChestReveal":natural=n
- await create_timer(0.2).timeout;var early=int(natural.get_meta("tick",0))
- await create_timer(0.2).timeout;var fast_ticks=int(natural.get_meta("tick",0))-early
- await create_timer(2.7).timeout;var late=int(natural.get_meta("tick",0))
- await create_timer(0.2).timeout;var slow_ticks=int(natural.get_meta("tick",0))-late
- check(fast_ticks>slow_ticks,"Icon cycling decelerates toward the final reveal")
- await create_timer(0.4).timeout
- check(natural.get_meta("revealed",false) and game.items==items,"Natural reveal stops on the fixed reward after 3.5 seconds without another grant")
+ game.frontend.reward("salted_pork");await process_frame
+ for n in game.frontend.menu.get_children():
+  if n is RunChest:screen=n
+ screen.open_chest();screen.phase_time=0.0;await create_timer(RunChest.OPEN_TIME+RunChest.SPIN_TIME+RunChest.LAND_TIME+0.5).timeout
+ check(screen.is_revealed() and game.items==items,"Natural reveal lands after the full reel without another grant")
  game.resume();await create_timer(0.5).timeout
- check(not is_instance_valid(celebration),"Closing reward smoothly fades and frees celebration")
+ check(not is_instance_valid(screen) or not screen.is_visible_in_tree(),"Closing the chest frees its screen")
  game.queue_free();await process_frame;await process_frame
  print("REWARDS AI V9: %d checks, %d failures"%[checks,failures.size()]);quit(0 if failures.is_empty() else 1)

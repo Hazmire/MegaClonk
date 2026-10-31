@@ -10,9 +10,10 @@ uniform float saturation=0.62;
 uniform vec4 flash_color:source_color=vec4(1.0);
 uniform float hit_flash=0.0;
 varying float damage_flash;
+varying float flash_mix;
 void vertex(){
 #include "res://shaders/vendor_psx/psx_vertex.gdshaderinc"
- damage_flash=max(INSTANCE_CUSTOM.r,hit_flash);
+ damage_flash=max(INSTANCE_CUSTOM.r,hit_flash);flash_mix=INSTANCE_CUSTOM.b;
 }
 void fragment(){
 #include "res://shaders/vendor_psx/psx_fragment.gdshaderinc"
@@ -22,7 +23,8 @@ void fragment(){
   if(season==1)ALBEDO=mix(ALBEDO,vec3(l)*vec3(1.25,1.04,.51),green*.92);
   if(season==2)ALBEDO=vec3(l)*vec3(.78,.73,.66);
  }
- ALBEDO=mix(ALBEDO,flash_color.rgb,damage_flash);
- EMISSION+=flash_color.rgb*damage_flash*.42;
+ vec3 flash_rgb=mix(flash_color.rgb,vec3(.45,1.,.35),flash_mix);
+ ALBEDO=mix(ALBEDO,flash_rgb,damage_flash);
+ EMISSION+=flash_rgb*damage_flash*.42;
  ROUGHNESS=1.0;SPECULAR=0.0;
 }

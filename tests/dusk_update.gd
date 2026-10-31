@@ -29,9 +29,9 @@ func run():
   game.tomes.clear();var stat=Catalog.TOMES[id][0];var before=float(game.stats[stat]);game.apply_upgrade({"type":"tome","id":id})
   verify(is_equal_approx(game.stats[stat],before+float(Catalog.TOMES[id][1])),"Actual stat effect for "+Catalog.tome_name(id))
   var icon=UIAssets.icon("tomes",id)
-  verify(icon is AtlasTexture and icon.atlas!=null and icon.region.size.x>0,"Generated tome icon loads: "+id)
-  regions[str(icon.region)]=true
- verify(regions.size()==10,"All ten tomes use distinct generated regions")
+  verify(icon!=null and icon.get_size()==Vector2(32,32),"Tome icon (32x32 final art) loads: "+id)
+  regions[icon.resource_path]=true
+ verify(regions.size()==10,"All ten tomes use distinct icon files")
  game.update_hud();verify(not game.frontend.quest_tracker.visible and game.frontend.quest_tracker.text.is_empty(),"Quest tracking is absent from the run HUD")
  var shrine={}
  for object in game.interactables:
@@ -40,10 +40,10 @@ func run():
  verify(shrine.charge>0 and shrine.node.get_node("ChargeProgress").visible,"Shrine text remains while residual charge decays outside")
  ShrineCharging.tick(game,shrine,8,3)
  verify(shrine.charge==0 and not shrine.node.get_node("ChargeProgress").visible,"Shrine text vanishes at zero percent")
- var audio=game.audio;verify(audio.tracks.size()==1 and not audio.menu_track.is_empty(),"One menu and one game music entry")
- audio.music_menu();verify(audio.current_track.ends_with("menu_dusk.mp3") and audio.streams[audio.current_track].loop,"Selected menu music loops")
+ var audio=game.audio;verify(audio.events.has("music.main_menu_loop") and audio.events.has("music.stage1_a_sixty_miles_of_pine"),"Menu and stage music events exist")
+ audio.music_menu();verify(audio.current_track=="music.main_menu_loop" and audio.streams[audio.events[audio.current_track].files[0]].loop,"Selected menu music loops")
  audio.music_stage(1);var slot=audio.music_slot
- audio.music_stage(3);verify(audio.current_track.ends_with("hollow_dusk.mp3") and audio.streams[audio.current_track].loop and audio.music_slot==slot,"Game music loops across stage changes without restart")
+ audio.music_stage(3);verify(audio.current_track=="music.stage3_a_leviathan" and audio.streams[audio.events[audio.current_track].files[0]].loop,"Stage music loops and a new stage starts on its A track")
  game.frontend.home();await process_frame
  verify(game.frontend.menu_shop.get_meta("grimdark_kind","")=="Shop","Backdrop uses native shop model")
  verify(game.player.position.distance_to(game.frontend.menu_shop.position)<4,"Player stands in front of shop")
@@ -53,7 +53,7 @@ func run():
   game.frontend.update_menu_camera(.1)
   if game.frontend.menu_camera.position.distance_to(game.frontend.menu_focus)>8:bounded=false
  verify(bounded and game.player.position==anchor and camera_start!=game.frontend.menu_camera.position,"Bounded camera pans without moving the player or circling the map")
- verify(audio.current_track.ends_with("menu_dusk.mp3"),"Returning home restores menu music")
+ verify(audio.current_track=="music.main_menu_loop","Returning home restores menu music")
  game.queue_free();await process_frame;await process_frame
  print("DUSK UPDATE: ",checks," checks, ",failures.size()," failures")
  quit(0 if failures.is_empty() else 1)

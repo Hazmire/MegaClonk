@@ -68,12 +68,13 @@ func run():
   else:
    game.sandbox=true;game.gold=1000
    game.player.position=shop.node.position;game.frontend.shop(shop)
-   if shop.offers.is_empty() or not game.buy_shop(shop,int(shop.offers[0]),ShopSystem.price(int(shop.offers[0]))):reasons.append("Shop purchase failed")
+   var offer=shop.offers.filter(func(o):return o is String)
+   if offer.is_empty() or not game.buy_shop(shop,offer[0],ShopSystem.price(offer[0])):reasons.append("Shop purchase failed")
    interactions+=1;game.mode="pause";game.player.active=false
-   game.player.position=chest.node.position;var old_count=game.items.size()
+   game.player.position=chest.node.position;var old_count=game.item_total()+int(game.amulets)
    await process_frame
    Input.action_press("interact");game.update_interactions(0.01);Input.action_release("interact")
-   if not chest.used or game.items.size()!=old_count+1:reasons.append("Chest cannot be opened")
+   if not chest.used or game.item_total()+int(game.amulets)!=old_count+1:reasons.append("Chest cannot be opened")
    interactions+=1;game.resume();game.mode="pause";game.player.active=false;await process_frame
    game.player.position=shrine.node.position
    game.update_interactions(4);game.update_interactions(4)
