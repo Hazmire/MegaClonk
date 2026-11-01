@@ -1,0 +1,113 @@
+{
+  "name": "The Investigator",
+  "generator": "Blender 4.3.2",
+  "triangles": 196248,
+  "vertices_blender": 98459,
+  "bones": 28,
+  "materials": 8,
+  "animations_seconds": {
+    "Idle": 3.0,
+    "Walk": 1.3333333333333333,
+    "Jump": 1.5,
+    "Crouch": 2.0,
+    "CrouchEnter": 0.5,
+    "CrouchExit": 0.5,
+    "Slide": 1.25,
+    "CriticalWalk": 2.0,
+    "Run": 1.0,
+    "Interact": 1.6666666666666667
+  },
+  "bounds_blender_m": {
+    "min": [
+      -0.5009269118309021,
+      -0.2907506823539734,
+      0.0034999847412109375
+    ],
+    "max": [
+      0.5009269118309021,
+      0.2907501459121704,
+      2.020439863204956
+    ]
+  },
+  "forward": "Blender -Y; glTF +Z",
+  "up": "Blender Z; glTF Y",
+  "units": "metres",
+  "design": "Smooth high-density dark brown duster, lowered hat with downturned front brim, featureless shadowed face. 1990s Appalachian horror investigator.",
+  "surface_style": "Smooth shaded, rounded edges, subdivided garments and hat",
+  "hat_lowering_m": 0.075,
+  "facial_features": false,
+  "external_assets": false,
+  "looping_clips": [
+    "Idle",
+    "Walk",
+    "Crouch",
+    "CriticalWalk",
+    "Run"
+  ],
+  "non_looping_clips": [
+    "Jump",
+    "CrouchEnter",
+    "CrouchExit",
+    "Slide",
+    "Interact"
+  ],
+  "animation_details": {
+    "Idle": {
+      "frames": 72,
+      "loop": true,
+      "description": "Quiet breathing and a small head/coat sway."
+    },
+    "Walk": {
+      "frames": 32,
+      "loop": true,
+      "speed_mps": 0.85,
+      "description": "Measured walking with planted stance feet."
+    },
+    "Jump": {
+      "frames": 36,
+      "loop": false,
+      "description": "Anticipation, takeoff, tucked airborne pose, landing and recovery."
+    },
+    "Crouch": {
+      "frames": 48,
+      "loop": true,
+      "description": "Held crouch with subtle breathing; both feet grounded."
+    },
+    "CrouchEnter": {
+      "frames": 12,
+      "loop": false,
+      "description": "Standing to the crouch pose."
+    },
+    "CrouchExit": {
+      "frames": 12,
+      "loop": false,
+      "description": "Crouch pose to standing."
+    },
+    "Slide": {
+      "frames": 30,
+      "loop": false,
+      "description": "Crouch to a low slide with one leg extended, returning to crouch."
+    },
+    "CriticalWalk": {
+      "frames": 48,
+      "loop": true,
+      "speed_mps": 0.35,
+      "description": "Hunched, asymmetric limp with the left hand bracing the abdomen."
+    },
+    "Run": {
+      "frames": 24,
+      "loop": true,
+      "speed_mps": 1.8,
+      "description": "In-place run, retained from the original pack."
+    },
+    "Interact": {
+      "frames": 40,
+      "loop": false,
+      "description": "Right-hand reach and recovery, retained from the original pack."
+    }
+  },
+  "root_motion": "None. Slide is stationary horizontally; game controller supplies travel.",
+  "jump_motion": "Local hips provide a 0.42 m visual arc; match or remove this channel for a physics-driven jump.",
+  "animation_preview": "docs/images/protagonist/animations/Investigator_Animations.mp4",
+  "animation_gif": "docs/images/protagonist/animations/Investigator_Animations.gif"
+}

@@ -1,0 +1,25 @@
+{
+  "models": [
+    {
+      "id": "Investigator",
+      "triangles": 196248,
+      "bones": 28,
+      "materials": 8,
+      "bytes": 7534352,
+      "animations_seconds": {
+        "CriticalWalk": 2.0,
+        "Crouch": 2.0,
+        "CrouchEnter": 0.5,
+        "CrouchExit": 0.5,
+        "Idle": 3.0,
+        "Interact": 1.6666666269302368,
+        "Jump": 1.5,
+        "Run": 1.0,
+        "Slide": 1.25,
+        "Walk": 1.3333333730697632
+      },
+      "binary_and_skin_checks": "passed",
+      "idle_walk_run_loop_endpoints": "match"
+    }
+  ]
+}

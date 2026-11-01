@@ -81,3 +81,13 @@ The five root-level `Megabonk_*` / `firefox_WjCOcSAmyE.png` screenshots uploaded
 
 ## Stage themes and physical swarms (2026-10-27)
 Original stage palette resources, atlas-preserving vegetation tint shader, shrine orb shader, shared procedural chest geometry and horned boss-statue assembly are project work. Existing supplied vegetation, enemies, icon art and fonts retain their previously recorded licences. No new third-party downloads were introduced. Actual rendered previews are in docs/images/stage-swarms/.
+
+## Original Investigator protagonist
+
+The playable Investigator is original procedural geometry and animation created
+for this project: dark brown duster, dark brimmed hat, featureless face, gloves,
+boots, belt radio and pouch. Editable sources are in `art/protagonist`; the
+runtime GLB and gameplay profile are in `assets/characters/investigator`.
+The model uses material colors and no external character geometry or textures.
+Its movement clips are baked skeletal animation. The existing Ranger resources
+retain their original credits for merchant and other legacy visual use.

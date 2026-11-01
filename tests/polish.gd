@@ -49,16 +49,16 @@ func run():
  verify(game.weapons[4].visuals[0].mesh==WeaponArt.mesh("stone") and game.weapons[4].debris.multimesh.instance_count==12,"Chunkers uses real stone geometry and instanced foot debris")
  game.stats.count=5;game.update_special_visuals(0.016);verify(game.weapons[4].visuals.size()==game.orbit_count(4),"Orbit visuals respond to projectile-count upgrades")
  var actor=game.player.avatar;var position=game.player.position
- verify(actor.playback.get_animation_library("").get_animation_list().size()==4,"Only four core animations control the Ranger")
+ verify(actor.playback.get_animation_library("").get_animation_list().size()==10,"All ten Investigator clips load into gameplay")
  var lengths=[]
  for b in actor.rig.get_bone_count():lengths.append(actor.rig.get_bone_rest(b).origin.length())
  for state in ["idle","run","jump","fall","slide","crouch"]:
   for tick in 10:actor.animate(state,6,0.02)
   actor.rig.force_update_all_bone_transforms();var valid=true
   for b in actor.rig.get_bone_count():
-   if actor.rig.get_bone_name(b)!="pelvis" and absf(actor.rig.get_bone_pose_position(b).length()-lengths[b])>0.005:valid=false
+   if actor.rig.get_bone_name(b) not in ["Hips","Root"] and absf(actor.rig.get_bone_pose_position(b).length()-lengths[b])>0.005:valid=false
   verify(valid,"Generic %s preserves bone lengths and limb attachments"%state)
- actor.animate("hit",6,0.1);verify(actor.animation_state=="move","Taking damage does not interrupt moving locomotion")
+ actor.animate("run",6,0.3);actor.animate("hit",6,0.1);verify(actor.animation_state=="Run","Taking damage does not interrupt moving locomotion")
  verify(game.player.position==position,"Animation never applies root motion to physics")
  # Find real downward edges for all orientations and both elevation differences.
  var passed=0;var attempted=0

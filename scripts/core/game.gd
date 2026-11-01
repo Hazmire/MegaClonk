@@ -244,7 +244,7 @@ func build_menu_world() -> void:
  create_avatar(world, selected_character, Vector3(10,0,-10)).scale = Vector3.ONE * 3
 func create_avatar(parent: Node3D, index: int, pos: Vector3) -> Node3D:
  if debug_combat:combat_counters["scenes"]=int(combat_counters.get("scenes",0))+1
- var node=RangerVisual.new()
+ var node=InvestigatorVisual.new()
  parent.add_child(node)
  node.position=pos
  node.set_meta("character_index",index)

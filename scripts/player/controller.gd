@@ -150,6 +150,9 @@ func _physics_process(delta: float) -> void:
  elif absf(angle_difference(last_facing,avatar.rotation.y))>0.01: animation="turn"
  if animation in ["idle","run"] and horizontal.length()<3 and absf(angle_difference(previous,avatar.rotation.y))>0.04: animation="turn"
  last_facing=avatar.rotation.y
+ if avatar.has_method("set_motion_context"):
+  var hp=clampf(float(crowd_world.health)/maxf(1,stats.get("max_health",100.0)),0,1) if is_instance_valid(crowd_world) else 1.0
+  avatar.set_motion_context(velocity.y,is_on_floor(),hp,jump_impulse*sqrt(stats.jump*jump_multiplier),can_stand() if posture!="standing" else true)
  if avatar.has_method("animate"): avatar.animate(animation,horizontal.length(),delta)
 
 func air_velocity(horizontal: Vector3, direction: Vector3, delta: float) -> Vector3:

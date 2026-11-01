@@ -1,0 +1,21 @@
+{
+  "source_suites_passed": 23,
+  "targeted_investigator_checks_passed": 49,
+  "runtime": "Godot 4.7.2",
+  "native_windows_executed": false,
+  "compiled_pack_checks": [
+    "running world",
+    "reward UI",
+    "stage and bosses",
+    "Investigator and all ten clips",
+    "critical health",
+    "jump root",
+    "save/load avatar"
+  ],
+  "gameplay_model_sha256": "eedee6ba65739614fcdae988750960b5a27bb9fc6a7a6b4268516200dcbc3945",
+  "changed_runtime_sha256": {
+    "scripts/art/investigator_visual.gd": "c2ca62b87ba5438890b7a3611bca2d50189f7f21b7cbe9579cf92ed9d2aa0863",
+    "scripts/player/controller.gd": "0e977983c645273892be8c5e28e345d692c409bb95dcdadc20a16da4ee06c681",
+    "scripts/core/game.gd": "238f07b142217e0dc710a92e592b6c486f29b602bcafb5f63bca606f6d6f6810"
+  }
+}

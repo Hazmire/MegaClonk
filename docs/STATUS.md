@@ -1,3 +1,11 @@
+# Playable Investigator
+
+The player and menu preview now use the Investigator with connected locomotion,
+jump/fall/landing, crouch/slide transitions, damage overlays, and a critical-HP
+walk. The gameplay export fits the existing capsules and uses physics-driven jump
+height. See [integration and controls](INVESTIGATOR_PLAYER.md). Native Windows
+execution requires Windows playtesting. Earlier release history follows.
+
 # Stage themes and physical swarms
 
 The stage/swarms gameplay increment and all 22 source suites are implemented and passing. See [guide](STAGE_SWARMS.md) and [checklist](../TODO_STAGE_SWARMS.md). Windows stage-swarms-v8 publication and downloaded compiled world/UI/stage checks are verified; see releases/BUILD_INFO.md. Dense 500-enemy CPU cost remains above the 60FPS frame budget; native Windows execution is untested. Earlier release history follows.

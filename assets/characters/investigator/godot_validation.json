@@ -1,0 +1,63 @@
+{
+  "engine": "4.7.2-stable (official)",
+  "models": [
+    {
+      "bones": 28,
+      "clips": {
+        "CriticalWalk": {
+          "deforms_skeleton": true,
+          "duration_seconds": 2.0,
+          "tracks": 27
+        },
+        "Crouch": {
+          "deforms_skeleton": true,
+          "duration_seconds": 2.0,
+          "tracks": 27
+        },
+        "CrouchEnter": {
+          "deforms_skeleton": true,
+          "duration_seconds": 0.5,
+          "tracks": 27
+        },
+        "CrouchExit": {
+          "deforms_skeleton": true,
+          "duration_seconds": 0.5,
+          "tracks": 27
+        },
+        "Idle": {
+          "deforms_skeleton": true,
+          "duration_seconds": 3.0,
+          "tracks": 27
+        },
+        "Interact": {
+          "deforms_skeleton": true,
+          "duration_seconds": 1.66666662693024,
+          "tracks": 27
+        },
+        "Jump": {
+          "deforms_skeleton": true,
+          "duration_seconds": 1.5,
+          "tracks": 27
+        },
+        "Run": {
+          "deforms_skeleton": true,
+          "duration_seconds": 1.0,
+          "tracks": 27
+        },
+        "Slide": {
+          "deforms_skeleton": true,
+          "duration_seconds": 1.25,
+          "tracks": 27
+        },
+        "Walk": {
+          "deforms_skeleton": true,
+          "duration_seconds": 1.33333337306976,
+          "tracks": 27
+        }
+      },
+      "id": "Investigator",
+      "surfaces": 8,
+      "triangles": 196248
+    }
+  ]
+}

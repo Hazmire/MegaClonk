@@ -6,6 +6,16 @@ func require(value: bool,message: String) -> bool:
 func run():
  var game=load("res://scenes/main/main.tscn").instantiate();root.add_child(game);await process_frame
  game.sandbox=true;game.settings.invincible=true;game.map_seed_override=9;game.next_run_seed=923;game.begin_run();game.set_physics_process(false);game.player.active=false
+ var avatar=game.player.avatar
+ if not require(avatar.get_script().resource_path.ends_with("investigator_visual.gd") and avatar.rig.get_bone_count()==28,"Compiled build did not instantiate the Investigator"):return
+ for clip in ["Idle","Walk","Run","Jump","Crouch","CrouchEnter","CrouchExit","Slide","CriticalWalk","Interact"]:
+  if not require(avatar.playback.has_animation(clip),"Compiled Investigator omitted "+clip):return
+ avatar.set_health_fraction(.2);avatar.animate("run",8,.1)
+ if not require(avatar.animation_state=="CriticalWalk","Compiled low-health animation did not activate"):return
+ avatar.set_motion_context(0,false,1,10,true);avatar.animate("jump",8,.05)
+ if not require(avatar.bone_world_position("Hips").y-game.player.global_position.y<.94,"Compiled jump added a second visual height arc"):return
+ if not require(absf(avatar.bone_world_position("Root").y-game.player.global_position.y)<.001,"Compiled avatar moved the physics root"):return
+ print("EXPORTED INVESTIGATOR SMOKE COMPLETE")
  for number in [1,2,3]:
   game.stage=number;game.build_stage();await process_frame
   if not require(ForestAtmosphere.floor_material().get_shader_parameter("moss_high")==StageThemes.config(number).moss_high,"Compiled stage theme did not apply"):return
@@ -31,6 +41,7 @@ func run():
  game.mode="run";RewardDrops.collect(game);await process_frame
  var granted=game.items.size()
  game.save_run("user://export-stage-smoke.json");game.load_run("user://export-stage-smoke.json");await process_frame
+ if not require(game.player.avatar.get_script().resource_path.ends_with("investigator_visual.gd"),"Compiled save/load restored the old player visual"):return
  if not require(game.items.size()==granted and game.reward_queue.size()==1,"Compiled active reward duplicated or lost its queue on load"):return
  game.resume();game.resume();await process_frame
  if not require(game.items.size()==granted+1 and game.active_reward==-1,"Compiled queued chest did not grant exactly once"):return

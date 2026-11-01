@@ -45,9 +45,9 @@ func run():
  var actor=player.avatar
  for input in ["idle","run","jump","fall","crouch","slide"]:
   for i in 20:actor.animate(input,4,0.0167)
-  check(actor.playback.is_playing(),"Ranger plays "+input)
+  check(actor.playback.is_playing(),"Investigator plays "+input)
  actor.animate("crouch",0,0.2);actor.rig.force_update_all_bone_transforms()
- check(actor.rig.get_bone_global_pose(actor.rig.find_bone("Head")).origin.y<1,"Crouch is a lowered skeletal pose")
+ check(actor.bone_world_position("Head").y-player.global_position.y<0.95,"Crouch fits the controller's low capsule in world coordinates")
  for model in ["Imp","Puglin"]:
   var a=BestiaryFrames.mesh(model,"enemy_move",0).surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
   var b=BestiaryFrames.mesh(model,"enemy_move",4).surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
