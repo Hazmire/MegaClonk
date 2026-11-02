@@ -4,6 +4,10 @@ The [Investigator is now the playable character](docs/INVESTIGATOR_PLAYER.md),
 with his dark duster, lowered hat, and connected movement, jump, crouch/slide,
 and critical-health animations.
 
+A [reference-inspired Rift Cultist model](art/cultist/README.md) is also available
+with packed textures, a rig, idle/walk/attack clips, and a downloadable Blender/GLB
+pack on the `rift-cultist-model` branch.
+
 A native Godot4.7.2 survival roguelike with ten-minute forest stages, player-triggered
 boss encounters, continued runs, configurable loadouts and permanent silver progression.
 The latest source adds a four-band vertical Forest, adaptive ramps, a layered cloud sky,

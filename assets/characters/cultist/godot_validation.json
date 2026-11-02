@@ -1,0 +1,26 @@
+{
+  "bones": 28,
+  "checks": "passed",
+  "clips": {
+    "Attack": {
+      "deforms_skeleton": true,
+      "duration_seconds": 1.25,
+      "tracks": 23
+    },
+    "Idle": {
+      "deforms_skeleton": true,
+      "duration_seconds": 3.0,
+      "tracks": 23
+    },
+    "Walk": {
+      "deforms_skeleton": true,
+      "duration_seconds": 1.66666662693024,
+      "tracks": 23
+    }
+  },
+  "embedded_cloth_textures": 2,
+  "engine": "4.7.2-stable (official)",
+  "failures": [],
+  "materials": 7,
+  "triangles": 12908
+}

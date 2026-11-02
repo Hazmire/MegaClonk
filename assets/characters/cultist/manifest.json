@@ -1,0 +1,46 @@
+{
+  "name": "Rift Cultist",
+  "generator": "Blender 4.3.2",
+  "triangles": 12908,
+  "vertices_blender": 6540,
+  "bones": 28,
+  "materials": 7,
+  "animations_seconds": {
+    "Idle": 3.0,
+    "Walk": 1.6666666666666667,
+    "Attack": 1.25
+  },
+  "looping_clips": [
+    "Idle",
+    "Walk"
+  ],
+  "non_looping_clips": [
+    "Attack"
+  ],
+  "bounds_blender_m": {
+    "min": [
+      -0.674614429473877,
+      -0.41040000319480896,
+      0.004999998956918716
+    ],
+    "max": [
+      0.674614429473877,
+      0.3827812969684601,
+      2.2950000762939453
+    ]
+  },
+  "texture_resolution": [
+    512,
+    512
+  ],
+  "textures": [
+    "textures/Cultist_Robe_BaseColor.png",
+    "textures/Cultist_Hood_BaseColor.png"
+  ],
+  "forward": "Blender -Y; glTF +Z",
+  "up": "Blender Z; glTF Y",
+  "units": "metres",
+  "design": "Reference-inspired tall pointed hood, real eye openings, dim red eyes, stained ivory bell-sleeved robe, rope belt and original red broken-gate sigil.",
+  "external_art_used": false,
+  "runtime_roster_integration": false
+}

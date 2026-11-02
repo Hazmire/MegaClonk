@@ -1,0 +1,21 @@
+{
+  "checks": "passed",
+  "triangles": 12908,
+  "materials": 7,
+  "bones": 28,
+  "embedded_textures": 2,
+  "texture_resolution": [
+    512,
+    512
+  ],
+  "nearest_texture_sampling": true,
+  "animations_seconds": {
+    "Attack": 1.25,
+    "Idle": 3.0,
+    "Walk": 1.6666666269302368
+  },
+  "idle_walk_loop_endpoints": "match",
+  "external_files_required_by_glb": false,
+  "skin_weights_and_normals": "normalized",
+  "glb_bytes": 1025132
+}
