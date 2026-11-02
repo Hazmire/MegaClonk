@@ -273,7 +273,7 @@ func create_avatar(parent: Node3D, index: int, pos: Vector3) -> Node3D:
  node.set_meta("character_index",index)
  return node
 func begin_run() -> void:
- enemy_frame=0
+ enemy_frame=0;crowd.next_id=1;crowd.solve_phase=0 # a seeded run must not depend on how many runs this process already played
  if not selected_weapon in Catalog.ACTIVE_WEAPONS:selected_weapon=Catalog.ACTIVE_WEAPONS[0]
  tome_rarities.clear()
  terrain_version=4
@@ -805,6 +805,7 @@ const MEGACRIT_MULTIPLIER=1.5
 # Lifesteal is a chance per damaging hit to restore 1 HP; every full 100% guarantees one more HP (150% = 1 HP, +1 more half the time).
 # Rolls use the weapon runtime's RNG so seeded runs stay deterministic.
 func lifesteal_hp() -> float:
+ if stats.lifesteal<=0.0:return 0.0
  var chance=float(stats.lifesteal);var whole=floorf(chance)
  return whole+(1.0 if wrt.rng.randf()<chance-whole else 0.0)
 func hit(e: Dictionary, base: float, weapon: int, ctx: Dictionary = {}) -> void:
