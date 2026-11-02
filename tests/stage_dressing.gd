@@ -75,8 +75,8 @@ func run():
   check(rings.size()==3 and is_equal_approx(rings[1].position.y-rings[1].get_aabb().size.y*0.5,outer_y-0.5) and is_equal_approx(rings[2].position.y-rings[2].get_aabb().size.y*0.5,outer_y-0.5) and rings[0].position.y-rings[0].get_aabb().size.y*0.5<outer_y,"Stage %d mid and near rings end 0.5 m under the outer ground, the far ring lower still"%s)
   var posts=root_node.get_node("FencePosts") as MultiMeshInstance3D
   var on_ground=posts.multimesh.instance_count>200;var height=float(d.fence.height)
-  for i in posts.multimesh.instance_count:
-   var origin=posts.multimesh.get_instance_transform(i).origin
+  for post_transform in posts.get_meta("transforms"):
+   var origin=post_transform.origin
    on_ground=on_ground and absf(origin.y-height*0.5-game.terrain_height(clampf(origin.x,-95.5,95.5),clampf(origin.z,-95.5,95.5)))<0.01
   check(on_ground,"Stage %d: %d fence posts, each standing on the terrain under it"%[s,posts.multimesh.instance_count])
   var fence_nodes=[]
@@ -88,9 +88,9 @@ func run():
   check(collision_free and fence_nodes.size()==expected,"Stage %d fence: %d multimesh draw calls, no collision, no shadows"%[s,fence_nodes.size()])
   # rails and wires only join posts at the same height
   var wires=root_node.get_node("FenceWires") as MultiMeshInstance3D;var level=true
-  for i in wires.multimesh.instance_count:
-   var t=wires.multimesh.get_instance_transform(i);var half=t.basis.z.normalized()*t.basis.z.length()*0.5
-   level=level and absf(half.y)<0.2+0.01
+  for t in wires.get_meta("transforms"):
+   var half=t.basis.z*0.5 # the wire's local z runs post to post, so its rise is half.y*2
+   level=level and absf(half.y)<0.2+0.01 and t.basis.z.length()>1.0
   check(level and wires.multimesh.instance_count>0,"Stage %d wires join only posts at the same height"%s)
  check(StageDressing.for_stage(4).fence.candles and not StageDressing.for_stage(1).fence.candles and StageDressing.for_stage(2).fence.panel and StageDressing.for_stage(3).fence.stripes,"Per-stage fence styles (stage 2 chain-link, 3 striped boards, 4 candles)")
  # --- endless cycle ---

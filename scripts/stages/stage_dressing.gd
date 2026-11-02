@@ -214,7 +214,7 @@ func multimesh_node(node_name: String,mesh: Mesh,transforms: Array,colors: Array
   var material=StandardMaterial3D.new();material.albedo_color=color;material.roughness=1.0;material.vertex_color_use_as_albedo=not colors.is_empty()
   if unshaded:material.shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED
   mesh.material=material
- var node=MultiMeshInstance3D.new();node.name=node_name;node.multimesh=multimesh;node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+ var node=MultiMeshInstance3D.new();node.name=node_name;node.multimesh=multimesh;node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF;node.set_meta("transforms",transforms) # a headless renderer does not store the multimesh buffer, so tests read these
  return node
 # Weather: one GPU particle system that rides on the player, hard-capped by the rules (halved in reduced mode, off with the Weather setting).
 func attach_weather(game: Node) -> void:
