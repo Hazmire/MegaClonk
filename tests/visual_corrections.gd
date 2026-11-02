@@ -36,7 +36,7 @@ func run():
  var source=StandardMaterial3D.new();source.transparency=BaseMaterial3D.TRANSPARENCY_ALPHA
  verify(GrimdarkMaterials.material(source).shader==preload("res://shaders/grimdark_opaque.gdshader"),"Solid objects ignore source texture alpha")
  verify(GrimdarkMaterials.material(source,1,true).shader==preload("res://shaders/grimdark_surface.gdshader"),"Only foliage uses intentional cutout shader")
- var terrain_shader=preload("res://shaders/grimdark_terrain.gdshader")
+ var terrain_shader=preload("res://shaders/stage_ground.gdshader")
  verify(terrain_shader.code.contains("#define ALPHA_DISABLED") and terrain_shader.code.contains("cull_disabled"),"Terrain is opaque and renders its back faces")
  var shrine={}
  for object in game.interactables:

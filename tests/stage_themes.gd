@@ -14,18 +14,18 @@ func run():
  var names=[];var palettes=[]
  for number in [1,2,3,4]:
   game.stage=number;game.build_stage();await process_frame
-  var theme=StageThemes.config(number);names.append(theme.title);palettes.append(theme.moss_high)
-  check(ForestAtmosphere.floor_material().get_shader_parameter("moss_high")==theme.moss_high,"Ground palette applies to stage "+str(number))
-  check(ForestAtmosphere.grass_material().get_shader_parameter("color_gradient")==StageThemes.gradient(number),"Grass gradient applies to stage "+str(number))
+  var theme=StageThemes.config(number);names.append(StageThemes.title(number));palettes.append(StageDressing.for_stage(number).top)
+  check(ForestAtmosphere.floor_material().get_shader_parameter("top_tex")==StageDressing.for_stage(number).top,"Ground textures apply to stage "+str(number))
+  check(ForestAtmosphere.grass_material().get_shader_parameter("color_gradient") is GradientTexture1D,"Grass gradient applies to stage "+str(number))
   var env=game.world.get_child(0).environment
-  check(env.fog_light_color==theme.fog and env.ambient_light_color==theme.ambient,"Sky/fog/light palette applies to stage "+str(number))
+  check(env.fog_light_color==StageDressing.for_stage(number).fog_color and env.ambient_light_color==StageDressing.for_stage(number).ambient_color,"Sky/fog/light palette applies to stage "+str(number))
   var trees=game.prop_batches.get("mega_CommonTree_1")
-  if number in [2,3] and trees!=null:
+  if number in [2,3,4] and trees!=null:
    var material=trees.multimesh.mesh.surface_get_material(0)
    check(material is ShaderMaterial and material.get_shader_parameter("season")==StageThemes.index(number),"Actual tree material recolours foliage in stage "+str(number))
   var base=ImportedArt.mesh(ForestWorld.NATURE+"CommonTree_1.gltf",7.5,7)
   check(StageThemes.decor(base,number)==StageThemes.decor(base,number),"Stage decoration materials/meshes are reused")
- check(names[0]=="BLIGHTED FOREST" and names[1]=="WITHERING FOREST" and names[2]=="DEADLANDS" and names[3]==names[0],"Living/withering/dead themes explicitly cycle after stage three")
+ check(names[0]=="CALVARY RUN HOLLOW" and names[1]=="ROUTE 9 & THE TIPPLE" and names[2]=="DOWNTOWN CALVARY RUN" and names[3]=="THE NO. 9 SINKHOLE","Each of the first four stages carries its dressing name")
  check(palettes[0]!=palettes[1] and palettes[1]!=palettes[2],"Stages change world materials rather than a screen overlay")
  game.stage=2;game.build_stage();game.show_stage_intro();check(game.announced_stages==[1,2],"New stage announces once")
  check(game.save_run("user://themes-test.json") and game.load_run("user://themes-test.json"),"Themed run saves and loads")

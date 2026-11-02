@@ -34,9 +34,10 @@ func run():
   if low<minf(game.player.position.y,game.portal.position.y)-3:valleys+=1
   if game.portal.position.y>=24:high_plateaus+=1
   seed_results.append({"seed":seed_value,"portal":str(game.portal.position),"spawn":str(game.player.position),"waypoints":path.size(),"above":delta>6,"below":delta< -6,"direct_line_crosses_cliff":blocked_line,"valid":valid})
-  var counts=[]
-  for edge in 4:counts.append(game.prop_batches["natural_boundary_"+str(edge)].multimesh.visible_instance_count)
-  check(counts.all(func(n):return n>90 and n<512),"Imported boundary rocks stay within instance budgets: "+str(seed_value))
+  var cliffs=0
+  for key in game.prop_batches:
+   if str(key).begins_with("natural_boundary"):cliffs+=1
+  check(cliffs==0,"The old boundary rock cliffs are replaced by the fog wall: "+str(seed_value))
  check(above>0 and below>0 and cliff_routes>0,"Sample covers portal above/below player and routes obstructed by direct cliffs")
  var moving=game.portal_wind;var start=game.player.position+Vector3.UP*1.2;moving.positions[0]=start;moving.ages[0]=0;moving.altitudes[0]=1.2;moving.velocities[0]=Vector3.ZERO
  var start_cell=game.forest_navigation.nearest_cell(start);var original_cost=moving.guidance.costs[start_cell]
@@ -56,7 +57,7 @@ func run():
  check(wind.factor==0 and not wind.stream.visible and not wind.vortex.visible and wind.ambient.emitting,"Completed portal fades guidance/vortex while ambient wind continues")
  for stage_value in [1,2,3]:
   game.stage=stage_value;game.build_stage();var sky=game.world.get_child(0).environment.sky.sky_material
-  check(sky is ProceduralSkyMaterial and sky.sky_top_color==StageThemes.config(stage_value).zenith,"Stage loads grimdark sky palette: "+str(stage_value))
+  check(sky is PanoramaSkyMaterial and sky.panorama==StageDressing.for_stage(stage_value).sky,"Stage loads its dressing sky: "+str(stage_value))
   check(game.portal.has_node("PortalAsset") and game.portal.get_node("PortalAsset").find_children("*","MeshInstance3D",true,false).size()==2,"Portal uses supplied stone arch and rune effect")
  var fx=game.combat_fx.supplied;var nodes=fx.get_child_count()
  check(game.combat_fx.supplied_burst("shatter",game.player.position,2),"Supplied native shatter scene plays as a bounded boss effect")
