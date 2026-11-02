@@ -31,7 +31,7 @@ func lowest_spot() -> Vector3:
    if ok:return Vector3(x,lowest,z)
  return Vector3(0,lowest,-90)
 # The void is a band of pure black across the frame just below the horizon. Dark silhouettes (the stage 4 backdrop art and timbers contain true black)
-# are fine, so a row fails only when more than 10% of its pixels are pure black; the total is reported too.
+# are fine, so a row fails only when more than 0.5% of its pixels are pure black; the total is reported too.
 func black_band(image: Image,label: String) -> void:
  var w=image.get_width();var h=image.get_height();var count=0;var worst=0.0
  for y in range(int(h*0.50),int(h*0.60),2):
@@ -41,7 +41,7 @@ func black_band(image: Image,label: String) -> void:
    if c.r8<=2 and c.g8<=2 and c.b8<=2:row+=1
   count+=row;worst=maxf(worst,float(row)/float(samples))
  print("BLACKBAND %s count=%d worst_row=%.1f%%"%[label,count,worst*100.0])
- if worst>0.10:black_failures+=1
+ if worst>0.005:black_failures+=1
 func run() -> void:
  var stages=[1,2,3,4];var shots=["A","B","C","D"]
  for a in OS.get_cmdline_user_args():

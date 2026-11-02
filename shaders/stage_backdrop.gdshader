@@ -18,5 +18,6 @@ void fragment() {
 	float bright = max(max(t.r, t.g), t.b);
 	float is_light = step(0.55, bright);
 	float h = haze * (1.0 - is_light * lights_keep);
-	ALBEDO = mix(t.rgb, haze_color.rgb, h);
+	// silhouettes never go to true black: the darkest they get is a fraction of the haze colour
+	ALBEDO = max(mix(t.rgb, haze_color.rgb, h), haze_color.rgb * 0.5 + vec3(0.03, 0.015, 0.015));
 }
