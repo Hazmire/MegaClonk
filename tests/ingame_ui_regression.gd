@@ -225,7 +225,7 @@ func pause_screen() -> void:
  check(screen.inventory_panel.position.x<screen.items["resume"].global_position.x and screen.stats_panel.position.x>screen.inventory_panel.position.x+420,"Inventory sits left of the menu, Stats right")
  check((screen.get_node("Stage/Content/Title") as Label).text=="Paused" and (screen.get_node("Stage/Content/Title") as Label).get_theme_font_size("font_size")==104,"Header reads Paused in 104px serif")
  var line=screen.get_node("Stage/Content/StageLine").text.to_lower()
- check(line.contains("stage %d"%game.stage) and line.contains(StageThemes.config(game.stage).title.to_lower()),"Stage line carries the real stage number and name (%s)"%line)
+ check(line.contains("stage %d"%game.stage) and line.contains(StageThemes.title(game.stage).to_lower()),"Stage line carries the real stage number and name (%s)"%line)
  var want=RunPause.counter_values(game)
  check(want[0][1]=="7" and want[1][1]=="12:34" and want[2][1]=="123" and want[3][1]=="456","Counter values come from the game (%s)"%str(want))
  var shown=[]
@@ -522,7 +522,7 @@ func misc_screens() -> void:
  var fe=game.frontend;game.enemies.clear();game.mode="run";game.stage=1;game.gold=321;game.kills=42;game.level=5
  # stage banner
  fe.stage_intro(2);await process_frame
- check(fe.stage_banner is StageBanner and fe.stage_banner.get_node("Title").text==str(StageThemes.config(2).title),"Stage intro banner shows the stage's real title")
+ check(fe.stage_banner is StageBanner and fe.stage_banner.get_node("Title").text==str(StageThemes.title(2)),"Stage intro banner shows the stage's real title")
  var first=fe.stage_banner;fe.stage_intro(2);await process_frame
  check(not is_instance_valid(first) or first.is_queued_for_deletion(),"A new banner replaces the old one")
  # notice
