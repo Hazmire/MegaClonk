@@ -1,0 +1,217 @@
+{
+  "version": 1,
+  "note": "Values are the ones used in reference/oob.gd renders. Tune by eye in game.",
+  "sky": {
+    "filter": false,
+    "sky_rotation_deg_y": 180,
+    "fog_sky_affect": 0.0
+  },
+  "texture_import": {
+    "filter": "nearest",
+    "mipmaps": false,
+    "triplanar_world_scale": 0.25,
+    "low_ground_scale": 0.18
+  },
+  "low_ground": "Cells at the lowest terrain level use the 'low' texture (creek / slag / wet street / floodwater).",
+  "backdrop_rings": [
+    {
+      "layer": "far",
+      "radius_m": 240,
+      "base_y_m": -12,
+      "haze": 0.55
+    },
+    {
+      "layer": "mid",
+      "radius_m": 150,
+      "base_y_m": -4,
+      "haze": 0.3
+    },
+    {
+      "layer": "near",
+      "radius_m": 90,
+      "base_y_m": 0,
+      "haze": 0.1
+    }
+  ],
+  "backdrop_ring_height": "circumference / 16 (strip 8:1, mirrored each lap)",
+  "fog_wall": {
+    "offsets_from_edge_m": [
+      9,
+      15
+    ],
+    "density": [
+      0.2,
+      0.28
+    ],
+    "note": "Lighter than the MapEdge mockup so the rings read through it."
+  },
+  "weather": {
+    "rain": "~3000 streaks, colour (0.85,0.9,0.86,0.3)",
+    "dust": "~900 motes rising",
+    "ash": "~900 flakes falling",
+    "blood_rain": "~3000 streaks, colour (0.6,0.05,0.04,0.55)"
+  },
+  "stages": [
+    {
+      "stage": 1,
+      "name": "Calvary Run Hollow",
+      "sky": "skies/alt1_calvary_run_hollow_skyonly_pano_2048.png",
+      "ground": {
+        "top": "textures/s1_grass.png",
+        "side": "textures/s1_soil_wall.png",
+        "low": "textures/a1_brown_creek.png",
+        "torn_edge": "textures/s1_torn_edge.png"
+      },
+      "fog": {
+        "color": "#9AA093",
+        "density": 0.005
+      },
+      "ambient": {
+        "color": "#8C978F",
+        "energy": 0.55
+      },
+      "sun": {
+        "color": "#C9CEC8",
+        "energy": 0.7,
+        "rotation_deg": [
+          -38,
+          25,
+          0
+        ]
+      },
+      "fog_wall": {
+        "color": "#A7B0A6",
+        "glow_color": "#000000",
+        "glow": 0.0
+      },
+      "weather": "rain",
+      "backdrop": {
+        "far": "backdrops/s1_far.png",
+        "mid": "backdrops/s1_mid.png",
+        "near": "backdrops/s1_near.png"
+      },
+      "footsteps": "grass"
+    },
+    {
+      "stage": 2,
+      "name": "Route 9 & the Tipple",
+      "sky": "skies/alt2_route9_tipple_skyonly_pano_2048.png",
+      "ground": {
+        "top": "textures/s2_dead_grass.png",
+        "side": "textures/s2_clay_wall.png",
+        "low": "textures/a2_coal_slag.png",
+        "torn_edge": "textures/s2_torn_edge.png"
+      },
+      "fog": {
+        "color": "#A8713C",
+        "density": 0.005
+      },
+      "ambient": {
+        "color": "#9A7A5A",
+        "energy": 0.55
+      },
+      "sun": {
+        "color": "#F0B070",
+        "energy": 0.7,
+        "rotation_deg": [
+          -38,
+          25,
+          0
+        ]
+      },
+      "fog_wall": {
+        "color": "#B8844C",
+        "glow_color": "#3A2416",
+        "glow": 0.4
+      },
+      "weather": "dust",
+      "backdrop": {
+        "far": "backdrops/s2_far.png",
+        "mid": "backdrops/s2_mid.png",
+        "near": "backdrops/s2_near.png"
+      },
+      "footsteps": "dirt"
+    },
+    {
+      "stage": 3,
+      "name": "Downtown Calvary Run",
+      "sky": "skies/alt3_downtown_skyonly_pano_2048.png",
+      "ground": {
+        "top": "textures/s3_scorched.png",
+        "side": "textures/s3_charred_wall.png",
+        "side_emission": "textures/s3_charred_wall_emission.png",
+        "low": "textures/a3_wet_street.png",
+        "torn_edge": "textures/s3_torn_edge.png"
+      },
+      "fog": {
+        "color": "#6A2014",
+        "density": 0.0055
+      },
+      "ambient": {
+        "color": "#A04020",
+        "energy": 0.55
+      },
+      "sun": {
+        "color": "#FF8A4A",
+        "energy": 0.7,
+        "rotation_deg": [
+          -38,
+          25,
+          0
+        ]
+      },
+      "fog_wall": {
+        "color": "#7A2414",
+        "glow_color": "#FF7A3A",
+        "glow": 0.6
+      },
+      "weather": "ash",
+      "backdrop": {
+        "far": "backdrops/s3_far.png",
+        "mid": "backdrops/s3_mid.png",
+        "near": "backdrops/s3_near.png"
+      },
+      "footsteps": "dirt"
+    },
+    {
+      "stage": 4,
+      "name": "The No. 9 Sinkhole",
+      "sky": "skies/alt4_no9_sinkhole_skyonly_pano_2048.png",
+      "ground": {
+        "top": "textures/s1_mud.png",
+        "side": "textures/a4_coal_rock.png",
+        "low": "textures/a1_brown_creek.png",
+        "torn_edge": "textures/a4_coal_rock.png"
+      },
+      "fog": {
+        "color": "#1E1414",
+        "density": 0.006
+      },
+      "ambient": {
+        "color": "#5A4040",
+        "energy": 0.55
+      },
+      "sun": {
+        "color": "#8A6A6A",
+        "energy": 0.7,
+        "rotation_deg": [
+          -38,
+          25,
+          0
+        ]
+      },
+      "fog_wall": {
+        "color": "#2A1A18",
+        "glow_color": "#8A1C14",
+        "glow": 0.3
+      },
+      "weather": "blood_rain",
+      "backdrop": {
+        "far": "backdrops/s4_far.png",
+        "mid": "backdrops/s4_mid.png",
+        "near": "backdrops/s4_near.png"
+      },
+      "footsteps": "dirt"
+    }
+  ]
+}
