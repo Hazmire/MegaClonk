@@ -92,11 +92,12 @@ The model uses material colors and no external character geometry or textures.
 Its movement clips are baked skeletal animation. The existing Ranger resources
 retain their original credits for merchant and other legacy visual use.
 
-## Original Rift Cultist asset
+## Original Rift Bellkeeper cultist asset
 
-The pointed-hood cultist mesh, recessed eye openings, robe, rope belt, gloves,
-original red broken-gate marking, and cloth textures are original procedural
-work for this game. The supplied cultist image guides the silhouette and palette;
-its pixels are not used in the textures. Sources are in `art/cultist` and the
+The hooked cowl, recessed amber slit, ragged mantle, asymmetric repaired robe,
+stitch-circle markings, leather harness, iron censer, and cloth textures are
+original procedural work for this game. This second design revises the earlier
+reference-inspired character; no reference pixels or external art are used.
+Sources are in `art/cultist` and the
 self-contained GLB is in `assets/characters/cultist`. This is a new character
 asset prepared separately from the active enemy roster.

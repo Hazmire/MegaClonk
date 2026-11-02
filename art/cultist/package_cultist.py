@@ -8,9 +8,11 @@ import json
 ROOT=Path(__file__).resolve().parents[2]
 output=ROOT/'art/cultist/RiftCultist_Model_Pack.zip'
 manifest=json.loads((ROOT/'assets/characters/cultist/manifest.json').read_text())
-assert manifest['triangles']==12908 and manifest['bones']==28
-assert json.loads((ROOT/'assets/characters/cultist/glb_validation.json').read_text())['checks']=='passed'
-assert json.loads((ROOT/'assets/characters/cultist/godot_validation.json').read_text())['checks']=='passed'
+reports=[json.loads((ROOT/'assets/characters/cultist'/name).read_text())
+    for name in ('glb_validation.json','godot_validation.json')]
+for report in reports:
+    assert report['checks']=='passed'
+    assert all(report[key]==manifest[key] for key in ('triangles','bones','materials'))
 files=sorted(p for folder in ('art/cultist','assets/characters/cultist','docs/images/cultist')
     for p in (ROOT/folder).rglob('*') if p.is_file() and p.suffix not in ('.zip','.pyc')
     and not p.name.endswith('.blend1') and '__pycache__' not in p.parts)

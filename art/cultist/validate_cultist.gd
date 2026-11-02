@@ -16,7 +16,7 @@ func run():
   push_error("Expected one rig, player and skinned mesh");quit(1);return
  var rig=rigs[0] as Skeleton3D;var player=players[0] as AnimationPlayer;var mesh=meshes[0] as MeshInstance3D
  check(rig.get_bone_count()==28 and mesh.skin!=null,"Cultist skeleton/skin missing")
- check(mesh.mesh.get_surface_count()==7,"Cultist material surfaces missing")
+ check(mesh.mesh.get_surface_count()==8,"Cultist material surfaces missing")
  var triangles=0;var textures=0
  for surface in mesh.mesh.get_surface_count():
   var arrays=mesh.mesh.surface_get_arrays(surface)

@@ -1,4 +1,4 @@
-"""Original reference-inspired cultist. Blender 4.3+, no external art or add-ons.
+"""Rift Bellkeeper: revised original cultist. Blender 4.3+, no external art.
 blender -b -t 8 --python-exit-code 1 --python art/cultist/generate_cultist.py
 """
 import bpy
@@ -40,8 +40,8 @@ def cloth_texture(name,hood=False):
         dirt+=stain*rng.uniform(.12,.35)
     dirt+=.48*(1-v)**4 if not hood else .20*(1-v)**2
     dirt=np.clip(dirt,0,.82)
-    clean=np.array((132,126,113) if hood else (199,191,175),dtype=float)
-    mud=np.array((48,43,33) if hood else (77,69,43),dtype=float)
+    clean=np.array((77,90,83) if hood else (172,168,148),dtype=float)
+    mud=np.array((29,36,33) if hood else (70,63,44),dtype=float)
     rgb=clean[None,None,:]*(1-dirt[:,:,None])+mud[None,None,:]*dirt[:,:,None]
     rgb*= (1-.085*(np.cos(u*math.tau*(9 if hood else 11))*.5+.5))[:,:,None]
     rgb+=(grain[:,:,None]-.5)*28+(medium[:,:,None]-.5)*15
@@ -51,18 +51,23 @@ def cloth_texture(name,hood=False):
     stitches=(v>.039)&(v<.044)&((u*100)%1<.40)
     rgb[stitches]=np.array((131,126,111) if hood else (159,152,133))
     if not hood:
-        seam=np.abs(u-.5)<.0035
+        # Offset tailoring and a contrasting repaired side panel break the
+        # symmetry of the original ivory robe and central placket.
+        panel=(u>.60)&(u<.84)&(v<.73)
+        rgb[panel]=rgb[panel]*np.array((.47,.55,.51))
+        placket=.47+.055*(v-.3)
+        seam=np.abs(u-placket)<.0035
         rgb[seam]*=.68
-        edge=(np.abs(u-.5)>.0035)&(np.abs(u-.5)<.006)
+        edge=(np.abs(u-placket)>.0035)&(np.abs(u-placket)<.006)
         rgb[edge]*=1.08
-        # An original broken-gate ritual mark, painted into the fabric.
-        sigil=((u>.536)&(u<.570)&(v>.667)&(v<.892))
-        sigil|=((u>.453)&(u<.560)&(v>.667)&(v<.701))
-        sigil|=((u>.455)&(u<.546)&(v>.753)&(v<.782))
-        sigil|=((u>.473)&(u<.540)&(v>.837)&(v<.891))
-        wear=(grain>.12)&(medium>.20)
-        paint=np.array((113,25,20))[None,None,:]*(.78+.28*grain[:,:,None])
-        alpha=(sigil&wear).astype(float)*(.70+.25*medium)
+        # Broken concentric stitch circles replace the reference-like red glyph.
+        dx=(u-.488)/.057;dy=(v-.765)/.083
+        radius=np.sqrt(dx*dx+dy*dy);angle=np.arctan2(dy,dx)
+        stitches=((angle/math.tau*36)%1)<.55
+        rings=((np.abs(radius-1)<.055)|(np.abs(radius-.64)<.045))&stitches
+        rings&=~((angle>-.30)&(angle<.16))
+        paint=np.array((197,174,119))[None,None,:]*(.83+.24*grain[:,:,None])
+        alpha=rings.astype(float)*(.75+.20*medium)
         rgb=rgb*(1-alpha[:,:,None])+paint*alpha[:,:,None]
     rgb=np.clip(rgb/255,0,1).astype(np.float32)
     pixels=np.ones((size,size,4),dtype=np.float32);pixels[:,:,:3]=rgb
@@ -98,12 +103,15 @@ def material(name,color,texture=None,emission=0):
     return m
 
 
-ROBE=material('Cultist | stained ivory cloth','C7BFAF',cloth_texture('Cultist_Robe_BaseColor'))
-HOOD=material('Cultist | ash-darkened hood','847E71',cloth_texture('Cultist_Hood_BaseColor',True))
+ROBE=material('Cultist | repaired ash-linen robe','ACA894',cloth_texture('Cultist_Robe_BaseColor'))
+HOOD=material('Cultist | charcoal-green cowl and mantle','4D5A53',cloth_texture('Cultist_Hood_BaseColor',True))
 DARK=material('Cultist | shadow lining and leather','211E19')
 ROPE=material('Cultist | old brown rope','32251A')
-FIBER=material('Cultist | rope fibers','594A31')
-RED=material('Cultist | recessed red eyes','922D20',emission=.16)
+FIBER=material('Cultist | old ochre stitching','9A8052')
+RED=material('Cultist | amber slit and censer embers','D09B46',emission=.45)
+IRON=material('Cultist | blackened iron fittings','414039')
+IRON.node_tree.nodes.get('Principled BSDF').inputs['Metallic'].default_value=.65
+IRON.node_tree.nodes.get('Principled BSDF').inputs['Roughness'].default_value=.7
 parts=[];bones={}
 
 
@@ -167,20 +175,25 @@ def tube(name,points,radii,mat,bind,sides=10,cloth=False):
     return obj
 
 
-def cloth_shell(name,rings,bind,steps=64,folds=.04):
+def cloth_shell(name,rings,bind,steps=64,folds=.04,mat=None,split=False,asymmetric=False):
     verts=[];uv=[]
     for z,rx,ry in rings:
         for j in range(steps+1):
             angle=-math.pi+math.tau*j/steps
             rip=1+folds*(.75*math.cos(angle*10)+.25*math.cos(angle*17))
+            hem_weight=max(0,1-z/.73)
             zz=z+(.009*math.sin(angle*13) if z<.12 else 0)
+            if asymmetric:
+                zz+=hem_weight*(.055+.075*math.sin(angle)+.021*math.sin(angle*19))
             verts.append((rx*math.sin(angle)*rip,-ry*math.cos(angle)*rip,zz))
             uv.append((j/steps,max(0,min(1,zz/1.5))))
     faces=[]
     for i in range(len(rings)-1):
         for j in range(steps):
+            angle=-math.pi+math.tau*(j+.5)/steps
+            if split and abs(angle)<math.radians(18) and rings[i][0]<.69:continue
             a=i*(steps+1)+j;faces.append((a,a+1,a+steps+2,a+steps+1))
-    obj=mesh(name,verts,faces,ROBE,bind,uv);solidify(obj,.009)
+    obj=mesh(name,verts,faces,mat or ROBE,bind,uv);solidify(obj,.009)
     return obj
 
 
@@ -200,7 +213,7 @@ def rope_ring(name,z,rx,ry,radius,phase=0):
     return mesh(name,verts,faces,ROPE,'Hips',uv)
 
 
-# Human proportions under a deliberately tall, tapered full-face hood.
+# Humanoid proportions under the collapsed, asymmetric cowl.
 bone('Root',(0,0,0),(0,0,.15))
 bone('Hips',(0,0,.88),(0,0,1.04),'Root')
 bone('Spine',(0,0,1.04),(0,0,1.20),'Hips')
@@ -221,7 +234,8 @@ for side,suffix in [(1,'L'),(-1,'R')]:
         bone(name+'.Tip',(side*.20,y,.55),(side*.25,y,.16),name)
 
 upper=cloth_shell('Robe chest',[(.87,.254,.174),(.96,.256,.176),(1.12,.277,.185),(1.29,.31,.188),(1.40,.32,.18),(1.44,.24,.15)],'Chest',folds=.022)
-skirt=cloth_shell('Long robe skirt',[(.065,.445,.32),(.10,.442,.315),(.27,.414,.29),(.47,.38,.26),(.68,.335,.227),(.86,.279,.185),(.965,.255,.175)],'Hips',folds=.053)
+skirt=cloth_shell('Asymmetric split outer robe',[(.065,.445,.32),(.10,.442,.315),(.27,.414,.29),(.47,.38,.26),(.68,.335,.227),(.86,.279,.185),(.965,.255,.175)],'Hips',folds=.053,split=True,asymmetric=True)
+under=cloth_shell('Dark inner tunic',[(.075,.366,.265),(.15,.366,.263),(.42,.335,.235),(.69,.303,.21),(.955,.245,.165)],'Hips',folds=.035,mat=HOOD)
 
 
 def reset_weights(obj,initial):
@@ -234,28 +248,29 @@ for v in upper.data.vertices:
     for name,weight in [('Chest',chest),('Spine',1-chest)]:
         group=upper.vertex_groups.get(name) or upper.vertex_groups.new(name=name)
         if weight>0:group.add([v.index],weight,'REPLACE')
-reset_weights(skirt,'Hips')
-for v in skirt.data.vertices:
-    x,y,z=v.co
-    hip=max(0,min(1,(z-.72)/.245))
-    lower=max(0,min(1,(.64-z)/.40))
-    left=max(0,min(1,.5+x/.24));front=max(0,min(1,.5-y/.23))
-    if hip>0:skirt.vertex_groups['Hips'].add([v.index],hip,'REPLACE')
-    for side,suffix,weight_side in [(1,'L',left),(-1,'R',1-left)]:
-        for which,weight_front in [('Front',front),('Back',1-front)]:
-            for tip,weight_tip in [(False,1-lower),(True,lower)]:
-                name='Skirt'+which+'.'+suffix+('.Tip' if tip else '')
-                weight=(1-hip)*weight_side*weight_front*weight_tip
-                if weight>0:
-                    group=skirt.vertex_groups.get(name) or skirt.vertex_groups.new(name=name)
-                    group.add([v.index],weight,'REPLACE')
+for garment in (skirt,under):
+    reset_weights(garment,'Hips')
+    for v in garment.data.vertices:
+        x,y,z=v.co
+        hip=max(0,min(1,(z-.72)/.245))
+        lower=max(0,min(1,(.64-z)/.40))
+        left=max(0,min(1,.5+x/.24));front=max(0,min(1,.5-y/.23))
+        if hip>0:garment.vertex_groups['Hips'].add([v.index],hip,'REPLACE')
+        for side,suffix,weight_side in [(1,'L',left),(-1,'R',1-left)]:
+            for which,weight_front in [('Front',front),('Back',1-front)]:
+                for tip,weight_tip in [(False,1-lower),(True,lower)]:
+                    name='Skirt'+which+'.'+suffix+('.Tip' if tip else '')
+                    weight=(1-hip)*weight_side*weight_front*weight_tip
+                    if weight>0:
+                        group=garment.vertex_groups.get(name) or garment.vertex_groups.new(name=name)
+                        group.add([v.index],weight,'REPLACE')
 
-# Oversized open bell sleeves, with the painted chest area excluded from their UVs.
+# Mismatched sleeves: one dark fitted cuff, one ragged linen bell sleeve.
 GLOVE=material('Cultist | worn work gloves','6B614A')
 for side,suffix in [(1,'L'),(-1,'R')]:
     sleeve=tube('Bell sleeve '+suffix,[(side*.285,0,1.375),(side*.33,0,1.30),(side*.39,0,1.18),
         (side*.435,0,1.08),(side*.47,-.005,.96),(side*.50,-.015,.84)],
-        [.12,.128,.132,.13,.155,.18],ROBE,'UpperArm.'+suffix,sides=20,cloth=True)
+        [.12,.128,.132,.13,.125 if side>0 else .16,.135 if side>0 else .19],HOOD if side>0 else ROBE,'UpperArm.'+suffix,sides=20,cloth=True)
     reset_weights(sleeve,'UpperArm.'+suffix)
     for vertex in sleeve.data.vertices:
         upper_weight=max(0,min(1,(vertex.co.z-1.03)/.16))
@@ -278,44 +293,101 @@ tube('Hanging rope B',[(-.21,-.17,.92),(-.18,-.23,.83),(-.20,-.24,.75)],[.017,.0
 for i in range(3):
     tube('Cord fiber '+str(i),[(-.20+i*.008,-.215,.913),(-.07+i*.008,-.236,.924),(.13+i*.008,-.212,.948)],[.002,.002,.002],FIBER,'Hips',5)
 
-# Hood topology deliberately leaves two real eye windows; all other facial
-# anatomy is hidden. The dark inner shell also forms each opening's rim.
-hood_rings=[(1.36,.50,.38),(1.39,.495,.378),(1.46,.445,.35),(1.58,.40,.31),
-    (1.68,.34,.285),(1.735,.30,.26),(1.805,.265,.23),(1.88,.225,.20),
-    (2.0,.16,.145),(2.12,.09,.08),(2.255,.018,.014)]
-angles=sorted(set(list(range(-180,181,6))+[-25,-21,-17,-13,-9,9,13,17,21,25]))
+
+def torus(name,location,radius,thickness,mat,bind,rotation=(math.pi/2,0,0)):
+    bpy.ops.mesh.primitive_torus_add(major_segments=16,minor_segments=5,major_radius=radius,minor_radius=thickness,
+        location=location,rotation=rotation)
+    obj=bpy.context.object;bpy.ops.object.transform_apply(location=True,rotation=True,scale=True)
+    vertices=[v.co.copy() for v in obj.data.vertices];faces=[tuple(p.vertices) for p in obj.data.polygons]
+    bpy.data.objects.remove(obj,do_unlink=True)
+    return mesh(name,vertices,faces,mat,bind)
+
+
+# A broad diagonal harness and a suspended iron censer give the cult a practical,
+# industrial ritual identity rather than the previous uniform priest's robe.
+strap=mesh('Diagonal leather harness',[(-.25,-.18,1.41),(-.19,-.20,1.44),(.25,-.211,1.00),(.19,-.225,.97)],[(0,1,2,3)],ROPE,'Chest')
+solidify(strap,.012,False)
+backstrap=mesh('Rear harness',[(-.25,.17,1.40),(-.19,.19,1.43),(.25,.20,1.00),(.19,.215,.97)],[(0,3,2,1)],ROPE,'Chest')
+solidify(backstrap,.012,False)
+for z in (.87,.915,.96):
+    torus('Censer chain',(-.32,-.16,z),.021,.005,IRON,'Hips',rotation=(math.pi/2 if z==.915 else 0,0,0))
+ellipsoid('Censer coal chamber',(-.32,-.16,.681),(.069,.059,.025),DARK,'Hips',16,8)
+ellipsoid('Censer glowing coals',(-.32,-.17,.744),(.060,.052,.052),RED,'Hips',12,6)
+ellipsoid('Censer domed lid',(-.32,-.16,.806),(.082,.070,.029),IRON,'Hips',16,6)
+ellipsoid('Censer bowl',(-.32,-.16,.669),(.079,.068,.035),IRON,'Hips',16,6)
+for i in range(8):
+    t=math.tau*i/8
+    x=-.32+.077*math.sin(t);y=-.16+.066*math.cos(t)
+    tube('Censer iron cage',[(x,y,.68),(x,y,.795)],[.007,.007],IRON,'Hips',6)
+torus('Censer rim',(-.32,-.16,.785),.077,.007,IRON,'Hips',rotation=(0,0,0))
+for z in (.89,.94,1.0):
+    tube('Fitted sleeve binding',[(.39,-.10,z),(.53,-.10,z+.025)],[.012,.012],ROPE,'Forearm.L',7)
+
+# A collapsed, hooked cowl replaces the full conical hood. Its opening is a
+# single horizontal amber fissure, with a separately draped shoulder mantle.
+hood_rings=[(1.48,.245,.235,0,.025),(1.60,.285,.235,0,0),
+    (1.735,.255,.215,-.01,0),(1.795,.25,.21,-.02,0),
+    (1.85,.233,.195,-.04,.012),(1.94,.185,.16,-.085,.03),
+    (2.04,.13,.122,-.15,.055),(2.11,.068,.082,-.225,.08),
+    (2.12,.022,.039,-.305,.095)]
+angles=sorted(set(list(range(-180,181,6))+[-28,-20,20,28]))
+def hood_point(z,degree):
+    pair=(hood_rings[-2],hood_rings[-1])
+    for first,second in zip(hood_rings,hood_rings[1:]):
+        if first[0]<=z<=second[0]:pair=(first,second);break
+    first,second=pair
+    t=max(0,min(1,(z-first[0])/(second[0]-first[0])))
+    rx,ry,cx,cy=[a+(b-a)*t for a,b in zip(first[1:],second[1:])]
+    angle=math.radians(degree)
+    wrinkle=.04*max(0,1-(z-1.48)/.65)*math.cos(angle*5)+.012*math.sin(angle*13)
+    return Vector((cx+rx*math.sin(angle)*(1+wrinkle),cy-ry*math.cos(angle)*(1+wrinkle),z))
 verts=[];uv=[];stride=len(angles)
-for z,rx,ry in hood_rings:
+for z,rx,ry,cx,cy in hood_rings:
     for degree in angles:
-        angle=math.radians(degree)
-        wrinkle=.08*max(0,(1.95-z)/.59)*math.cos(angle*7)+.015*math.sin(angle*13)
-        x=rx*math.sin(angle)*(1+wrinkle)
-        y=-ry*math.cos(angle)*(1+wrinkle)
-        zz=z+(.012*math.sin(angle*5)+.004*math.cos(angle*11) if z<1.41 else 0)
-        verts.append((x,y,zz));uv.append(((degree+180)/360,(z-1.34)/.96))
+        verts.append(hood_point(z,degree));uv.append(((degree+180)/360,(z-1.44)/.73))
 faces=[]
 for i in range(len(hood_rings)-1):
     for j in range(stride-1):
         mid=(angles[j]+angles[j+1])/2
-        eye_window=9<abs(mid)<25 and hood_rings[i][0]>=1.735 and hood_rings[i+1][0]<=1.805
-        if eye_window:continue
+        slit=abs(mid)<28 and hood_rings[i][0]>=1.735 and hood_rings[i+1][0]<=1.795
+        if slit:continue
         a=i*stride+j;faces.append((a,a+1,a+stride+1,a+stride))
-apex=len(verts);verts.append((.012,.014,2.295));uv.append((.5,1))
+apex=len(verts);verts.append((-.365,.102,2.085));uv.append((.5,.91))
 for j in range(stride-1):faces.append(((len(hood_rings)-1)*stride+j,(len(hood_rings)-1)*stride+j+1,apex))
-hood=mesh('Pointed hood with eye openings',verts,faces,HOOD,'Head',uv);solidify(hood,.012)
-ellipsoid('Black hood interior',(0,.045,1.65),(.18,.15,.23),DARK,'Head')
-for side in (-1,1):
-    t=math.radians(side*17)
-    center=Vector((.2825*math.sin(t),-.245*math.cos(t),1.77))
-    u=Vector((.2825*math.cos(t),.245*math.sin(t),0)).normalized()
-    v=Vector((-.5*math.sin(t),.43*math.cos(t),1)).normalized()
-    normal=u.cross(v).normalized()
-    def eye_patch(name,inset,w,h,mat):
-        c=center-normal*inset
-        vertices=[c-u*w-v*h,c+u*w-v*h,c+u*w+v*h,c-u*w+v*h]
-        return mesh(name,vertices,[(0,1,2,3)],mat,'Head')
-    eye_patch('Recessed black eye socket '+str(side),.020,.037,.025,DARK)
-    eye_patch('Dim red eye '+str(side),.011,.015,.011,RED)
+hood=mesh('Hooked collapsed cowl',verts,faces,HOOD,'Head',uv);solidify(hood,.012)
+ellipsoid('Black cowl interior',(0,.045,1.65),(.18,.15,.23),DARK,'Head')
+def visor_strip(name,width,low,high,mat,inset):
+    degrees=[-width+2*width*i/12 for i in range(13)]
+    vertices=[]
+    for z in (low,high):
+        for degree in degrees:
+            angle=math.radians(degree)
+            normal=Vector((math.sin(angle),-math.cos(angle),.08)).normalized()
+            vertices.append(hood_point(z,degree)-normal*inset)
+    faces=[(i,i+1,i+14,i+13) for i in range(12)]
+    return mesh(name,vertices,faces,mat,'Head')
+visor_strip('Recessed horizontal visor cavity',29,1.732,1.798,DARK,.018)
+visor_strip('Single amber fissure',20,1.758,1.772,RED,.011)
+for x in (-.145,.11):
+    tube('Cowl iron staple',[(x,-.206,1.810),(x,-.211,1.852)],[.005,.005],IRON,'Head',6)
+
+verts=[];uv=[];faces=[];steps=48
+mantle_rings=[(1.18,.46,.29),(1.24,.44,.28),(1.39,.35,.235),(1.51,.265,.19)]
+for z,rx,ry in mantle_rings:
+    weight=max(0,(1.51-z)/.33)
+    for j in range(steps+1):
+        angle=math.radians(37+286*j/steps)
+        hem=.10*math.sin(angle)+.024*math.sin(angle*11)+.016*math.sin(angle*17)
+        verts.append((rx*math.sin(angle),-ry*math.cos(angle),z+weight*hem))
+        uv.append((.15+.72*j/steps,(z-1.10)/.45))
+for i in range(len(mantle_rings)-1):
+    for j in range(steps):
+        a=i*(steps+1)+j;faces.append((a,a+1,a+steps+2,a+steps+1))
+mantle=mesh('Ragged asymmetric shoulder mantle',verts,faces,HOOD,'Chest',uv);solidify(mantle,.013)
+for j in range(0,steps,3):
+    a=Vector(verts[j]);b=Vector(verts[j+1])
+    a.z+=.01;b.z+=.01
+    tube('Mantle hem stitch',[a,b],[.0025,.0025],FIBER,'Chest',5)
 
 # Join surfaces while retaining named selection groups and blended skin weights.
 bpy.ops.object.select_all(action='DESELECT')
@@ -339,7 +411,7 @@ for name,(head,tail,parent) in bones.items():
 bpy.ops.object.mode_set(mode='OBJECT')
 body.parent=rig;modifier=body.modifiers.new('Cultist skeleton','ARMATURE');modifier.object=rig
 rig.show_in_front=True;data.display_type='STICK'
-rig['description']='Ash-stained pointed hood, recessed red eyes, old ivory robe, rope belt, and an original red ritual mark.'
+rig['description']='Rift Bellkeeper: hooked charcoal cowl, single amber fissure, ragged mantle, split repaired robe, circular stitching and iron censer.'
 rig['forward']='Blender -Y / glTF +Z';rig.animation_data_create()
 
 
@@ -475,12 +547,12 @@ bpy.context.view_layer.update()
 def caption(text,x,y,size,color):
     curve=bpy.data.curves.new(text,'FONT');curve.body=text;curve.align_x='CENTER';curve.size=size;curve.space_character=1.15
     obj=bpy.data.objects.new(text,curve);studio.objects.link(obj);obj.rotation_euler=camera.rotation_euler
-    obj.location=camera.matrix_world@Vector((x,y,-7))
+    obj.location=camera.matrix_world@Vector((x,y,-6))
     mat=material('Type '+text,color);shader=mat.node_tree.nodes.get('Principled BSDF')
     shader.inputs['Emission Color'].default_value=mat.diffuse_color;shader.inputs['Emission Strength'].default_value=.7
     curve.materials.append(mat)
-caption('R I F T   C U L T I S T',0,1.62,.15,'DDD0B9')
-caption('POINTED HOOD  /  ASH-STAINED CLOTH  /  RECESSED RED EYES',0,1.37,.052,'A6B2B5')
+caption('R I F T   B E L L K E E P E R',0,1.62,.15,'DDD0B9')
+caption('HOOKED COWL  /  SINGLE AMBER SLIT  /  IRON CENSER',0,1.37,.052,'A6B2B5')
 for x,label in [(-1.65,'FRONT'),(0,'THREE-QUARTER'),(1.65,'REAR')]:caption(label,x,-1.35,.08,'C5B299')
 caption('BLENDER + GLB  /  RIGGED  /  ORIGINAL PAINTED TEXTURES',0,-1.61,.047,'A6B2B5')
 scene.render.resolution_x=1800;scene.render.resolution_y=1200
@@ -488,14 +560,14 @@ scene.render.filepath=str(PREVIEW/'RiftCultist_Turnaround.png')
 bpy.ops.wm.save_as_mainfile(filepath=str(SOURCE/'RiftCultist_Turnaround.blend'),compress=True)
 bpy.ops.render.render(write_still=True)
 vertices=[v.co for v in body.data.vertices]
-report={'name':'Rift Cultist','generator':'Blender '+bpy.app.version_string,
+report={'name':'Rift Bellkeeper','design_revision':2,'generator':'Blender '+bpy.app.version_string,
     'triangles':len(body.data.polygons),'vertices_blender':len(body.data.vertices),'bones':len(data.bones),'materials':len(body.data.materials),
     'animations_seconds':{name:frames/24 for name,frames in clip_frames.items()},
     'looping_clips':['Idle','Walk'],'non_looping_clips':['Attack'],
     'bounds_blender_m':{'min':[min(v[i] for v in vertices) for i in range(3)],'max':[max(v[i] for v in vertices) for i in range(3)]},
     'texture_resolution':[512,512],'textures':['textures/Cultist_Robe_BaseColor.png','textures/Cultist_Hood_BaseColor.png'],
     'forward':'Blender -Y; glTF +Z','up':'Blender Z; glTF Y','units':'metres',
-    'design':'Reference-inspired tall pointed hood, real eye openings, dim red eyes, stained ivory bell-sleeved robe, rope belt and original red broken-gate sigil.',
+    'design':'Hooked charcoal-green cowl, single recessed amber fissure, asymmetric ragged mantle, split ash-linen robe over dark tunic, ochre stitch circles, leather harness and suspended iron censer.',
     'external_art_used':False,'runtime_roster_integration':False}
 (EXPORT/'manifest.json').write_text(json.dumps(report,indent=2)+'\n')
 print('CULTIST_COMPLETE',json.dumps(report))

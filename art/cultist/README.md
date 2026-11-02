@@ -1,12 +1,13 @@
-# Rift Cultist
+# Rift Bellkeeper
 
-An original game character inspired by the supplied cultist reference: a tall
-pointed hood, recessed dark eye openings with dim red eyes, ash-stained cloth,
-wide bell sleeves, an old rope belt, and a weathered red ritual marking. The
-face has no exposed nose, mouth, skin, or hair. The chest mark is an original
-broken-gate design painted into the robe texture.
+An original cultist character with a hooked, off-centre charcoal-green cowl,
+a single recessed amber slit, and an uneven ragged shoulder mantle. A repaired,
+split ash-linen robe opens over a dark inner tunic. Mismatched sleeves, ochre
+stitch circles, a diagonal leather harness, and a suspended iron censer give
+this revision its own silhouette and ritual-worker identity. The face stays
+completely concealed.
 
-The export has **12,908 triangles, 28 bones, seven material surfaces, and two
+The export has **16,050 triangles, 28 bones, eight material surfaces, and two
 embedded 512 × 512 textures**. The GLB and all three clips have been imported and
 sampled successfully in Godot 4.7.2.
 
@@ -27,17 +28,19 @@ sampled successfully in Godot 4.7.2.
   texture details, and animation durations.
 - `generate_cultist.py`: reproducible source, with no external art or add-ons.
 
-The reference image is used as visual guidance only. Its pixels are not used as
-a texture or included in the pack. The mesh and weathered textures are generated
-from scratch. Nearest texture sampling keeps the grainy appearance of the
-reference while the cloth silhouette remains smoothly shaded.
+This second design revises the silhouette, face treatment, garments, palette,
+and ritual details of the first model. The mesh and weathered textures are
+generated from scratch; no reference pixels or external art are included.
+Nearest texture sampling retains a grainy finish while the cloth remains
+smoothly shaded. Existing `RiftCultist` filenames are retained for compatibility.
 
 ## Rig and motion
 
 The single skinned mesh has separate material surfaces for the robe, hood,
-shadow lining/leather, rope, rope fibers, eyes, and gloves. Named `PART | ...`
-vertex groups allow selection of garment pieces after joining. Real holes in
-the hood reveal recessed red eye surfaces and a dark interior.
+shadow lining/leather, rope, stitching, amber light, gloves, and iron. Named
+`PART | ...` vertex groups allow selection of garment pieces after joining.
+A real opening in the cowl reveals the recessed amber strip and dark interior.
+The censer follows the hips; its chain is modeled geometry without physics.
 
 The humanoid skeleton includes root, hips, spine, chest, neck, head, clavicles,
 arms, hands, legs and feet, plus eight robe-skirt bones. The robe uses blended
@@ -57,8 +60,8 @@ than a full combat animation set.
 
 ## Import and scale
 
-The model uses metres, with its origin on the ground. The pointed hood makes it
-approximately 2.3 m tall. Scale the root to suit the enemy's desired size.
+The model uses metres, with its origin on the ground. The hooked cowl makes it
+approximately 2.13 m tall. Scale the root to suit the enemy's desired size.
 Blender uses Z up / -Y forward; the GLB uses Y up / +Z forward. The studio and
 presentation text are excluded from the game export. Godot imports the GLB
 directly; the native source directory is under a `.gdignore`.

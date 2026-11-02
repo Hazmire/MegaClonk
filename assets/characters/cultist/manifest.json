@@ -1,10 +1,11 @@
 {
-  "name": "Rift Cultist",
+  "name": "Rift Bellkeeper",
+  "design_revision": 2,
   "generator": "Blender 4.3.2",
-  "triangles": 12908,
-  "vertices_blender": 6540,
+  "triangles": 16050,
+  "vertices_blender": 8282,
   "bones": 28,
-  "materials": 7,
+  "materials": 8,
   "animations_seconds": {
     "Idle": 3.0,
     "Walk": 1.6666666666666667,
@@ -19,14 +20,14 @@
   ],
   "bounds_blender_m": {
     "min": [
-      -0.674614429473877,
-      -0.41040000319480896,
+      -0.6843152046203613,
+      -0.36000001430511475,
       0.004999998956918716
     ],
     "max": [
-      0.674614429473877,
-      0.3827812969684601,
-      2.2950000762939453
+      0.6309608221054077,
+      0.3284800052642822,
+      2.1319172382354736
     ]
   },
   "texture_resolution": [
@@ -40,7 +41,7 @@
   "forward": "Blender -Y; glTF +Z",
   "up": "Blender Z; glTF Y",
   "units": "metres",
-  "design": "Reference-inspired tall pointed hood, real eye openings, dim red eyes, stained ivory bell-sleeved robe, rope belt and original red broken-gate sigil.",
+  "design": "Hooked charcoal-green cowl, single recessed amber fissure, asymmetric ragged mantle, split ash-linen robe over dark tunic, ochre stitch circles, leather harness and suspended iron censer.",
   "external_art_used": false,
   "runtime_roster_integration": false
 }

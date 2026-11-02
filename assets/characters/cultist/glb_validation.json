@@ -1,7 +1,7 @@
 {
   "checks": "passed",
-  "triangles": 12908,
-  "materials": 7,
+  "triangles": 16050,
+  "materials": 8,
   "bones": 28,
   "embedded_textures": 2,
   "texture_resolution": [
@@ -17,5 +17,5 @@
   "idle_walk_loop_endpoints": "match",
   "external_files_required_by_glb": false,
   "skin_weights_and_normals": "normalized",
-  "glb_bytes": 1025132
+  "glb_bytes": 1121392
 }
