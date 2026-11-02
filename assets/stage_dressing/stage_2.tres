@@ -29,4 +29,15 @@ weather = "dust"
 backdrop_far = ExtResource("1_pyb2p")
 backdrop_mid = ExtResource("2_jnw81")
 backdrop_near = ExtResource("3_lyk17")
+fence = {
+"candles": false,
+"gap": 3.0,
+"height": 2.0,
+"panel": true,
+"post_color": Color(0.3529412, 0.3529412, 0.3372549, 1),
+"stripes": false,
+"style": "steel",
+"wire_color": Color(0.22745098, 0.22745098, 0.21960784, 1),
+"wires": 2
+}
 prop_style = 1

@@ -28,6 +28,8 @@ const RULES_PATH="res://assets/stage_dressing/rules.tres"
 @export var backdrop_mid: Texture2D
 @export var backdrop_near: Texture2D
 @export var footsteps="dirt"
+# Boundary fence (visual only): style, post_color, wire_color, height, gap, wires, panel, stripes, candles.
+@export var fence: Dictionary={}
 # Prop look (tree/rock/grass variants) that goes with this dressing, until stage-specific props exist: 0 living, 1 withering, 2 dead.
 @export var prop_style=0
 static var cache: Dictionary={}
@@ -61,13 +63,16 @@ func apply(game: Node) -> void:
  env.tonemap_mode=Environment.TONE_MAPPER_LINEAR
  for light in game.world.get_children():
   if light is DirectionalLight3D:light.light_color=sun_color;light.light_energy=sun_energy;light.rotation_degrees=sun_rotation_deg;light.sky_mode=DirectionalLight3D.SKY_MODE_LIGHT_ONLY
+ var low_y=lowest_level(game.map_layout)
  var ground=ForestAtmosphere.floor_material()
  ground.set_shader_parameter("top_tex",top);ground.set_shader_parameter("side_tex",side);ground.set_shader_parameter("low_tex",low)
  ground.set_shader_parameter("emission_tex",side_emission if side_emission!=null else side);ground.set_shader_parameter("emission_strength",1.0 if side_emission!=null else 0.0)
- ground.set_shader_parameter("tex_scale",r.triplanar_scale);ground.set_shader_parameter("low_scale",r.low_ground_scale);ground.set_shader_parameter("low_y",lowest_level(game.map_layout))
+ ground.set_shader_parameter("tex_scale",r.triplanar_scale);ground.set_shader_parameter("low_scale",r.low_ground_scale);ground.set_shader_parameter("low_y",low_y)
  ForestAtmosphere.grass_material().set_shader_parameter("color_gradient",grass_gradient())
  var root=Node3D.new();root.name=NODE_NAME;game.world.add_child(root)
  root.add_child(torn_edge_mesh(game,r))
+ root.add_child(outer_ground_mesh(r,low_y))
+ for part in fence_parts(game,r):root.add_child(part)
  for layer in r.wall_offsets.size():
   var offset=HALF+r.wall_offsets[layer];var shader_material=veil_material(r,layer);var quad=QuadMesh.new();quad.size=Vector2(offset*2.0,r.wall_height)
   for side_index in 4:
@@ -78,7 +83,7 @@ func apply(game: Node) -> void:
     1:node.position.z=offset;node.rotation.y=PI
     2:node.position.x=-offset;node.rotation.y=PI/2
     3:node.position.x=offset;node.rotation.y=-PI/2
- for layer in r.ring_layers.size():root.add_child(backdrop_ring(layer,r))
+ for layer in r.ring_layers.size():root.add_child(backdrop_ring(layer,r,low_y))
 # The y of the lowest flat terrain level (creek / slag / wet street / floodwater), found once per stage from the layout's cell planes.
 static func lowest_level(layout: Dictionary) -> float:
  var lowest=1e9
@@ -122,8 +127,9 @@ func torn_edge_mesh(game: Node,r: StageDressingRules) -> MeshInstance3D:
  return node
 # One open, inward-facing cylinder per layer (CylinderMesh maps only part of the strip). Height = circumference / 16 so the 8:1 strip and its mirror
 # stay square; unshaded, no shadows, no collision. Centred on the arena (the origin), never on the player.
-func backdrop_ring(layer: int,r: StageDressingRules) -> MeshInstance3D:
+func backdrop_ring(layer: int,r: StageDressingRules,low_y: float=0.0) -> MeshInstance3D:
  var radius=r.ring_radius[layer]*r.arena_scale;var base_y=r.ring_base_y[layer]*r.arena_scale
+ if r.ring_anchor[layer]=="outer_ground":base_y=outer_ground_y(r,low_y)+r.ring_base_y[layer] # bottom edge just under the outer ground
  var h=TAU*radius/r.ring_height_divisor
  var surface=SurfaceTool.new();surface.begin(Mesh.PRIMITIVE_TRIANGLES)
  for i in SEGMENTS:
@@ -137,6 +143,78 @@ func backdrop_ring(layer: int,r: StageDressingRules) -> MeshInstance3D:
  material.set_shader_parameter("haze",r.ring_haze[layer]);material.set_shader_parameter("haze_color",fog_color)
  var node=MeshInstance3D.new();node.name="Backdrop_"+r.ring_layers[layer];node.mesh=surface.commit();node.material_override=material
  node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF;node.position=Vector3(0,base_y+h*0.5,0)
+ return node
+static func outer_ground_y(r: StageDressingRules,low_y: float) -> float:return low_y-r.outer_ground_drop*r.arena_scale
+# Render-only flat ring of ground from just outside the torn edge to past the far ring, so nothing is black below the horizon.
+# No collision, no shadows, one draw call. The square hole keeps it from ever showing through the playable ground.
+func outer_ground_mesh(r: StageDressingRules,low_y: float) -> MeshInstance3D:
+ var surface=SurfaceTool.new();surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+ var y=outer_ground_y(r,low_y);var inner=HALF+r.outer_ground_margin*r.arena_scale;var outer=r.ring_radius[0]*r.arena_scale*r.outer_ground_radius_factor;var segments=r.outer_ground_segments
+ for i in segments:
+  var a0=TAU*i/segments;var a1=TAU*(i+1)/segments
+  var d0=Vector3(cos(a0),0,sin(a0));var d1=Vector3(cos(a1),0,sin(a1))
+  var in0=d0*inner/maxf(absf(d0.x),absf(d0.z));var in1=d1*inner/maxf(absf(d1.x),absf(d1.z))
+  in0.y=y;in1.y=y
+  var o0=d0*outer+Vector3(0,y,0);var o1=d1*outer+Vector3(0,y,0)
+  for v in [in0,o0,o1,in0,o1,in1]:surface.add_vertex(v)
+ surface.generate_normals()
+ var material=StandardMaterial3D.new();material.albedo_texture=low;material.albedo_color=Color(r.outer_ground_tint,r.outer_ground_tint,r.outer_ground_tint);material.roughness=1.0
+ material.texture_filter=BaseMaterial3D.TEXTURE_FILTER_NEAREST;material.uv1_triplanar=true;material.uv1_world_triplanar=true;material.uv1_scale=Vector3.ONE*r.outer_ground_texture_scale;material.cull_mode=BaseMaterial3D.CULL_DISABLED
+ var node=MeshInstance3D.new();node.name="OuterGround";node.mesh=surface.commit();node.material_override=material;node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+ return node
+# Boundary fence, visual only (the perimeter wall already blocks the player): posts every `gap` m along the wall, inset by rules.fence_inset,
+# each snapped to the terrain under it. Rails/wires/chain-link panels join neighbouring posts only at equal height. Batched into MultiMeshes:
+# posts, wires, plus panels (stage 2) and candles (stage 4), so a stage's fence costs two to three draw calls.
+const FENCE_STEP_TOLERANCE=0.2
+func fence_parts(game: Node,r: StageDressingRules) -> Array:
+ var style=fence;var h=float(style.height);var gap=float(style.gap);var wires=int(style.wires)
+ var posts=[];var rails=[];var panels=[];var candles=[]
+ var inset=r.fence_inset
+ var sides=[[Vector3(-HALF,0,-HALF+inset),Vector3(HALF,0,-HALF+inset)],[Vector3(-HALF,0,HALF-inset),Vector3(HALF,0,HALF-inset)],[Vector3(-HALF+inset,0,-HALF),Vector3(-HALF+inset,0,HALF)],[Vector3(HALF-inset,0,-HALF),Vector3(HALF-inset,0,HALF)]]
+ for side_points in sides:
+  var a: Vector3=side_points[0];var b: Vector3=side_points[1];var length=a.distance_to(b);var direction=(b-a).normalized();var distance=0.5;var previous=Vector3.INF;var k=0
+  while distance<length:
+   var p=a+direction*distance;var ground=game.terrain_height(clampf(p.x,-HALF+0.5,HALF-0.5),clampf(p.z,-HALF+0.5,HALF-0.5))
+   var top=Vector3(p.x,ground+h,p.z)
+   posts.append(Transform3D(Basis(Vector3(0,0,1),sin(k*1.7)*0.06),Vector3(p.x,ground+h*0.5,p.z)))
+   if previous!=Vector3.INF and absf(previous.y-top.y)<FENCE_STEP_TOLERANCE:
+    for w in wires:
+     var offset=Vector3(0,-h*(0.15+0.3*w),0);var wa=previous+offset;var wb=top+offset
+     var thick=0.22 if style.stripes else 0.03
+     var basis=Basis.looking_at((wb-wa).normalized(),Vector3.UP)*Basis.from_scale(Vector3(0.03,thick,wa.distance_to(wb)))
+     rails.append([Transform3D(basis,(wa+wb)*0.5),style.post_color if (style.stripes and k%2==0) else style.wire_color])
+    if style.panel:
+     var middle=(previous+top)*0.5-Vector3(0,h*0.47,0)
+     panels.append(Transform3D(Basis.looking_at(direction.cross(Vector3.UP),Vector3.UP)*Basis.from_scale(Vector3(previous.distance_to(top),h*0.9,1.0)),middle))
+   previous=top;distance+=gap;k+=1
+   if style.candles and k%3==0:candles.append(Transform3D(Basis(),Vector3(p.x,ground+0.1,p.z)-Vector3(direction.z,0,-direction.x)*0.3))
+ var out=[]
+ out.append(multimesh_node("FencePosts",box_mesh(Vector3(0.14,h,0.14)),posts,[],style.post_color,false))
+ var rail_transforms=[];var rail_colors=[]
+ for rail in rails:rail_transforms.append(rail[0]);rail_colors.append(rail[1])
+ if not rail_transforms.is_empty():out.append(multimesh_node("FenceWires",box_mesh(Vector3.ONE),rail_transforms,rail_colors,Color.WHITE,false))
+ if not panels.is_empty():out.append(multimesh_node("FencePanels",chain_link_quad(gap,h),panels,[],Color.WHITE,false))
+ if not candles.is_empty():out.append(multimesh_node("FenceCandles",box_mesh(Vector3(0.06,0.2,0.06)),candles,[],Color("FFC060"),true))
+ return out
+static func box_mesh(size: Vector3) -> BoxMesh:
+ var mesh=BoxMesh.new();mesh.size=size;return mesh
+static func chain_link_quad(gap: float,h: float) -> QuadMesh:
+ var image=Image.create(16,16,false,Image.FORMAT_RGBA8)
+ for y in 16:
+  for x in 16:image.set_pixel(x,y,Color(0.35,0.35,0.33,1.0 if (x+y)%8==0 or (x-y+16)%8==0 else 0.0))
+ var material=StandardMaterial3D.new();material.albedo_texture=ImageTexture.create_from_image(image);material.texture_filter=BaseMaterial3D.TEXTURE_FILTER_NEAREST
+ material.transparency=BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR;material.cull_mode=BaseMaterial3D.CULL_DISABLED;material.uv1_scale=Vector3(gap/0.5,h*0.9/0.5,1.0)
+ var quad=QuadMesh.new();quad.size=Vector2.ONE;quad.material=material;return quad
+func multimesh_node(node_name: String,mesh: Mesh,transforms: Array,colors: Array,color: Color,unshaded: bool) -> MultiMeshInstance3D:
+ var multimesh=MultiMesh.new();multimesh.transform_format=MultiMesh.TRANSFORM_3D;multimesh.use_colors=not colors.is_empty();multimesh.mesh=mesh;multimesh.instance_count=transforms.size()
+ for i in transforms.size():
+  multimesh.set_instance_transform(i,transforms[i])
+  if not colors.is_empty():multimesh.set_instance_color(i,colors[i])
+ if mesh.material==null:
+  var material=StandardMaterial3D.new();material.albedo_color=color;material.roughness=1.0;material.vertex_color_use_as_albedo=not colors.is_empty()
+  if unshaded:material.shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED
+  mesh.material=material
+ var node=MultiMeshInstance3D.new();node.name=node_name;node.multimesh=multimesh;node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
  return node
 # Weather: one GPU particle system that rides on the player, hard-capped by the rules (halved in reduced mode, off with the Weather setting).
 func attach_weather(game: Node) -> void:

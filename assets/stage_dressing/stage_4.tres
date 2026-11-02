@@ -29,4 +29,15 @@ weather = "blood_rain"
 backdrop_far = ExtResource("1_f5edq")
 backdrop_mid = ExtResource("2_w87vj")
 backdrop_near = ExtResource("3_v3qvv")
+fence = {
+"candles": true,
+"gap": 3.4,
+"height": 1.5,
+"panel": false,
+"post_color": Color(0.16470589, 0.1254902, 0.09411765, 1),
+"stripes": false,
+"style": "timber",
+"wire_color": Color(0.5411765, 0.11764706, 0.101960786, 1),
+"wires": 1
+}
 prop_style = 2

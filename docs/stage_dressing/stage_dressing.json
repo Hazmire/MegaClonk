@@ -18,19 +18,22 @@
       "layer": "far",
       "radius_m": 240,
       "base_y_m": -12,
-      "haze": 0.55
+      "haze": 0.55,
+      "anchor": "world"
     },
     {
       "layer": "mid",
       "radius_m": 150,
-      "base_y_m": -4,
-      "haze": 0.3
+      "base_y_m": -0.5,
+      "haze": 0.3,
+      "anchor": "outer_ground"
     },
     {
       "layer": "near",
       "radius_m": 90,
-      "base_y_m": 0,
-      "haze": 0.1
+      "base_y_m": -0.5,
+      "haze": 0.1,
+      "anchor": "outer_ground"
     }
   ],
   "backdrop_ring_height": "circumference / 16 (strip 8:1, mirrored each lap)",
@@ -90,7 +93,18 @@
         "mid": "backdrops/s1_mid.png",
         "near": "backdrops/s1_near.png"
       },
-      "footsteps": "grass"
+      "footsteps": "grass",
+      "fence": {
+        "style": "wood",
+        "post_color": "#3A2E24",
+        "wire_color": "#1A1612",
+        "height": 1.3,
+        "gap": 3.0,
+        "wires": 3,
+        "panel": false,
+        "stripes": false,
+        "candles": false
+      }
     },
     {
       "stage": 2,
@@ -130,7 +144,18 @@
         "mid": "backdrops/s2_mid.png",
         "near": "backdrops/s2_near.png"
       },
-      "footsteps": "dirt"
+      "footsteps": "dirt",
+      "fence": {
+        "style": "steel",
+        "post_color": "#5A5A56",
+        "wire_color": "#3A3A38",
+        "height": 2.0,
+        "gap": 3.0,
+        "wires": 2,
+        "panel": true,
+        "stripes": false,
+        "candles": false
+      }
     },
     {
       "stage": 3,
@@ -171,7 +196,18 @@
         "mid": "backdrops/s3_mid.png",
         "near": "backdrops/s3_near.png"
       },
-      "footsteps": "dirt"
+      "footsteps": "dirt",
+      "fence": {
+        "style": "sawhorse",
+        "post_color": "#6A5A48",
+        "wire_color": "#C8401F",
+        "height": 1.1,
+        "gap": 2.6,
+        "wires": 1,
+        "panel": false,
+        "stripes": true,
+        "candles": false
+      }
     },
     {
       "stage": 4,
@@ -211,7 +247,29 @@
         "mid": "backdrops/s4_mid.png",
         "near": "backdrops/s4_near.png"
       },
-      "footsteps": "dirt"
+      "footsteps": "dirt",
+      "fence": {
+        "style": "timber",
+        "post_color": "#2A2018",
+        "wire_color": "#8A1E1A",
+        "height": 1.5,
+        "gap": 3.4,
+        "wires": 1,
+        "panel": false,
+        "stripes": false,
+        "candles": true
+      }
     }
-  ]
+  ],
+  "outer_ground": {
+    "note": "Render-only flat ring from just outside the torn edge to past the far ring; drop and margin scale by arena_scale.",
+    "drop_m": 4.0,
+    "inner_margin_m": 2.0,
+    "outer_radius_factor": 1.1,
+    "tint": 0.6,
+    "texture_scale": 0.12,
+    "segments": 96
+  },
+  "fence_note": "Visual-only fence along the perimeter wall, inset 1 m. Posts snap to terrain height; rails/wires/panels join posts at equal height.",
+  "fence_inset_m": 1.0
 }

@@ -17,8 +17,30 @@ func highest() -> Vector3:
    var h=game.terrain_height(x,z)
    if h>best.y+0.01 or (absf(h-best.y)<=0.01 and Vector2(x,z).length()>Vector2(best.x,best.z).length()):best=Vector3(x,h,z)
  return best
+var black_failures=0
+# The lowest flat terrain cell nearest the north edge with 12 m of the same level behind it (the reference's shot == "low").
+func lowest_spot() -> Vector3:
+ var lowest=INF
+ for x in range(-90,91,4):
+  for z in range(-94,-40,4):lowest=minf(lowest,game.terrain_height(x,z))
+ for z in range(-94,-40,2):
+  for x in range(-82,83,2):
+   var ok=true
+   for dz in range(0,14,2):
+    for dx in [-4,0,4]:ok=ok and is_equal_approx(game.terrain_height(x+dx,z+dz),lowest)
+   if ok:return Vector3(x,lowest,z)
+ return Vector3(0,lowest,-90)
+# No pure-black pixel in the band just below the horizon (where the void used to show).
+func black_band(image: Image,label: String) -> void:
+ var w=image.get_width();var h=image.get_height();var count=0
+ for y in range(int(h*0.50),int(h*0.60),2):
+  for x in range(0,w,2):
+   var c=image.get_pixel(x,y)
+   if c.r8<=2 and c.g8<=2 and c.b8<=2:count+=1
+ print("BLACKBAND %s count=%d"%[label,count])
+ if count>0:black_failures+=1
 func run() -> void:
- var stages=[1,2,3,4];var shots=["A","B","C"]
+ var stages=[1,2,3,4];var shots=["A","B","C","D"]
  for a in OS.get_cmdline_user_args():
   if a.begins_with("only="):stages=Array(a.substr(5).split(",")).map(func(v):return int(v))
   if a.begins_with("shots="):shots=Array(a.substr(6).split(","))
@@ -37,10 +59,13 @@ func run() -> void:
   game.frontend.run_hud.visible=false
   if "A" in shots:
    var p=Vector3(6,game.terrain_height(6,-80)+0.6,-80);look(p,-0.05,0.12);await snap("stage%d_A_edge"%s,1.2)
+  if "D" in shots:
+   var lp=lowest_spot();game.player.avatar.visible=false;look(lp+Vector3(0,0.1,12.0),0.0,0.03);await snap("stage%d_D_lowest"%s,1.2)
+   black_band(root.get_texture().get_image(),"stage%d"%s);game.player.avatar.visible=true
   if "C" in shots:
    var top=highest();var yaw=atan2(-top.x,-top.z) if false else 0.0
    # look outward from the plateau toward the nearest border
    var dir=Vector3(top.x,0,top.z).normalized();if dir.length()<0.1:dir=Vector3(0,0,-1)
    yaw=atan2(-dir.x,-dir.z);look(top+Vector3(0,0.6,0),yaw,0.05);await snap("stage%d_C_plateau"%s,1.2)
   game.frontend.run_hud.visible=true
- quit()
+ quit(1 if black_failures>0 else 0)

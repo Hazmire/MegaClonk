@@ -8,7 +8,16 @@ extends Resource
 @export var ring_radius: PackedFloat32Array=PackedFloat32Array([240.0,150.0,90.0])
 @export var ring_base_y: PackedFloat32Array=PackedFloat32Array([-12.0,-4.0,0.0])
 @export var ring_haze: PackedFloat32Array=PackedFloat32Array([0.55,0.3,0.1])
+# "world" rings sit at ring_base_y; "outer_ground" rings sit ring_base_y (a small offset, unscaled) below the outer ground.
+@export var ring_anchor: PackedStringArray=PackedStringArray(["world","outer_ground","outer_ground"])
 @export var ring_height_divisor=16.0
+@export var outer_ground_drop=4.0
+@export var outer_ground_margin=2.0
+@export var outer_ground_radius_factor=1.1
+@export var outer_ground_tint=0.6
+@export var outer_ground_texture_scale=0.12
+@export var outer_ground_segments=96
+@export var fence_inset=1.0
 # The reference arena is 96 m across; the game's is 192 m. Ring radii and base heights scale by this so the rings stay outside the walls.
 @export var arena_scale=2.0
 @export var wall_offsets: PackedFloat32Array=PackedFloat32Array([9.0,15.0])
