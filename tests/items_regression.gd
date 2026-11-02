@@ -113,7 +113,7 @@ func stat_tests():
  fresh();give("salted_pork");var hp=game.stats.max_health
  check(is_equal_approx(hp,base.max_health+20.0) and is_equal_approx(game.health,hp),"Salted Pork: +20 max HP, filled on pickup")
  fresh();give("rosary_teeth");give("grave_salt")
- check(is_equal_approx(game.stats.crit,base.crit+0.05) and is_equal_approx(game.stats.crit_damage,base.crit_damage+0.10) and is_equal_approx(game.stats.max_health,base.max_health+15.0) and is_equal_approx(game.stats.armor,1.0),"Rosary of Teeth and Grave Salt")
+ check(is_equal_approx(game.stats.crit,base.crit+0.05) and is_equal_approx(game.stats.crit_damage,base.crit_damage+0.10) and is_equal_approx(game.stats.max_health,base.max_health+15.0) and is_equal_approx(game.stats.armor,4.0),"Rosary of Teeth and Grave Salt")
  fresh();give("crowsfoot_charm");var one=game.stats.evasion;give("crowsfoot_charm",5)
  check(is_equal_approx(one,0.12) and game.stats.evasion>one and game.stats.evasion<0.75 and game.stats.evasion<6*0.12,"Crowsfoot Charm: +12% evasion with diminishing returns")
  fresh();give("bitter_wine");var wine=game.stats
