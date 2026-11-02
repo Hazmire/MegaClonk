@@ -6,7 +6,7 @@ extends RefCounted
 # bonuses back out, so the player is not left with invisible stat boosts. No refund is given.
 const LEGACY={
  "Ember Heart":["max_health",25.0],"Runner's Knot":["speed",0.12],"Lucky Claw":["crit",0.07],"Copper Crown":["gold_gain",0.25],
- "Soul Lantern":["xp",0.2],"Iron Petal":["armor",3.0],"Vampire Fang":["lifesteal",0.02],"Storm Lens":["count",1.0],
+ "Soul Lantern":["xp",0.2],"Iron Petal":["armor",12.0],"Vampire Fang":["lifesteal",0.12],"Storm Lens":["count",1.0],
  "Giant's Ring":["size",0.2],"Briar Halo":["thorns",5.0],"Phoenix Seal":["revives",1.0],"Thunder Covenant":["storm",1.0],"Timekeeper":["ultimate_haste",0.25]
 }
 const LEGACY_ONLY_STATS=["revives","storm","ultimate_haste"]

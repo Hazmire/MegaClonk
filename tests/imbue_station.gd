@@ -99,6 +99,13 @@ func station_ui():
  check(held_count==2,"Only elements the player holds can be picked up (%d)"%held_count)
  screen.tiles["fire"].pressed.emit();await process_frame
  var wid=int(screen.data.weapons[0].id)
+ # Hovering a fitting socket while holding a gem charges the hover sound up; leaving charges it down.
+ var hover_slot: SocketSlot=screen.slots["Slot_%d_0"%wid]
+ check(hover_slot.state=="ready","A held gem makes a fitting socket ready")
+ hover_slot.mouse_entered.emit();game.audio.charge_tick(0.016)
+ check(game.audio.charge_target==1.0 and game.audio.charge_level>0.0 and game.audio.charge_player!=null,"Hovering a ready socket charges the hover sound up")
+ hover_slot.mouse_exited.emit()
+ check(game.audio.charge_target==0.0,"Leaving the socket charges the hover sound down")
  screen.slots["Slot_%d_0"%wid].pressed.emit();await process_frame
  check(screen.phase=="confirm" and game.gold==2000,"Choosing a socket asks to confirm and spends nothing yet")
  screen.fuse_button.chosen.emit();await create_timer(RunImbue.FUSE_TIME+0.4).timeout

@@ -432,7 +432,7 @@ func gem_tests():
   var b=make_enemy(Vector3(5+i,0,0));b["burn"]=3.0
  var armor0=game.stats.armor;var ls0=game.stats.lifesteal
  for i in 40:game.irt.tick(1.0/60.0)
- check(is_equal_approx(game.stats.armor-armor0,3*0.4) and is_equal_approx(game.stats.lifesteal-ls0,3*0.002),"Witch-Hunter's Brand: armour and lifesteal per burning enemy")
+ check(is_equal_approx(game.stats.armor-armor0,3*ItemStats.v("witch_hunters_brand","armor_each")) and is_equal_approx(game.stats.lifesteal-ls0,3*ItemStats.v("witch_hunters_brand","lifesteal_each")),"Witch-Hunter's Brand: armour and lifesteal per burning enemy")
  for e2 in game.enemies:e2["burn"]=0.0
  for i in 40:game.irt.tick(1.0/60.0)
  check(is_equal_approx(game.stats.armor,armor0) and is_equal_approx(game.stats.lifesteal,ls0),"Witch-Hunter's Brand: bonuses vanish when nothing burns")

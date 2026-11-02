@@ -51,9 +51,12 @@ for m in MAN:
 GAIN_OVERRIDE={
 "weapon.sword.hit":-4,"weapon.firestaff.impact":-3,"weapon.bow.hit":-5,"weapon.revolver.hit":-5,"weapon.scythes.hit":-4,"weapon.shotgun.hit":-6,"weapon.lightning.chain":-8,
 "weapon.sword.crit":-7,"weapon.firestaff.crit":-7,"weapon.lightning.crit":-7,"weapon.bow.crit":-8,"weapon.revolver.crit":-7,"weapon.scythes.crit":-7,"weapon.shotgun.crit":-8,"weapon.aura.crit":-11,
-"pickup.gold":-21,"world.gem_found_corrosive":-5,"world.gem_found_electric":-5,"world.gem_found_fire":-5,"world.gem_found_ice":-5,"pickup.xp":-8,"gem.pickup":-7,"reward.chest.tick":-6,
+"pickup.gold":-21,"ui.socket_hover":6,"world.gem_found_corrosive":-5,"world.gem_found_electric":-5,"world.gem_found_fire":-5,"world.gem_found_ice":-5,"pickup.xp":-8,"gem.pickup":-7,"reward.chest.tick":-6,
 }
 for k,g in GAIN_OVERRIDE.items():out[k]["gain_db"]=g
+# Fix pass 2: menu hover sounds must retrigger as fast as the pointer moves (they used to wait for the previous 0.6 s clip to finish).
+# The socket_hover sample peaks 15 dB under the other UI clips, hence its positive gain above.
+for k,(cd,mv) in {"ui.hover":(0.03,8),"ui.card_hover":(0.02,6)}.items():out[k]["cooldown"]=cd;out[k]["max_voices"]=mv
 # The socket-hover swell is held as a charge: a gapless body of the sample (frames, zero-slope matched) loops while the pointer is on a slot.
 out["ui.socket_hover"]["charge_loop"]=[13740,25558]
 json.dump({"events":out},open(PATH,"w"),indent=2)

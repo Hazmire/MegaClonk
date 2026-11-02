@@ -9,7 +9,7 @@ const GROUPS=[
  ["Combat",["damage","crit","crit_damage","haste","count","size","projectile_speed","duration","knockback"]],
  ["Movement",["speed","air_jumps","jump","slide_speed","slide_friction","glide","climb"]],
  ["Rewards",["pickup","xp","gold_gain","luck","difficulty"]]]
-const LABELS={"max_health":"Max health","crit_damage":"Crit damage","projectile_speed":"Projectile speed","air_jumps":"Air jumps","slide_speed":"Slide speed","slide_friction":"Slide friction","gold_gain":"Gold gain","xp":"XP gain","pickup":"Pickup range","regen":"Regeneration"}
+const LABELS={"haste":"Attack speed","max_health":"Max health","crit_damage":"Crit damage","projectile_speed":"Projectile speed","air_jumps":"Air jumps","slide_speed":"Slide speed","slide_friction":"Slide friction","gold_gain":"Gold gain","xp":"XP gain","pickup":"Pickup range","regen":"Regeneration"}
 static func tier_index(tier: String) -> int:return maxi(0,TIER_IDS.find(tier))
 static func label(key: String) -> String:return LABELS.get(key,key.replace("_"," ").capitalize())
 # --- stats -------------------------------------------------------------------------------------------------------
@@ -161,11 +161,11 @@ static func shop_rows(game: Node,object: Dictionary) -> Array:
  return rows
 # --- shrine ---------------------------------------------------------------------------------------------------------
 # One Dictionary per shrine choice: {index, stat, stat_name, bonus, description, tier, tier_name, before, after}; all from ShrineRewards.
-static func shrine_cards(reward: Dictionary) -> Array:
+static func shrine_cards(reward: Dictionary,current_armor: float=0.0) -> Array:
  var out=[]
  for i in reward.get("choices",[]).size():
   var c: Dictionary=reward.choices[i];var tier=tier_index(str(c.rarity))
-  out.append({"index":i,"stat":str(c.stat),"stat_name":ShrineRewards.stat_name(str(c.stat)),"bonus":ShrineRewards.bonus_text(c),"description":str(c.description),"tier":tier,"tier_name":str(FogPalette.RARITY[tier]["name"]),"before":float(c.before),"after":float(c.after)})
+  out.append({"index":i,"stat":str(c.stat),"stat_name":ShrineRewards.stat_name(str(c.stat)),"bonus":ShrineRewards.bonus_text(c,current_armor),"description":str(c.description),"tier":tier,"tier_name":str(FogPalette.RARITY[tier]["name"]),"before":float(c.before),"after":float(c.after)})
  return out
 # --- treasure chest -------------------------------------------------------------------------------------------------
 # What the chest screen shows. The item is already decided and granted by RewardDrops before the screen opens; this only builds the

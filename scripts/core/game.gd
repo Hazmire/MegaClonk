@@ -296,7 +296,7 @@ func begin_run() -> void:
   10: stats.crit_damage += 0.75
   14: stats.xp += 0.3
   16: stats.evasion += 0.15
-  17: stats.lifesteal += 0.03
+  17: stats.lifesteal += 0.05
   18: stats.damage += tier * 0.2
  health = stats.max_health
  xp = 0
@@ -326,11 +326,17 @@ func equip(id: int) -> void:
  elif weapons.size() < weapon_limit():
   weapons[id] = {"level":1,"rarity":"common","clock":0.1,"upgrades":{},"legacy_damage":1.0}
   WeaponSockets.ensure(weapons[id])
-func terrain_height(x: float, z: float) -> float:
- # Query the collision mesh's already-built planes, never regenerate or format
- # a layout-cache key for each agent probe during a horde tick.
+# Fast path: the layout's planes are cached in `terrain_planes` while the layout matches the current stage (validated once per frame
+# and on every stage build), so the per-enemy probes do one array read instead of several dictionary lookups.
+var terrain_planes=PackedVector3Array()
+var terrain_planes_ready=false
+func refresh_terrain_cache() -> void:
+ terrain_planes_ready=false
  if not map_layout.is_empty() and int(map_layout.seed)==stage_map_seed() and int(map_layout.terrain_version)==terrain_version and int(map_layout.get("object_version",0))==world_content_version:
-  var plane: Vector3=map_layout.planes[ForestMap.index(x,z)]
+  terrain_planes=map_layout.planes;terrain_planes_ready=true
+func terrain_height(x: float, z: float) -> float:
+ if terrain_planes_ready:
+  var plane: Vector3=terrain_planes[clampi(floori((z+96)*0.5),0,ForestMap.SIDE-1)*ForestMap.SIDE+clampi(floori((x+96)*0.5),0,ForestMap.SIDE-1)]
   return plane.x*x+plane.y+plane.z*z+maxf(0,maxf(absf(x),absf(z))-96)*3.0
  return ForestMap.height(stage_map_seed(),x,z)
 func build_stage() -> void:
@@ -533,7 +539,7 @@ func _physics_process(delta: float) -> void:
   passive_clock -= 1
  spawn_clock -= hostile_delta
  # Budgeted spawning: no catch-up burst after a long frame; bounded ordinary counts.
- spawn_budget=minf(6,spawn_budget+hostile_delta*RUN_RULES.base_spawn_rate*stage_clock.pressure()*(1+(stage-1)*RUN_RULES.stage_spawn_growth))
+ spawn_budget=minf(6,spawn_budget+hostile_delta*spawn_rate())
  if spawn_clock<=0 and spawn_budget>=1 and enemies.size()<ENEMY_LIMIT-8:
   var count=mini(3,int(spawn_budget))
   for i in count:spawn_enemy()
@@ -570,6 +576,19 @@ func tick_passive() -> void:
     stats[names[rng.randi_range(0,3)]] += 0.04
   20:
    if int(elapsed) % 60 == 0: award_item()
+# Credit-based spawning. Enemies per second the pool earns right now: a base rate that starts slow and grows over the stage clock
+# (and per stage), times the clock's rush/endless multiplier and the Difficulty stat, times a feedback term: up to (1+clear_bonus)x
+# while the field is clear, falling to 1x as the living count reaches a soft cap that grows over time. Nothing killed still spawns.
+func spawn_rate() -> float:
+ var span=clampf(stage_clock.elapsed/StageClock.DURATION,0.0,1.0)
+ var base=lerpf(RUN_RULES.spawn_start_rate,RUN_RULES.spawn_end_rate,pow(span,RUN_RULES.spawn_curve))*(1.0+(stage-1)*RUN_RULES.stage_spawn_growth*2.0)
+ var difficulty=maxf(0.1,float(stats.difficulty))
+ var soft_cap=lerpf(RUN_RULES.soft_cap_start,RUN_RULES.soft_cap_end,span)*difficulty
+ var clearance=clampf(1.0-float(enemies.size())/maxf(1.0,soft_cap),0.0,1.0)
+ return base*stage_clock.spawn_mult()*difficulty*(1.0+RUN_RULES.clear_bonus*clearance)
+# Difficulty also speeds enemies up (hp, damage and spawn count scale 1:1 with the stat).
+func difficulty_speed() -> float:
+ return clampf(1.0+(float(stats.difficulty)-1.0)*RUN_RULES.difficulty_speed_per_point,1.0,RUN_RULES.difficulty_speed_cap)
 func spawn_enemy(kind: int = -1, at: Vector3 = Vector3.INF) -> Dictionary:
  if enemies.size() >= ENEMY_LIMIT: return {}
  if is_instance_valid(forest_navigation) and not forest_navigation.ready_for_spawning:return {}
@@ -595,7 +614,8 @@ func spawn_enemy(kind: int = -1, at: Vector3 = Vector3.INF) -> Dictionary:
   enemy["hp"]=config.health*scale_factor
   enemy["max_hp"]=enemy.hp
   enemy["speed"]=config.speed
-  enemy["damage"]=config.damage*(1+(tier-1)*0.3+(stage-1)*0.2)*(1+overtime/180)
+  enemy["damage"]=config.damage*(1+(tier-1)*0.3+(stage-1)*0.2)*(1+overtime/180)*float(stats.difficulty)
+  enemy["speed"]=float(enemy.speed)*difficulty_speed()
   enemy["scale"]=1.0
   enemy["state"]="move"
   enemy["windup"]=0.0
@@ -615,6 +635,11 @@ func spawn_enemy(kind: int = -1, at: Vector3 = Vector3.INF) -> Dictionary:
  enemies.append(enemy)
  if effects.size()<70:combat_fx.burst("smoke_puff",enemy.pos-Vector3.UP*0.5,0.5)
  return enemy
+# Enemy distance LOD (squared metres): within NEAR every frame, then every 2nd / 3rd / 4th frame. Spawned enemies run every frame for 1.5 s.
+const LOD_NEAR_SQ=144.0
+const LOD_MID_SQ=900.0
+const LOD_FAR_SQ=3025.0
+var enemy_frame=0
 func update_enemies(real_delta: float) -> void:
  # Everything below is hostile simulation, so it runs on Stopwatch-scaled time. The player,
  # weapons, camera, UI and audio never go through here.
@@ -623,7 +648,7 @@ func update_enemies(real_delta: float) -> void:
   combat_pool_start=pool.created;combat_burst_start=combat_fx.bursts_created
   combat_counters={"hits":0,"deaths":0,"xp_drops":0,"xp_merged":0,"scenes":0,"freed_nodes":0}
  if is_instance_valid(forest_navigation):forest_navigation.tick(real_delta,player.position)
- crowd.rebuild(enemies)
+ refresh_terrain_cache();crowd.rebuild(enemies);enemy_frame+=1
  var colors = [Color("ee7d70"),Color("ffc05f"),Color("a28cae"),Color("e0d3a0"),Color("f55e67"),Color("b0dafa"),Color("aeef7a"),Color("80b9cb"),Color("cf7aff")]
  var mm = enemy_mesh.multimesh
  var boss_count=0
@@ -631,31 +656,39 @@ func update_enemies(real_delta: float) -> void:
  for i in enemies.size():
   var e = enemies[i]
   if e.hp <= 0: continue
-  e.age += delta
-  EnemyContact.step(self,e,delta)
+  var dt=delta;var forced=false
+  if e.kind<8 and not e.has("encounter"):
+   # Distance LOD: far enemies think less often (with the skipped time carried over) and are redrawn from their cached pose.
+   var to_player: Vector3=e.pos-player.position;var d2=to_player.x*to_player.x+to_player.z*to_player.z
+   var period=1 if (d2<LOD_NEAR_SQ or e.age<1.5) else (2 if d2<LOD_MID_SQ else (3 if d2<LOD_FAR_SQ else 4))
+   if period>1 and (enemy_frame+int(e.get("crowd_id",i)))%period!=0:
+    e["lod_acc"]=float(e.get("lod_acc",0.0))+delta;enemy_view.redraw(e);continue
+   dt=delta+float(e.get("lod_acc",0.0));e["lod_acc"]=0.0;forced=period>1
+  e.age += dt
+  EnemyContact.step(self,e,dt)
   if e.hp<=0:crowd.disable(e);continue
-  if e.kind>=8:e["hit_time"]=maxf(0,float(e.get("hit_time",0))-delta)
-  e.cooldown -= delta
-  if e.has("fx"):StatusManager.tick(self,e,delta)
-  e.slow = maxf(0,e.slow-delta)
-  e.frozen = maxf(0,e.frozen-delta)
-  e.poison = maxf(0,e.poison-delta)
-  e.burn=maxf(0,e.burn-delta)
+  if e.kind>=8:e["hit_time"]=maxf(0,float(e.get("hit_time",0))-dt)
+  e.cooldown -= dt
+  if e.has("fx"):StatusManager.tick(self,e,dt)
+  e.slow = maxf(0,e.slow-dt)
+  e.frozen = maxf(0,e.frozen-dt)
+  e.poison = maxf(0,e.poison-dt)
+  e.burn=maxf(0,e.burn-dt)
   if e.burn>0:
-   if rng.randf()<delta:combat_fx.burst("fire_torch",e.pos,1,0.7)
-   e.burn_clock-=delta
+   if rng.randf()<dt:combat_fx.burst("fire_torch",e.pos,1,0.7)
+   e.burn_clock-=dt
    if e.burn_clock<=0: hit(e,(3+level*0.5)*irt.status_harder(),int(e.get("burn_source",1))); e.burn_clock=0.5
    if not settings.reduced and rng.randf()<0.07: impact(e.pos,Color("ffb45a"),1)
   if e.poison > 0:
-   e.poison_clock -= delta
+   e.poison_clock -= dt
    if e.poison_clock <= 0: hit(e,5+level,int(e.get("poison_source",23))); e.poison_clock = 0.5
   if e.kind<8:
-   crowd.prepare(e);EnemySimulation.step(self,e,delta)
-   crowd.resolve(self,e,delta)
+   crowd.prepare(e);EnemySimulation.step(self,e,dt)
+   crowd.resolve(self,e,dt,forced)
    if e.hp>0: enemy_view.draw_enemy(e,player.position)
    continue
   if e.has("encounter"):
-   crowd.prepare(e);Encounters.step(self,e,delta);crowd.resolve(self,e,delta);enemy_view.draw_enemy(e,player.position);continue
+   crowd.prepare(e);Encounters.step(self,e,dt);crowd.resolve(self,e,dt);enemy_view.draw_enemy(e,player.position);continue
   var direction = player.position-e.pos
   direction.y = 0
   var distance = direction.length()
@@ -672,7 +705,7 @@ func update_enemies(real_delta: float) -> void:
     e.cooldown = 3.8
     flash(e.pos,Color("ff4444"),2)
    if e.telegraph > 0:
-    e.telegraph -= delta
+    e.telegraph -= dt
     speed = 0 if e.telegraph>0.3 else 18
   if e.kind == 8:
    speed = 2.0
@@ -685,7 +718,7 @@ func update_enemies(real_delta: float) -> void:
     effects.back().life=1.4
    if e.telegraph>0:
     speed = 0
-    e.telegraph -= delta
+    e.telegraph -= dt
     if e.telegraph <= 0:
      if e.phase == 0:
       for j in 12:
@@ -706,8 +739,8 @@ func update_enemies(real_delta: float) -> void:
       e.hp=minf(e.max_hp,e.hp+e.max_hp*0.015)
      flash(e.pos,Color("ff718d"),8)
   if e.frozen > 0: speed = 0
-  e.pos += (direction*speed+e.knock)*delta
-  e.knock = e.knock.move_toward(Vector3.ZERO,delta*15)
+  e.pos += (direction*speed+e.knock)*dt
+  e.knock = e.knock.move_toward(Vector3.ZERO,dt*15)
   e.pos.y = terrain_height(e.pos.x,e.pos.z)+0.65*e.scale+(2+sin(e.age*3) if e.kind==5 else 0)
   if distance < 1.1*e.scale+0.5 and e.cooldown<=0:
    hurt((8+stage*2+tier*2)*(2 if e.kind==8 else 1))
@@ -753,7 +786,7 @@ func hurt(amount: float) -> void:
   if irt.any:irt.on_evade()
   return
  if irt.hurt_hooks and irt.witch_bottle(): toast("WARDED"); return
- var final_damage=maxf(1,amount*100/(100+stats.armor*5))
+ var final_damage=maxf(1,amount*Armor.multiplier(float(stats.armor)))
  if irt.hurt_hooks and irt.hourglass(final_damage):return
  health -= final_damage
  if irt.hurt_hooks:irt.on_damage_taken(amount)
@@ -768,6 +801,11 @@ func hurt(amount: float) -> void:
 # `ctx` (optional) is the shared weapon hit context: {"source": hit type, "dir", "pos"}. It only steers
 # impact feedback; damage, crit, sockets and combos all run through this one function for every source.
 const MEGACRIT_MULTIPLIER=1.5
+# Lifesteal is a chance per damaging hit to restore 1 HP; every full 100% guarantees one more HP (150% = 1 HP, +1 more half the time).
+# Rolls use the weapon runtime's RNG so seeded runs stay deterministic.
+func lifesteal_hp() -> float:
+ var chance=float(stats.lifesteal);var whole=floorf(chance)
+ return whole+(1.0 if wrt.rng.randf()<chance-whole else 0.0)
 func hit(e: Dictionary, base: float, weapon: int, ctx: Dictionary = {}) -> void:
  if e.is_empty() or e.hp<=0: return
  if debug_combat:combat_counters.hits+=1
@@ -811,7 +849,7 @@ func hit(e: Dictionary, base: float, weapon: int, ctx: Dictionary = {}) -> void:
   numbers.show_damage(e.pos+Vector3.UP,amount,critical,color,elapsed)
  damage_total += actual
  damage_by_weapon[weapon] = damage_by_weapon.get(weapon,0.0)+actual
- if not item_hit:health = minf(stats.max_health,health+actual*stats.lifesteal)
+ if not item_hit and actual>0.0 and stats.lifesteal>0.0:health=minf(stats.max_health,health+lifesteal_hp())
  if critical and not settings.reduced and not ctx.has("source"): flash(e.pos,Color("fff3aa"),0.4)
  StatusManager.on_hit(self,e,weapon,critical,actual)
  if irt.hit_hooks and not item_hit and ctx.has("source"):irt.on_hit(e,amount,actual,critical,weapon)
@@ -1032,7 +1070,7 @@ func on_level() -> void:
  if irt.any:irt.on_level_up()
  match character:
   0: stats.luck+=0.03
-  1: stats.armor+=1.5
+  1: stats.armor+=6.0
   4: stats.damage+=0.04
   5: stats.crit+=0.01
   8: stats.max_health+=4; health+=4
@@ -1340,7 +1378,7 @@ func save_run(path: String = "user://active-run.json") -> bool:
  var saved_enemies=[]
  for e in enemies:
   var record=e.duplicate(true)
-  record.erase("variant");record.erase("move_direction");record.erase("crowd_start");record.erase("crowd_was_traversing");record.erase("crowd_last_solved");record.erase("crowd_body_height");record.erase("crowd_slot")
+  record.erase("variant");record.erase("view");record.erase("move_direction");record.erase("crowd_start");record.erase("crowd_was_traversing");record.erase("crowd_last_solved");record.erase("crowd_body_height");record.erase("crowd_slot")
   for key in ["pos","knock","target","charge_direction"]:
    if record.has(key): record[key]=[record[key].x,record[key].y,record[key].z]
   saved_enemies.append(record)

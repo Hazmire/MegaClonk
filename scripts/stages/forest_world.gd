@@ -16,7 +16,7 @@ static func build(game: Node) -> void:
  var started=Time.get_ticks_usec()
  BestiaryFrames.prewarm()
  var data=ForestMap.layout(game.stage_map_seed())
- game.map_layout=data
+ game.map_layout=data;game.refresh_terrain_cache()
  var layout_done=Time.get_ticks_usec()
  var terrain=game.mesh_node(ForestMap.geometry(data,false),Color.WHITE,game.world)
  terrain.name="TerraceTerrain"

@@ -2,10 +2,12 @@ class_name BuildStats
 extends RefCounted
 const HELP={
  "damage":"Multiplies weapon damage. Higher increases damage before critical hits and trait/ultimate multipliers.",
- "haste":"Multiplies attacks per second; higher reduces cooldown. Per-weapon haste multiplies this bonus.",
+ "haste":"Attack speed: multiplies attacks per second; higher reduces cooldown. Per-weapon attack speed multiplies this bonus.",
  "crit":"Chance per hit to critically strike. Higher is better. Chance above 100% is a chance of a megacrit (1.5x a normal critical hit).",
  "crit_damage":"Damage multiplier of a critical hit. 100% bonus means a critical hit deals twice normal damage.",
- "armor":"Armour points: incoming damage is multiplied by 100 / (100 + 5 × armour). Higher reduces damage; Berserker then multiplies incoming damage by 0.70.",
+ "armor":"Damage reduction: the share of incoming damage blocked. It has diminishing returns (reduction = armour / (75 + armour)), so it never reaches 100%. Berserker then multiplies incoming damage by 0.70.",
+ "lifesteal":"Chance on each damaging hit to restore 1 HP. Over 100% every hit restores 1 HP and the excess is the chance of a second HP, and so on.",
+ "difficulty":"Raises enemy health, damage and speed, and how many enemies spawn. Higher is harder and pays off in rewards.",
  "evasion":"Chance to dodge all damage from a hit, bounded at 75%. Higher is better.",
  "speed":"Multiplies running speed and the practical slide speed limit. Higher is faster.",
  "jump":"Multiplies jump height. Jump impulse uses its square root; Ghost Form multiplies height again.",
@@ -16,7 +18,8 @@ const HELP={
  "glide":"Reduces glide descent speed and gravity; higher gives more airtime without upward flight.",
  "climb":"Multiplies wall climbing speed for Wall Climber. Higher climbs faster; outer boundaries remain forbidden."}
 static func value(key: String, number: float) -> String:
- if key in ["max_health","armor","count","air_jumps","thorns"]:return "%.0f"%number
+ if key=="armor":return "%.0f%%"%(Armor.reduction(number)*100.0)
+ if key in ["max_health","count","air_jumps","thorns"]:return "%.0f"%number
  if key=="regen":return "%.1f HP/s"%number
  if key in ["crit","evasion","luck","lifesteal"]:return "%.0f%%"%(number*100)
  if key=="crit_damage":return "+%.0f%%"%((number-1)*100)

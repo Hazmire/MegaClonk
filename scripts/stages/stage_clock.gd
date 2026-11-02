@@ -24,6 +24,12 @@ func pressure() -> float:
  if elapsed<rush_until:base=maxf(base,RULES.first_rush_pressure if elapsed<300 else RULES.second_rush_pressure)
  if endless():base+=minf(6,(elapsed-DURATION)/RULES.endless_pressure_seconds)
  return base
+# Multiplier on the spawner's credit rate: a rush window and, once endless, steady growth.
+func spawn_mult() -> float:
+ var m=1.0
+ if elapsed<rush_until:m=RULES.rush_spawn_mult
+ if endless():m*=1.0+minf(RULES.endless_mult_cap,(elapsed-DURATION)/RULES.endless_pressure_seconds)
+ return m
 func serialize() -> Dictionary:return {"elapsed":elapsed,"fired":fired.duplicate(),"rush_until":rush_until}
 func restore(data: Dictionary, fallback_elapsed: float=0) -> void:
  reset();elapsed=maxf(0,float(data.get("elapsed",fallback_elapsed)))

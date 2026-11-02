@@ -53,7 +53,7 @@ static func tome_description(id: String) -> String:
  if id=="Multishot":return "+1 total weapon projectile per level (any tier)."
  var low=float(data[1]);var high=Economy.scaled(low,"legendary")
  if id=="Vitality":return "+%s to +%s maximum HP per level, by tier."%[_num(low),_num(high)]
- var labels={"Precision":"critical-hit chance","Might":"damage","Colossus":"attack size","Haste":"attack speed","Wind":"movement speed","Vampire":"lifesteal","Wisdom":"XP gain","Greed":"gold gain"}
+ var labels={"Precision":"critical-hit chance","Might":"damage","Colossus":"attack size","Haste":"attack speed","Wind":"movement speed","Vampire":"lifesteal chance (1 HP per hit)","Wisdom":"XP gain","Greed":"gold gain"}
  if not TOME_NAMES.has(id):return "%s %+.2f per level"%[str(data[0]).replace("_"," "),data[1]]
  return "+%s%% to +%s%% %s per level, by tier."%[_num(low*100.0),_num(high*100.0),labels.get(id,str(data[0]).replace("_"," "))]
 static func _num(value: float) -> String:
@@ -63,13 +63,13 @@ const TOMES = {
  "Might": ["damage", 0.06], "Haste": ["haste", 0.05],
  "Precision": ["crit", 0.025], "Ruin": ["crit_damage", 0.25],
  "Vitality": ["max_health", 8.0], "Recovery": ["regen", 0.5],
- "Iron": ["armor", 2.0], "Dodge": ["evasion", 0.04],
+ "Iron": ["armor", 8.0], "Dodge": ["evasion", 0.04],
  "Wind": ["speed", 0.04], "Feather": ["jump", 0.12],
  "Magnet": ["pickup", 0.25], "Wisdom": ["xp", 0.06],
  "Fortune": ["luck", 0.1], "Multishot": ["count", 1.0],
  "Velocity": ["projectile_speed", 0.15], "Colossus": ["size", 0.06],
  "Persistence": ["duration", 0.2], "Force": ["knockback", 0.2],
- "Briar": ["thorns", 3.0], "Vampire": ["lifesteal", 0.004],
+ "Briar": ["thorns", 3.0], "Vampire": ["lifesteal", 0.03],
  "Thermal": ["glide",0.15], "Gecko": ["climb",0.15], "Air Step": ["air_jumps",1.0], "Skater": ["slide_speed",0.15], "Wax": ["slide_friction",-0.08],
  "Greed": ["gold_gain", 0.08], "Curse": ["difficulty", 0.15]
 }
