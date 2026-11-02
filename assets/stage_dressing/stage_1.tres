@@ -1,14 +1,14 @@
 [gd_resource type="Resource" script_class="StageDressing" format=3]
 
-[ext_resource type="Texture2D" path="res://docs/stage_dressing/backdrops/s1_far.png" id="1_2yxmv"]
-[ext_resource type="Texture2D" path="res://docs/stage_dressing/backdrops/s1_mid.png" id="2_8ahx7"]
-[ext_resource type="Texture2D" path="res://docs/stage_dressing/backdrops/s1_near.png" id="3_j5oqn"]
-[ext_resource type="Texture2D" path="res://docs/stage_dressing/textures/a1_brown_creek.png" id="4_bq81h"]
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/backdrops/s1_far.png" id="1_2yxmv"]
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/backdrops/s1_mid.png" id="2_8ahx7"]
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/backdrops/s1_near.png" id="3_j5oqn"]
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/textures/a1_brown_creek.png" id="4_bq81h"]
 [ext_resource type="Script" path="res://scripts/stages/stage_dressing.gd" id="5_q50xe"]
-[ext_resource type="Texture2D" path="res://docs/stage_dressing/textures/s1_soil_wall.png" id="6_pwg5b"]
-[ext_resource type="Texture2D" path="res://docs/stage_dressing/skies/alt1_calvary_run_hollow_skyonly_pano_2048.png" id="7_ucxkg"]
-[ext_resource type="Texture2D" path="res://docs/stage_dressing/textures/s1_grass.png" id="8_awwq3"]
-[ext_resource type="Texture2D" path="res://docs/stage_dressing/textures/s1_torn_edge.png" id="9_6nqtp"]
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/textures/s1_soil_wall.png" id="6_pwg5b"]
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/skies/alt1_calvary_run_hollow_skyonly_pano_2048.png" id="7_ucxkg"]
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/textures/s1_grass.png" id="8_awwq3"]
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/textures/s1_torn_edge.png" id="9_6nqtp"]
 
 [resource]
 script = ExtResource("5_q50xe")

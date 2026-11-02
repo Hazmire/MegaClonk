@@ -104,9 +104,9 @@ func run():
  # --- imports ---
  var all_ok=true;var bad=[]
  for folder in ["textures","backdrops","skies"]:
-  for file in DirAccess.get_files_at("res://docs/stage_dressing/"+folder):
+  for file in DirAccess.get_files_at("res://assets/stage_dressing/"+folder):
    if file.ends_with(".png"):
-    var text=FileAccess.get_file_as_string("res://docs/stage_dressing/%s/%s.import"%[folder,file])
+    var text=FileAccess.get_file_as_string("res://assets/stage_dressing/%s/%s.import"%[folder,file])
     if not text.contains("mipmaps/generate=false"):all_ok=false;bad.append(file)
  check(all_ok,"Every dressing texture imports without mipmaps %s"%str(bad))
  var shader_ok=true

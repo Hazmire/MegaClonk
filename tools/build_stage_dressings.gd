@@ -3,7 +3,13 @@ extends SceneTree
 #   tools/godot.sh --headless --path . --script tools/build_stage_dressings.gd
 const DIR="res://docs/stage_dressing/"
 const PROP_STYLE=[0,1,2,2]
-func tex(path):return load(DIR+path) if path!=null and path!="" else null
+const OUT="res://assets/stage_dressing/"
+# docs/ is excluded from exports, so the runtime copies of the pack's images live in assets/stage_dressing/ (the manifest stays the source of truth).
+func tex(path):
+ if path==null or path=="":return null
+ var target=OUT+path;DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(target.get_base_dir()))
+ DirAccess.copy_absolute(ProjectSettings.globalize_path(DIR+path),ProjectSettings.globalize_path(target))
+ return ResourceLoader.load(target,"Texture2D",ResourceLoader.CACHE_MODE_REPLACE) if ResourceLoader.exists(target) else null
 func vec(a):return Vector3(a[0],a[1],a[2])
 func _initialize():
  var d=JSON.parse_string(FileAccess.get_file_as_string(DIR+"stage_dressing.json"))
