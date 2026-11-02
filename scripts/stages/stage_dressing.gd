@@ -213,7 +213,6 @@ func multimesh_node(node_name: String,mesh: Mesh,transforms: Array,colors: Array
  if mesh.material==null:
   var material=StandardMaterial3D.new();material.albedo_color=color;material.roughness=1.0;material.vertex_color_use_as_albedo=not colors.is_empty()
   if unshaded:material.shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED
-  elif colors.is_empty():material.emission_enabled=true;material.emission=color*0.35 # dark timbers in a dim stage must never render pure black
   mesh.material=material
  var node=MultiMeshInstance3D.new();node.name=node_name;node.multimesh=multimesh;node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
  return node
