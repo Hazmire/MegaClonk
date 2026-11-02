@@ -57,6 +57,42 @@ func run():
   var aabb=rings[0].get_aabb() if rings.size()>0 else AABB()
   check(rings.size()==3 and rings[0].get_aabb().size.x>rings[2].get_aabb().size.x and rings[2].get_aabb().size.x/2.0>96.0*1.5,"Stage %d rings nest far>mid>near and the near ring clears the arena corners"%s)
   check(rings.size()==3 and rings[0].mesh.get_surface_count()==1,"Stage %d: 3 ring meshes, one surface each (3 draw calls)"%s)
+ # --- outer ground and fence (edge void fix) ---
+ for s in [1,2,3,4]:
+  game.stage=s;game.build_stage();await process_frame
+  var d=StageDressing.for_stage(s);var root_node=game.world.get_node("StageDressing");var low_y=StageDressing.lowest_level(game.map_layout)
+  var outer=root_node.get_node("OuterGround") as MeshInstance3D
+  var outer_y=StageDressing.outer_ground_y(rules,low_y)
+  var aabb=outer.get_aabb()
+  check(outer.get_child_count()==0 and outer.cast_shadow==GeometryInstance3D.SHADOW_CASTING_SETTING_OFF and outer.mesh.get_surface_count()==1,"Stage %d outer ground: no collision, no shadows, one surface"%s)
+  check(is_equal_approx(aabb.position.y,outer_y) and outer_y<low_y-rules.outer_ground_drop*rules.arena_scale+0.01 and is_equal_approx(aabb.size.y,0.0),"Stage %d outer ground is flat and %.1f m below the lowest terrain (y %.1f)"%[s,rules.outer_ground_drop*rules.arena_scale,outer_y])
+  check(aabb.position.x<=-rules.ring_radius[0]*rules.arena_scale*1.09 and aabb.end.x>=rules.ring_radius[0]*rules.arena_scale*1.09,"Stage %d outer ground reaches 1.1x the far ring"%s)
+  var vertices=outer.mesh.get_faces();var inside=false
+  for v in vertices:
+   if absf(v.x)<StageDressing.HALF+rules.outer_ground_margin*rules.arena_scale-0.01 and absf(v.z)<StageDressing.HALF+rules.outer_ground_margin*rules.arena_scale-0.01:inside=true
+  check(not inside,"Stage %d outer ground has a square hole clear of the playable area"%s)
+  var rings=ring_nodes()
+  check(rings.size()==3 and is_equal_approx(rings[1].position.y-rings[1].get_aabb().size.y*0.5,outer_y-0.5) and is_equal_approx(rings[2].position.y-rings[2].get_aabb().size.y*0.5,outer_y-0.5) and rings[0].position.y-rings[0].get_aabb().size.y*0.5<outer_y,"Stage %d mid and near rings end 0.5 m under the outer ground, the far ring lower still"%s)
+  var posts=root_node.get_node("FencePosts") as MultiMeshInstance3D
+  var on_ground=posts.multimesh.instance_count>200;var height=float(d.fence.height)
+  for i in posts.multimesh.instance_count:
+   var origin=posts.multimesh.get_instance_transform(i).origin
+   on_ground=on_ground and absf(origin.y-height*0.5-game.terrain_height(clampf(origin.x,-95.5,95.5),clampf(origin.z,-95.5,95.5)))<0.01
+  check(on_ground,"Stage %d: %d fence posts, each standing on the terrain under it"%[s,posts.multimesh.instance_count])
+  var fence_nodes=[]
+  for n in root_node.get_children():
+   if n.name.begins_with("Fence"):fence_nodes.append(n)
+  var collision_free=true
+  for n in fence_nodes:collision_free=collision_free and n.get_child_count()==0 and n.cast_shadow==GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+  var expected=2+(1 if d.fence.panel else 0)+(1 if d.fence.candles else 0)
+  check(collision_free and fence_nodes.size()==expected,"Stage %d fence: %d multimesh draw calls, no collision, no shadows"%[s,fence_nodes.size()])
+  # rails and wires only join posts at the same height
+  var wires=root_node.get_node("FenceWires") as MultiMeshInstance3D;var level=true
+  for i in wires.multimesh.instance_count:
+   var t=wires.multimesh.get_instance_transform(i);var half=t.basis.z.normalized()*t.basis.z.length()*0.5
+   level=level and absf(half.y)<0.2+0.01
+  check(level and wires.multimesh.instance_count>0,"Stage %d wires join only posts at the same height"%s)
+ check(StageDressing.for_stage(4).fence.candles and not StageDressing.for_stage(1).fence.candles and StageDressing.for_stage(2).fence.panel and StageDressing.for_stage(3).fence.stripes,"Per-stage fence styles (stage 2 chain-link, 3 striped boards, 4 candles)")
  # --- endless cycle ---
  check([5,6,7,8,9,10].map(func(v):return StageDressing.index(v))==[1,2,3,1,2,3] and StageDressing.index(1)==0 and StageDressing.index(4)==3,"Endless stages cycle dressings 2 -> 3 -> 4")
  # --- footsteps are data ---
