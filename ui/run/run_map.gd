@@ -10,7 +10,7 @@ func build() -> void:
  build_panels();build_status();build_section()
  var head=Control.new();head.name="Header";head.position=Vector2(572,182);head.size=Vector2(776,100);head.mouse_filter=Control.MOUSE_FILTER_IGNORE;content.add_child(head)
  head.add_child(SmallCapsLabel.new().setup("World map",14,Color("A9ADA4"),800,0.3))
- var title=MenuStyle.label("Stage %d — %s"%[game.stage,StageThemes.config(game.stage).title],MenuStyle.serif(),46,FogPalette.BONE,0,head);title.name="Title";title.position=Vector2(0,22)
+ var title=MenuStyle.label("Stage %d — %s"%[game.stage,StageThemes.title(game.stage)],MenuStyle.serif(),46,FogPalette.BONE,0,head);title.name="Title";title.position=Vector2(0,22)
  var rule=ColorRect.new();rule.color=FogPalette.RUST;rule.position=Vector2(0,84);rule.size=Vector2(48,5);rule.mouse_filter=Control.MOUSE_FILTER_IGNORE;head.add_child(rule)
  map=RunMinimap.new();map.name="Map";map.game=game;map.paper_style=true;map.reveal_all=frontend.minimap.reveal_all;map.explored=frontend.minimap.explored;map.terrain_colors=frontend.minimap.terrain_colors
  map.position=Vector2(572,296);map.size=Vector2(776,560);map.custom_minimum_size=map.size;content.add_child(map)

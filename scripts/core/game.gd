@@ -123,7 +123,7 @@ var chests_opened=0
 var legacy_weapon_slots=0
 var legacy_tome_slots=0
 var grimdark_renderer: GrimdarkRenderer
-var settings = {"retro_scale":0.5,"psx_warp":0.25,"psx_snap":0.35,"psx_dither":true,"visual_intensity":0.7,"render_scale":1.0,"quality":1,"master":0.7,"effects":0.7,"ui_volume":0.65,"ambience":0.35,"music":0.3,"sensitivity":0.0025,"invert":false,"reduced":false,"fps":false,"focus_pause":true,"shake":true,"numbers":true,"invincible":false}
+var settings = {"retro_scale":0.5,"psx_warp":0.25,"psx_snap":0.35,"psx_dither":true,"visual_intensity":0.7,"render_scale":1.0,"quality":1,"master":0.7,"effects":0.7,"ui_volume":0.65,"ambience":0.35,"music":0.3,"sensitivity":0.0025,"invert":false,"reduced":false,"weather":true,"fps":false,"focus_pause":true,"shake":true,"numbers":true,"invincible":false}
 var pending_binding = ""
 var bindings = {"forward":KEY_W,"back":KEY_S,"left":KEY_A,"right":KEY_D,"jump":KEY_SPACE,"crouch":KEY_CTRL,"interact":KEY_E,"inspect":KEY_TAB,"ultimate":KEY_Q,"map":KEY_M}
 var music: AudioStreamPlayer
@@ -376,13 +376,8 @@ func build_stage() -> void:
  terrain_noise.seed = posmod(run_seed+8127+biome*101+stage*73,2147483647)
  terrain_noise.frequency = 0.018
  var colors = [Color("304f3d"),Color("9b7e51"),Color("353947")]
- var env = world.get_child(0).environment
- env.background_color = [Color("668e9b"),Color("b8a07c"),Color("343a58")][biome]
- env.fog_enabled = true
- env.fog_light_color = env.background_color
- env.fog_density = 0.003 if biome < 2 else 0.009
- StageThemes.apply(self)
  ForestWorld.build(self)
+ StageDressing.for_stage(stage).apply(self)
  if world_content_version>=1 or OrdinaryRoster.SETTINGS.elite_statues>0:create_elite_statue()
  var shop_count=0
  if map_layout.has("poi_kinds"):shop_count=map_layout.poi_kinds.count("Shop")
@@ -415,6 +410,7 @@ func build_stage() -> void:
  world.add_child(player)
  player.position = map_layout.spawn+Vector3.UP*0.1
  player.avatar = create_avatar(player,0,Vector3.ZERO)
+ StageDressing.for_stage(stage).attach_weather(self)
  player.can_climb = loadout_runtime.trait_id=="climber"
  player.can_glide=loadout_runtime.trait_id=="glider"
  player.air_control = 18 if character == 11 else 9

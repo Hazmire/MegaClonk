@@ -70,13 +70,5 @@ v_vertex_color = COLOR.rgb;
 	v_uv = UV * v_clip.w;
 	v_uv2 = UV2 * v_clip.w;
 
-#if defined VERTEX_FOG_ENABLED
-	v_fog_strength = psx_fog_near != psx_fog_far ?
-		psx_fog_color.a * clamp((v_clip.w - psx_fog_near) / (psx_fog_far - psx_fog_near), 0.0, 1.0) :
-		0.0;
-	v_fog_color = psx_fog_color.rgb;
-#elif defined VERTEX_FOG_ALWAYS
-	v_fog_strength = psx_fog_color.a;
-	v_fog_color = psx_fog_color.rgb;
-#endif
+// Fog is the world Environment fog (set per stage by StageDressing); the old per-vertex PSX fog was removed.
 

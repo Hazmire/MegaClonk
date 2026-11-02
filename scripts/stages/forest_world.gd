@@ -61,7 +61,6 @@ static func build(game: Node) -> void:
   var position=Vector3(p.x,game.terrain_height(p.x,p.y),p.y)
   if not spaced(game,position,1.8):continue
   game.prop_instance("mega_rock",StageThemes.decor(mesh,game.stage,true),Color.WHITE,position,Vector3.ONE*2,true);game.prop_collider(position,1.8,mesh.get_aabb().size.y*2)
- GrimdarkWorld.boundary(game)
  var props_done=Time.get_ticks_usec()
  ForestAtmosphere.add_grass(game,data,rng)
  var grass_done=Time.get_ticks_usec()

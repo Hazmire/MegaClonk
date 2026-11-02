@@ -4,7 +4,6 @@ shader_type spatial;
 render_mode unshaded, cull_disabled, depth_draw_opaque;
 #define BILLBOARD_DISABLED
 #define ALPHA_DISABLED
-#define VERTEX_FOG_ENABLED
 #include "res://shaders/vendor_psx/psx.gdshaderinc"
 void vertex(){
 #include "res://shaders/vendor_psx/psx_vertex.gdshaderinc"

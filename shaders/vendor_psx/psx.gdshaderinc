@@ -34,13 +34,5 @@ uniform bool u_emission_on_uv2 = false;
 uniform sampler2D u_emission_texture: hint_default_black, filter_nearest;
 #endif
 
-#if (defined VERTEX_FOG_ENABLED) || (defined VERTEX_FOG_ALWAYS)
-global uniform vec4 psx_fog_color;
-global uniform float psx_fog_far;
-global uniform float psx_fog_near;
-
-varying float v_fog_strength;
-varying vec3 v_fog_color;
-#endif
 
 

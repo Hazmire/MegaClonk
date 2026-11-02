@@ -20,7 +20,7 @@ func tick(game: Node,delta: float):
   if distance>=2.1:
    distance=fmod(distance,2.1)
    var rock=game.player.get_floor_normal().y<0.92
-   # Surfaces: steep ground is stone, stage 1 is grass, every later stage is dirt (stages have no ground-material data).
-   game.audio.emit("player.footstep.rock" if rock else ("player.footstep.grass" if int(game.get("stage") if game.get("stage")!=null else 1)==1 else "movement.step_dirt"),player.position,0.75 if player.posture=="standing" else 0.4)
+   # Surfaces: steep ground is stone, grass or dirt comes from the stage dressing's footsteps value.
+   game.audio.emit("player.footstep.rock" if rock else ("player.footstep.grass" if StageDressing.for_stage(int(game.get("stage") if game.get("stage")!=null else 1)).footsteps=="grass" else "movement.step_dirt"),player.position,0.75 if player.posture=="standing" else 0.4)
  else:distance=0
  grounded=on_ground;sliding=slide

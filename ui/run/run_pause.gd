@@ -16,7 +16,7 @@ func build() -> void:
  stats_panel=StatsPanel.new().setup(game);stats_panel.name="Stats";stats_panel.position=Vector2(MenuStyle.W-60-420,105);content.add_child(stats_panel)
  var title=MenuStyle.label("Paused",MenuStyle.serif(),104,FogPalette.BONE,4,content);title.name="Title"
  title.position=Vector2(480,96);title.size=Vector2(960,130);title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
- var stage_line=SmallCapsLabel.new().setup("Stage %d — %s"%[game.stage,StageThemes.config(game.stage).title],20,Color("A9ADA4"),600,0.3);stage_line.name="StageLine"
+ var stage_line=SmallCapsLabel.new().setup("Stage %d — %s"%[game.stage,StageThemes.title(game.stage)],20,Color("A9ADA4"),600,0.3);stage_line.name="StageLine"
  stage_line.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;stage_line.position=Vector2(480,238);stage_line.size=Vector2(960,28);content.add_child(stage_line)
  build_counters()
  var nav=VBoxContainer.new();nav.name="Nav";nav.position=Vector2(700,424);nav.size=Vector2(520,420);nav.add_theme_constant_override("separation",4);nav.mouse_filter=Control.MOUSE_FILTER_IGNORE;content.add_child(nav)

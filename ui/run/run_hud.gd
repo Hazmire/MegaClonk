@@ -123,7 +123,7 @@ func update(delta: float) -> void:
  var left=maxf(0,game.STAGE_SECONDS-game.stage_time)
  set_text(timer_label,"%02d:%02d"%[int(left)/60,int(left)%60] if left>0 else "00:00")
  timer_label.add_theme_color_override("font_color",FogPalette.RUST_TEXT if left<=0 else FogPalette.BONE_BRIGHT)
- set_text(stage_label,("STAGE %d · %s"%[game.stage,str(StageThemes.config(game.stage).title)]+(" · ENDLESS" if left<=0 else "")).to_upper())
+ set_text(stage_label,("STAGE %d · %s"%[game.stage,str(StageThemes.title(game.stage))]+(" · ENDLESS" if left<=0 else "")).to_upper())
  set_text(kills_value,str(game.kills));set_text(chest_value,str(game.chest_cost()));set_text(gold_value,str(game.gold))
  _tick(gold_tick,"gold",delta,"+")
  var hp_now=ceili(maxf(0,game.health));var hp_max=ceili(game.stats.max_health)
