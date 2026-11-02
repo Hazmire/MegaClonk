@@ -5,22 +5,22 @@
     "Attack": {
       "deforms_skeleton": true,
       "duration_seconds": 1.25,
-      "tracks": 23
+      "tracks": 25
     },
     "Idle": {
       "deforms_skeleton": true,
       "duration_seconds": 3.0,
-      "tracks": 23
+      "tracks": 25
     },
     "Walk": {
       "deforms_skeleton": true,
       "duration_seconds": 1.66666662693024,
-      "tracks": 23
+      "tracks": 25
     }
   },
   "embedded_cloth_textures": 2,
   "engine": "4.7.2-stable (official)",
   "failures": [],
-  "materials": 8,
-  "triangles": 16050
+  "materials": 9,
+  "triangles": 17162
 }

@@ -4,6 +4,7 @@ python art/cultist/package_cultist.py
 from pathlib import Path
 from zipfile import ZipFile,ZIP_DEFLATED
 import json
+import hashlib
 
 ROOT=Path(__file__).resolve().parents[2]
 output=ROOT/'art/cultist/RiftCultist_Model_Pack.zip'
@@ -13,6 +14,9 @@ reports=[json.loads((ROOT/'assets/characters/cultist'/name).read_text())
 for report in reports:
     assert report['checks']=='passed'
     assert all(report[key]==manifest[key] for key in ('triangles','bones','materials'))
+clearance=json.loads((ROOT/'assets/characters/cultist/clearance_validation.json').read_text())
+assert clearance['checks']=='passed' and clearance['design_revision']==manifest['design_revision']
+assert clearance['source_blend_sha256']==hashlib.sha256((ROOT/'art/cultist/RiftCultist.blend').read_bytes()).hexdigest()
 files=sorted(p for folder in ('art/cultist','assets/characters/cultist','docs/images/cultist')
     for p in (ROOT/folder).rglob('*') if p.is_file() and p.suffix not in ('.zip','.pyc')
     and not p.name.endswith('.blend1') and '__pycache__' not in p.parts)

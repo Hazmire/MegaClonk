@@ -1,11 +1,11 @@
 {
   "name": "Rift Bellkeeper",
-  "design_revision": 2,
+  "design_revision": 3,
   "generator": "Blender 4.3.2",
-  "triangles": 16050,
-  "vertices_blender": 8282,
+  "triangles": 17162,
+  "vertices_blender": 8871,
   "bones": 28,
-  "materials": 8,
+  "materials": 9,
   "animations_seconds": {
     "Idle": 3.0,
     "Walk": 1.6666666666666667,
@@ -20,14 +20,14 @@
   ],
   "bounds_blender_m": {
     "min": [
-      -0.6843152046203613,
-      -0.36000001430511475,
+      -0.6806616187095642,
+      -0.4339999854564667,
       0.004999998956918716
     ],
     "max": [
-      0.6309608221054077,
-      0.3284800052642822,
-      2.1319172382354736
+      0.6661103963851929,
+      0.35699906945228577,
+      2.1449999809265137
     ]
   },
   "texture_resolution": [
@@ -41,7 +41,7 @@
   "forward": "Blender -Y; glTF +Z",
   "up": "Blender Z; glTF Y",
   "units": "metres",
-  "design": "Hooked charcoal-green cowl, single recessed amber fissure, asymmetric ragged mantle, split ash-linen robe over dark tunic, ochre stitch circles, leather harness and suspended iron censer.",
+  "design": "Hooked charcoal-green cowl, two recessed red eyes, asymmetric ragged mantle, continuous split ash-linen robe over dark tunic, ochre stitch circles, leather harness and suspended iron censer.",
   "external_art_used": false,
   "runtime_roster_integration": false
 }

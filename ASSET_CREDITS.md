@@ -94,10 +94,11 @@ retain their original credits for merchant and other legacy visual use.
 
 ## Original Rift Bellkeeper cultist asset
 
-The hooked cowl, recessed amber slit, ragged mantle, asymmetric repaired robe,
+The hooked cowl, recessed red eyes, ragged mantle, asymmetric repaired robe,
 stitch-circle markings, leather harness, iron censer, and cloth textures are
-original procedural work for this game. This second design revises the earlier
-reference-inspired character; no reference pixels or external art are used.
+original procedural work for this game. The Bellkeeper revision restores the
+two red eyes and refits the garments and motion for clearance; no reference
+pixels or external art are used.
 Sources are in `art/cultist` and the
 self-contained GLB is in `assets/characters/cultist`. This is a new character
 asset prepared separately from the active enemy roster.

@@ -1,0 +1,297 @@
+{
+  "checks": "passed",
+  "design_revision": 3,
+  "method": "triangle intersections on evaluated skinned mesh; every half frame",
+  "sampled_poses": {
+    "Rest": 1,
+    "Idle": 145,
+    "Walk": 81,
+    "Attack": 61
+  },
+  "total_sampled_poses": 288,
+  "separate_layer_pairs": 67,
+  "pairs": [
+    [
+      "Asymmetric split outer robe",
+      "Dark inner tunic"
+    ],
+    [
+      "Asymmetric split outer robe",
+      "Ragged asymmetric shoulder mantle"
+    ],
+    [
+      "Hooked collapsed cowl",
+      "Ragged asymmetric shoulder mantle"
+    ],
+    [
+      "Asymmetric split outer robe",
+      "Bell sleeve L below armhole"
+    ],
+    [
+      "Bell sleeve L",
+      "Ragged asymmetric shoulder mantle"
+    ],
+    [
+      "Bell sleeve L",
+      "Mantle hem stitch"
+    ],
+    [
+      "Bell sleeve L",
+      "Censer assembly"
+    ],
+    [
+      "Bell sleeve L",
+      "Diagonal leather harness"
+    ],
+    [
+      "Bell sleeve L",
+      "Rear harness"
+    ],
+    [
+      "Gloved hand L",
+      "Ragged asymmetric shoulder mantle"
+    ],
+    [
+      "Gloved hand L",
+      "Asymmetric split outer robe"
+    ],
+    [
+      "Gloved hand L",
+      "Censer assembly"
+    ],
+    [
+      "Glove thumb L",
+      "Ragged asymmetric shoulder mantle"
+    ],
+    [
+      "Glove thumb L",
+      "Asymmetric split outer robe"
+    ],
+    [
+      "Glove thumb L",
+      "Censer assembly"
+    ],
+    [
+      "Asymmetric split outer robe",
+      "Boot toe L"
+    ],
+    [
+      "Dark inner tunic",
+      "Boot toe L"
+    ],
+    [
+      "Asymmetric split outer robe",
+      "Boot ankle L"
+    ],
+    [
+      "Dark inner tunic",
+      "Boot ankle L"
+    ],
+    [
+      "Bell sleeve L",
+      "Waist rope wrap 0"
+    ],
+    [
+      "Bell sleeve L",
+      "Waist rope wrap 1"
+    ],
+    [
+      "Bell sleeve L",
+      "Waist rope wrap 2"
+    ],
+    [
+      "Bell sleeve L",
+      "Crossed cord"
+    ],
+    [
+      "Bell sleeve L",
+      "Crossed upper cord"
+    ],
+    [
+      "Bell sleeve L",
+      "Rope knot"
+    ],
+    [
+      "Bell sleeve L",
+      "Hanging rope A"
+    ],
+    [
+      "Bell sleeve L",
+      "Hanging rope B"
+    ],
+    [
+      "Asymmetric split outer robe",
+      "Bell sleeve R below armhole"
+    ],
+    [
+      "Bell sleeve R",
+      "Ragged asymmetric shoulder mantle"
+    ],
+    [
+      "Bell sleeve R",
+      "Mantle hem stitch"
+    ],
+    [
+      "Bell sleeve R",
+      "Censer assembly"
+    ],
+    [
+      "Bell sleeve R",
+      "Diagonal leather harness"
+    ],
+    [
+      "Bell sleeve R",
+      "Rear harness"
+    ],
+    [
+      "Gloved hand R",
+      "Ragged asymmetric shoulder mantle"
+    ],
+    [
+      "Gloved hand R",
+      "Asymmetric split outer robe"
+    ],
+    [
+      "Gloved hand R",
+      "Censer assembly"
+    ],
+    [
+      "Glove thumb R",
+      "Ragged asymmetric shoulder mantle"
+    ],
+    [
+      "Glove thumb R",
+      "Asymmetric split outer robe"
+    ],
+    [
+      "Glove thumb R",
+      "Censer assembly"
+    ],
+    [
+      "Asymmetric split outer robe",
+      "Boot toe R"
+    ],
+    [
+      "Dark inner tunic",
+      "Boot toe R"
+    ],
+    [
+      "Asymmetric split outer robe",
+      "Boot ankle R"
+    ],
+    [
+      "Dark inner tunic",
+      "Boot ankle R"
+    ],
+    [
+      "Bell sleeve R",
+      "Waist rope wrap 0"
+    ],
+    [
+      "Bell sleeve R",
+      "Waist rope wrap 1"
+    ],
+    [
+      "Bell sleeve R",
+      "Waist rope wrap 2"
+    ],
+    [
+      "Bell sleeve R",
+      "Crossed cord"
+    ],
+    [
+      "Bell sleeve R",
+      "Crossed upper cord"
+    ],
+    [
+      "Bell sleeve R",
+      "Rope knot"
+    ],
+    [
+      "Bell sleeve R",
+      "Hanging rope A"
+    ],
+    [
+      "Bell sleeve R",
+      "Hanging rope B"
+    ],
+    [
+      "Asymmetric split outer robe",
+      "Waist rope wrap 0"
+    ],
+    [
+      "Asymmetric split outer robe",
+      "Waist rope wrap 1"
+    ],
+    [
+      "Asymmetric split outer robe",
+      "Waist rope wrap 2"
+    ],
+    [
+      "Asymmetric split outer robe",
+      "Crossed cord"
+    ],
+    [
+      "Asymmetric split outer robe",
+      "Crossed upper cord"
+    ],
+    [
+      "Asymmetric split outer robe",
+      "Rope knot"
+    ],
+    [
+      "Asymmetric split outer robe",
+      "Hanging rope A"
+    ],
+    [
+      "Asymmetric split outer robe",
+      "Hanging rope B"
+    ],
+    [
+      "Censer assembly",
+      "Asymmetric split outer robe"
+    ],
+    [
+      "Censer assembly",
+      "Dark inner tunic"
+    ],
+    [
+      "Censer assembly",
+      "Hanging rope A"
+    ],
+    [
+      "Censer assembly",
+      "Hanging rope B"
+    ],
+    [
+      "Asymmetric split outer robe",
+      "Diagonal leather harness"
+    ],
+    [
+      "Asymmetric split outer robe",
+      "Rear harness"
+    ],
+    [
+      "Hooked collapsed cowl",
+      "Dim red eye -1"
+    ],
+    [
+      "Hooked collapsed cowl",
+      "Dim red eye 1"
+    ]
+  ],
+  "exterior_self_checked_parts": [
+    "Asymmetric split outer robe",
+    "Dark inner tunic",
+    "Ragged asymmetric shoulder mantle",
+    "Hooked collapsed cowl",
+    "Bell sleeve L",
+    "Bell sleeve R"
+  ],
+  "eye_visibility": "two red pupils clear through apertures across frontal +/-20 degree cone",
+  "minimum_ground_clearance_m": 0.004914,
+  "intentional_attachments": "Sewn upper armholes above rest z=1.15 m, knots and cord crossings, embedded hem stitches, glove/thumb joins, and censer metal assembly joints are not separate clearance layers.",
+  "limitations": "Checks cover the supplied clips and sampled poses, not arbitrary future retargeting or runtime cloth simulation.",
+  "source_blend_sha256": "34684b68c58fd48cf2925a3dbbb884af144eb53d83bdea1ff10bc4a53ae88ed2",
+  "failures": {}
+}

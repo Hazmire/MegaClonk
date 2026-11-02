@@ -5,7 +5,7 @@ with his dark duster, lowered hat, and connected movement, jump, crouch/slide,
 and critical-health animations.
 
 A [Rift Bellkeeper cultist model](art/cultist/README.md) is also available, with
-a hooked cowl, amber slit, asymmetric repaired robes, and iron censer. The
+a hooked cowl, two recessed red eyes, asymmetric repaired robes, and iron censer. The
 downloadable Blender/GLB pack includes packed textures, a rig, and idle/walk/attack
 clips on the `rift-cultist-model` branch.
 
