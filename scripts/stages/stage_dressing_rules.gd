@@ -6,11 +6,11 @@ extends Resource
 @export var sky_rotation_deg=180.0
 @export var ring_layers: PackedStringArray=PackedStringArray(["far","mid","near"])
 @export var ring_radius: PackedFloat32Array=PackedFloat32Array([240.0,150.0,90.0])
-@export var ring_base_y: PackedFloat32Array=PackedFloat32Array([-12.0,-4.0,0.0])
-@export var ring_haze: PackedFloat32Array=PackedFloat32Array([0.55,0.3,0.1])
-# "world" rings sit at ring_base_y; "outer_ground" rings sit ring_base_y (a small offset, unscaled) below the outer ground.
-@export var ring_anchor: PackedStringArray=PackedStringArray(["world","outer_ground","outer_ground"])
-@export var ring_height_divisor=16.0
+@export var ring_ground_y: PackedFloat32Array=PackedFloat32Array([52.0,30.0,15.0]) # reference scale, see scaled_ring()
+@export var ring_fog_floor: PackedFloat32Array=PackedFloat32Array([26.0,13.0,4.0])
+@export var ring_fog_band: PackedFloat32Array=PackedFloat32Array([26.0,17.0,11.0])
+@export var reference_top=12.0 # the pack's top plateau; heights scale by (real top / this)
+@export var ring_haze: PackedFloat32Array=PackedFloat32Array([0.55,0.35,0.3])
 @export var outer_ground_drop=4.0
 @export var outer_ground_margin=2.0
 @export var outer_ground_radius_factor=1.1

@@ -29,6 +29,7 @@ weather = "dust"
 backdrop_far = ExtResource("1_pyb2p")
 backdrop_mid = ExtResource("2_jnw81")
 backdrop_near = ExtResource("3_lyk17")
+backdrop_ground_px = PackedFloat32Array(299, 224, 206)
 fence = {
 "candles": false,
 "gap": 3.0,

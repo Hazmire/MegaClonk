@@ -58,7 +58,7 @@ func _ready() -> void:
  arm.add_excluded_object(get_rid())
  add_child(arm)
  camera = Camera3D.new()
- camera.fov = 76
+ camera.fov = 76;camera.far = 1500.0 # covers the far backdrop ring top and bottom, not only its radius
  arm.add_child(camera)
 func _unhandled_input(event: InputEvent) -> void:
  if not active: return

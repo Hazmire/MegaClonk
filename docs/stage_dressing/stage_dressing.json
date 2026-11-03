@@ -16,27 +16,30 @@
   "backdrop_rings": [
     {
       "layer": "far",
-      "radius_m": 240,
-      "base_y_m": -12,
+      "radius_m": 240.0,
+      "ground_y_m": 52.0,
       "haze": 0.55,
-      "anchor": "world"
+      "fog_floor_m": 26.0,
+      "fog_band_m": 26.0
     },
     {
       "layer": "mid",
-      "radius_m": 150,
-      "base_y_m": -0.5,
-      "haze": 0.3,
-      "anchor": "outer_ground"
+      "radius_m": 150.0,
+      "ground_y_m": 30.0,
+      "haze": 0.35,
+      "fog_floor_m": 13.0,
+      "fog_band_m": 17.0
     },
     {
       "layer": "near",
-      "radius_m": 90,
-      "base_y_m": -0.5,
-      "haze": 0.1,
-      "anchor": "outer_ground"
+      "radius_m": 90.0,
+      "ground_y_m": 15.0,
+      "haze": 0.3,
+      "fog_floor_m": 4.0,
+      "fog_band_m": 11.0
     }
   ],
-  "backdrop_ring_height": "circumference / 16 (strip 8:1, mirrored each lap)",
+  "backdrop_ring_height": "circumference * strip_h / (2 * strip_w): one strip plus its mirror per lap (strips are 2048x512)",
   "fog_wall": {
     "offsets_from_edge_m": [
       9,
@@ -296,5 +299,7 @@
       "density": 0.35,
       "offset_m": 0.0
     }
-  }
+  },
+  "backdrop_scale": "Reference values. Radii scale by arena_scale; ground_y, fog_floor and fog_band scale by (highest plateau of the stage layout / 12), so every ground line stays above the real top plateau and rises with distance.",
+  "backdrop_reference_top_m": 12.0
 }

@@ -28,6 +28,8 @@ const RULES_PATH="res://assets/stage_dressing/rules.tres"
 @export var backdrop_mid: Texture2D
 @export var backdrop_near: Texture2D
 @export var footsteps="dirt"
+# Each backdrop strip's ground line in px from the bottom (far, mid, near), baked from strips.json by tools/build_stage_dressings.gd.
+@export var backdrop_ground_px: PackedFloat32Array=PackedFloat32Array()
 # Boundary fence (visual only): style, post_color, wire_color, height, gap, wires, panel, stripes, candles.
 @export var fence: Dictionary={}
 # Prop look (tree/rock/grass variants) that goes with this dressing, until stage-specific props exist: 0 living, 1 withering, 2 dead.
@@ -83,10 +85,17 @@ func apply(game: Node) -> void:
     1:node.position.z=offset;node.rotation.y=PI
     2:node.position.x=-offset;node.rotation.y=PI/2
     3:node.position.x=offset;node.rotation.y=-PI/2
- for layer in r.ring_layers.size():root.add_child(backdrop_ring(layer,r,low_y))
+ var top_y=highest_level(game.map_layout)
+ for layer in r.ring_layers.size():root.add_child(backdrop_ring(layer,r,top_y))
  for layer in r.fog_sea_y.size():root.add_child(fog_sea_mesh(r,layer,low_y))
  env.fog_height=low_y+r.fog_height_offset;env.fog_height_density=r.fog_height_density # anything below the arena floor dissolves into fog
 # The y of the lowest flat terrain level (creek / slag / wet street / floodwater), found once per stage from the layout's cell planes.
+# The y of the highest flat terrain level of the layout (the top plateau): 36 m with the default maximum_elevation, up to 48 m.
+static func highest_level(layout: Dictionary) -> float:
+ var highest=-1e9
+ for plane in layout.planes:
+  if absf(plane.x)+absf(plane.z)<=0.001:highest=maxf(highest,plane.y)
+ return highest if highest>-1e8 else 0.0
 static func lowest_level(layout: Dictionary) -> float:
  var lowest=1e9
  for plane in layout.planes:
@@ -129,10 +138,17 @@ func torn_edge_mesh(game: Node,r: StageDressingRules) -> MeshInstance3D:
  return node
 # One open, inward-facing cylinder per layer (CylinderMesh maps only part of the strip). Height = circumference / 16 so the 8:1 strip and its mirror
 # stay square; unshaded, no shadows, no collision. Centred on the arena (the origin), never on the player.
-func backdrop_ring(layer: int,r: StageDressingRules,low_y: float=0.0) -> MeshInstance3D:
- var radius=r.ring_radius[layer]*r.arena_scale;var base_y=r.ring_base_y[layer]*r.arena_scale
- if r.ring_anchor[layer]=="outer_ground":base_y=outer_ground_y(r,low_y)+r.ring_base_y[layer] # bottom edge just under the outer ground
- var h=TAU*radius/r.ring_height_divisor
+# Scaled placement of one backdrop ring (all values in world metres). Radius scales by arena_scale; ground line, fog floor and fog band scale by
+# (the layout's real top plateau / the pack's 12 m), so every ground line is above the highest plateau and each is higher than the one in front.
+# The ring's height comes from the strip's aspect ratio: one strip plus its mirror per lap. The strip's ground line is placed exactly at ground_y.
+func scaled_ring(layer: int,r: StageDressingRules,top_y: float) -> Dictionary:
+ var texture=backdrop(layer);var height_scale=top_y/r.reference_top
+ var radius=r.ring_radius[layer]*r.arena_scale;var ground_y=r.ring_ground_y[layer]*height_scale
+ var ring_h=TAU*radius*float(texture.get_height())/(2.0*float(texture.get_width()))
+ var bottom=ground_y-backdrop_ground_px[layer]*ring_h/float(texture.get_height())
+ return {"radius":radius,"ground_y":ground_y,"fog_floor":r.ring_fog_floor[layer]*height_scale,"fog_band":r.ring_fog_band[layer]*height_scale,"height":ring_h,"bottom":bottom,"top":bottom+ring_h}
+func backdrop_ring(layer: int,r: StageDressingRules,top_y: float) -> MeshInstance3D:
+ var placed=scaled_ring(layer,r,top_y);var radius=placed.radius;var h=placed.height
  var surface=SurfaceTool.new();surface.begin(Mesh.PRIMITIVE_TRIANGLES)
  for i in SEGMENTS:
   var a0=TAU*i/SEGMENTS;var a1=TAU*(i+1)/SEGMENTS;var u0=float(i)/SEGMENTS;var u1=float(i+1)/SEGMENTS
@@ -143,8 +159,10 @@ func backdrop_ring(layer: int,r: StageDressingRules,low_y: float=0.0) -> MeshIns
  var material=ShaderMaterial.new();material.shader=preload("res://shaders/stage_backdrop.gdshader")
  material.set_shader_parameter("strip",backdrop(layer));material.set_shader_parameter("repeats",Vector2(1,1))
  material.set_shader_parameter("haze",r.ring_haze[layer]);material.set_shader_parameter("haze_color",fog_color)
+ material.set_shader_parameter("fog_floor",placed.fog_floor);material.set_shader_parameter("fog_band",placed.fog_band)
  var node=MeshInstance3D.new();node.name="Backdrop_"+r.ring_layers[layer];node.mesh=surface.commit();node.material_override=material
- node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF;node.position=Vector3(0,base_y+h*0.5,0)
+ node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF;node.position=Vector3(0,placed.bottom+h*0.5,0)
+ node.set_meta("placement",placed)
  return node
 # Fog sea layer: a flat, render-only square ring (square hole exactly at the arena edge) with the fogsea shader. No collision, no shadows, one draw call.
 # It has no physics body, so camera, projectile and ground-snap queries never see it. Colours come from the stage fog colour.

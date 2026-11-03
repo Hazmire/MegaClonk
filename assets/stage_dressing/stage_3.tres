@@ -32,6 +32,7 @@ weather = "ash"
 backdrop_far = ExtResource("1_iydm8")
 backdrop_mid = ExtResource("2_7tbmu")
 backdrop_near = ExtResource("3_dr1mo")
+backdrop_ground_px = PackedFloat32Array(292, 258, 207)
 fence = {
 "candles": false,
 "gap": 2.6,

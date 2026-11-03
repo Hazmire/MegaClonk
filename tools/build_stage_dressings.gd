@@ -16,9 +16,10 @@ func _initialize():
  var rules=StageDressingRules.new()
  rules.triplanar_scale=float(d.texture_import.triplanar_world_scale);rules.low_ground_scale=float(d.texture_import.low_ground_scale)
  rules.sky_rotation_deg=float(d.sky.sky_rotation_deg_y)
- var layers=PackedStringArray();var radius=PackedFloat32Array();var base=PackedFloat32Array();var haze=PackedFloat32Array();var anchors=PackedStringArray()
- for r in d.backdrop_rings:layers.append(r.layer);radius.append(r.radius_m);base.append(r.base_y_m);haze.append(r.haze);anchors.append(r.get("anchor","world"))
- rules.ring_layers=layers;rules.ring_radius=radius;rules.ring_base_y=base;rules.ring_haze=haze;rules.ring_anchor=anchors
+ var layers=PackedStringArray();var radius=PackedFloat32Array();var ground=PackedFloat32Array();var haze=PackedFloat32Array();var floors=PackedFloat32Array();var bands=PackedFloat32Array()
+ for r in d.backdrop_rings:layers.append(r.layer);radius.append(r.radius_m);ground.append(r.ground_y_m);haze.append(r.haze);floors.append(r.fog_floor_m);bands.append(r.fog_band_m)
+ rules.ring_layers=layers;rules.ring_radius=radius;rules.ring_ground_y=ground;rules.ring_haze=haze;rules.ring_fog_floor=floors;rules.ring_fog_band=bands;rules.reference_top=float(d.backdrop_reference_top_m)
+ var strips=JSON.parse_string(FileAccess.get_file_as_string(DIR+"backdrops/strips.json")).ground_px_from_bottom # baked into each dressing: the strip art is fixed
  var og=d.outer_ground
  rules.outer_ground_drop=float(og.drop_m);rules.outer_ground_margin=float(og.inner_margin_m);rules.outer_ground_radius_factor=float(og.outer_radius_factor);rules.outer_ground_tint=float(og.tint);rules.outer_ground_texture_scale=float(og.texture_scale);rules.outer_ground_segments=int(og.segments);rules.fence_inset=float(d.fence_inset_m)
  var fs=d.fog_sea;rules.fog_sea_size=float(fs.size_m);rules.fog_sea_lighten=float(fs.lighten);rules.fog_sea_darken=float(fs.darken);rules.fog_sea_drift=float(fs.drift)
@@ -38,6 +39,8 @@ func _initialize():
   r.wall_color=Color(s.fog_wall.color);r.wall_glow_color=Color(s.fog_wall.glow_color);r.wall_glow=float(s.fog_wall.glow)
   r.weather=s.weather;r.backdrop_far=tex(s.backdrop.far);r.backdrop_mid=tex(s.backdrop.mid);r.backdrop_near=tex(s.backdrop.near);r.footsteps=s.footsteps
   var f=s.fence;r.fence={"style":f.style,"post_color":Color(f.post_color),"wire_color":Color(f.wire_color),"height":float(f.height),"gap":float(f.gap),"wires":int(f.wires),"panel":bool(f.panel),"stripes":bool(f.stripes),"candles":bool(f.candles)}
+  var gp=PackedFloat32Array();for layer in layers:gp.append(float(strips["s%d_%s"%[int(s.stage),layer]]))
+  r.backdrop_ground_px=gp
   r.prop_style=PROP_STYLE[int(s.stage)-1]
   print("stage ",s.stage," ",ResourceSaver.save(r,"res://assets/stage_dressing/stage_%d.tres"%int(s.stage)))
  quit()

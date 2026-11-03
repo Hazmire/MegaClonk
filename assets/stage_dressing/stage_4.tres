@@ -29,6 +29,7 @@ weather = "blood_rain"
 backdrop_far = ExtResource("1_f5edq")
 backdrop_mid = ExtResource("2_w87vj")
 backdrop_near = ExtResource("3_v3qvv")
+backdrop_ground_px = PackedFloat32Array(288, 231, 213)
 fence = {
 "candles": true,
 "gap": 3.4,

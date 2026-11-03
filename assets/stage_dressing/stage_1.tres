@@ -26,6 +26,7 @@ backdrop_far = ExtResource("1_2yxmv")
 backdrop_mid = ExtResource("2_8ahx7")
 backdrop_near = ExtResource("3_j5oqn")
 footsteps = "grass"
+backdrop_ground_px = PackedFloat32Array(346, 238, 206)
 fence = {
 "candles": false,
 "gap": 3.0,
