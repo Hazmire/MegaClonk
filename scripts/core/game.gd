@@ -79,6 +79,14 @@ var spawn_rng=RandomNumberGenerator.new()
 var elite_active=false
 var elite_rewarded=false
 var ghost_budget=0.0
+# Endless mode: starts once, when a stage clock reaches 0:00 (Endless). endless_time counts seconds survived since, on the run simulation (stops for pause
+# and reward screens, keeps counting through the Stopwatch). Ghost spawns draw only from ghost_rng.
+var endless=false
+var endless_started=false
+var endless_time=0.0
+var ghost_count=0
+var ghost_rng=RandomNumberGenerator.new()
+var ghost_view: GhostView
 var boss_spawned = false
 var boss_dead = false
 var portal: Node3D
@@ -306,6 +314,7 @@ func begin_run() -> void:
  gold = 0
  gold_fraction = 0
  elapsed = 0
+ endless=false;endless_started=false;endless_time=0.0;ghost_count=0;ghost_budget=0.0;ghost_rng.seed=run_seed+8675309
  damage_total = 0
  damage_by_weapon.clear();weapon_damage_windows.clear()
  weapons.clear();gems.reset();amulets=0;amulets_found=0
@@ -420,6 +429,7 @@ func build_stage() -> void:
  player.camera.current = true
  enemy_view=EnemyView.new()
  world.add_child(enemy_view)
+ ghost_view=GhostView.new();world.add_child(ghost_view);ghost_count=0
  enemy_mesh = MultiMeshInstance3D.new()
  enemy_mesh.multimesh = MultiMesh.new()
  enemy_mesh.multimesh.transform_format = MultiMesh.TRANSFORM_3D
@@ -510,6 +520,7 @@ func _physics_process(delta: float) -> void:
  loadout_runtime.tick(self,delta)
  if irt.ticking:irt.tick(delta)
  elapsed += delta
+ if endless:endless_time+=delta
  world_time.tick(delta)
  var hostile_delta=world_time.hostile(delta)
  for event_id in stage_clock.advance(delta):
@@ -535,16 +546,15 @@ func _physics_process(delta: float) -> void:
   tick_passive()
   passive_clock -= 1
  spawn_clock -= hostile_delta
- # Budgeted spawning: no catch-up burst after a long frame; bounded ordinary counts.
- spawn_budget=minf(6,spawn_budget+hostile_delta*spawn_rate())
- if spawn_clock<=0 and spawn_budget>=1 and enemies.size()<ENEMY_LIMIT-8:
-  var count=mini(3,int(spawn_budget))
-  for i in count:spawn_enemy()
-  spawn_budget-=count
-  spawn_clock=0.25
- if stage_clock.endless():
-  ghost_budget=minf(3,ghost_budget+hostile_delta*(RUN_RULES.ghost_base_rate+maxf(0,stage_time-STAGE_SECONDS)/RUN_RULES.ghost_growth_seconds))
-  if ghost_budget>=1 and enemies.size()<ENEMY_LIMIT-8:spawn_enemy(11);ghost_budget-=1
+ if endless:Ghosts.tick_spawner(self,hostile_delta) # normal spawning has stopped for good; the ghosts take over
+ else:
+  # Budgeted spawning: no catch-up burst after a long frame; bounded ordinary counts.
+  spawn_budget=minf(6,spawn_budget+hostile_delta*spawn_rate())
+  if spawn_clock<=0 and spawn_budget>=1 and enemies.size()<ENEMY_LIMIT-8:
+   var count=mini(3,int(spawn_budget))
+   for i in count:spawn_enemy()
+   spawn_budget-=count
+   spawn_clock=0.25
  BossEncounters.tick(self,hostile_delta)
  update_enemies(delta)
  rebuild_grid()
@@ -587,6 +597,8 @@ func spawn_rate() -> float:
 func difficulty_speed() -> float:
  return clampf(1.0+(float(stats.difficulty)-1.0)*RUN_RULES.difficulty_speed_per_point,1.0,RUN_RULES.difficulty_speed_cap)
 func spawn_enemy(kind: int = -1, at: Vector3 = Vector3.INF) -> Dictionary:
+ if kind==Endless.GHOST_KIND:return Ghosts.spawn(self,0,at)
+ if endless and kind<0 and not sandbox:return {} # no more ordinary spawns in endless
  if enemies.size() >= ENEMY_LIMIT: return {}
  if is_instance_valid(forest_navigation) and not forest_navigation.ready_for_spawning:return {}
  if kind < 0:kind=OrdinaryRoster.choose(spawn_rng)
@@ -649,10 +661,11 @@ func update_enemies(real_delta: float) -> void:
  var colors = [Color("ee7d70"),Color("ffc05f"),Color("a28cae"),Color("e0d3a0"),Color("f55e67"),Color("b0dafa"),Color("aeef7a"),Color("80b9cb"),Color("cf7aff")]
  var mm = enemy_mesh.multimesh
  var boss_count=0
- enemy_view.begin_frame()
+ enemy_view.begin_frame();ghost_view.begin_frame()
  for i in enemies.size():
   var e = enemies[i]
   if e.hp <= 0: continue
+  if e.has("ghost"):Ghosts.step(self,e,delta);continue
   var dt=delta;var forced=false
   if e.kind<8 and not e.has("encounter"):
    # Distance LOD: far enemies think less often (with the skipped time carried over) and are redrawn from their cached pose.
@@ -752,7 +765,7 @@ func update_enemies(real_delta: float) -> void:
   mm.set_instance_color(boss_count,boss_tint)
   boss_count+=1
  mm.visible_instance_count=boss_count
- enemy_view.end_frame()
+ enemy_view.end_frame();ghost_view.end_frame(real_delta)
 func rebuild_grid() -> void:
  grid.clear()
  for e in enemies:
@@ -862,6 +875,7 @@ func kill_enemy(index: int) -> void:
  var e = enemies[index]
  if e.get("death_handled",false):return
  e.death_handled=true;crowd.disable(e)
+ if e.has("ghost"):Ghosts.kill(self,index,e);return
  StatusManager.on_death(self,e)
  var stage_encounter_complete=BossEncounters.died(self,e)
  RewardDrops.from_enemy(self,e)
@@ -934,10 +948,14 @@ func stage_event(event_id: String) -> void:
    var direction=-Vector3(player.position.x,0,player.position.z).normalized()
    var group=BossEncounters.start(self,str(stage)+":"+event_id,false,player.position+direction*24)
    announce("MINIBOSS ENCOUNTER · %d bosses"%group.required);play_sound("ready")
-  "endless":
-   run_metrics["endless"]=int(run_metrics.get("endless",0))+1
-   announce("ENDLESS MODE • Escape through the boss portal")
-   tone(90,0.6)
+  "endless":start_endless()
+# The stage clock reached 0:00: the run timer becomes the endless timer, the normal spawner stops for good and the ghosts take over. Exactly once per run.
+func start_endless() -> void:
+ if endless_started:return
+ endless_started=true;endless=true;endless_time=0.0;ghost_budget=0.0
+ run_metrics["endless"]=int(run_metrics.get("endless",0))+1
+ if Endless.LOCK_PORTAL:refresh_portal() # an open portal seals, a dormant one can no longer be summoned
+ RunAudio.endless_begins(self)
 func make_portal() -> void:
  if is_instance_valid(portal):return
  assert(forest_navigation.reachable(map_layout.portal))
@@ -949,6 +967,7 @@ func refresh_portal() -> void:
  if not is_instance_valid(portal):return
  GrimdarkObjects.refresh_portal(self)
 func activate_portal() -> bool:
+ if endless and Endless.LOCK_PORTAL:return false
  if portal_state=="summoned":return false
  if portal_state=="exit":return advance_stage()
  for active in enemies:
@@ -959,6 +978,7 @@ func activate_portal() -> bool:
  tone(90,0.6)
  return true
 func advance_stage() -> bool:
+ if endless and Endless.LOCK_PORTAL:return false
  if not boss_dead or portal_state!="exit":return false
  WorldPickups.settle(self) # coins still in flight are paid before the checkpoint
  # Persist both sides of the transition; an interrupted generation can resume safely.
@@ -1173,6 +1193,8 @@ func update_interactions(delta: float) -> void:
   if d<distance: distance=d; closest=obj
  if mode=="run" and RewardDrops.present_next(self):return
  if is_instance_valid(portal) and portal.position.distance_to(player.position)<4:
+  if endless and Endless.LOCK_PORTAL:
+   notice.text="The portal is sealed";return
   notice.text="E  /  "+("Advance to stage %d"%(stage+1) if portal_state=="exit" else ("Boss active • defeat the stage guardian" if portal_state=="summoned" else "Summon the stage boss"))
   if Input.is_action_just_pressed("interact"):activate_portal()
   return
@@ -1188,7 +1210,7 @@ func update_interactions(delta: float) -> void:
   return
  if closest.kind=="Elite Statue":
   notice.text="Press E to summon Elite Enemies"
-  if Input.is_action_just_pressed("interact"):activate_elite_statue(closest)
+  if Input.is_action_just_pressed("interact") and not endless:activate_elite_statue(closest)
   return
  notice.text="E  /  %s%s"%[closest.kind," · %d gold"%chest_cost() if closest.kind=="Chest" else (" · %d gold per gem"%ImbueRules.cost(stage,irt.imbue_discount()) if closest.kind==ImbueStation.KIND else "")]
  if not Input.is_action_just_pressed("interact"): return
@@ -1377,14 +1399,14 @@ func save_run(path: String = "user://active-run.json") -> bool:
  for e in enemies:
   var record=e.duplicate(true)
   record.erase("variant");record.erase("view");record.erase("move_direction");record.erase("crowd_start");record.erase("crowd_was_traversing");record.erase("crowd_last_solved");record.erase("crowd_body_height");record.erase("crowd_slot")
-  for key in ["pos","knock","target","charge_direction"]:
+  for key in ["pos","knock","target","charge_direction","vel","bank_to"]:
    if record.has(key): record[key]=[record[key].x,record[key].y,record[key].z]
   saved_enemies.append(record)
  var saved_pickups=[]
  for pickup in pickups: saved_pickups.append({"position":[pickup.node.position.x,pickup.node.position.y,pickup.node.position.z],"value":pickup.value,"age":pickup.age,"red":pickup.get("red",false),"attracted":pickup.get("attracted",false),"attraction_reason":pickup.get("attraction_reason","")})
  var used=[]
  for object in interactables: used.append({"kind":object.kind,"used":object.used,"charge":object.charge,"tier":object.get("tier","Common"),"offers":object.get("offers",null),"sold":object.get("sold",[]),"shrine_reward":object.get("shrine_reward",{}),"golden":object.get("golden",false),"shrine_choices":object.get("shrine_choices",[])})
- var data={"version":2,"next_enemy_id":crowd.next_id,"drop_chests":RewardDrops.serialize(self),"vases_broken":Vases.serialize(self),"world_pickups":WorldPickups.serialize(self),"stopwatch":world_time.serialize(),"reward_queue":reward_queue,"active_reward":active_reward,"item_state":irt.serialize(),"shrine_reward_queue":shrine_reward_queue,"active_shrine_reward":active_shrine_reward,"announced_stages":announced_stages,"gem_rng_state":str(gem_rng.state),"pending_upgrades":pending_upgrades+(1 if mode=="upgrade" else 0),"terrain_version":terrain_version,"world_content_version":world_content_version,"additional_boss_count":additional_boss_count,"boss_encounters":boss_encounters,"map_seed_override":map_seed_override,"stage_clock":stage_clock.serialize(),"boss_variant":boss_variant,"ghost_budget":ghost_budget,"portal_state":portal_state,"loadout":loadout_runtime.serialize(),"selected_weapon":selected_weapon,"run_metrics":run_metrics,"chests_opened":chests_opened,"legacy_weapon_slots":legacy_weapon_slots,"legacy_tome_slots":legacy_tome_slots,"minimap":serialize_minimap(),"variants":variants.serialize(),"spawn_rng_state":str(spawn_rng.state),"elite_active":elite_active,"elite_rewarded":elite_rewarded,"rng_state":str(rng.state),"character":character,"biome":biome,"selected_biome":selected_biome,"tier":tier,"stage":stage,"elapsed":elapsed,"stage_time":stage_time,"stats":stats,"health":health,"xp":xp,"level":level,"kills":kills,"gold":gold,"weapons":saved_weapons,"amulets":amulets,"amulets_found":amulets_found,"gems":gems.serialize(),"tomes":tomes,"tome_rarities":tome_rarities,"items":items,"sandbox":sandbox,"position":[player.position.x,player.position.y,player.position.z],"enemies":saved_enemies,"boss_spawned":boss_spawned,"boss_dead":boss_dead,"interactables":used,"damage_total":damage_total,"rerolls":rerolls,"banished":banished,"pickups":saved_pickups,"damage_by_weapon":damage_by_weapon,"gold_fraction":gold_fraction,"camera":[player.yaw,player.pitch,player.zoom]}
+ var data={"version":2,"next_enemy_id":crowd.next_id,"drop_chests":RewardDrops.serialize(self),"vases_broken":Vases.serialize(self),"world_pickups":WorldPickups.serialize(self),"stopwatch":world_time.serialize(),"reward_queue":reward_queue,"active_reward":active_reward,"item_state":irt.serialize(),"shrine_reward_queue":shrine_reward_queue,"active_shrine_reward":active_shrine_reward,"announced_stages":announced_stages,"gem_rng_state":str(gem_rng.state),"pending_upgrades":pending_upgrades+(1 if mode=="upgrade" else 0),"terrain_version":terrain_version,"world_content_version":world_content_version,"additional_boss_count":additional_boss_count,"boss_encounters":boss_encounters,"map_seed_override":map_seed_override,"stage_clock":stage_clock.serialize(),"boss_variant":boss_variant,"ghost_budget":ghost_budget,"endless_started":endless_started,"endless_time":endless_time,"ghost_rng_state":ghost_rng.state,"portal_state":portal_state,"loadout":loadout_runtime.serialize(),"selected_weapon":selected_weapon,"run_metrics":run_metrics,"chests_opened":chests_opened,"legacy_weapon_slots":legacy_weapon_slots,"legacy_tome_slots":legacy_tome_slots,"minimap":serialize_minimap(),"variants":variants.serialize(),"spawn_rng_state":str(spawn_rng.state),"elite_active":elite_active,"elite_rewarded":elite_rewarded,"rng_state":str(rng.state),"character":character,"biome":biome,"selected_biome":selected_biome,"tier":tier,"stage":stage,"elapsed":elapsed,"stage_time":stage_time,"stats":stats,"health":health,"xp":xp,"level":level,"kills":kills,"gold":gold,"weapons":saved_weapons,"amulets":amulets,"amulets_found":amulets_found,"gems":gems.serialize(),"tomes":tomes,"tome_rarities":tome_rarities,"items":items,"sandbox":sandbox,"position":[player.position.x,player.position.y,player.position.z],"enemies":saved_enemies,"boss_spawned":boss_spawned,"boss_dead":boss_dead,"interactables":used,"damage_total":damage_total,"rerolls":rerolls,"banished":banished,"pickups":saved_pickups,"damage_by_weapon":damage_by_weapon,"gold_fraction":gold_fraction,"camera":[player.yaw,player.pitch,player.zoom]}
  var file=FileAccess.open(path+".tmp",FileAccess.WRITE)
  if not file: return false
  file.store_string(JSON.stringify(data)); file.close()
@@ -1438,8 +1460,11 @@ func load_run(path: String = "user://active-run.json") -> bool:
  boss_variant=str(data.get("boss_variant",boss_variant))
  if boss_variant not in ["chunkus","rock_golem"]:boss_variant="chunkus" if boss_variant=="sovereign" else "rock_golem"
  ghost_budget=float(data.get("ghost_budget",0))
+ endless_started=bool(data.get("endless_started",false));endless_time=float(data.get("endless_time",0.0));ghost_rng.state=int(data.get("ghost_rng_state",ghost_rng.state))
  stage_clock.restore(data.get("stage_clock",{}),stage_time)
  stage_time=stage_clock.elapsed
+ if stage_clock.endless() and not endless_started:endless_started=true;endless_time=maxf(0.0,stage_time-STAGE_SECONDS)
+ endless=endless_started
  health=float(data.health); xp=float(data.xp); level=int(data.level); kills=int(data.kills); gold=int(data.gold)
  damage_total=float(data.damage_total)
  damage_by_weapon.clear()
@@ -1464,9 +1489,10 @@ func load_run(path: String = "user://active-run.json") -> bool:
    e.variant=OrdinaryRoster.variant(int(record.kind),choice)
   for key in record:
    if key=="encounter" and int(data.get("terrain_version",1))<3 and int(record.kind)==8:continue
-   if key in ["pos","knock","target","charge_direction"]: e[key]=Vector3(record[key][0],record[key][1],record[key][2])
+   if key in ["pos","knock","target","charge_direction","vel","bank_to"]: e[key]=Vector3(record[key][0],record[key][1],record[key][2])
    elif key in ["kind","phase","crowd_id"]: e[key]=int(record[key])
    else: e[key]=record[key]
+  if e.has("ghost"):Ghosts.refresh(self,e)
  if int(data.get("terrain_version",1))<3:
   for enemy in enemies:enemy.pos.y=terrain_height(enemy.pos.x,enemy.pos.z)+0.65
  BossEncounters.restore(self,data.get("boss_encounters",{}))

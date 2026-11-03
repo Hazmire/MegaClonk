@@ -44,3 +44,7 @@ static func gold(game: Node) -> void:
  gold_streak=gold_streak+1 if (gap>=0.0 and gap<=1.2) else 0
  gold_last=now
  game.audio.emit("pickup.gold",Vector3.INF,1.0,1.0,mini(gold_streak,2))
+# Endless mode begins: the banshee, once per run, at the start of the glitch; the music ducks about 6 dB for the length of the sound.
+static func endless_begins(game: Node) -> void:
+ if not is_instance_valid(game.audio):return
+ game.audio.emit("world.endless_begins_banshee",game.player.position)

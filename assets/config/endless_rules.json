@@ -1,0 +1,21 @@
+{
+  "note": "Single source of truth for endless mode. Times are endless minutes (0 = the moment the stage clock hit 0:00). Curves have no ceiling.",
+  "ghost_cap": 600,
+  "player_run_speed": 8.0,
+  "stress_run_speed": 16.5,
+  "stress_note": "Loadout B stress build (every item x5, 8 weapons): speed stat 1.65 x 8 m/s run = 13.2, x ~1.25 item-runtime speed = ~16.5 m/s. Max health 150, armour 20 (21% reduction), evasion 0.47.",
+  "stress_effective_hp": 190.0,
+  "spawn": {"base_per_s": 0.8, "growth_per_min": 1.18, "budget_cap": 3.0},
+  "speed": {"start": 4.0, "slope_early": 0.45, "knee_min": 10.0, "slope_late": 3.0},
+  "hp": {"base": 60.0, "growth_per_min": 1.14},
+  "damage": {"base": 12.0, "growth_per_min": 1.35},
+  "flight": {"turn_rate": 3.0, "hit_radius": 0.5, "player_radius": 0.45, "chest_height": 1.1, "bank": 0.6},
+  "spawn_ring": {"min_m": 26.0, "max_m": 34.0, "height_min": -1.0, "height_max": 12.0, "immediate_radius": 18.0, "arena_clamp": 110.0},
+  "fade": {"in_s": 0.6, "out_s": 0.25},
+  "tiers": [
+    {"id": "mourner",  "join_min": 0.0,  "weight": 1.0,  "hp": 1.0, "damage": 1.0, "speed": 1.0,  "scale": 1.0, "xp": 2.0, "gold": 0},
+    {"id": "drowned",  "join_min": 3.0,  "weight": 0.45, "hp": 2.2, "damage": 1.0, "speed": 1.0,  "scale": 1.05, "xp": 3.0, "gold": 0},
+    {"id": "wrathful", "join_min": 6.0,  "weight": 0.30, "hp": 1.4, "damage": 1.6, "speed": 1.25, "scale": 1.12, "xp": 4.0, "gold": 0},
+    {"id": "hollow",   "join_min": 10.0, "weight": 0.20, "hp": 3.0, "damage": 2.0, "speed": 1.1,  "scale": 1.3, "xp": 6.0, "gold": 0}
+  ]
+}
