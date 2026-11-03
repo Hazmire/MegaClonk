@@ -65,6 +65,20 @@ func run() -> void:
   if "D" in shots:
    var lp=lowest_spot();game.player.avatar.visible=false;look(lp+Vector3(0,0.1,12.0),0.0,0.03);await snap("stage%d_D_lowest"%s,1.2)
    black_band(root.get_texture().get_image(),"stage%d"%s);game.player.avatar.visible=true
+  if "L" in shots or "E" in shots or "P" in shots:
+   var save_out=out;out="res://docs/images/stages/layers/";DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(out))
+   if "L" in shots:
+    var lp2=lowest_spot();game.player.avatar.visible=false;look(lp2+Vector3(0,0.1,12.0),0.0,0.03);await snap("layers_%d_low"%s,1.2);black_band(root.get_texture().get_image(),"stage%d"%s);game.player.avatar.visible=true
+   if "E" in shots:
+    look(Vector3(0,game.terrain_height(0,-90)+0.1,-90),0.0,-0.3);await snap("layers_%d_edge"%s,1.2)
+   if "P" in shots:
+    var best=Vector3(0,-1,0)
+    for x in range(-90,91,2):
+     for z in range(-94,-40,2):
+      var hh=game.terrain_height(x,z)
+      if hh>best.y+0.01 or (is_equal_approx(hh,best.y) and z<best.z):best=Vector3(x,hh,z)
+    look(best+Vector3(0,0.1,0),0.0,-0.2);await snap("layers_%d_plateau"%s,1.2)
+   out=save_out
   if "C" in shots:
    var top=highest();var yaw=atan2(-top.x,-top.z) if false else 0.0
    # look outward from the plateau toward the nearest border
