@@ -72,7 +72,25 @@ func run():
    if absf(v.x)<StageDressing.HALF+rules.outer_ground_margin*rules.arena_scale-0.01 and absf(v.z)<StageDressing.HALF+rules.outer_ground_margin*rules.arena_scale-0.01:inside=true
   check(not inside,"Stage %d outer ground has a square hole clear of the playable area"%s)
   var rings=ring_nodes()
-  check(rings.size()==3 and is_equal_approx(rings[1].position.y-rings[1].get_aabb().size.y*0.5,outer_y-0.5) and is_equal_approx(rings[2].position.y-rings[2].get_aabb().size.y*0.5,outer_y-0.5) and rings[0].position.y-rings[0].get_aabb().size.y*0.5<outer_y,"Stage %d mid and near rings end 0.5 m under the outer ground, the far ring lower still"%s)
+  var top_y=StageDressing.highest_level(game.map_layout);var grounds=[];var bottoms_ok=true;var line_ok=rings.size()==3;var rise_ok=true
+  for layer in rings.size():
+   var ring=rings[layer];var h=ring.get_aabb().size.y;var tex=d.backdrop(layer)
+   var line_y=ring.position.y-h*0.5+d.backdrop_ground_px[layer]*h/float(tex.get_height());var want=rules.ring_ground_y[layer]*top_y/rules.reference_top
+   line_ok=line_ok and absf(line_y-want)<0.1 and is_equal_approx(h,TAU*rules.ring_radius[layer]*rules.arena_scale*float(tex.get_height())/(2.0*float(tex.get_width())))
+   bottoms_ok=bottoms_ok and ring.position.y-h*0.5<outer_y
+   grounds.append(line_y)
+  rise_ok=rings.size()==3 and grounds[0]>grounds[1] and grounds[1]>grounds[2] and grounds[2]>top_y # rings are ordered far, mid, near
+  check(line_ok,"Stage %d each ring's ground line is at ground_y (heights scaled by top plateau %.0f / 12) within 0.1 m"%[s,top_y])
+  check(bottoms_ok,"Stage %d every ring bottom is below the outer ground (%.1f m)"%[s,outer_y])
+  check(rise_ok,"Stage %d ground lines rise near to mid to far and all clear the top plateau (%s over %.0f)"%[s,str(grounds.map(func(v):return snappedf(v,0.1))),top_y])
+  var sea=[root_node.get_node("FogSea_Low") as MeshInstance3D,root_node.get_node("FogSea_High") as MeshInstance3D];var sea_ok=true
+  for layer in 2:
+   var node=sea[layer];sea_ok=sea_ok and node.get_child_count()==0 and node.cast_shadow==GeometryInstance3D.SHADOW_CASTING_SETTING_OFF and node.mesh.get_surface_count()==1 and is_equal_approx(node.position.y,low_y+rules.fog_sea_y[layer])
+   for v in node.mesh.get_faces():sea_ok=sea_ok and (absf(v.x)>=StageDressing.HALF-0.001 or absf(v.z)>=StageDressing.HALF-0.001) # no face ever lies inside the arena square
+   for tri in range(0,node.mesh.get_faces().size(),3):
+    var centre=(node.mesh.get_faces()[tri]+node.mesh.get_faces()[tri+1]+node.mesh.get_faces()[tri+2])/3.0;sea_ok=sea_ok and (absf(centre.x)>StageDressing.HALF or absf(centre.z)>StageDressing.HALF)
+  check(sea_ok,"Stage %d fog sea: 2 layers, no collision, no shadows, never inside the arena, at -0.6 / +2.5 m from the lowest terrain"%s)
+  check(is_equal_approx(game.world.get_child(0).environment.fog_height,low_y) and is_equal_approx(game.world.get_child(0).environment.fog_height_density,rules.fog_height_density),"Stage %d height fog starts at the lowest terrain level"%s)
   var posts=root_node.get_node("FencePosts") as MultiMeshInstance3D
   var on_ground=posts.multimesh.instance_count>200;var height=float(d.fence.height)
   for post_transform in posts.get_meta("transforms"):
