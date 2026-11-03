@@ -13,9 +13,11 @@ static func data() -> Dictionary:
 static func tiers() -> Array:return data().tiers
 static func tier(index: int) -> Dictionary:return data().tiers[clampi(index,0,data().tiers.size()-1)]
 static func cap() -> int:return int(data().ghost_cap)
-# Total ghosts per second the spawner earns at endless minute m.
-static func spawn_rate(minutes: float) -> float:
- var s=data().spawn;return float(s.base_per_s)*pow(float(s.growth_per_min),maxf(0.0,minutes))
+# Ghosts in one wave at endless minute m (before the Difficulty stat), and the average ghosts per second that works out to.
+static func wave_count(minutes: float) -> float:
+ var s=data().spawn;return float(s.wave_base)*pow(float(s.wave_growth_per_min),maxf(0.0,minutes))
+static func wave_interval() -> float:return float(data().spawn.wave_interval_s)
+static func spawn_rate(minutes: float) -> float:return wave_count(minutes)/wave_interval()
 # Base flight speed (m/s) at endless minute m: slow and steady until the knee (it passes the player's run speed there), then much faster.
 static func base_speed(minutes: float) -> float:
  var s=data().speed;var m=maxf(0.0,minutes);var knee=float(s.knee_min)

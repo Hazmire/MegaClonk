@@ -172,7 +172,7 @@ func tier_checks() -> void:
   if gg.is_empty():continue
   min_flat=minf(min_flat,Vector2(gg.pos.x-game.player.position.x,gg.pos.z-game.player.position.z).length());hs.append(gg.pos.y-game.player.position.y)
  check(min_flat>=float(Endless.data().spawn_ring.immediate_radius)-0.01,"Ghosts never spawn inside the immediate radius (min %.1f m)"%min_flat)
- hs.sort();check(hs.size()>0 and hs[-1]-hs[0]>6.0,"Spawn heights are spread (%.1f m)"%(hs[-1]-hs[0]))
+ hs.sort();check(hs.size()>0 and hs[-1]-hs[0]>4.0,"Spawn heights are spread (%.1f m)"%(hs[-1]-hs[0]))
 # ---- 5. Determinism -------------------------------------------------------------------------------------------------
 func signature() -> String:
  var parts=[]

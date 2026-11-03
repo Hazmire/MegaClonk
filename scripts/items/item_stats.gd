@@ -8,8 +8,8 @@ extends RefCounted
 const TIER_WEIGHTS={"common":0.50,"uncommon":0.28,"rare":0.15,"epic":0.05,"legendary":0.02} # SPEC (tokens.json dropWeight)
 
 const DROPS={
- "vase_item_chance":0.04,           # GUESS: chance a smashed vase also yields a Common/Uncommon item
- "vase_tiers":["common","uncommon"], # SPEC
+ "vase_item_chance":0.0,            # Vases never yield items (was 0.04: a bug report). Items come from chests and shops only.
+ "vase_tiers":[],                  # none: see vase_item_chance
  "shop_tiers":["common","uncommon","rare","epic","legendary"], # Economy Rework: shops can stock every tier (Standard: all, Rare: Rare+, Legendary: Legendary only); prices live in Economy
  "rng_seed_offset":6100417          # item RNG stream, separate from game.rng so gem/weapon rolls are untouched
 }

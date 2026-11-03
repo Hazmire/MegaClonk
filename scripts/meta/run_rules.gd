@@ -15,6 +15,10 @@ extends Resource
 @export var spawn_start_rate=0.25
 @export var spawn_end_rate=3.0
 @export var spawn_curve=1.4
+# After spawn_ramp_start_s of a stage the spawn rate gets an extra multiplier that grows by spawn_ramp_per_minute every further minute (1x at the start,
+# 1 + 0.35 x minutes-after). Raise spawn_ramp_per_minute to make stages fill up faster; set it to 0 for the old curve.
+@export var spawn_ramp_start_s=180.0
+@export var spawn_ramp_per_minute=0.35
 @export var soft_cap_start=25.0
 @export var soft_cap_end=300.0
 @export var clear_bonus=2.0

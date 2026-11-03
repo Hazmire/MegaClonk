@@ -84,7 +84,7 @@ func catalog_tests():
   if id!="":
    vase_hits+=1
    if not Catalog.item_tier(id) in ["common","uncommon"]:vase_ok=false
- check(vase_ok and vase_hits>0 and absf(float(vase_hits)/6000.0-float(ItemStats.DROPS.vase_item_chance))<0.015,"Vases drop only Commons/Uncommons at the configured rate (%d/6000)"%vase_hits)
+ check(vase_ok and vase_hits==0,"Smashing vases never yields an item (%d/6000)"%vase_hits)
  var shop_ok=true
  var shop_rng=RandomNumberGenerator.new();shop_rng.seed=3
  for t in ["Common","Rare","Legendary"]:

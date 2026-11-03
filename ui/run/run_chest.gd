@@ -2,7 +2,7 @@ class_name RunChest
 extends MenuScreen
 # RunChest: the treasure chest. The item is already decided and in the bag when this opens (RewardDrops/grant_item); the screen is the
 # show: chest wobbles -> Open chest -> jump (0.65 s) -> the reel turns for 6 s -> lands (1 s, marker blinks, screen shakes) -> the
-# reveal card. Holding Enter / a click / Space skips ahead; ui.chest_skip does the same. Reduced motion goes straight to the reveal.
+# reveal card. Holding Enter / a click / Space / E skips ahead; ui.chest_skip does the same. Reduced motion goes straight to the reveal.
 const OPEN_TIME=0.65
 const SPIN_TIME=6.0
 const LAND_TIME=1.0
@@ -24,6 +24,7 @@ var shake_root: Control
 var reveal_layer: Control
 var card: ChestCard
 var take_button: MenuItem
+var banish_button: MenuItem
 var fx: ChestFx
 var flash: ColorRect
 var hold=0.0
@@ -38,7 +39,8 @@ func build() -> void:
  frontend.chest_skip=skip
  set_hints([["ENTER","Open chest","A"]])
  focus_later(open_button)
- if game.settings.reduced:go_reveal()
+
+ if game.settings.reduced or game.chest_quick:game.chest_quick=false;go_reveal()
 func build_status() -> void:
  var row=HBoxContainer.new();row.name="Status";row.position=Vector2(72,36);row.add_theme_constant_override("separation",48);row.mouse_filter=Control.MOUSE_FILTER_IGNORE;shake_root.add_child(row)
  var t=int(game.elapsed)
@@ -110,6 +112,11 @@ func go_reveal() -> void:
   stamp.add_theme_stylebox_override("normal",sb);reveal_layer.add_child(stamp)
  take_button=MenuStyle.spawn("menu_item") as MenuItem;take_button.name="TakeIt";take_button.setup("Take it",36,36).make_primary("ENTER",72,36);take_button.size=Vector2(300,72);take_button.position=Vector2(810,740);take_button.indent=48.0
  take_button.sound="item_take";take_button.chosen.connect(func():game.resume());reveal_layer.add_child(take_button)
+ if game.chest_banishes_left>0:
+  take_button.position.x=560.0
+  banish_button=MenuStyle.spawn("menu_item") as MenuItem;banish_button.name="Banish";banish_button.setup("Banish  (%d left)"%game.chest_banishes_left,30,30);banish_button.size=Vector2(420,72);banish_button.position=Vector2(960,740);banish_button.indent=36.0
+  banish_button.chosen.connect(func():game.banish_chest_item(item_id));reveal_layer.add_child(banish_button)
+  take_button.focus_neighbor_right=take_button.get_path_to(banish_button);banish_button.focus_neighbor_left=banish_button.get_path_to(take_button)
  flash=ColorRect.new();flash.color=Color("FFEDC2");flash.size=Vector2(1920,1080);flash.mouse_filter=Control.MOUSE_FILTER_IGNORE;reveal_layer.add_child(flash)
  reveal_layer.show();set_hints([["ENTER","Take it","A"]]);focus_later(take_button)
  if not game.settings.reduced:
@@ -120,13 +127,14 @@ func go_reveal() -> void:
   tw.tween_property(card,"modulate:a",1.0,0.25)
   tw.tween_property(flash,"modulate:a",0.0,0.45*maxf(0.3,game.settings.visual_intensity))
   take_button.modulate.a=0.0;tw.tween_property(take_button,"modulate:a",1.0,0.4).set_delay(1.0)
+  if banish_button!=null:banish_button.modulate.a=0.0;tw.tween_property(banish_button,"modulate:a",1.0,0.4).set_delay(1.0)
  else:flash.hide()
  var cel=float(Rarity.definition(Catalog.item_tier(item_id)).celebration)
  game.play_sound("applause",0.25+0.75*cel);game.play_sound(REVEAL_EVENTS[clampi(t,0,4)])
 func _input(event: InputEvent) -> void:
  super._input(event)
- if phase=="spinning" and event is InputEventKey and event.pressed and not event.echo and event.keycode==KEY_SPACE:skip();get_viewport().set_input_as_handled()
-func _held() -> bool:return Input.is_action_pressed("ui_accept") or Input.is_key_pressed(KEY_SPACE) or Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)
+ if phase in ["opening","spinning","landed"] and event is InputEventKey and event.pressed and not event.echo and event.keycode in [KEY_SPACE,KEY_E]:skip();get_viewport().set_input_as_handled()
+func _held() -> bool:return Input.is_action_pressed("ui_accept") or Input.is_key_pressed(KEY_SPACE) or Input.is_key_pressed(KEY_E) or Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)
 func _process(delta: float) -> void:
  phase_time+=delta
  match phase:

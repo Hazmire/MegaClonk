@@ -31,6 +31,10 @@ var weapons: Dictionary = {}
 var gems=GemInventory.new()
 var amulets=0 # Imbued Amulets in the bag (each unlocks one weapon's second socket)
 var amulets_found=0 # Imbued Amulet items acquired this run, bounded by Elements.TUNING.amulet.max_per_run
+const CHEST_BANISHES=3 # item banishes per run, spent from the chest reveal screen
+var banished_items: Array=[] # items banished from chests this run: they never roll from a chest again
+var chest_banishes_left=CHEST_BANISHES
+var chest_quick=false # the next chest screen opens straight on its reveal (a banish re-roll)
 var chest_gem="" # element found by the chest being revealed, shown once by the reward screen
 var world_time=WorldTime.new()
 var vases: Array=[]
@@ -324,7 +328,7 @@ func begin_run() -> void:
  weapons.clear();gems.reset();amulets=0;amulets_found=0
  tomes.clear()
  items.clear();irt.reset()
- banished.clear()
+ banished.clear();banished_items.clear();chest_banishes_left=CHEST_BANISHES;chest_quick=false
  rerolls = 3
  passive_clock = 0
  moving_time = 0
@@ -477,6 +481,10 @@ func gem_discovered(element: String) -> void:
 func toast(text: String) -> void:
  notice.text = text
  message_time = 4
+# Tab closes the build screen it opened. Handled in _input, before the GUI's Tab focus-navigation can swallow the key.
+func _input(event: InputEvent) -> void:
+ if mode=="build" and event.is_action_pressed("inspect") and not event.is_echo():
+  get_viewport().set_input_as_handled();resume()
 func _unhandled_input(event: InputEvent) -> void:
  if pending_binding != "" and event is InputEventKey and event.pressed:
   InputMap.action_erase_events(pending_binding)
@@ -595,6 +603,7 @@ func tick_passive() -> void:
 func spawn_rate() -> float:
  var span=clampf(stage_clock.elapsed/StageClock.DURATION,0.0,1.0)
  var base=lerpf(RUN_RULES.spawn_start_rate,RUN_RULES.spawn_end_rate,pow(span,RUN_RULES.spawn_curve))*(1.0+(stage-1)*RUN_RULES.stage_spawn_growth*2.0)
+ base*=1.0+RUN_RULES.spawn_ramp_per_minute*maxf(0.0,stage_clock.elapsed-RUN_RULES.spawn_ramp_start_s)/60.0
  var difficulty=maxf(0.1,float(stats.difficulty))
  var soft_cap=lerpf(RUN_RULES.soft_cap_start,RUN_RULES.soft_cap_end,span)*difficulty
  var clearance=clampf(1.0-float(enemies.size())/maxf(1.0,soft_cap),0.0,1.0)
@@ -667,7 +676,7 @@ func update_enemies(real_delta: float) -> void:
  var colors = [Color("ee7d70"),Color("ffc05f"),Color("a28cae"),Color("e0d3a0"),Color("f55e67"),Color("b0dafa"),Color("aeef7a"),Color("80b9cb"),Color("cf7aff")]
  var mm = enemy_mesh.multimesh
  var boss_count=0
- enemy_view.begin_frame();ghost_view.begin_frame()
+ enemy_view.begin_frame();ghost_view.begin_frame();Ghosts.separate(self,delta)
  for i in enemies.size():
   var e = enemies[i]
   if e.hp <= 0: continue
@@ -1059,12 +1068,20 @@ func update_effects(delta: float) -> void:
     effects[i].node.queue_free()
     if debug_combat:combat_counters.freed_nodes+=1
    effects.remove_at(i)
+const GEM_GRAVITY=26.0
 func update_pickups(delta: float) -> void:
  for i in range(pickups.size()-1,-1,-1):
   var p = pickups[i]
   p.age+=delta
   p.node.rotation.y+=delta*0.85
-  p.node.position.y+=(sin(p.age*2)-sin((p.age-delta)*2))*0.06
+  if not p.get("attracted",false) and not p.get("magnet",false):
+   # Gravity: a gem dropped in mid-air (a flying enemy died, a knock-up) falls to the ground, then hovers and bobs a little above it.
+   var rest=terrain_height(p.node.position.x,p.node.position.z)+0.55
+   var base=float(p.get("base_y",p.node.position.y));var vy=float(p.get("vy",0.0))-GEM_GRAVITY*delta
+   base+=vy*delta
+   if base<=rest:base=rest;vy=0.0
+   p["base_y"]=base;p["vy"]=vy
+   p.node.position.y=base+sin(p.age*2.0)*0.06
   var distance = p.node.position.distance_to(player.position+Vector3.UP)
   if not p.get("attracted",false) and distance<5*stats.pickup:
    p["attracted"]=true;p["attraction_reason"]="pickup_range";p["attraction_distance"]=distance;p["attraction_radius"]=5*stats.pickup
@@ -1413,7 +1430,7 @@ func save_run(path: String = "user://active-run.json") -> bool:
  for pickup in pickups: saved_pickups.append({"position":[pickup.node.position.x,pickup.node.position.y,pickup.node.position.z],"value":pickup.value,"age":pickup.age,"red":pickup.get("red",false),"attracted":pickup.get("attracted",false),"attraction_reason":pickup.get("attraction_reason","")})
  var used=[]
  for object in interactables: used.append({"kind":object.kind,"used":object.used,"charge":object.charge,"tier":object.get("tier","Common"),"offers":object.get("offers",null),"sold":object.get("sold",[]),"shrine_reward":object.get("shrine_reward",{}),"golden":object.get("golden",false),"shrine_choices":object.get("shrine_choices",[])})
- var data={"version":2,"next_enemy_id":crowd.next_id,"drop_chests":RewardDrops.serialize(self),"vases_broken":Vases.serialize(self),"world_pickups":WorldPickups.serialize(self),"stopwatch":world_time.serialize(),"reward_queue":reward_queue,"active_reward":active_reward,"item_state":irt.serialize(),"shrine_reward_queue":shrine_reward_queue,"active_shrine_reward":active_shrine_reward,"announced_stages":announced_stages,"gem_rng_state":str(gem_rng.state),"pending_upgrades":pending_upgrades+(1 if mode=="upgrade" else 0),"terrain_version":terrain_version,"world_content_version":world_content_version,"additional_boss_count":additional_boss_count,"boss_encounters":boss_encounters,"map_seed_override":map_seed_override,"stage_clock":stage_clock.serialize(),"boss_variant":boss_variant,"ghost_budget":ghost_budget,"endless_started":endless_started,"endless_time":endless_time,"ghost_rng_state":ghost_rng.state,"portal_state":portal_state,"loadout":loadout_runtime.serialize(),"selected_weapon":selected_weapon,"run_metrics":run_metrics,"chests_opened":chests_opened,"legacy_weapon_slots":legacy_weapon_slots,"legacy_tome_slots":legacy_tome_slots,"minimap":serialize_minimap(),"variants":variants.serialize(),"spawn_rng_state":str(spawn_rng.state),"elite_active":elite_active,"elite_rewarded":elite_rewarded,"rng_state":str(rng.state),"character":character,"biome":biome,"selected_biome":selected_biome,"tier":tier,"stage":stage,"elapsed":elapsed,"stage_time":stage_time,"stats":stats,"health":health,"xp":xp,"level":level,"kills":kills,"gold":gold,"weapons":saved_weapons,"amulets":amulets,"amulets_found":amulets_found,"gems":gems.serialize(),"tomes":tomes,"tome_rarities":tome_rarities,"items":items,"sandbox":sandbox,"position":[player.position.x,player.position.y,player.position.z],"enemies":saved_enemies,"boss_spawned":boss_spawned,"boss_dead":boss_dead,"interactables":used,"damage_total":damage_total,"rerolls":rerolls,"banished":banished,"pickups":saved_pickups,"damage_by_weapon":damage_by_weapon,"gold_fraction":gold_fraction,"camera":[player.yaw,player.pitch,player.zoom]}
+ var data={"version":2,"next_enemy_id":crowd.next_id,"drop_chests":RewardDrops.serialize(self),"vases_broken":Vases.serialize(self),"world_pickups":WorldPickups.serialize(self),"stopwatch":world_time.serialize(),"reward_queue":reward_queue,"active_reward":active_reward,"item_state":irt.serialize(),"shrine_reward_queue":shrine_reward_queue,"active_shrine_reward":active_shrine_reward,"announced_stages":announced_stages,"gem_rng_state":str(gem_rng.state),"pending_upgrades":pending_upgrades+(1 if mode=="upgrade" else 0),"terrain_version":terrain_version,"world_content_version":world_content_version,"additional_boss_count":additional_boss_count,"boss_encounters":boss_encounters,"map_seed_override":map_seed_override,"stage_clock":stage_clock.serialize(),"boss_variant":boss_variant,"ghost_budget":ghost_budget,"banished_items":banished_items,"chest_banishes_left":chest_banishes_left,"endless_started":endless_started,"endless_time":endless_time,"ghost_rng_state":ghost_rng.state,"portal_state":portal_state,"loadout":loadout_runtime.serialize(),"selected_weapon":selected_weapon,"run_metrics":run_metrics,"chests_opened":chests_opened,"legacy_weapon_slots":legacy_weapon_slots,"legacy_tome_slots":legacy_tome_slots,"minimap":serialize_minimap(),"variants":variants.serialize(),"spawn_rng_state":str(spawn_rng.state),"elite_active":elite_active,"elite_rewarded":elite_rewarded,"rng_state":str(rng.state),"character":character,"biome":biome,"selected_biome":selected_biome,"tier":tier,"stage":stage,"elapsed":elapsed,"stage_time":stage_time,"stats":stats,"health":health,"xp":xp,"level":level,"kills":kills,"gold":gold,"weapons":saved_weapons,"amulets":amulets,"amulets_found":amulets_found,"gems":gems.serialize(),"tomes":tomes,"tome_rarities":tome_rarities,"items":items,"sandbox":sandbox,"position":[player.position.x,player.position.y,player.position.z],"enemies":saved_enemies,"boss_spawned":boss_spawned,"boss_dead":boss_dead,"interactables":used,"damage_total":damage_total,"rerolls":rerolls,"banished":banished,"pickups":saved_pickups,"damage_by_weapon":damage_by_weapon,"gold_fraction":gold_fraction,"camera":[player.yaw,player.pitch,player.zoom]}
  var file=FileAccess.open(path+".tmp",FileAccess.WRITE)
  if not file: return false
  file.store_string(JSON.stringify(data)); file.close()
@@ -1461,7 +1478,7 @@ func load_run(path: String = "user://active-run.json") -> bool:
  for element in refunds:gems.add(str(element),1)
  if weapons.is_empty():equip(0)
  amulets=maxi(0,int(data.get("amulets",0)));amulets_found=maxi(0,int(data.get("amulets_found",0)))
- tomes=data.tomes;tome_rarities=data.get("tome_rarities",{}); items=ItemMigration.sanitize(data.items,stats); irt.restore(data.get("item_state",{})); banished=data.banished; rerolls=int(data.rerolls)
+ tomes=data.tomes;tome_rarities=data.get("tome_rarities",{}); items=ItemMigration.sanitize(data.items,stats); irt.restore(data.get("item_state",{})); banished=data.banished;banished_items=Array(data.get("banished_items",[]));chest_banishes_left=int(data.get("chest_banishes_left",CHEST_BANISHES)); rerolls=int(data.rerolls)
  build_stage()
  elapsed=float(data.elapsed); stage_time=float(data.stage_time)
  boss_variant=str(data.get("boss_variant",boss_variant))
@@ -1619,6 +1636,26 @@ func item_stacks(id: Variant) -> int:
  for entry in items:
   if str(entry.id)==str(id):return int(entry.stacks)
  return 0
+# Chest banish: the item the chest just gave is taken back out of the bag, can never come from a chest again this run, and the chest rolls a
+# replacement (shown straight on its reveal). Costs one of CHEST_BANISHES. Returns false when none are left.
+func banish_chest_item(id: String) -> bool:
+ if chest_banishes_left<=0 or id=="" or not Catalog.item_exists(id):return false
+ chest_banishes_left-=1;revoke_item(id)
+ if not id in banished_items:banished_items.append(id)
+ active_reward=""
+ var replacement=ItemDrops.roll_chest(self)
+ if replacement=="":resume();return true
+ reward_queue.push_front(replacement);chest_quick=true;RewardDrops.present_next(self)
+ return true
+# Takes one stack of a granted item back out (the reverse of grant_item).
+func revoke_item(id: String) -> void:
+ if id=="imbued_amulet":amulets=maxi(0,amulets-1);amulets_found=maxi(0,amulets_found-1);return
+ for i in range(items.size()-1,-1,-1):
+  if str(items[i].id)!=id:continue
+  items[i].stacks=int(items[i].stacks)-1
+  if int(items[i].stacks)<=0:items.remove_at(i)
+  break
+ irt.on_acquire(id)
 # The one way an item enters the inventory. Uniques can be held once and never stack.
 func grant_item(id: Variant,quiet: bool=false) -> bool:
  id=str(id)

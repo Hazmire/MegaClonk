@@ -5,19 +5,23 @@ extends RefCounted
 # and are drawn by GhostView. Contact damage goes through Game.hurt_contact; they obey hostile time (the Stopwatch and Hourglass freeze them).
 # Every number comes from Endless (assets/config/endless_rules.json). Ghost spawns draw only from game.ghost_rng, so seeded runs reproduce them.
 static func minutes(game: Node) -> float:return float(game.endless_time)/60.0
-# Spawner: a credit budget on hostile time, capped, one ghost at a time. Hitting the live cap stops the count growing, not the escalation.
+# Spawner: waves. game.ghost_budget is the countdown (hostile seconds) to the next wave; a wave spawns at once, as a ring around the player, and is
+# wave_count(m) ghosts (times Difficulty). The first wave comes the instant endless starts. A wave is trimmed to the room left under the live cap.
 static func tick_spawner(game: Node,hostile_delta: float) -> void:
- var m=minutes(game)
- game.ghost_budget=minf(float(Endless.data().spawn.budget_cap),game.ghost_budget+hostile_delta*Endless.spawn_rate(m)*maxf(0.1,float(game.stats.difficulty)))
- while game.ghost_budget>=1.0:
-  game.ghost_budget-=1.0
-  if game.ghost_count<Endless.cap():spawn(game,Endless.choose_tier(m,game.ghost_rng),Vector3.INF)
-static func spawn(game: Node,tier_index: int,at: Vector3) -> Dictionary:
+ game.ghost_budget-=hostile_delta
+ if game.ghost_budget>0.0:return
+ game.ghost_budget=Endless.wave_interval()
+ var m=minutes(game);var want=int(round(Endless.wave_count(m)*maxf(0.1,float(game.stats.difficulty))))
+ var room=Endless.cap()-game.ghost_count;var n=mini(want,room)
+ if n<=0:return
+ var phase=game.ghost_rng.randf()*TAU
+ for i in n:spawn(game,Endless.choose_tier(m,game.ghost_rng),Vector3.INF,phase+TAU*float(i)/float(n))
+static func spawn(game: Node,tier_index: int,at: Vector3,angle_hint: float=-1.0) -> Dictionary:
  if game.ghost_count>=Endless.cap():return {}
  var ring: Dictionary=Endless.data().spawn_ring;var pos=at
  if at==Vector3.INF:
   # Just outside the camera view, at a spread of heights, never inside the player's immediate radius.
-  var angle=game.ghost_rng.randf()*TAU;var distance=game.ghost_rng.randf_range(float(ring.min_m),float(ring.max_m));var height=game.ghost_rng.randf_range(float(ring.height_min),float(ring.height_max))
+  var angle=(game.ghost_rng.randf()*TAU) if angle_hint<0.0 else angle_hint+game.ghost_rng.randf_range(-0.05,0.05);var distance=game.ghost_rng.randf_range(float(ring.min_m),float(ring.max_m));var height=game.ghost_rng.randf_range(float(ring.height_min),float(ring.height_max))
   pos=game.player.position+Vector3(cos(angle)*distance,height,sin(angle)*distance)
   var clamp_to=float(ring.arena_clamp);pos.x=clampf(pos.x,-clamp_to,clamp_to);pos.z=clampf(pos.z,-clamp_to,clamp_to)
   var flat=Vector2(pos.x-game.player.position.x,pos.z-game.player.position.z).length()
@@ -35,6 +39,37 @@ static func refresh(game: Node,e: Dictionary,fresh: bool=false) -> void:
  if fresh:
   var hp=Endless.tier_hp(e.tier,minutes(game))*maxf(0.1,float(game.stats.difficulty));e.hp=hp;e.max_hp=hp
  e.speed=Endless.tier_speed(e.tier,minutes(game))
+# Ghost-vs-ghost collision. A spatial hash over fixed, preallocated arrays (no allocation per frame): each ghost is pushed out of any other ghost it
+# overlaps, half the overlap each, so a swarm packs into a shell around the player instead of stacking on one point. Run once per frame before the steps.
+const CELL=1.4 # >= the largest ghost diameter (Hollow: 2 x 0.5 x 1.3)
+const TABLE=8192
+static var heads=PackedInt32Array()
+static var chain=PackedInt32Array()
+static var crowd_list: Array=[]
+static func cell_hash(x: int,y: int,z: int) -> int:return ((x*73856093)^(y*19349663)^(z*83492791))&(TABLE-1)
+static func separate(game: Node,dt: float) -> void:
+ if dt<=0.0 or game.ghost_count<2:return
+ if heads.size()!=TABLE:heads.resize(TABLE)
+ if chain.size()<Endless.cap()+8:chain.resize(Endless.cap()+8)
+ heads.fill(-1);crowd_list.clear()
+ for e in game.enemies:
+  if not e.has("ghost") or e.hp<=0.0 or crowd_list.size()>=chain.size():continue
+  var p: Vector3=e.pos;var h=cell_hash(floori(p.x/CELL),floori(p.y/CELL),floori(p.z/CELL))
+  var i=crowd_list.size();crowd_list.append(e);chain[i]=heads[h];heads[h]=i
+ for i in crowd_list.size():
+  var a: Dictionary=crowd_list[i];var pa: Vector3=a.pos;var cx=floori(pa.x/CELL);var cy=floori(pa.y/CELL);var cz=floori(pa.z/CELL)
+  for dx in range(-1,2):
+   for dy in range(-1,2):
+    for dz in range(-1,2):
+     var j=heads[cell_hash(cx+dx,cy+dy,cz+dz)]
+     while j>=0:
+      if j>i:
+       var b: Dictionary=crowd_list[j];var d: Vector3=b.pos-a.pos;var reach=float(a.radius)+float(b.radius);var d2=d.length_squared()
+       if d2<reach*reach:
+        var dist=sqrt(d2);var push=(reach-dist)*0.5
+        var dir=d/dist if dist>0.0001 else Vector3(game.ghost_rng.randf_range(-1,1),game.ghost_rng.randf_range(-1,1),game.ghost_rng.randf_range(-1,1)).normalized()
+        a.pos-=dir*push;b.pos+=dir*push
+      j=chain[j]
 # Per-frame step, called from Game.update_enemies with hostile-scaled dt.
 static func step(game: Node,e: Dictionary,dt: float) -> void:
  e.age+=dt;e.hit_time=maxf(0.0,float(e.hit_time)-dt)
