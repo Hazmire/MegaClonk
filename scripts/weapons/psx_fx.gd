@@ -208,6 +208,7 @@ func _tick_squares(delta: float) -> void:
   buf[o+12]=c.r;buf[o+13]=c.g;buf[o+14]=c.b;buf[o+15]=1.0
   shown+=1;i+=1
  for k in im_sq_n:
+  if shown>=SQUARE_CAP:break # the buffer is SQUARE_CAP instances; a heavy build used to write past it
   var o=shown*16;var size=im_sq_size[k];var p=im_sq_pos[k];var c=im_sq_col[k]
   buf[o]=size;buf[o+3]=p.x;buf[o+5]=size;buf[o+7]=p.y;buf[o+10]=size;buf[o+11]=p.z
   buf[o+12]=c.r;buf[o+13]=c.g;buf[o+14]=c.b;buf[o+15]=1.0;shown+=1
