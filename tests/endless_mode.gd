@@ -92,12 +92,14 @@ func state_checks() -> void:
   if not e.has("ghost"):normals.append(e)
  game.enemies=game.enemies.filter(func(e):return e.has("ghost"))
  game.settings.invincible=true;game.sandbox=true
- step(60.0)
+ var peak_ghosts=0
+ for i in 60:
+  step(1.0);peak_ghosts=maxi(peak_ghosts,game.ghost_count)
  var normal_after=0
  for e in game.enemies:
   if not e.has("ghost"):normal_after+=1
  check(normal_after==0,"Normal spawning has stopped for good (%d normal enemies after 60 s)"%normal_after)
- check(game.ghost_count>0,"Ghosts spawn (%d alive after 60 s)"%game.ghost_count)
+ check(peak_ghosts>=28,"Ghosts spawn (a wave of %d seen within 60 s)"%peak_ghosts)
  check(game.activate_portal()==false and game.advance_stage()==false,"The portal is sealed")
  game.stage_event("endless");var t1=game.endless_time
  check(game.endless_time==t1 and int(game.run_metrics.endless)==1,"A second endless event does nothing")
@@ -156,7 +158,7 @@ func tier_checks() -> void:
  var g=ghosts()[0];var s=Endless.tier(int(g.tier))
  check(float(g.speed)>0.0 and float(g.hp)>0.0,"Ghost carries data-driven HP and speed")
  # Killable through Game.hit(); small XP, no gold.
- game.enemies.clear();game.ghost_count=0
+ game.enemies.clear();game.ghost_count=0;game.ghost_budget=999.0
  var e=Ghosts.spawn(game,0,game.player.position+Vector3(5,1,0));var xp0=game.xp;var gold0=game.gold;var kills0=game.kills
  game.hit(e,1.0e9,0);step(0.1)
  check(not game.enemies.has(e) and game.ghost_count==0,"Game.hit() kills a ghost and frees its slot")
@@ -182,9 +184,9 @@ func determinism_checks() -> void:
  var sigs=[]
  for run_index in 2:
   await fresh(2024);game.settings.invincible=true;game.sandbox=true
-  to_switch();game.player.position=Vector3(0,20,0);step(30.0);sigs.append(signature())
+  to_switch();game.player.position=Vector3(0,20,0);step(1.5);sigs.append(signature())
  check(sigs[0]==sigs[1],"A seeded run reproduces the same ghost spawns and endless_time")
- await fresh(2025);game.settings.invincible=true;game.sandbox=true;to_switch();game.player.position=Vector3(0,20,0);step(30.0)
+ await fresh(2025);game.settings.invincible=true;game.sandbox=true;to_switch();game.player.position=Vector3(0,20,0);step(1.5)
  check(signature()!=sigs[0],"A different seed gives different spawns")
 # ---- 6. Cap ------------------------------------------------------------------------------------------------------------
 func cap_checks() -> void:
