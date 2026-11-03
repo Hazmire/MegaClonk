@@ -42,12 +42,13 @@ func build_counters() -> void:
   if i>0:
    var div=ColorRect.new();div.color=FogPalette.DIVIDER;div.custom_minimum_size=Vector2(1,64);div.size_flags_vertical=Control.SIZE_SHRINK_CENTER;div.mouse_filter=Control.MOUSE_FILTER_IGNORE;strip.add_child(div)
   var cell=VBoxContainer.new();cell.custom_minimum_size=Vector2(199,0);cell.add_theme_constant_override("separation",2);cell.mouse_filter=Control.MOUSE_FILTER_IGNORE;strip.add_child(cell)
-  var cap=SmallCapsLabel.new().setup(data[i][0],14,FogPalette.ASH_DIM,800,0.28);cap.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;cell.add_child(cap)
-  var value=HudNumber.new().setup(data[i][1],48,FogPalette.BONE_BRIGHT,3);cell.add_child(value);value.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;counters[data[i][0].to_lower()]=value
+  var cap=SmallCapsLabel.new().setup(data[i][0],14,Color("E07B83") if data[i][0]=="ENDLESS" else FogPalette.ASH_DIM,800,0.28);cap.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;cell.add_child(cap)
+  var value=HudNumber.new().setup(data[i][1],48,FogPalette.ENDLESS_RED if data[i][0]=="ENDLESS" else FogPalette.BONE_BRIGHT,3);cell.add_child(value);value.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;counters[data[i][0].to_lower()]=value
 # The four header counters as [caption, text]; also what tests compare against the game.
 static func counter_values(game_node: Node) -> Array:
  var t=int(game_node.elapsed)
- return [["Level",str(game_node.level)],["Time","%02d:%02d"%[t/60,t%60]],["Kills",str(game_node.kills)],["Gold",str(game_node.gold)]]
+ var time_cell=["ENDLESS",Endless.clock(game_node.endless_time)] if game_node.endless else ["Time","%02d:%02d"%[t/60,t%60]]
+ return [["Level",str(game_node.level)],time_cell,["Kills",str(game_node.kills)],["Gold",str(game_node.gold)]]
 # "Save & quit" replaces the old "Save run": the checkpoint is written and the run is left for the main menu, where "Resume saved run" picks it up.
 func save_and_quit() -> void:
  if game.save_run():game.build_menu_world();game.main_menu()

@@ -59,5 +59,8 @@ for k,g in GAIN_OVERRIDE.items():out[k]["gain_db"]=g
 for k,(cd,mv) in {"ui.hover":(0.03,8),"ui.card_hover":(0.02,6)}.items():out[k]["cooldown"]=cd;out[k]["max_voices"]=mv
 # The socket-hover swell is held as a charge: a gapless body of the sample (frames, zero-slope matched) loops while the pointer is on a slot.
 out["ui.socket_hover"]["charge_loop"]=[13740,25558]
+# Endless mode: the banshee at the 0:00 switch. Measured (RMS/peak dBFS, raw file): banshee -18.0/-1.9 vs boss_enrage_* mean -16.0/-1.0,
+# so +2 dB over their -12 dB gain puts it level (-10). Priority above boss_enrage (5) so it is never stolen; one voice, plays once per run.
+out["world.endless_begins_banshee"]={"files":["res://assets/audio/fog/world/endless_begins_banshee.wav"],"bus":"SFX","cooldown":0.0,"priority":8,"max_voices":1,"gain_db":-10.0,"pitch":0.0,"base_pitch":1.0,"manifest":"world.endless_begins_banshee","length_s":3.0}
 json.dump({"events":out},open(PATH,"w"),indent=2)
 print(len(out),"events;",len(used),"repointed manifest ids;",len({m['event'] for m in MAN}-used-{k for k in out if out[k].get('manifest')==k}),"x")

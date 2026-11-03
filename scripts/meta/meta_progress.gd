@@ -2,7 +2,7 @@ class_name MetaProgress
 extends RefCounted
 # Profile v2 is additive; legacy character/currency/stat data is preserved.
 static func migrate(data: Dictionary) -> void:
- var defaults={"silver":maxi(0,int(data.get("credits",data.get("currency",0)))+int(data.get("quest_gold",0))),"credits":int(data.get("currency",0)),"quest_gold":0,"account_level":1,"weapon_slots":2,"tome_slots":2,"entries":[],"disabled":[],"claimed":[],"quest_metrics":{},"leaderboard":[],"loadout":{"weapon":0,"trait":"climber","ultimate":"nova"}}
+ var defaults={"silver":maxi(0,int(data.get("credits",data.get("currency",0)))+int(data.get("quest_gold",0))),"credits":int(data.get("currency",0)),"quest_gold":0,"account_level":1,"weapon_slots":2,"tome_slots":2,"entries":[],"disabled":[],"claimed":[],"quest_metrics":{},"leaderboard":[],"best_endless_time":0.0,"loadout":{"weapon":0,"trait":"climber","ultimate":"nova"}}
  for key in defaults:
   if not data.has(key): data[key]=defaults[key]
  for category in ["weapons","tomes","traits","items","ultimates"]:
@@ -66,8 +66,12 @@ static func claim(data: Dictionary, id: String) -> bool:
    data.account_level=account_level(data)
    return true
  return false
-static func record(data: Dictionary, record: Dictionary, sandbox: bool) -> void:
- if sandbox: return
+# Returns true when this run set a new best endless time (the only value that can be a record; sandbox runs write nothing).
+# Bests are kept overall: the profile ranks runs on one leaderboard (each record carries its loadout) and has no per-loadout best table to extend.
+static func record(data: Dictionary, record: Dictionary, sandbox: bool) -> bool:
+ if sandbox: return false
+ var beaten=float(record.get("endless_time",0.0))>float(data.get("best_endless_time",0.0))
+ if beaten: data.best_endless_time=float(record.endless_time)
  for key in record.get("metrics",{}):
   data.quest_metrics[key]=maxf(float(data.quest_metrics.get(key,0)),float(record.metrics[key])) if key=="stage" else float(data.quest_metrics.get(key,0))+float(record.metrics[key])
  if record.get("victory",false) and record.time<=300 and not record.get("metrics",{}).has("fast_clear"): data.quest_metrics.fast_clear=float(data.quest_metrics.get("fast_clear",0))+1
@@ -76,6 +80,7 @@ static func record(data: Dictionary, record: Dictionary, sandbox: bool) -> void:
   if bool(a.victory)!=bool(b.victory): return bool(a.victory)
   return float(a.kills)>float(b.kills) if a.kills!=b.kills else float(a.time)>float(b.time))
  if data.leaderboard.size()>20: data.leaderboard.resize(20)
+ return beaten
 
 static func quest_state(data: Dictionary,q: Dictionary,value: float=-1) -> String:
  if q.id in data.claimed:return "claimed"

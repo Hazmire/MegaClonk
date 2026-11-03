@@ -220,6 +220,16 @@ func music_duck(on: bool) -> void:
  duck_tween.tween_property(amplify,"volume_db",DUCK_DB if on else 0.0,0.3);duck_tween.tween_property(lowpass,"cutoff_hz",DUCK_CUTOFF_HZ if on else 20500.0,0.3)
  if not on:duck_tween.chain().tween_callback(func():AudioServer.set_bus_effect_enabled(index,0,false);AudioServer.set_bus_effect_enabled(index,1,false))
 var duck_tween: Tween
+var dip_tween: Tween
+func music_dip(db: float,seconds: float) -> void: # a plain level dip (no low-pass) for a one-off sting; skipped while the level-up duck owns the bus
+ if ducked:return
+ var index=AudioServer.get_bus_index("Music")
+ if AudioServer.get_bus_effect_count(index)<2:return
+ var amplify=AudioServer.get_bus_effect(index,1) as AudioEffectAmplify
+ AudioServer.set_bus_effect_enabled(index,1,true)
+ if dip_tween and dip_tween.is_valid():dip_tween.kill()
+ dip_tween=create_tween();dip_tween.tween_property(amplify,"volume_db",db,0.2);dip_tween.tween_interval(maxf(seconds-0.2,0.0));dip_tween.tween_property(amplify,"volume_db",0.0,0.6)
+ dip_tween.tween_callback(func():if not ducked:AudioServer.set_bus_effect_enabled(index,1,false))
 func music_fade_out(seconds: float) -> void:
  if music_tween and music_tween.is_valid():music_tween.kill()
  music_tween=create_tween().set_parallel(true)

@@ -222,7 +222,8 @@ static func results(game: Node,victory: bool,unlocked: Array) -> Dictionary:
   if best==-1 or float(game.damage_by_weapon[id])>float(game.damage_by_weapon[best]):best=int(id)
  per.sort_custom(func(a,b):return a.damage>b.damage)
  return {"victory":victory,"time":clock(game.elapsed),"stage":int(game.stage),"level":int(game.level),"kills":int(game.kills),"damage":float(game.damage_total),"gold":int(game.gold),
-  "best":str(Catalog.weapon_name(best)) if best>=0 else "None","per_weapon":per,"unlocked":unlocked,"sandbox":bool(game.sandbox),"character":str(game.character)}
+  "best":str(Catalog.weapon_name(best)) if best>=0 else "None","per_weapon":per,"unlocked":unlocked,"sandbox":bool(game.sandbox),"character":str(game.character),
+  "endless":bool(game.endless),"endless_time":float(game.endless_time),"endless_clock":Endless.clock(game.endless_time),"new_record":bool(game.endless_record)}
 # Build inspector: run totals and one entry per weapon (the game's own tooltip text) with its sockets.
 static func build_details(game: Node) -> Dictionary:
  var ws=[]

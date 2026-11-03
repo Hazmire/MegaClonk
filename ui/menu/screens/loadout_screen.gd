@@ -88,6 +88,8 @@ func build_bests() -> void:
   var hint=bests.memo_label("Your greatest runs will be recorded here.",15,Color("5A5446"));hint.name="NoRunsHint"
   return
  var note=bests.memo_label("Ranked by kills.",15,Color("5A5446"));note.add_theme_constant_override("line_spacing",0)
+ if MenuData.best_endless(game.progress.data)>0.0:
+  var be=bests.memo_label("Best endless  %s"%Endless.clock(MenuData.best_endless(game.progress.data)),20,FogPalette.ENDLESS_RED);be.name="BestEndless"
  var gap=Control.new();gap.custom_minimum_size.y=18;b.add_child(gap)
  b.add_child(bests_row(["#","KILLS · LOADOUT","TIME"],null,true,0))
  for i in records.size():

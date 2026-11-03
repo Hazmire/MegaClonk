@@ -1,0 +1,94 @@
+{
+ "_note": "Endless timer look (EndlessTimerStyle). Tiers are keyed to endless time in seconds (0 = the stage clock reaching 0:00). Every tier change replays the glitch. Mockup: docs/endless_mode/mockup/RunEndlessTimer.html.",
+ "normal": {
+  "digits": "#F4EFE2",
+  "line_accent": null
+ },
+ "glitch": {
+  "duration_s": 0.5,
+  "shake_px": 2,
+  "shake_step_s": 0.09,
+  "ghost_offset": [
+   5,
+   -2
+  ],
+  "ghost_color": "#D8333E",
+  "settle_s": 0.5,
+  "settle_scale": 1.18
+ },
+ "line": {
+  "endless_color": "#E07B83",
+  "title_color": "#D9D4C4",
+  "rule_color": "#B3363F"
+ },
+ "tiers": [
+  {
+   "from_s": 0,
+   "name": "mourners",
+   "digits": "#D8333E",
+   "edge": "#D8333E",
+   "glow": "#B3363F",
+   "glow_alpha": 0.45,
+   "pulse_s": 0.0,
+   "smoulder": false,
+   "twitch_s": 0.0,
+   "embers": 0,
+   "smoke": 0
+  },
+  {
+   "from_s": 180,
+   "name": "drowned",
+   "digits": "#A81E28",
+   "edge": "#A81E28",
+   "glow": "#A81E28",
+   "glow_alpha": 0.6,
+   "pulse_s": 2.4,
+   "smoulder": false,
+   "twitch_s": 0.0,
+   "embers": 0,
+   "smoke": 0
+  },
+  {
+   "from_s": 360,
+   "name": "wrathful",
+   "digits": "#7E1218",
+   "edge": "#FF5A4A",
+   "glow": "#DC281E",
+   "glow_alpha": 0.7,
+   "pulse_s": 1.4,
+   "smoulder": false,
+   "twitch_s": 0.0,
+   "embers": 16,
+   "smoke": 0,
+   "ember_color": "#FF6A3A"
+  },
+  {
+   "from_s": 600,
+   "name": "hollow",
+   "digits": "#22060A",
+   "edge": "#E0303A",
+   "glow": "#E0303A",
+   "glow_alpha": 0.8,
+   "pulse_s": 0.0,
+   "smoulder": true,
+   "smoulder_colors": [
+    "#E0303A",
+    "#FF7A2A",
+    "#A01820",
+    "#FF6A2A"
+   ],
+   "smoulder_s": 1.6,
+   "smoulder_steps": 8,
+   "twitch_s": 3.0,
+   "embers": 30,
+   "smoke": 12,
+   "ember_color": "#E0303A",
+   "smoke_color": "#120808"
+  }
+ ],
+ "caps": {
+  "embers": 30,
+  "smoke": 12
+ },
+ "format": "MM:SS, H:MM:SS from one hour; never rolls over"
+}

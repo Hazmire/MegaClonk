@@ -81,7 +81,11 @@ var elite_rewarded=false
 var ghost_budget=0.0
 # Endless mode: starts once, when a stage clock reaches 0:00 (Endless). endless_time counts seconds survived since, on the run simulation (stops for pause
 # and reward screens, keeps counting through the Stopwatch). Ghost spawns draw only from ghost_rng.
+signal endless_begun
+signal endless_second(seconds: int)
 var endless=false
+var endless_whole=0
+var endless_record:=false # the finished run beat best_endless_time (read by Results)
 var endless_started=false
 var endless_time=0.0
 var ghost_count=0
@@ -314,7 +318,7 @@ func begin_run() -> void:
  gold = 0
  gold_fraction = 0
  elapsed = 0
- endless=false;endless_started=false;endless_time=0.0;ghost_count=0;ghost_budget=0.0;ghost_rng.seed=run_seed+8675309
+ endless=false;endless_started=false;endless_time=0.0;endless_whole=0;ghost_count=0;ghost_budget=0.0;ghost_rng.seed=run_seed+8675309
  damage_total = 0
  damage_by_weapon.clear();weapon_damage_windows.clear()
  weapons.clear();gems.reset();amulets=0;amulets_found=0
@@ -520,7 +524,9 @@ func _physics_process(delta: float) -> void:
  loadout_runtime.tick(self,delta)
  if irt.ticking:irt.tick(delta)
  elapsed += delta
- if endless:endless_time+=delta
+ if endless:
+  endless_time+=delta
+  if int(endless_time)!=endless_whole:endless_whole=int(endless_time);endless_second.emit(endless_whole) # the HUD updates its text on this, once per second
  world_time.tick(delta)
  var hostile_delta=world_time.hostile(delta)
  for event_id in stage_clock.advance(delta):
@@ -952,10 +958,11 @@ func stage_event(event_id: String) -> void:
 # The stage clock reached 0:00: the run timer becomes the endless timer, the normal spawner stops for good and the ghosts take over. Exactly once per run.
 func start_endless() -> void:
  if endless_started:return
- endless_started=true;endless=true;endless_time=0.0;ghost_budget=0.0
+ endless_started=true;endless=true;endless_time=0.0;endless_whole=0;ghost_budget=0.0
  run_metrics["endless"]=int(run_metrics.get("endless",0))+1
  if Endless.LOCK_PORTAL:refresh_portal() # an open portal seals, a dormant one can no longer be summoned
  RunAudio.endless_begins(self)
+ endless_begun.emit()
 func make_portal() -> void:
  if is_instance_valid(portal):return
  assert(forest_navigation.reachable(map_layout.portal))
@@ -1242,7 +1249,7 @@ func show_build() -> void:
  frontend.inventory()
 
 func finish_run(victory: bool) -> void:
- mode="results"
+ mode="results";endless_record=false
  WorldPickups.settle(self)
  world_time.reset()
  if not victory and health<=0:
@@ -1255,7 +1262,7 @@ func finish_run(victory: bool) -> void:
  if not sandbox and FileAccess.file_exists("user://active-run.json"): DirAccess.remove_absolute("user://active-run.json")
  var unlocked=progress.finish(kills,elapsed,victory,selected_biome,sandbox)
  run_metrics["ultimates"]=loadout_runtime.uses
- MetaProgress.record(progress.data,{"weapon":selected_weapon,"trait":loadout_runtime.trait_id,"ultimate":loadout_runtime.ultimate_id,"time":elapsed,"kills":kills,"victory":victory,"metrics":run_metrics.duplicate(true)},sandbox)
+ endless_record=MetaProgress.record(progress.data,{"endless_time":endless_time if endless else 0.0,"weapon":selected_weapon,"trait":loadout_runtime.trait_id,"ultimate":loadout_runtime.ultimate_id,"time":elapsed,"kills":kills,"victory":victory,"metrics":run_metrics.duplicate(true)},sandbox)
  if not sandbox:progress.save()
  frontend.results(victory,unlocked)
  if is_instance_valid(audio):

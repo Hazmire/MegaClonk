@@ -2065,6 +2065,20 @@
       "pitch": 0.0,
       "base_pitch": 1.0,
       "manifest": "world.stage_boss_victory"
+    },
+    "world.endless_begins_banshee": {
+      "files": [
+        "res://assets/audio/fog/world/endless_begins_banshee.wav"
+      ],
+      "bus": "SFX",
+      "cooldown": 0.0,
+      "priority": 8,
+      "max_voices": 1,
+      "gain_db": -10.0,
+      "pitch": 0.0,
+      "base_pitch": 1.0,
+      "manifest": "world.endless_begins_banshee",
+      "length_s": 3.0
     }
   }
 }
