@@ -15,7 +15,7 @@ func build() -> void:
  if endless:build_endless()
  else:
   var title=MenuStyle.label("Infinity broken" if win else "The wild claims another",MenuStyle.serif(),72,FogPalette.BONE,3,content);title.name="Title";title.position=Vector2(480,182)
- var rule=ColorRect.new();rule.color=FogPalette.RUST;rule.position=Vector2(480,282+dy);rule.size=Vector2(56,6);rule.mouse_filter=Control.MOUSE_FILTER_IGNORE;content.add_child(rule)
+ var rule=ColorRect.new();rule.color=FogPalette.RUST;rule.position=Vector2(480,316.0 if endless else 282.0);rule.size=Vector2(56,6);rule.mouse_filter=Control.MOUSE_FILTER_IGNORE;content.add_child(rule)
  var cells=[["Run time" if endless else "Survived",info.time],["Stage",str(info.stage)],["Level",str(info.level)],["Kills",str(info.kills)],["Damage","%.0f"%info.damage],["Gold",str(info.gold)]]
  var grid=GridContainer.new();grid.name="Figures";grid.columns=3;grid.position=Vector2(480,320+dy);grid.add_theme_constant_override("h_separation",64);grid.add_theme_constant_override("v_separation",22);grid.mouse_filter=Control.MOUSE_FILTER_IGNORE;content.add_child(grid)
  for c in cells:
