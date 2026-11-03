@@ -48,6 +48,33 @@ All values come from `docs/stage_dressing/stage_dressing.json` via `tools/build_
 
 The three rings add 3 draw calls and the fog wall and torn edge add about 9 more, offset by removing the cliff prop batches. Frame times were within noise of each other on software GL.
 
+## Edge void fix
+
+Visual only. Terrain, collision, the perimeter wall, movement, spawning and determinism are unchanged (tests compare digests for a fixed seed).
+
+- **Skies:** the four panoramas are replaced (below the horizon they are the stage fog colour). Imports are still nearest, no mipmaps, panorama `filter=false`.
+- **Outer ground:** one flat render-only ring, square hole 2 m x `arena_scale` outside the arena edge, outer edge 1.1x the far ring radius, `outer_ground_drop` (4 m x `arena_scale`, new rules field) below the lowest terrain. The dressing's `low` texture, world triplanar, nearest, 60% tint, normal fog. No collision, no shadows.
+- **Rings:** mid and near rings are anchored to the outer ground, so their bottom edge sits 0.5 m below it. The far ring keeps its base.
+- **Fence:** inset 1 m from the perimeter wall. Posts every `gap` m snapped to the terrain height; wires, rails and panels join only posts at the same height (step under 0.2 m). Per-stage `fence` block in `StageDressing` and the JSON (wood and barbed wire; steel and chain-link; sawhorse barricade; leaning timbers with red rope and a candle every third post). MultiMesh, no collision, no shadows: 3 draw calls on stages 1 and 3, 4 on stages 2 and 4 (wires, posts, plus panels or candles; stage 1 and 3 have posts and wires only, the counts the tests assert are 2 + panels + candles).
+- **Backdrop shader:** silhouettes are floored just above black. Stage 4's backdrop art contains true black, which the horizon band showed as a dark strip.
+
+### Draw calls (software GL, 500 enemies)
+| Stage | Before | After |
+|---|---|---|
+| 1 | 562 | 565 |
+| 2 | 668 | 672 |
+| 3 | 650 | 653 |
+| 4 | 613 | 617 |
+
+Fence plus the outer ground add 3 to 4 draw calls per stage. Frame times are within noise.
+
+### Black-band check
+Capture shot D (`stage{1-4}_D_lowest.png`) stands on the lowest terrain cell nearest the north edge at eye height, looking out. `tools/stage_capture.gd` samples rows 50-60% of the frame and fails if any row has more than 0.5% pure-black pixels. Result: stages 1-3 have 0 black pixels, stage 4 has 2 (worst row 0.2%). Shots A and C were re-shot.
+
+### Tests (`tests/stage_dressing.gd`, 108 checks)
+Outer ground has no collision, is flat, sits below the lowest terrain and has a clear hole; rings end 0.5 m under it; every post stands on the terrain; wires join equal heights only; fence has no collision; collision and spawns are unchanged for a fixed seed. Headless renderers do not keep MultiMesh buffers, so fence nodes carry their transforms as `transforms` metadata for the tests to read.
+
+
 ## Outstanding / unverified
 - Nothing was seen on a real GPU, monitor or Windows; captures are software rendering. Frame cost on real hardware is not measured.
 - Stages 3 and 4 are very dark in gameplay views (manifest fog and ambient values); the HUD stays legible but this wants a look on a real display.
