@@ -1,0 +1,13 @@
+{
+  "_note": "Reference scale (96 m arena, terraces 0-12 m). Multiply every distance and height by arena_scale. ground_y = world height of the strip's ground line; fog_floor/fog_band drive the shader's fog bank. Ring height = circumference * strip_h / (2 * strip_w); ring bottom = ground_y - ground_px_from_bottom * ring_h / strip_h (ground_px in strips/strips.json).",
+  "layers": [
+    {"layer": "near", "radius": 90.0,  "ground_y": 15.0, "haze": 0.30, "fog_floor": 4.0,  "fog_band": 11.0},
+    {"layer": "mid",  "radius": 150.0, "ground_y": 30.0, "haze": 0.35, "fog_floor": 13.0, "fog_band": 17.0},
+    {"layer": "far",  "radius": 240.0, "ground_y": 52.0, "haze": 0.55, "fog_floor": 26.0, "fog_band": 26.0}
+  ],
+  "rules": {
+    "ground_lines_above_top_plateau": true,
+    "ground_line_rises_with_distance": true,
+    "ring_bottom_below_outer_ground": true
+  }
+}
