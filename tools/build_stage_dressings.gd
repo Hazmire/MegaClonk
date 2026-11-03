@@ -21,6 +21,10 @@ func _initialize():
  rules.ring_layers=layers;rules.ring_radius=radius;rules.ring_base_y=base;rules.ring_haze=haze;rules.ring_anchor=anchors
  var og=d.outer_ground
  rules.outer_ground_drop=float(og.drop_m);rules.outer_ground_margin=float(og.inner_margin_m);rules.outer_ground_radius_factor=float(og.outer_radius_factor);rules.outer_ground_tint=float(og.tint);rules.outer_ground_texture_scale=float(og.texture_scale);rules.outer_ground_segments=int(og.segments);rules.fence_inset=float(d.fence_inset_m)
+ var fs=d.fog_sea;rules.fog_sea_size=float(fs.size_m);rules.fog_sea_lighten=float(fs.lighten);rules.fog_sea_darken=float(fs.darken);rules.fog_sea_drift=float(fs.drift)
+ var fy=PackedFloat32Array();var fd=PackedFloat32Array();var fe=PackedFloat32Array()
+ for l in fs.layers:fy.append(float(l.y_offset_m));fd.append(float(l.density));fe.append(float(l.edge_soft_m))
+ rules.fog_sea_y=fy;rules.fog_sea_density=fd;rules.fog_sea_edge_soft=fe;rules.fog_height_density=float(fs.height_fog.density);rules.fog_height_offset=float(fs.height_fog.offset_m)
  rules.wall_offsets=PackedFloat32Array(d.fog_wall.offsets_from_edge_m);rules.wall_density=PackedFloat32Array(d.fog_wall.density)
  DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://assets/stage_dressing"))
  var err=ResourceSaver.save(rules,"res://assets/stage_dressing/rules.tres");print("rules ",err)

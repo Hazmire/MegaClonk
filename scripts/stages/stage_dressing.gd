@@ -84,6 +84,8 @@ func apply(game: Node) -> void:
     2:node.position.x=-offset;node.rotation.y=PI/2
     3:node.position.x=offset;node.rotation.y=-PI/2
  for layer in r.ring_layers.size():root.add_child(backdrop_ring(layer,r,low_y))
+ for layer in r.fog_sea_y.size():root.add_child(fog_sea_mesh(r,layer,low_y))
+ env.fog_height=low_y+r.fog_height_offset;env.fog_height_density=r.fog_height_density # anything below the arena floor dissolves into fog
 # The y of the lowest flat terrain level (creek / slag / wet street / floodwater), found once per stage from the layout's cell planes.
 static func lowest_level(layout: Dictionary) -> float:
  var lowest=1e9
@@ -143,6 +145,22 @@ func backdrop_ring(layer: int,r: StageDressingRules,low_y: float=0.0) -> MeshIns
  material.set_shader_parameter("haze",r.ring_haze[layer]);material.set_shader_parameter("haze_color",fog_color)
  var node=MeshInstance3D.new();node.name="Backdrop_"+r.ring_layers[layer];node.mesh=surface.commit();node.material_override=material
  node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF;node.position=Vector3(0,base_y+h*0.5,0)
+ return node
+# Fog sea layer: a flat, render-only square ring (square hole exactly at the arena edge) with the fogsea shader. No collision, no shadows, one draw call.
+# It has no physics body, so camera, projectile and ground-snap queries never see it. Colours come from the stage fog colour.
+func fog_sea_mesh(r: StageDressingRules,layer: int,low_y: float) -> MeshInstance3D:
+ var half=r.fog_sea_size*r.arena_scale*0.5;var inner=HALF
+ var surface=SurfaceTool.new();surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+ var rects=[[-half,-half,half,-inner],[-half,inner,half,half],[-half,-inner,-inner,inner],[inner,-inner,half,inner]] # north, south, west, east (x0,z0,x1,z1)
+ for q in rects:
+  var a=Vector3(q[0],0,q[1]);var b=Vector3(q[2],0,q[1]);var c=Vector3(q[2],0,q[3]);var d=Vector3(q[0],0,q[3])
+  for v in [a,b,c,a,c,d]:surface.set_normal(Vector3.UP);surface.add_vertex(v)
+ var material=ShaderMaterial.new();material.shader=preload("res://shaders/stage_fogsea.gdshader")
+ material.set_shader_parameter("fog_color",fog_color.lightened(r.fog_sea_lighten));material.set_shader_parameter("deep_color",fog_color.darkened(r.fog_sea_darken))
+ material.set_shader_parameter("arena_half",Vector2(HALF,HALF));material.set_shader_parameter("density",r.fog_sea_density[layer])
+ material.set_shader_parameter("edge_soft",r.fog_sea_edge_soft[layer]*r.arena_scale);material.set_shader_parameter("drift",r.fog_sea_drift)
+ var node=MeshInstance3D.new();node.name="FogSea_"+["Low","High"][layer];node.mesh=surface.commit();node.material_override=material
+ node.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF;node.position.y=low_y+r.fog_sea_y[layer]
  return node
 static func outer_ground_y(r: StageDressingRules,low_y: float) -> float:return low_y-r.outer_ground_drop*r.arena_scale
 # Render-only flat ring of ground from just outside the torn edge to past the far ring, so nothing is black below the horizon.

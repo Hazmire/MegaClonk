@@ -271,5 +271,30 @@
     "segments": 96
   },
   "fence_note": "Visual-only fence along the perimeter wall, inset 1 m. Posts snap to terrain height; rails/wires/panels join posts at equal height.",
-  "fence_inset_m": 1.0
+  "fence_inset_m": 1.0,
+  "fog_sea": {
+    "note": "Two flat render-only planes outside the arena (fogsea shader written in-repo from the spec; the pack's shader was not supplied). Plane size and edge_soft scale by arena_scale, heights are offsets from the lowest terrain level and do not scale. Colours: stage fog colour lightened / darkened.",
+    "size_m": 560.0,
+    "lighten": 0.06,
+    "darken": 0.18,
+    "drift": 0.6,
+    "layers": [
+      {
+        "name": "low",
+        "y_offset_m": -0.6,
+        "density": 1.0,
+        "edge_soft_m": 6.0
+      },
+      {
+        "name": "high",
+        "y_offset_m": 2.5,
+        "density": 0.55,
+        "edge_soft_m": 26.0
+      }
+    ],
+    "height_fog": {
+      "density": 0.35,
+      "offset_m": 0.0
+    }
+  }
 }

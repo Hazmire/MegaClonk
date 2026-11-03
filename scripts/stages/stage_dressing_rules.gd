@@ -32,3 +32,13 @@ extends Resource
 @export var dust_color=Color(0.85,0.7,0.5,0.6)
 @export var ash_color=Color(0.75,0.68,0.64,0.9)
 @export var weather_reduced_fraction=0.5
+# Fog sea: two flat render-only layers outside the arena. size and edge_soft scale by arena_scale; y offsets are from the lowest terrain level.
+@export var fog_sea_size=560.0
+@export var fog_sea_lighten=0.06
+@export var fog_sea_darken=0.18
+@export var fog_sea_drift=0.6
+@export var fog_sea_y: PackedFloat32Array=PackedFloat32Array([-0.6,2.5])
+@export var fog_sea_density: PackedFloat32Array=PackedFloat32Array([1.0,0.55])
+@export var fog_sea_edge_soft: PackedFloat32Array=PackedFloat32Array([6.0,26.0])
+@export var fog_height_density=0.35
+@export var fog_height_offset=0.0
