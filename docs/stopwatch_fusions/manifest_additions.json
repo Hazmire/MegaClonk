@@ -1,0 +1,666 @@
+{
+ "_note": "Events this pack adds or updates. Same conventions as docs/audio_handoff/manifest.json.",
+ "events": {
+  "powerup.stopwatch_activate": {
+   "files": [
+    "stopwatch/stopwatch_activate.wav"
+   ],
+   "bus": "SFX",
+   "loop": false,
+   "positional": false,
+   "description": "Time stops: the crown clicks, ticks slow to a halt, the world winds down like tape, a glassy chord hangs in the air. Replaces the file behind powerup.stopwatch.",
+   "replaces": "powerup.stopwatch",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "priority": 9,
+   "duration_s": [
+    1.887
+   ],
+   "channels": 1
+  },
+  "powerup.stopwatch_loop": {
+   "files": [
+    "stopwatch/stopwatch_loop.wav"
+   ],
+   "bus": "SFX",
+   "loop": true,
+   "positional": false,
+   "description": "While time is stopped: a low frozen drone, a hanging glassy shimmer, one heavy tick every 2 s. Seamless 4 s loop.",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "priority": 8,
+   "duration_s": [
+    4.0
+   ],
+   "channels": 1
+  },
+  "powerup.stopwatch_end": {
+   "files": [
+    "stopwatch/stopwatch_end.wav"
+   ],
+   "bus": "SFX",
+   "loop": false,
+   "positional": false,
+   "description": "Time resumes: the world spins back up, the crown clicks, the ticking starts again.",
+   "cooldown": 0.0,
+   "max_voices": 1,
+   "priority": 9,
+   "duration_s": [
+    1.136
+   ],
+   "channels": 1
+  },
+  "fusion.steamforged.attack": {
+   "files": [
+    "fusion/imbue_layer_steamforged_attack_01.wav",
+    "fusion/imbue_layer_steamforged_attack_02.wav",
+    "fusion/imbue_layer_steamforged_attack_03.wav"
+   ],
+   "bus": "SFX",
+   "loop": false,
+   "positional": true,
+   "variation": "random_no_repeat",
+   "gems": "fire+ice",
+   "description": "Steamforged Fusion attack layer: plays on top of the weapon's own attack sound, instead of the two single-gem layers.",
+   "cooldown": 0.06,
+   "max_voices": 3,
+   "pitch_var": 0.04,
+   "priority": 4,
+   "duration_s": [
+    0.28,
+    0.28,
+    0.28
+   ],
+   "channels": 1
+  },
+  "fusion.steamforged.hit": {
+   "files": [
+    "fusion/imbue_layer_steamforged_hit_01.wav",
+    "fusion/imbue_layer_steamforged_hit_02.wav",
+    "fusion/imbue_layer_steamforged_hit_03.wav"
+   ],
+   "bus": "SFX",
+   "loop": false,
+   "positional": true,
+   "variation": "random_no_repeat",
+   "gems": "fire+ice",
+   "description": "Steamforged Fusion hit layer: plays on top of the weapon's own hit sound, instead of the two single-gem layers.",
+   "cooldown": 0.05,
+   "max_voices": 3,
+   "pitch_var": 0.04,
+   "priority": 4,
+   "duration_s": [
+    0.45,
+    0.45,
+    0.45
+   ],
+   "channels": 1
+  },
+  "fusion.steamforged.loop": {
+   "files": [
+    "fusion/imbue_layer_steamforged_loop.wav"
+   ],
+   "bus": "SFX",
+   "loop": true,
+   "positional": true,
+   "gems": "fire+ice",
+   "description": "Steamforged Fusion loop: Aura, Scythes in flight and fireballs in flight, instead of the single-gem loops.",
+   "max_voices": 2,
+   "priority": 4,
+   "duration_s": [
+    2.0
+   ],
+   "channels": 1
+  },
+  "fusion.plasma.attack": {
+   "files": [
+    "fusion/imbue_layer_plasma_attack_01.wav",
+    "fusion/imbue_layer_plasma_attack_02.wav",
+    "fusion/imbue_layer_plasma_attack_03.wav"
+   ],
+   "bus": "SFX",
+   "loop": false,
+   "positional": true,
+   "variation": "random_no_repeat",
+   "gems": "electricity+fire",
+   "description": "Plasma Fusion attack layer: plays on top of the weapon's own attack sound, instead of the two single-gem layers.",
+   "cooldown": 0.06,
+   "max_voices": 3,
+   "pitch_var": 0.04,
+   "priority": 4,
+   "duration_s": [
+    0.28,
+    0.28,
+    0.28
+   ],
+   "channels": 1
+  },
+  "fusion.plasma.hit": {
+   "files": [
+    "fusion/imbue_layer_plasma_hit_01.wav",
+    "fusion/imbue_layer_plasma_hit_02.wav",
+    "fusion/imbue_layer_plasma_hit_03.wav"
+   ],
+   "bus": "SFX",
+   "loop": false,
+   "positional": true,
+   "variation": "random_no_repeat",
+   "gems": "electricity+fire",
+   "description": "Plasma Fusion hit layer: plays on top of the weapon's own hit sound, instead of the two single-gem layers.",
+   "cooldown": 0.05,
+   "max_voices": 3,
+   "pitch_var": 0.04,
+   "priority": 4,
+   "duration_s": [
+    0.45,
+    0.45,
+    0.45
+   ],
+   "channels": 1
+  },
+  "fusion.plasma.loop": {
+   "files": [
+    "fusion/imbue_layer_plasma_loop.wav"
+   ],
+   "bus": "SFX",
+   "loop": true,
+   "positional": true,
+   "gems": "electricity+fire",
+   "description": "Plasma Fusion loop: Aura, Scythes in flight and fireballs in flight, instead of the single-gem loops.",
+   "max_voices": 2,
+   "priority": 4,
+   "duration_s": [
+    2.0
+   ],
+   "channels": 1
+  },
+  "fusion.aurora.attack": {
+   "files": [
+    "fusion/imbue_layer_aurora_attack_01.wav",
+    "fusion/imbue_layer_aurora_attack_02.wav",
+    "fusion/imbue_layer_aurora_attack_03.wav"
+   ],
+   "bus": "SFX",
+   "loop": false,
+   "positional": true,
+   "variation": "random_no_repeat",
+   "gems": "electricity+ice",
+   "description": "Aurora Fusion attack layer: plays on top of the weapon's own attack sound, instead of the two single-gem layers.",
+   "cooldown": 0.06,
+   "max_voices": 3,
+   "pitch_var": 0.04,
+   "priority": 4,
+   "duration_s": [
+    0.28,
+    0.28,
+    0.28
+   ],
+   "channels": 1
+  },
+  "fusion.aurora.hit": {
+   "files": [
+    "fusion/imbue_layer_aurora_hit_01.wav",
+    "fusion/imbue_layer_aurora_hit_02.wav",
+    "fusion/imbue_layer_aurora_hit_03.wav"
+   ],
+   "bus": "SFX",
+   "loop": false,
+   "positional": true,
+   "variation": "random_no_repeat",
+   "gems": "electricity+ice",
+   "description": "Aurora Fusion hit layer: plays on top of the weapon's own hit sound, instead of the two single-gem layers.",
+   "cooldown": 0.05,
+   "max_voices": 3,
+   "pitch_var": 0.04,
+   "priority": 4,
+   "duration_s": [
+    0.45,
+    0.45,
+    0.45
+   ],
+   "channels": 1
+  },
+  "fusion.aurora.loop": {
+   "files": [
+    "fusion/imbue_layer_aurora_loop.wav"
+   ],
+   "bus": "SFX",
+   "loop": true,
+   "positional": true,
+   "gems": "electricity+ice",
+   "description": "Aurora Fusion loop: Aura, Scythes in flight and fireballs in flight, instead of the single-gem loops.",
+   "max_voices": 2,
+   "priority": 4,
+   "duration_s": [
+    2.0
+   ],
+   "channels": 1
+  },
+  "fusion.livewire.attack": {
+   "files": [
+    "fusion/imbue_layer_livewire_attack_01.wav",
+    "fusion/imbue_layer_livewire_attack_02.wav",
+    "fusion/imbue_layer_livewire_attack_03.wav"
+   ],
+   "bus": "SFX",
+   "loop": false,
+   "positional": true,
+   "variation": "random_no_repeat",
+   "gems": "corrosive+electricity",
+   "description": "Livewire Fusion attack layer: plays on top of the weapon's own attack sound, instead of the two single-gem layers.",
+   "cooldown": 0.06,
+   "max_voices": 3,
+   "pitch_var": 0.04,
+   "priority": 4,
+   "duration_s": [
+    0.28,
+    0.28,
+    0.28
+   ],
+   "channels": 1
+  },
+  "fusion.livewire.hit": {
+   "files": [
+    "fusion/imbue_layer_livewire_hit_01.wav",
+    "fusion/imbue_layer_livewire_hit_02.wav",
+    "fusion/imbue_layer_livewire_hit_03.wav"
+   ],
+   "bus": "SFX",
+   "loop": false,
+   "positional": true,
+   "variation": "random_no_repeat",
+   "gems": "corrosive+electricity",
+   "description": "Livewire Fusion hit layer: plays on top of the weapon's own hit sound, instead of the two single-gem layers.",
+   "cooldown": 0.05,
+   "max_voices": 3,
+   "pitch_var": 0.04,
+   "priority": 4,
+   "duration_s": [
+    0.45,
+    0.45,
+    0.45
+   ],
+   "channels": 1
+  },
+  "fusion.livewire.loop": {
+   "files": [
+    "fusion/imbue_layer_livewire_loop.wav"
+   ],
+   "bus": "SFX",
+   "loop": true,
+   "positional": true,
+   "gems": "corrosive+electricity",
+   "description": "Livewire Fusion loop: Aura, Scythes in flight and fireballs in flight, instead of the single-gem loops.",
+   "max_voices": 2,
+   "priority": 4,
+   "duration_s": [
+    2.0
+   ],
+   "channels": 1
+  },
+  "fusion.pyrebile.attack": {
+   "files": [
+    "fusion/imbue_layer_pyrebile_attack_01.wav",
+    "fusion/imbue_layer_pyrebile_attack_02.wav",
+    "fusion/imbue_layer_pyrebile_attack_03.wav"
+   ],
+   "bus": "SFX",
+   "loop": false,
+   "positional": true,
+   "variation": "random_no_repeat",
+   "gems": "corrosive+fire",
+   "description": "Pyrebile Fusion attack layer: plays on top of the weapon's own attack sound, instead of the two single-gem layers.",
+   "cooldown": 0.06,
+   "max_voices": 3,
+   "pitch_var": 0.04,
+   "priority": 4,
+   "duration_s": [
+    0.28,
+    0.28,
+    0.28
+   ],
+   "channels": 1
+  },
+  "fusion.pyrebile.hit": {
+   "files": [
+    "fusion/imbue_layer_pyrebile_hit_01.wav",
+    "fusion/imbue_layer_pyrebile_hit_02.wav",
+    "fusion/imbue_layer_pyrebile_hit_03.wav"
+   ],
+   "bus": "SFX",
+   "loop": false,
+   "positional": true,
+   "variation": "random_no_repeat",
+   "gems": "corrosive+fire",
+   "description": "Pyrebile Fusion hit layer: plays on top of the weapon's own hit sound, instead of the two single-gem layers.",
+   "cooldown": 0.05,
+   "max_voices": 3,
+   "pitch_var": 0.04,
+   "priority": 4,
+   "duration_s": [
+    0.45,
+    0.45,
+    0.45
+   ],
+   "channels": 1
+  },
+  "fusion.pyrebile.loop": {
+   "files": [
+    "fusion/imbue_layer_pyrebile_loop.wav"
+   ],
+   "bus": "SFX",
+   "loop": true,
+   "positional": true,
+   "gems": "corrosive+fire",
+   "description": "Pyrebile Fusion loop: Aura, Scythes in flight and fireballs in flight, instead of the single-gem loops.",
+   "max_voices": 2,
+   "priority": 4,
+   "duration_s": [
+    2.0
+   ],
+   "channels": 1
+  },
+  "fusion.rimerot.attack": {
+   "files": [
+    "fusion/imbue_layer_rimerot_attack_01.wav",
+    "fusion/imbue_layer_rimerot_attack_02.wav",
+    "fusion/imbue_layer_rimerot_attack_03.wav"
+   ],
+   "bus": "SFX",
+   "loop": false,
+   "positional": true,
+   "variation": "random_no_repeat",
+   "gems": "corrosive+ice",
+   "description": "Rimerot Fusion attack layer: plays on top of the weapon's own attack sound, instead of the two single-gem layers.",
+   "cooldown": 0.06,
+   "max_voices": 3,
+   "pitch_var": 0.04,
+   "priority": 4,
+   "duration_s": [
+    0.28,
+    0.28,
+    0.28
+   ],
+   "channels": 1
+  },
+  "fusion.rimerot.hit": {
+   "files": [
+    "fusion/imbue_layer_rimerot_hit_01.wav",
+    "fusion/imbue_layer_rimerot_hit_02.wav",
+    "fusion/imbue_layer_rimerot_hit_03.wav"
+   ],
+   "bus": "SFX",
+   "loop": false,
+   "positional": true,
+   "variation": "random_no_repeat",
+   "gems": "corrosive+ice",
+   "description": "Rimerot Fusion hit layer: plays on top of the weapon's own hit sound, instead of the two single-gem layers.",
+   "cooldown": 0.05,
+   "max_voices": 3,
+   "pitch_var": 0.04,
+   "priority": 4,
+   "duration_s": [
+    0.45,
+    0.45,
+    0.45
+   ],
+   "channels": 1
+  },
+  "fusion.rimerot.loop": {
+   "files": [
+    "fusion/imbue_layer_rimerot_loop.wav"
+   ],
+   "bus": "SFX",
+   "loop": true,
+   "positional": true,
+   "gems": "corrosive+ice",
+   "description": "Rimerot Fusion loop: Aura, Scythes in flight and fireballs in flight, instead of the single-gem loops.",
+   "max_voices": 2,
+   "priority": 4,
+   "duration_s": [
+    2.0
+   ],
+   "channels": 1
+  },
+  "imbue.imbue_combo_thermal_shock": {
+   "files": [
+    "imbue_combo/imbue_combo_thermal_shock.wav"
+   ],
+   "bus": "SFX",
+   "loop": false,
+   "positional": false,
+   "gems": "fire+ice",
+   "fuse_moment_s": 0.85,
+   "description": "Updated combo fuse (3.4 s, one flowing reaction). Same event and file name as before: replace the old file. The two gems fuse at 0.85 s: the forging moment's collision lands on it.",
+   "replaces_file": true,
+   "max_voices": 1,
+   "priority": 9,
+   "duration_s": [
+    3.4
+   ],
+   "channels": 2
+  },
+  "imbue.imbue_combo_overcharge": {
+   "files": [
+    "imbue_combo/imbue_combo_overcharge.wav"
+   ],
+   "bus": "SFX",
+   "loop": false,
+   "positional": false,
+   "gems": "electricity+fire",
+   "fuse_moment_s": 0.85,
+   "description": "Updated combo fuse (3.4 s, one flowing reaction). Same event and file name as before: replace the old file. The two gems fuse at 0.85 s: the forging moment's collision lands on it.",
+   "replaces_file": true,
+   "max_voices": 1,
+   "priority": 9,
+   "duration_s": [
+    3.4
+   ],
+   "channels": 2
+  },
+  "imbue.imbue_combo_cryoshock": {
+   "files": [
+    "imbue_combo/imbue_combo_cryoshock.wav"
+   ],
+   "bus": "SFX",
+   "loop": false,
+   "positional": false,
+   "gems": "electricity+ice",
+   "fuse_moment_s": 0.85,
+   "description": "Updated combo fuse (3.4 s, one flowing reaction). Same event and file name as before: replace the old file. The two gems fuse at 0.85 s: the forging moment's collision lands on it.",
+   "replaces_file": true,
+   "max_voices": 1,
+   "priority": 9,
+   "duration_s": [
+    3.4
+   ],
+   "channels": 2
+  },
+  "imbue.imbue_combo_toxic_conduction": {
+   "files": [
+    "imbue_combo/imbue_combo_toxic_conduction.wav"
+   ],
+   "bus": "SFX",
+   "loop": false,
+   "positional": false,
+   "gems": "corrosive+electricity",
+   "fuse_moment_s": 0.85,
+   "description": "Updated combo fuse (3.4 s, one flowing reaction). Same event and file name as before: replace the old file. The two gems fuse at 0.85 s: the forging moment's collision lands on it.",
+   "replaces_file": true,
+   "max_voices": 1,
+   "priority": 9,
+   "duration_s": [
+    3.4
+   ],
+   "channels": 2
+  },
+  "imbue.imbue_combo_caustic_combustion": {
+   "files": [
+    "imbue_combo/imbue_combo_caustic_combustion.wav"
+   ],
+   "bus": "SFX",
+   "loop": false,
+   "positional": false,
+   "gems": "corrosive+fire",
+   "fuse_moment_s": 0.85,
+   "description": "Updated combo fuse (3.4 s, one flowing reaction). Same event and file name as before: replace the old file. The two gems fuse at 0.85 s: the forging moment's collision lands on it.",
+   "replaces_file": true,
+   "max_voices": 1,
+   "priority": 9,
+   "duration_s": [
+    3.4
+   ],
+   "channels": 2
+  },
+  "imbue.imbue_combo_blightfrost": {
+   "files": [
+    "imbue_combo/imbue_combo_blightfrost.wav"
+   ],
+   "bus": "SFX",
+   "loop": false,
+   "positional": false,
+   "gems": "corrosive+ice",
+   "fuse_moment_s": 0.85,
+   "description": "Updated combo fuse (3.4 s, one flowing reaction). Same event and file name as before: replace the old file. The two gems fuse at 0.85 s: the forging moment's collision lands on it.",
+   "replaces_file": true,
+   "max_voices": 1,
+   "priority": 9,
+   "duration_s": [
+    3.4
+   ],
+   "channels": 2
+  },
+  "ult.cataclysm_activate": {
+   "files": [
+    "ultimates/ult_cataclysm_activate.wav"
+   ],
+   "bus": "SFX",
+   "loop": false,
+   "positional": false,
+   "description": "Cataclysm pressed: the shared ultimate opening (reversed swell into a low bell, sub and a short choir \"ah\").",
+   "max_voices": 1,
+   "priority": 9,
+   "duration_s": [
+    1.715
+   ]
+  },
+  "ult.cataclysm": {
+   "files": [
+    "ultimates/ult_cataclysm.wav"
+   ],
+   "bus": "SFX",
+   "loop": false,
+   "positional": false,
+   "description": "The Cataclysm itself landing. Replaces the file behind weapon.ult_cataclysm.",
+   "max_voices": 1,
+   "priority": 9,
+   "duration_s": [
+    3.325
+   ]
+  },
+  "ult.berserker": {
+   "files": [
+    "ultimates/ult_berserker.wav"
+   ],
+   "bus": "SFX",
+   "loop": false,
+   "positional": false,
+   "description": "Berserker pressed: the shared opening into the berserker roar.",
+   "max_voices": 1,
+   "priority": 9,
+   "duration_s": [
+    2.563
+   ]
+  },
+  "ult.berserker_loop": {
+   "files": [
+    "ultimates/ult_berserker_loop.wav"
+   ],
+   "bus": "SFX",
+   "loop": true,
+   "positional": false,
+   "description": "While Berserker is active (seamless loop).",
+   "max_voices": 1,
+   "priority": 9,
+   "duration_s": [
+    1.6
+   ]
+  },
+  "ult.berserker_end": {
+   "files": [
+    "ultimates/ult_berserker_end.wav"
+   ],
+   "bus": "SFX",
+   "loop": false,
+   "positional": false,
+   "description": "Berserker wears off.",
+   "max_voices": 1,
+   "priority": 9,
+   "duration_s": [
+    1.21
+   ]
+  },
+  "ult.ghost_form": {
+   "files": [
+    "ultimates/ult_ghost_form.wav"
+   ],
+   "bus": "SFX",
+   "loop": false,
+   "positional": false,
+   "description": "Ghost form pressed: the shared opening into the ghost transformation.",
+   "max_voices": 1,
+   "priority": 9,
+   "duration_s": [
+    3.523
+   ]
+  },
+  "ult.ghost_loop": {
+   "files": [
+    "ultimates/ult_ghost_loop.wav"
+   ],
+   "bus": "SFX",
+   "loop": true,
+   "positional": false,
+   "description": "While Ghost form is active (seamless loop).",
+   "max_voices": 1,
+   "priority": 9,
+   "duration_s": [
+    3.0
+   ]
+  },
+  "ult.ghost_dash": {
+   "files": [
+    "ultimates/ult_ghost_dash_01.wav",
+    "ultimates/ult_ghost_dash_02.wav",
+    "ultimates/ult_ghost_dash_03.wav"
+   ],
+   "bus": "SFX",
+   "loop": false,
+   "positional": false,
+   "description": "Each dash or phase-through while in Ghost form (random, no repeat).",
+   "max_voices": 2,
+   "priority": 9,
+   "duration_s": [
+    0.767,
+    0.82,
+    0.795
+   ],
+   "variation": "random_no_repeat",
+   "cooldown": 0.08
+  },
+  "ult.ghost_end": {
+   "files": [
+    "ultimates/ult_ghost_end.wav"
+   ],
+   "bus": "SFX",
+   "loop": false,
+   "positional": false,
+   "description": "Ghost form wears off.",
+   "max_voices": 1,
+   "priority": 9,
+   "duration_s": [
+    1.184
+   ]
+  }
+ }
+}
