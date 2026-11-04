@@ -1729,7 +1729,9 @@ func weapon_tooltip(id: int) -> String:
  var state=weapons[id];var definition=Catalog.WEAPONS[id]
  var r=WeaponStats.resolve(self,id,state)
  var damage=float(r.damage)*stats.damage*loadout_runtime.damage_multiplier()
- var result="%s • Level %d\nDamage %.1f • %s"%[definition[0],state.level,damage,WeaponUpgrades.format_value(id,"haste",r)]
+ var fusion=Fusions.of_state(state)
+ var result="%s • Level %d\nDamage %.1f • %s"%[Fusions.weapon_name(state,id),state.level,damage,WeaponUpgrades.format_value(id,"haste",r)]
+ if fusion!="":result+="\n%s"%Fusions.epithet(fusion)
  for key in WeaponUpgrades.pool(id):
   if key in ["damage","haste"]:continue
   result+="\n%s: %s"%[WeaponUpgrades.label(id,key),WeaponUpgrades.format_value(id,key,r)]

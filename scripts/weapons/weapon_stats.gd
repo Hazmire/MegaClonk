@@ -45,4 +45,5 @@ static func resolve(game: Object,id: int,state: Dictionary) -> Dictionary:
    r["count"]=1;r["radius"]=AURA.radius*r.size_mult;r["interval"]=float(def[3])/maxf(0.1,haste)
   15:
    r["count"]=clampi(SHOTGUN.base_pellets+extra,1,SHOTGUN.max_pellets);r["cone_deg"]=minf(SHOTGUN.cone_max_deg,SHOTGUN.cone_deg*(1.0+0.55*(r.size_mult-1.0)));r["range"]=minf(SHOTGUN.range_max,SHOTGUN.range*(1.0+0.12*(r.size_mult-1.0)))
+ if Fusions.of_state(state)!="":r["damage"]=float(r.damage)*Fusions.DAMAGE_MULT # Fusions are meant to be overpowered (GUESS, in the Fusions table)
  return r
