@@ -23,6 +23,7 @@ var clouds: Dictionary={} # weapon id -> {"clock","t"}
 var counters: Dictionary={"slashes":0,"shots":0,"pulses":0}
 var form_bucket=0.0
 var stats={"hits":0,"dropped":0,"crescents":0,"meteors":0,"strikes":0,"splits":0,"judgements":0,"lines":0,"vortices":0,"walls":0,"eruptions":0}
+static var enabled=true # tests and the DPS table switch the forms off to measure a Fusion without its attack form
 func _init(runtime: WeaponRuntime) -> void:
  rt=runtime;game=runtime.game;form_bucket=float(Fusions.SAFETY.form_hits_per_second)
 func clear() -> void:
@@ -55,6 +56,7 @@ func tick(delta: float) -> void:
  rt.psx.tint_end()
 # ---- Sword: every 3rd slash throws a crescent wave ----------------------------------------------------------------------------
 func on_slash(id: int,f: String,dir: Vector3,r: Dictionary) -> void:
+ if not enabled:return
  var form=Fusions.form(0)
  counters.slashes+=1
  if counters.slashes%int(form.every)!=0 or crescents.size()>=MAX_CRESCENTS:return
@@ -88,6 +90,7 @@ func step_crescents(delta: float) -> void:
   i-=1
 # ---- Firestaff: comet into meteor shower ----------------------------------------------------------------------------------------
 func comet_splits(b: Dictionary,at: Vector3) -> void:
+ if not enabled:return
  var form=Fusions.form(1);var f=str(b.fusion)
  var pool=game.nearby(at,float(form.meteor_range))
  var n=int(form.meteors)
@@ -109,6 +112,7 @@ func meteor_land(id: int,f: String,land: Vector3,damage: float,radius: float) ->
  game.audio.emit("weapon.firestaff.impact",land,0.7,0.9)
 # ---- Lightning staff: a storm cloud strikes on its own and tethers the pack ---------------------------------------------------
 func cloud_tick(id: int,f: String,delta: float) -> void:
+ if not enabled:return
  var form=Fusions.form(2)
  var c=clouds.get(id)
  if c==null:c={"clock":float(form.cloud_interval)*0.5,"t":0.0};clouds[id]=c
@@ -154,6 +158,7 @@ func step_tethers(delta: float) -> void:
   i-=1
 # ---- Bow: three shards on the first pierce -----------------------------------------------------------------------------------------
 func arrow_split(a: Dictionary,at: Vector3,victim: Dictionary) -> void:
+ if not enabled:return
  var form=Fusions.form(6);var f=str(a.fusion)
  stats.splits+=1
  FusionFx.impact(rt,f,at,Vector3.UP,0.8)
@@ -165,6 +170,7 @@ func arrow_split(a: Dictionary,at: Vector3,victim: Dictionary) -> void:
   rt.arrows.append({"pos":at+d*0.5,"dir":d,"speed":float(a.speed)*float(form.shard_speed_mult),"left":float(form.shard_range),"damage":float(a.damage)*float(form.shard_damage_mult),"id":a.id,"scale":float(a.scale)*0.75,"hit_r":a.hit_r,"hits":hits,"trail":0.0,"fusion":f,"shard":true})
 # ---- Revolver: every 6th shot is a judgement round, and it leaves a detonating line ------------------------------------------
 func on_revolver_shot(id: int,f: String,bullet: Dictionary) -> void:
+ if not enabled:return
  var form=Fusions.form(7)
  counters.shots+=1
  if counters.shots%int(form.every)!=0:return
@@ -201,6 +207,7 @@ func aura_draw(id: int,center: Vector3,radius: float,spin: float,flash: bool) ->
  var form=Fusions.form(10)
  rt.draw_aura_circle(center+Vector3.UP*0.03,radius*float(form.inner_radius_frac),-spin*2.2,flash)
 func aura_pulse(id: int,f: String,center: Vector3,radius: float,r: Dictionary) -> void:
+ if not enabled:return
  var form=Fusions.form(10)
  counters.pulses+=1
  var inner=radius*float(form.inner_radius_frac)
@@ -219,6 +226,7 @@ func aura_pulse(id: int,f: String,center: Vector3,radius: float,r: Dictionary) -
   elif d<=inner+rt.hit_reach(e):strike_form(f,e,float(r.damage)*float(form.inner_damage_mult),id,"pulse_inner",Vector3.ZERO,e.pos)
 # ---- Scythes: a vortex where the blade turns back ----------------------------------------------------------------------------------
 func scythe_turns(s: Dictionary,at: Vector3) -> void:
+ if not enabled:return
  var form=Fusions.form(9);var f=fusion_of(int(s.id))
  if f=="":return
  stats.vortices+=1
@@ -248,6 +256,7 @@ func step_vortices(delta: float) -> void:
   i-=1
 # ---- Shotgun: a bile wall across the cone -----------------------------------------------------------------------------------------
 func shotgun_blast(id: int,f: String,origin: Vector3,dir: Vector3,r: Dictionary) -> void:
+ if not enabled:return
  var form=Fusions.form(15)
  stats.walls+=1
  if walls.size()>=int(form.max_walls):walls.pop_front()

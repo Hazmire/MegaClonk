@@ -197,7 +197,7 @@ func fire_firestaff(id: int,r: Dictionary) -> bool:
   var d=dir if k==0 else (random_enemy(pool).pos-origin).normalized()
   var ball={"pos":origin+d*0.9,"vel":d*float(r.speed),"dir":d,"damage":float(r.damage),"id":id,"scale":float(r.scale),"hit_r":float(r.hit_radius),"left":float(r.range)+3.0,"trail":0.0,"age":0.0}
   var fusion=str(fusion_of.get(id,""))
-  if fusion!="" and k==0: # the lead fireball is a comet: bigger and harder, and it splits into a meteor shower where it lands
+  if fusion!="" and FusionForms.enabled and k==0: # the lead fireball is a comet: bigger and harder, and it splits into a meteor shower where it lands
    var form=Fusions.form(1)
    ball["fusion"]=fusion;ball["base_damage"]=float(r.damage);ball["scale"]=float(r.scale)*float(form.comet_scale);ball["damage"]=float(r.damage)*float(form.comet_damage_mult);ball["hit_r"]=float(r.hit_radius)*float(form.comet_scale)
   fireballs.append(ball)
