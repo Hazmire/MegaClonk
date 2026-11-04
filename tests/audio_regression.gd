@@ -148,7 +148,7 @@ func element_checks(game: Node) -> void:
  game.player.position=Vector3(0,game.terrain_height(0,0),0)
  var enemy=game.spawn_enemy(0,game.player.position+Vector3(1.4,0,0));enemy.hp=1.0e9;enemy.max_hp=1.0e9;enemy.speed=0.0
  var pos=enemy.pos
- var runs=[[[],0,0],[["fire"],1,1],[["fire","ice"],2,2],[["electricity"],1,1]]
+ var runs=[[[],0,0],[["fire"],1,1],[["fire","ice"],0,0],[["electricity"],1,1]] # fire+ice is Steamforged: its own layer replaces both element layers (checked below)
  for run_case in runs:
   var state=game.weapons[0];state["sockets"]={"unlocked":2,"gems":run_case[0].duplicate()}
   audio.emit_counts.clear();audio.clock+=1
@@ -162,7 +162,7 @@ func element_checks(game: Node) -> void:
   check(hits==run_case[1] and attacks==run_case[2],"Gems %s: %d hit layer(s), %d attack layer(s) per hit / attack (got %d / %d)"%[str(run_case[0]),run_case[1],run_case[2],hits,attacks])
  var state=game.weapons[0];state["sockets"]={"unlocked":2,"gems":["fire","ice"]}
  audio.emit_counts.clear();game.hit(enemy,1.0,0,{"source":"slash","dir":Vector3.RIGHT,"pos":pos,"variant":0})
- check(audio.emit_counts.get("element.fire.hit",0)==1 and audio.emit_counts.get("element.ice.hit",0)==1 and not audio.emit_counts.has("element.electric.hit"),"Two gems emit both elements' layers, once each, and no other element")
+ check(audio.emit_counts.get("fusion.steamforged.hit",0)==1 and not audio.emit_counts.has("element.fire.hit") and not audio.emit_counts.has("element.ice.hit") and not audio.emit_counts.has("element.electric.hit"),"Two gems that form a Fusion emit the Fusion layer once and neither element layer")
  check(ElementAudio.EVENTS["electricity"][0]=="element.electric.attack","Game element 'electricity' maps to the manifest id 'electric'")
  var aura=game.weapons[10];aura["sockets"]={"unlocked":1,"gems":["corrosive"]};aura.clock=0.0
  audio.emit_counts.clear();game.wrt.update_aura(10,aura,0.016)

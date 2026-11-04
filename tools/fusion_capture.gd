@@ -14,8 +14,7 @@ func setup(wid: int,gems: Array) -> void:
  var fwd=-game.player.camera.global_transform.basis.z;fwd.y=0;fwd=fwd.normalized();var side=fwd.cross(Vector3.UP)
  for i in 18:
   var e=game.spawn_enemy(0,game.player.position+fwd*(5.0+float(i%6)*1.6)+side*(float(i/6)-1.0)*2.4)
-  if not e.is_empty():e.hp=1.0e9;e.max_hp=1.0e9
- game.world_time.freeze(1.0e6)
+  if not e.is_empty():e.hp=1.0e9;e.max_hp=1.0e9;e.frozen=1.0e6 # held in place by the enemy's own stun, so the screen is not under the Stopwatch look
 func advance(seconds: float) -> void:
  var n=int(seconds/0.033)
  for i in n:

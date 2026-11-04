@@ -17,10 +17,12 @@ func run() -> void:
  game=load("res://scenes/main/main.tscn").instantiate();root.add_child(game)
  await create_timer(0.6).timeout
  game.progress=Progress.new();MetaProgress.migrate(game.progress.data);game.progress.storage_path="user://stopwatch-capture.json"
- game.next_run_seed=77;game.map_seed_override=9;game.begin_run();game.resume();game.spawn_clock=999;game.set_physics_process(false)
+ game.next_run_seed=77;game.map_seed_override=9;game.begin_run();game.resume();game.spawn_clock=999;game.set_physics_process(false);game.sandbox=true;game.settings.invincible=true
+ process_frame.connect(func():
+  if game.mode=="run":game.spawn_clock=999.0;game._physics_process(0.05)) # the capture drives the game itself: one 50 ms tick per rendered frame
  var wt: WorldTime=game.world_time
  for stage in stages:
-  game.stage=stage;game.build_stage();game.resume();game.set_physics_process(false);game.enemies.clear();wt.reset()
+  game.stage=stage;game.build_stage();game.resume();game.set_physics_process(false);game.enemies.clear();wt.reset();game.mode="run"
   var fwd=-game.player.camera.global_transform.basis.z;fwd.y=0;fwd=fwd.normalized();var side=fwd.cross(Vector3.UP)
   for i in 24:
    var at=game.player.position+fwd*(7.0+float(i%6)*3.0)+side*(float(i/6)-1.5)*3.5
@@ -33,6 +35,6 @@ func run() -> void:
   wt.remaining=3.0;await create_timer(0.2).timeout
   wt.activate(4.0);await snap(tag+"3_extension_tag",0.25)
   wt.remaining=0.8;await snap(tag+"4_last_second",0.4)
-  wt.remaining=0.0;wt.scale=1.0;wt.just_released=true;await snap(tag+"5_release",0.2)
+  wt.remaining=0.04;await snap(tag+"5_release",0.25)
   wt.just_released=false;await create_timer(1.0).timeout
  print("capture done");quit()
