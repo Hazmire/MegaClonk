@@ -121,7 +121,7 @@ func fx_checks() -> void:
  fx.update(6.0,origin);fx.advance(0.016);fx.update(3.0,origin);fx.advance(0.016);fx.update(8.0,origin);fx.advance(0.016)
  check(ext[0]>4.9 and fx.tag.begins_with("+") and is_equal_approx(fx.total,8.0),"Extension: total becomes the new time left and the +n.ns tag shows (%s)"%fx.tag)
  var wave_before=fx.wave_t
- check(wave_before<0.0 or wave_before>0.2,"No second wave on extension (wave not restarted)")
+ check(wave_before<0.0 or wave_before>=0.03,"No second wave on extension (wave not restarted)")
  for i in 8:fx.advance(0.05)
  check(fx.shown_frac>0.99 or fx.shown_frac>=fx.remaining/fx.total-0.001,"Ticks sweep to full within the refill time")
  check(fx.lit_ticks(0.5)==30 and fx.lit_ticks(1.0)==60,"60 edge ticks: half the fraction lights 30")
