@@ -170,8 +170,8 @@ static func magnet(game: Node) -> int:
  return queue.size()
 # Stopwatch: starts or refreshes the world slowdown (see WorldTime).
 static func stopwatch(game: Node) -> void:
- game.world_time.activate(game.irt.stopwatch_bonus())
- game.play_sound("powerup.stopwatch")
+ # The opening cue plays when the effect starts; picking another up while it runs (a refresh or an extension) is silent.
+ if game.world_time.activate(game.irt.stopwatch_bonus()):game.play_sound("powerup.stopwatch")
  game.flash(game.player.position+Vector3.UP*0.2,Color("ffe27a"),2.6)
 # One step of a magnetised gem; returns the new position. Used by Game.update_pickups.
 static func magnet_step(p: Dictionary,target: Vector3,delta: float) -> Vector3:

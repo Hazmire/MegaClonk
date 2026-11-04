@@ -535,7 +535,7 @@ func _physics_process(delta: float) -> void:
  if endless:
   endless_time+=delta
   if int(endless_time)!=endless_whole:endless_whole=int(endless_time);endless_second.emit(endless_whole) # the HUD updates its text on this, once per second
- world_time.tick(delta)
+ world_time.tick(delta);RunAudio.stopwatch(self)
  var hostile_delta=world_time.hostile(delta)
  for event_id in stage_clock.advance(delta):
   stage_event(event_id)

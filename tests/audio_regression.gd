@@ -59,7 +59,7 @@ func manifest_checks(manifest: Dictionary,audio: RetroAudio) -> void:
     wav_names+=1
     var s=load("res://assets/audio/fog/%s/%s"%[dir,f]) as AudioStreamWAV
     if (s.loop_mode==AudioStreamWAV.LOOP_FORWARD)!=f.ends_with("_loop.wav"):loop_ok=false
- check(wav_names==187 and loop_ok,"All 187 WAVs: loop flag matches the _loop suffix")
+ check(wav_names==243 and loop_ok,"All 243 WAVs: loop flag matches the _loop suffix")
  var untouched=true
  for dir in DirAccess.get_directories_at("res://assets/audio/fog"):
   for f in DirAccess.get_files_at("res://assets/audio/fog/"+dir):
