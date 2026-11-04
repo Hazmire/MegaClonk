@@ -418,7 +418,7 @@ func build_stage() -> void:
  ImbueStation.setup(self)
  Vases.build(self)
  combat_fx=CombatFX.new();world.add_child(combat_fx)
- psx=PsxFx.new();world.add_child(psx);wrt=WeaponRuntime.new(self,psx);irt=ItemRuntime.new(self)
+ psx=PsxFx.new();world.add_child(psx);wrt=WeaponRuntime.release(wrt,self,psx);irt=ItemRuntime.new(self)
  pool = MeshPool.new()
  world.add_child(pool)
  numbers=CombatNumbers.new();world.add_child(numbers);numbers.prewarm()
@@ -1356,6 +1356,7 @@ func tone(_frequency: float,_duration: float,_loudness: float=0.3) -> void:
  play_sound("boss.warning" if _frequency<200 else "ui.confirm")
 
 func _exit_tree() -> void:
+ if wrt!=null:wrt.forms=null # WeaponRuntime and FusionForms refer to each other: break the cycle so both are freed
  CombatFX.frames.clear()
  ForestAtmosphere.reset();StageThemes.reset()
  RigClips.reset()

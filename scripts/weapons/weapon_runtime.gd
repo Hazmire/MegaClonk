@@ -34,6 +34,10 @@ var forms: FusionForms
 var counters={"strike":{},"casts":{},"dropped_timers":0}
 const SCYTHE_MODEL_PATH="res://assets/weapons/scythe.glb" # supplied model slot; PLACEHOLDER mesh is used until it exists
 
+# A new runtime replaces the old one: break the old runtime <-> FusionForms cycle so it is freed.
+static func release(old: WeaponRuntime,owner: Node,fx: Node) -> WeaponRuntime:
+ if old!=null:old.forms=null
+ return WeaponRuntime.new(owner,fx)
 func _init(owner: Node,fx: PsxFx) -> void:
  game=owner;psx=fx;rng.seed=424242;forms=FusionForms.new(self)
  scythe_view=MultiMeshInstance3D.new();scythe_view.name="PLACEHOLDER_ScytheMeshes"
