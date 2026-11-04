@@ -81,7 +81,7 @@ func resolve(game: Node,e: Dictionary,delta: float,forced: bool=false) -> void:
  var radius=float(radii[slot]);var old_height=float(lifts[slot]);var on_terrain_path=not e.get("climb",EMPTY).is_empty() or not e.get("drop",EMPTY).is_empty();traversing[slot]=1 if on_terrain_path else 0
  # Two staggered groups solve at 30Hz against ALL actual body positions;
  # pursuit, damage, broadphase and the player's swept capsule remain at 60Hz.
- if not forced and int(ids[slot])%2!=solve_phase:
+ if delta<=0.0 or (not forced and int(ids[slot])%2!=solve_phase): # delta 0 = frozen: bodies keep their exact positions
   if on_terrain_path:
    if not e.get("crowd_was_traversing",false):e.pos.y+=old_height
    e.crowd_height=0

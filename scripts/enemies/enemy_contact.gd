@@ -10,7 +10,7 @@ static func overlaps(game: Node,e: Dictionary) -> bool:
  return Vector2(p.x-e.pos.x,p.z-e.pos.z).length_squared()<=radius*radius and p.y<bottom+height(e)+0.1 and p.y+game.player.collider.shape.height>bottom
 static func step(game: Node,e: Dictionary,delta: float) -> void:
  e.contact_clock=maxf(0,float(e.get("contact_clock",0))-delta)
- if e.hp<=0 or "proximity" in e.get("variant",EMPTY).get("modules",EMPTY_MODULES) or e.contact_clock>0:return
+ if delta<=0.0 or e.hp<=0 or "proximity" in e.get("variant",EMPTY).get("modules",EMPTY_MODULES) or e.contact_clock>0:return
  if not overlaps(game,e):return
  e.contact_clock=SETTINGS.contact_interval
  var previous=float(game.health);game.hurt_contact(float(e.get("damage",8)),e.pos)

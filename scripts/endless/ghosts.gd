@@ -92,7 +92,7 @@ static func step(game: Node,e: Dictionary,dt: float) -> void:
  var previous: Vector3=e.pos
  e.pos+=(e.vel+e.knock)*dt;e.knock=e.knock.move_toward(Vector3.ZERO,dt*15.0)
  # Swept sphere test, so a ghost faster than the player cannot tunnel through them in one frame.
- if game.segment_distance(chest,previous,e.pos)<float(flight.player_radius)+e.radius and e.frozen<=0.0:
+ if game.segment_distance(chest,previous,e.pos)<float(flight.player_radius)+e.radius and e.frozen<=0.0 and dt>0.0:
   game.hurt_contact(Endless.tier_damage(e.tier,minutes(game))*maxf(0.1,float(game.stats.difficulty)),e.pos)
   e["spent"]=true;e.hp=0.0 # a ghost that touches the player dissipates, whether or not the hit landed
  draw(game,e)

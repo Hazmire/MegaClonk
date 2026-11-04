@@ -664,10 +664,13 @@ const LOD_NEAR_SQ=144.0
 const LOD_MID_SQ=900.0
 const LOD_FAR_SQ=3025.0
 var enemy_frame=0
+# True only while the enemy pass runs with hostile time stopped: nothing the enemies do may hurt the player then.
+var hostile_frozen_pass=false
 func update_enemies(real_delta: float) -> void:
  # Everything below is hostile simulation, so it runs on Stopwatch-scaled time. The player,
  # weapons, camera, UI and audio never go through here.
  var delta=world_time.hostile(real_delta)
+ hostile_frozen_pass=delta<=0.0
  if debug_combat:
   combat_pool_start=pool.created;combat_burst_start=combat_fx.bursts_created
   combat_counters={"hits":0,"deaths":0,"xp_drops":0,"xp_merged":0,"scenes":0,"freed_nodes":0}
@@ -781,6 +784,7 @@ func update_enemies(real_delta: float) -> void:
   boss_count+=1
  mm.visible_instance_count=boss_count
  enemy_view.end_frame();ghost_view.end_frame(real_delta)
+ hostile_frozen_pass=false
 func rebuild_grid() -> void:
  grid.clear()
  for e in enemies:
@@ -804,6 +808,7 @@ func nearest(pos: Vector3, radius: float, farthest: bool = false) -> Dictionary:
  return result
 var hurt_events=0 # counts hits taken (the run overlay flashes red on each)
 func hurt(amount: float) -> void:
+ if hostile_frozen_pass:return # frozen enemies deal no damage, whatever their timers say
  if invulnerability>0 or loadout_runtime.immune() or (sandbox and settings.invincible): return
  amount*=loadout_runtime.incoming_multiplier()
  if rng.randf()<minf(0.75,stats.evasion):
@@ -1036,7 +1041,7 @@ func update_projectiles(real_delta: float) -> void:
    pool.release(p.node);projectiles.remove_at(i);continue
   if p.velocity.length_squared()>0.01: p.node.look_at(p.node.position+p.velocity)
   if not settings.reduced and int(p.age*30)!=int((p.age-delta)*30) and effects.size()<55:trail(p.node.position,Color("ff9b74"))
-  if segment_distance(player.position+Vector3.UP,previous,p.node.position)<0.8: hurt(p.damage); p.life=0
+  if delta>0.0 and segment_distance(player.position+Vector3.UP,previous,p.node.position)<0.8: hurt(p.damage); p.life=0 # a frozen projectile cannot hit
   if p.life<=0:
    pool.release(p.node)
    projectiles.remove_at(i)
