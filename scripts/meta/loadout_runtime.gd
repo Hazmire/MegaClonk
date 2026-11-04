@@ -10,8 +10,11 @@ var still_charge=0.0
 var stationary_time=0.0
 var still_time=0.0
 var uses=0
+const LOOP_KEY="ultimate_loop"
+const SOUNDS={"nova":{"press":"ult.cataclysm_activate"},"ghost":{"press":"ult.ghost_form","loop":"ult.ghost_loop","end":"ult.ghost_end"},"berserk":{"press":"ult.berserker","loop":"ult.berserker_loop","end":"ult.berserker_end"}}
+var looping=false # a Ghost/Berserk loop is meant to be playing (it can be silenced by pause / level-up and is restarted from tick)
 func reset(trait_value: String, ultimate_value: String) -> void:
- trait_id=trait_value;ultimate_id=ultimate_value;cooldown=0;remaining=0;movement_charge=0;still_charge=0;uses=0;stationary_time=0;still_time=0
+ looping=false;trait_id=trait_value;ultimate_id=ultimate_value;cooldown=0;remaining=0;movement_charge=0;still_charge=0;uses=0;stationary_time=0;still_time=0
 func tick(game: Node, delta: float) -> void:
  var was_cooling=cooldown>0
  cooldown=maxf(0,cooldown-delta);remaining=maxf(0,remaining-delta)
@@ -28,6 +31,7 @@ func tick(game: Node, delta: float) -> void:
  game.player.can_climb=trait_id=="climber";game.player.can_glide=trait_id=="glider"
  game.player.movement_multiplier=RULES.ghost_speed_multiplier if remaining>0 and ultimate_id=="ghost" else 1.0
  game.player.jump_multiplier=RULES.ghost_jump_height_multiplier if remaining>0 and ultimate_id=="ghost" else 1.0
+ ultimate_audio(game)
  game.ability_visual(ultimate_id if remaining>0 and ultimate_id in ["ghost","berserk"] else "base")
  if Input.is_action_just_pressed("ultimate"):activate(game)
 func damage_multiplier() -> float:
@@ -52,9 +56,25 @@ func activate(game: Node) -> bool:
   if game.settings.shake:game.player.camera.h_offset=0.3
  elif ultimate_id=="ghost":game.flash(game.player.position,Color("9bdeff"),4)
  else:game.flash(game.player.position,Color("ff8168"),4)
- if ultimate_id=="nova" and is_instance_valid(game.audio):game.audio.emit("weapon.ult_cataclysm",game.player.position)
- else:game.play_sound("explosion")
+ if is_instance_valid(game.audio):
+  var sounds: Dictionary=SOUNDS.get(ultimate_id,{})
+  game.audio.stop_event(str(sounds.get("press","")));game.audio.emit(str(sounds.get("press","")),Vector3.INF) # a retrigger restarts the opening; the one loop below is only ever started once
+  if ultimate_id=="nova":game.audio.emit("weapon.ult_cataclysm",game.player.position) # same frame, straight after the press cue
+  elif looping:game.audio.loop_stop(LOOP_KEY);looping=false
+  ultimate_audio(game)
  return true
+# Ghost Form and Berserker hold one loop while they last and play an end cue when they run out. Stops (no cue) on death/Results via stop_audio.
+func ultimate_audio(game: Node) -> void:
+ if not is_instance_valid(game.audio):return
+ var sounds: Dictionary=SOUNDS.get(ultimate_id,{})
+ if not sounds.has("loop"):return
+ if remaining>0.0:
+  looping=true;game.audio.loop_start(LOOP_KEY,str(sounds.loop))
+ elif looping:
+  looping=false;game.audio.loop_stop(LOOP_KEY);game.audio.emit(str(sounds.end))
+func stop_audio(game: Node) -> void:
+ looping=false
+ if is_instance_valid(game.audio):game.audio.loop_stop(LOOP_KEY)
 func serialize() -> Dictionary:
  return {"trait":trait_id,"ultimate":ultimate_id,"cooldown":cooldown,"remaining":remaining,"movement_charge":movement_charge,"still_charge":still_charge,"stationary_time":stationary_time,"still_time":still_time,"uses":uses}
 func restore(data: Dictionary) -> void:

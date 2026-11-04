@@ -566,7 +566,7 @@ func _physics_process(delta: float) -> void:
  else:
   # Budgeted spawning: no catch-up burst after a long frame; bounded ordinary counts.
   spawn_budget=minf(6,spawn_budget+hostile_delta*spawn_rate())
-  if spawn_clock<=0 and spawn_budget>=1 and enemies.size()<ENEMY_LIMIT-8:
+  if hostile_delta>0.0 and spawn_clock<=0 and spawn_budget>=1 and enemies.size()<ENEMY_LIMIT-8: # nothing spawns while hostile time is stopped
    var count=mini(3,int(spawn_budget))
    for i in count:spawn_enemy()
    spawn_budget-=count
@@ -1278,12 +1278,12 @@ func show_build() -> void:
  frontend.inventory()
 
 func finish_run(victory: bool) -> void:
- mode="results";endless_record=false
+ mode="results";endless_record=false;loadout_runtime.stop_audio(self)
  WorldPickups.settle(self)
  world_time.reset()
  if not victory and health<=0:
   player.dead=true
-  RunAudio.death(self)
+  RunAudio.death(self);loadout_runtime.stop_audio(self)
   var dying_avatar=player.avatar
   var death_tween=dying_avatar.create_tween()
   death_tween.tween_method(func(_time):
