@@ -128,7 +128,7 @@ func advance(delta: float) -> void:
 		tag_t += delta
 		if tag_t > float(style.extend.tag_s): tag_t = -1.0
 	_rect.visible = active or out_t >= 0.0 or punch_t >= 0.0
-	_mat.set_shader_parameter("center", center); _mat.set_shader_parameter("radius", radius)
+	_mat.set_shader_parameter("center", center); _mat.set_shader_parameter("view_size", size_px); _mat.set_shader_parameter("radius", radius)
 	_mat.set_shader_parameter("ring", ring); _mat.set_shader_parameter("zoom", zoom)
 	_clock.queue_redraw()
 

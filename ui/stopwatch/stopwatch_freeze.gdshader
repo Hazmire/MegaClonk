@@ -3,7 +3,8 @@
 // stays in colour; a glowing ice ring marks the wave front.
 shader_type canvas_item;
 uniform sampler2D screen_tex : hint_screen_texture, filter_linear_mipmap;
-uniform vec2 center = vec2(960.0, 540.0);    // player, in screen pixels
+uniform vec2 center = vec2(960.0, 540.0);    // player, in canvas (logical) pixels
+uniform vec2 view_size = vec2(1920.0, 1080.0); // the canvas size those pixels are measured in (differs from the real pixel count when the window is scaled)
 uniform float radius = 0.0;                  // wave radius in pixels (0 = off)
 uniform float bubble = 64.0;                 // pocket of moving time around the player
 uniform float zoom = 1.0;                    // zoom punch about the player (1 = none)
@@ -14,8 +15,8 @@ uniform float brightness = 1.35;
 uniform float contrast = 1.1;
 uniform vec4 ice : source_color = vec4(0.81, 0.91, 1.0, 1.0);
 void fragment() {
-	vec2 px = SCREEN_UV / SCREEN_PIXEL_SIZE;
-	vec2 cuv = center * SCREEN_PIXEL_SIZE;
+	vec2 px = SCREEN_UV * view_size;
+	vec2 cuv = center / view_size;
 	vec3 col = texture(screen_tex, (SCREEN_UV - cuv) / zoom + cuv).rgb;
 	float d = distance(px, center);
 	float g = dot(col, vec3(0.299, 0.587, 0.114));

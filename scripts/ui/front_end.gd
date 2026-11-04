@@ -217,7 +217,9 @@ func update_stopwatch(_delta: float) -> void:
  stopwatch_fx.timer_anchor=run_hud.timer_anchor()
  var origin=Vector2(960,540)
  if is_instance_valid(game.player) and is_instance_valid(game.player.camera) and DisplayServer.get_name()!="headless" and not game.player.camera.is_position_behind(game.player.position):
-  origin=game.player.camera.unproject_position(game.player.position+Vector3.UP*1.0) # the chest
+  # the 3D world renders in a low-res SubViewport: scale its coordinates up to the full-screen canvas the effect draws on
+  var cam: Camera3D=game.player.camera;var scale_up=get_viewport().get_visible_rect().size/cam.get_viewport().get_visible_rect().size
+  origin=cam.unproject_position(game.player.position+Vector3.UP*1.0)*scale_up # the chest
  stopwatch_fx.update(time.remaining,origin)
  # Weather nearly stops while the world is frozen. Set from the state every frame, so it is restored after any pause or level-up.
  if not is_instance_valid(weather_node) and is_instance_valid(game.player):weather_node=game.player.get_node_or_null(StageDressing.WEATHER_NAME) as GPUParticles3D

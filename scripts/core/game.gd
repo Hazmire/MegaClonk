@@ -485,6 +485,7 @@ func toast(text: String) -> void:
  message_time = 4
 # Tab closes the build screen it opened. Handled in _input, before the GUI's Tab focus-navigation can swallow the key.
 func _input(event: InputEvent) -> void:
+ if event is InputEventKey and event.pressed and not event.echo and event.physical_keycode==KEY_E:e_press_frame=Engine.get_physics_frames()
  if mode=="build" and event.is_action_pressed("inspect") and not event.is_echo():
   get_viewport().set_input_as_handled();resume()
 func _unhandled_input(event: InputEvent) -> void:
@@ -1232,24 +1233,24 @@ func update_interactions(delta: float) -> void:
   if endless and Endless.LOCK_PORTAL:
    notice.text="The portal is sealed";return
   notice.text="E  /  "+("Advance to stage %d"%(stage+1) if portal_state=="exit" else ("Boss active • defeat the stage guardian" if portal_state=="summoned" else "Summon the stage boss"))
-  if Input.is_action_just_pressed("interact"):activate_portal()
+  if interact_pressed():activate_portal()
   return
  var vase=Vases.nearest_in_reach(self,player.position)
  if not vase.is_empty() and (closest.is_empty() or Vector2(vase.pos.x-player.position.x,vase.pos.z-player.position.z).length()<closest.node.position.distance_to(player.position)):
   notice.text="E  /  Smash vase"
-  if Input.is_action_just_pressed("interact"):Vases.smash(self,vase)
+  if interact_pressed():Vases.smash(self,vase)
   return
  if closest.is_empty(): return
  if closest.kind=="Boss Statue":
   notice.text="[%s] Increase Boss Count (+1 for this run)\nFuture miniboss/stage encounters: %d bosses"%[OS.get_keycode_string(bindings.interact),additional_boss_count+2]
-  if Input.is_action_just_pressed("interact"):activate_boss_statue(closest)
+  if interact_pressed():activate_boss_statue(closest)
   return
  if closest.kind=="Elite Statue":
   notice.text="Press E to summon Elite Enemies"
-  if Input.is_action_just_pressed("interact") and not endless:activate_elite_statue(closest)
+  if interact_pressed() and not endless:activate_elite_statue(closest)
   return
  notice.text="E  /  %s%s"%[closest.kind," · %d gold"%chest_cost() if closest.kind=="Chest" else (" · %d gold per gem"%ImbueRules.cost(stage,irt.imbue_discount()) if closest.kind==ImbueStation.KIND else "")]
- if not Input.is_action_just_pressed("interact"): return
+ if not interact_pressed(): return
  match closest.kind:
   "Shop":frontend.shop(closest);return
   "Imbue Station":frontend.imbue_station(closest);return
@@ -1265,6 +1266,12 @@ func update_interactions(delta: float) -> void:
  closest.used=true
  closest.node.scale=Vector3.ONE*0.5
  tone(600,0.15)
+# E always interacts (chests, shops, stations, vases...), whatever the "interact" action was rebound to; the rebound key still works too.
+var e_press_frame=-100
+func interact_pressed() -> bool:
+ if Input.is_action_just_pressed("interact"):e_press_frame=-100;return true
+ if Engine.get_physics_frames()-e_press_frame<=1:e_press_frame=-100;return true # E was pressed this frame or the last
+ return false
 func update_hud() -> void:
  frontend.update_hud()
  if is_instance_valid(combat_debug_label):
