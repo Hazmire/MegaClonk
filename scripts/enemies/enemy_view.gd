@@ -25,12 +25,20 @@ func batch(key: String, mesh: Mesh, capacity: int) -> MultiMesh:
  add_child(node)
  batches[key]=node
  return node.multimesh
+# Stopwatch look: enemies read as frozen (cold grey-blue) while hostile time is stopped, and jolt for one frame on release.
+var frozen_look=0.0
+var jolt=false
 func begin_frame() -> void:
  counts.clear();last_transforms.clear()
 func put(key: String, mesh: Mesh, transform: Transform3D, color: Color, capacity: int = 500, spectral: bool=false, flash: float=0.0, flash_tint: float=0.0) -> void:
  var mm=batch(key,mesh,capacity)
  var index=int(counts.get(key,0))
  if index>=capacity: return
+ if key!="elite_emblems":
+  if frozen_look>0.0:
+   var grey=color.r*0.299+color.g*0.587+color.b*0.114
+   color=color.lerp(Color(grey*0.78,grey*0.95,grey*1.15,color.a),frozen_look*0.6)
+  if jolt:transform.origin.y+=0.12
  mm.set_instance_transform(index,transform)
  mm.set_instance_color(index,color)
  mm.set_instance_custom_data(index,Color(flash,1 if spectral else 0,flash_tint,0))

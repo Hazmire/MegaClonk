@@ -45,7 +45,7 @@ func foundation() -> void:
  check(RunOverlay.wants_low_hp(30,100) and not RunOverlay.wants_low_hp(31,100) and not RunOverlay.wants_low_hp(0,100),"low_hp turns on at exactly 30% HP and off above it")
  game.health=20.0;o.sync(game,1.0);check(o.low_hp>=0.99,"Overlay low_hp is driven by HP")
  game.health=game.stats.max_health;o.sync(game,1.0);check(o.low_hp<=0.01,"Overlay low_hp clears when healed")
- game.world_time.freeze(2.0);o.sync(game,1.0);check(o.stopwatch>=0.99,"Overlay stopwatch is driven by the Hourglass freeze")
+ game.world_time.freeze(2.0);o.sync(game,1.0);check(o.stopwatch<=0.01,"The old overlay glow is gone: the Stopwatch look is StopwatchFX")
  game.world_time.reset();o.sync(game,1.0);check(o.stopwatch<=0.01,"Overlay stopwatch clears when time resumes")
  # ---- Stats panel: rows generated from the real stats, preview matches the change ----
  var stats=StatsPanel.new().setup(game);root.add_child(stats)

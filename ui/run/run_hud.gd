@@ -121,6 +121,10 @@ func _build_xp() -> void:
 # ---- update ---------------------------------------------------------------------------------------------------------
 func set_text(l: Label,text: String) -> void:
  if l.text!=text:l.text=text
+# Bottom-centre of the run timer in screen pixels: the Stopwatch watch hangs from here.
+func timer_anchor() -> Vector2:
+ if not is_instance_valid(timer_label):return Vector2(960,120)
+ return timer_label.get_global_transform()*Vector2(timer_label.size.x*0.5,timer_label.size.y)
 func update(delta: float) -> void:
  var signature=RunData.build_signature(game)
  if signature!=build_signature_drawn:build_signature_drawn=signature;_rebuild_build()

@@ -671,6 +671,7 @@ func update_enemies(real_delta: float) -> void:
  # weapons, camera, UI and audio never go through here.
  var delta=world_time.hostile(real_delta)
  hostile_frozen_pass=delta<=0.0
+ enemy_view.frozen_look=1.0 if world_time.frozen() else 0.0;enemy_view.jolt=world_time.just_released
  if debug_combat:
   combat_pool_start=pool.created;combat_burst_start=combat_fx.bursts_created
   combat_counters={"hits":0,"deaths":0,"xp_drops":0,"xp_merged":0,"scenes":0,"freed_nodes":0}
