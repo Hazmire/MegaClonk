@@ -75,6 +75,8 @@ var gold = 0
 var gold_fraction = 0.0
 var damage_total = 0.0
 var damage_by_weapon: Dictionary = {}
+var damage_by_fusion: Dictionary = {} # damage dealt by Fusion-tagged hits, per Fusion id (the weapon's own hits and its forms)
+var damage_by_form: Dictionary = {}   # damage dealt by the fused attack forms only (Fusions.FORMS), per Fusion id
 var weapon_damage_windows: Dictionary={}
 var spawn_clock = 0.0
 var invulnerability = 0.0
@@ -324,7 +326,7 @@ func begin_run() -> void:
  elapsed = 0
  endless=false;endless_started=false;endless_time=0.0;endless_whole=0;ghost_count=0;ghost_budget=0.0;ghost_rng.seed=run_seed+8675309
  damage_total = 0
- damage_by_weapon.clear();weapon_damage_windows.clear()
+ damage_by_weapon.clear();damage_by_fusion.clear();damage_by_form.clear();weapon_damage_windows.clear()
  weapons.clear();gems.reset();amulets=0;amulets_found=0
  tomes.clear()
  items.clear();irt.reset()
@@ -860,6 +862,7 @@ func hit(e: Dictionary, base: float, weapon: int, ctx: Dictionary = {}) -> void:
  if e.kind<8 and "shield" in e.variant.modules and e.hp/e.max_hp>0.5: amount*=0.5
  if irt.cond_damage:amount*=irt.damage_mult(e,item_hit,amount)
  amount=StatusManager.modify_damage(self,e,amount,critical,weapon)
+ if ctx.has("form") and e.kind in Elements.BOSS_KINDS:amount=minf(amount,float(e.max_hp)*float(Fusions.SAFETY.boss_hit_max_fraction)) # a fused form can never instakill a boss
  e["hit_time"]=0.10;e["flash_tint"]=0.0
  if is_instance_valid(combat_fx):
   if item_hit:psx.burst(e.pos+Vector3.UP*0.8,2,[Color("d9d2b8"),Color("8f876f")],4.0,0.1,0.18,6.0,1.5)
@@ -881,6 +884,9 @@ func hit(e: Dictionary, base: float, weapon: int, ctx: Dictionary = {}) -> void:
   numbers.show_damage(e.pos+Vector3.UP,amount,critical,color,elapsed)
  damage_total += actual
  damage_by_weapon[weapon] = damage_by_weapon.get(weapon,0.0)+actual
+ if ctx.has("fusion"):
+  damage_by_fusion[ctx.fusion]=float(damage_by_fusion.get(ctx.fusion,0.0))+actual
+  if ctx.has("form"):damage_by_form[ctx.fusion]=float(damage_by_form.get(ctx.fusion,0.0))+actual
  if not item_hit and actual>0.0 and stats.lifesteal>0.0:health=minf(stats.max_health,health+lifesteal_hp())
  if critical and not settings.reduced and not ctx.has("source"): flash(e.pos,Color("fff3aa"),0.4)
  StatusManager.on_hit(self,e,weapon,critical,actual)
