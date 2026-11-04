@@ -59,3 +59,15 @@ At the cap the ghost swarm costs about the same as 500 ordinary enemies on this 
 - Results capture shows "RUN TIME 00:00" because the capture drives the clocks by hand; in a real run it is the whole run time.
 - Old saves made mid-endless before this change derive `endless` from the stage clock; not tested against a real legacy file.
 - Perf numbers are software GL only.
+
+## Fix pass 1 (branch `fix/endless-pass-1`)
+1. **Ghost waves.** The trickle spawner is gone. A wave is a ring of ghosts that appears at once, 10-15 m from the player, evenly spaced all the way round. The first wave (30) comes the instant endless starts, then one every 5 s; wave size is 30 x 1.22^minute (x Difficulty), so ~30 at 0:00, ~81 at 5:00, ~220 at 10:00, trimmed to the 600 live cap. Values: `spawn` in `assets/config/endless_rules.json` (`wave_base`, `wave_growth_per_min`, `wave_interval_s`) and `spawn_ring`.
+2. **Ghost-vs-ghost collision.** A spatial hash over preallocated arrays pushes overlapping ghosts apart each frame (`Ghosts.separate`); no per-frame allocation.
+3. **E / Space skip** the chest-opening cutscene (it already skipped with Space while the reel spun; now E too, and during the open and landing phases). The level-up fanfare already took both.
+4. **Tab closes the build screen** (handled before the GUI's focus navigation can swallow it).
+5. **Stage spawn ramp.** After 3:00 of a stage the spawn rate gets an extra multiplier of 1 + 0.35 per minute. The values are `spawn_ramp_start_s` and `spawn_ramp_per_minute` in `scripts/meta/run_rules.gd` (0 = old curve).
+6. **Chest banish.** The chest reveal has a Banish button, 3 per run. Banishing takes the item back out of the bag, bans it from chests for the rest of the run, and the chest rolls a replacement (shown straight on its reveal). Saved with the run.
+7. **Vases give no items** (`vase_item_chance` 0, no vase tiers); the Unlocks memo no longer lists vases as a source.
+8. **XP gem gravity.** Gems fall to the ground and hover just above it; before, a gem dropped by a flying ghost stayed where it died.
+
+Tests: `tests/endless_fix_pass_1.gd` (33 checks); endless, items, menus and audio tests updated. With waves the stress-build runner now dies at endless 13:46 (was 16:38). Unverified: feel and difficulty by hand; banish semantics (replacement roll rather than a plain skip) is my reading of the request.
