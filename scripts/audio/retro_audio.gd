@@ -16,6 +16,7 @@ var cooldown_suppressed=0
 var voice_suppressed=0
 var music_players=[]
 var muted=false # test/profile stub: emit() accepts nothing (used to prove audio never changes the simulation)
+var last_player: Node=null # the player the most recent accepted emit started (the Fusion forge reads its playback position)
 var count_emits=false # tests: count every emit request per event id
 var emit_counts: Dictionary={}
 var profile_usec=0 # tests/profile: time spent inside emit() and the loop calls while count_emits is on
@@ -120,7 +121,7 @@ func _emit(event: String,position_value: Vector3,gain: float,pitch_multiplier: f
  if AudioServer.get_driver_name()!="Dummy":player.play()
  voice.event=event;voice.until=clock+maxf(0.02,stream.get_length()/player.pitch_scale);voice.priority=priority;voice["key"]=loop_key
  if loop_key!="":voice.until=clock+1.0e9
- last_events[event]=clock;accepted+=1;recent.append(event)
+ last_player=player;last_events[event]=clock;accepted+=1;recent.append(event)
  if recent.size()>16:recent.pop_front()
  return true
 # Looping sounds (shrine charge, heartbeat, aura, scythes, element layers) hold one pooled voice under a key.

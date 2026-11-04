@@ -57,6 +57,7 @@ static func of_weapon(game: Object,id: int) -> String:
 static func is_fusion(state: Dictionary) -> bool:return of_state(state)!=""
 static func display_name(id: String) -> String:return str(TABLE[id].name) if valid(id) else ""
 static func epithet(id: String) -> String:return str(TABLE[id].epithet) if valid(id) else ""
+static func combo_name(id: String) -> String:return combo_id(id).replace("_"," ").capitalize()
 static func combo_id(id: String) -> String:return str(TABLE[id].combo) if valid(id) else ""
 static func palette(id: String) -> Dictionary:return TABLE[id].palette if valid(id) else {}
 static func color(id: String,key: String="mid") -> Color:return TABLE[id].palette.get(key,Color.WHITE) if valid(id) else Color.WHITE
