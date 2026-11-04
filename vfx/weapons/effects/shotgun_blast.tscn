@@ -1,0 +1,179 @@
+[gd_scene format=4]
+
+[ext_resource type="Script" path="res://vfx/weapons/scripts/vfx_burst.gd" id="1_q7en8"]
+[ext_resource type="Texture2D" path="res://vfx/weapons/textures/flash.png" id="2_dyy70"]
+[ext_resource type="Texture2D" path="res://vfx/weapons/textures/cone.png" id="3_0s8e1"]
+[ext_resource type="Texture2D" path="res://vfx/weapons/textures/streak.png" id="4_0o62a"]
+[ext_resource type="Texture2D" path="res://vfx/weapons/textures/smoke.png" id="5_rx54o"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uc70s"]
+transparency = 1
+blend_mode = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(1, 0.9, 0.6, 1)
+albedo_texture = ExtResource("2_dyy70")
+texture_filter = 0
+billboard_mode = 1
+billboard_keep_scale = true
+
+[sub_resource type="QuadMesh" id="QuadMesh_alvng"]
+material = SubResource("StandardMaterial3D_uc70s")
+size = Vector2(1.3, 1.3)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bmpe8"]
+transparency = 1
+blend_mode = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(1, 0.75, 0.35, 0.95)
+albedo_texture = ExtResource("3_0s8e1")
+texture_filter = 0
+billboard_keep_scale = true
+
+[sub_resource type="QuadMesh" id="QuadMesh_0870i"]
+material = SubResource("StandardMaterial3D_bmpe8")
+size = Vector2(3.2, 4)
+
+[sub_resource type="Gradient" id="Gradient_1v17i"]
+offsets = PackedFloat32Array(0, 0.3, 1)
+colors = PackedColorArray(1, 1, 0.9, 1, 1, 0.85, 0.4, 1, 0.9, 0.4, 0.1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_m0vko"]
+gradient = SubResource("Gradient_1v17i")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_yauyd"]
+particle_flag_align_y = true
+direction = Vector3(0, 0, -1)
+spread = 18.0
+initial_velocity_min = 16.0
+initial_velocity_max = 26.0
+gravity = Vector3(0, -5, 0)
+damping_min = 6.0
+damping_max = 10.0
+scale_min = 0.7
+scale_max = 1.2
+color_ramp = SubResource("GradientTexture1D_m0vko")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_37n4t"]
+transparency = 1
+blend_mode = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("4_0o62a")
+texture_filter = 0
+billboard_keep_scale = true
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_4srmw"]
+_surfaces = [{
+"aabb": AABB(-0.025, -0.16, -0.025, 0.05, 0.32, 0.05),
+"attribute_data": PackedByteArray("AAAAAAAAAAAAAIA/AAAAAAAAgD8AAIA/AAAAAAAAAAAAAIA/AACAPwAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAgD8AAIA/AAAAAAAAAAAAAIA/AACAPwAAAAAAAIA/"),
+"format": 34359738385,
+"material": SubResource("StandardMaterial3D_37n4t"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 12,
+"vertex_data": PackedByteArray("zczMvArXI74AAAAAzczMPArXI74AAAAAzczMPArXIz4AAAAAzczMvArXI74AAAAAzczMPArXIz4AAAAAzczMvArXIz4AAAAAAAAAAArXI77NzMy8AAAAAArXI77NzMw8AAAAAArXIz7NzMw8AAAAAArXI77NzMy8AAAAAArXIz7NzMw8AAAAAArXIz7NzMy8")
+}]
+
+[sub_resource type="Gradient" id="Gradient_rwtvn"]
+offsets = PackedFloat32Array(0, 0.08, 1)
+colors = PackedColorArray(0.78, 0.8, 0.77, 0, 0.82, 0.84, 0.81, 0.8, 0.66, 0.68, 0.66, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_fggn8"]
+gradient = SubResource("Gradient_rwtvn")
+
+[sub_resource type="Curve" id="Curve_vj60o"]
+_data = [Vector2(0, 0.25), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_ugjna"]
+curve = SubResource("Curve_vj60o")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_1tyfo"]
+angle_max = 360.0
+direction = Vector3(0, 0, -1)
+spread = 25.0
+initial_velocity_min = 1.0
+initial_velocity_max = 2.5
+gravity = Vector3(0, 0.4, 0)
+damping_min = 0.5
+damping_max = 0.8
+scale_min = 0.7
+scale_max = 1.1
+scale_curve = SubResource("CurveTexture_ugjna")
+color_ramp = SubResource("GradientTexture1D_fggn8")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4feri"]
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("5_rx54o")
+texture_filter = 0
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_nrqag"]
+material = SubResource("StandardMaterial3D_4feri")
+size = Vector2(0.6, 0.6)
+
+[node name="ShotgunBlast" type="Node3D" unique_id=334409734]
+script = ExtResource("1_q7en8")
+life = 1.3
+
+[node name="FlashStar" type="MeshInstance3D" parent="." unique_id=895643494]
+cast_shadow = 0
+mesh = SubResource("QuadMesh_alvng")
+metadata/time = 0.07
+metadata/scale_from = 0.7
+metadata/scale_to = 1.4
+
+[node name="FlashCone" type="MeshInstance3D" parent="." unique_id=406272674]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, -2)
+cast_shadow = 0
+mesh = SubResource("QuadMesh_0870i")
+metadata/time = 0.12
+metadata/scale_from = 0.85
+metadata/scale_to = 1.05
+
+[node name="FlashConeV" type="MeshInstance3D" parent="." unique_id=573008753]
+transform = Transform3D(-4.371139e-08, 4.371139e-08, 1, 1, 1.9106855e-15, 4.371139e-08, 0, 1, -4.371139e-08, 0, 0, -2)
+cast_shadow = 0
+mesh = SubResource("QuadMesh_0870i")
+metadata/time = 0.12
+metadata/scale_from = 0.85
+metadata/scale_to = 1.05
+
+[node name="Shrapnel" type="GPUParticles3D" parent="." unique_id=1246841517]
+emitting = false
+amount = 36
+lifetime = 0.32
+one_shot = true
+explosiveness = 1.0
+visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
+process_material = SubResource("ParticleProcessMaterial_yauyd")
+draw_pass_1 = SubResource("ArrayMesh_4srmw")
+
+[node name="Smoke" type="GPUParticles3D" parent="." unique_id=186258508]
+emitting = false
+lifetime = 1.1
+one_shot = true
+explosiveness = 0.8
+visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
+process_material = SubResource("ParticleProcessMaterial_1tyfo")
+draw_pass_1 = SubResource("QuadMesh_nrqag")
+metadata/delay = 0.03
+
+[node name="Light" type="OmniLight3D" parent="." unique_id=1346865706]
+light_color = Color(1, 0.75, 0.4, 1)
+light_energy = 0.0
+omni_range = 6.0
+metadata/peak = 6.0
+metadata/fade = 0.12

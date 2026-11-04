@@ -1,0 +1,111 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://vfx/weapons/scripts/aura.gd" id="1_7mebo"]
+[ext_resource type="Texture2D" path="res://vfx/weapons/textures/sigil.png" id="2_mhlwg"]
+[ext_resource type="Texture2D" path="res://vfx/weapons/textures/smoke.png" id="3_otewj"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jyp38"]
+transparency = 1
+blend_mode = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.3, 0.68, 0.26, 0.8)
+albedo_texture = ExtResource("2_mhlwg")
+texture_filter = 0
+billboard_keep_scale = true
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_gx6l3"]
+material = SubResource("StandardMaterial3D_jyp38")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jf2xn"]
+transparency = 1
+blend_mode = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.8, 1, 0.7, 0)
+albedo_texture = ExtResource("2_mhlwg")
+texture_filter = 0
+billboard_keep_scale = true
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_k18fl"]
+material = SubResource("StandardMaterial3D_jf2xn")
+
+[sub_resource type="Gradient" id="Gradient_iiigo"]
+offsets = PackedFloat32Array(0, 0.2, 1)
+colors = PackedColorArray(0.1, 0.24, 0.09, 0, 0.16, 0.34, 0.13, 0.8, 0.1, 0.22, 0.08, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_8k1jo"]
+gradient = SubResource("Gradient_iiigo")
+
+[sub_resource type="Curve" id="Curve_02ihw"]
+_data = [Vector2(0, 0.4), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_hxrmy"]
+curve = SubResource("Curve_02ihw")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_x1a78"]
+emission_shape = 6
+emission_ring_axis = Vector3(0, 1, 0)
+emission_ring_height = 0.05
+emission_ring_radius = 2.5
+emission_ring_inner_radius = 0.0
+emission_ring_cone_angle = 90.0
+angle_max = 360.0
+direction = Vector3(0, 1, 0)
+spread = 12.0
+initial_velocity_min = 0.25
+initial_velocity_max = 0.6
+gravity = Vector3(0, 0.25, 0)
+scale_min = 0.7
+scale_max = 1.3
+scale_curve = SubResource("CurveTexture_hxrmy")
+color_ramp = SubResource("GradientTexture1D_8k1jo")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6w3l0"]
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("3_otewj")
+texture_filter = 0
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_wgh81"]
+material = SubResource("StandardMaterial3D_6w3l0")
+size = Vector2(1.3, 1.3)
+
+[node name="Aura" type="Node3D" unique_id=944426112]
+script = ExtResource("1_7mebo")
+
+[node name="Sigil" type="MeshInstance3D" parent="." unique_id=1139701821]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, 0)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_gx6l3")
+
+[node name="Pulse" type="MeshInstance3D" parent="." unique_id=916415640]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_k18fl")
+
+[node name="Smoke" type="GPUParticles3D" parent="." unique_id=955731768]
+amount = 30
+lifetime = 2.6
+visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_x1a78")
+draw_pass_1 = SubResource("QuadMesh_wgh81")
+
+[node name="Light" type="OmniLight3D" parent="." unique_id=939899118]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+light_color = Color(0.45, 1, 0.4, 1)
+light_energy = 0.6
+omni_range = 4.5
+metadata/peak = 4.0
+metadata/fade = 0.15

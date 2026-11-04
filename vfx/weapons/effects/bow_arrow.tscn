@@ -1,0 +1,117 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://vfx/weapons/scripts/projectile.gd" id="1_1ooom"]
+[ext_resource type="Texture2D" path="res://vfx/weapons/textures/dot.png" id="2_gl51r"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rff3c"]
+shading_mode = 0
+albedo_color = Color(0.1, 0.11, 0.1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_lsosc"]
+material = SubResource("StandardMaterial3D_rff3c")
+size = Vector3(0.04, 0.04, 0.85)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_de6mx"]
+shading_mode = 0
+albedo_color = Color(0.5, 0.1, 0.13, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4kpmj"]
+material = SubResource("StandardMaterial3D_de6mx")
+size = Vector3(0.16, 0.02, 0.16)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7rx5h"]
+shading_mode = 0
+
+[sub_resource type="BoxMesh" id="BoxMesh_6tel6"]
+material = SubResource("StandardMaterial3D_7rx5h")
+size = Vector3(0.08, 0.08, 0.14)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2tmby"]
+transparency = 1
+blend_mode = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.85, 0.95, 1, 0.9)
+albedo_texture = ExtResource("2_gl51r")
+texture_filter = 0
+billboard_mode = 1
+billboard_keep_scale = true
+
+[sub_resource type="QuadMesh" id="QuadMesh_vm6ob"]
+material = SubResource("StandardMaterial3D_2tmby")
+size = Vector2(0.55, 0.55)
+
+[sub_resource type="Gradient" id="Gradient_xrwg1"]
+colors = PackedColorArray(1, 1, 1, 0.55, 0.85, 0.95, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_rkgxk"]
+gradient = SubResource("Gradient_xrwg1")
+
+[sub_resource type="Curve" id="Curve_ubd4s"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_86bjl"]
+curve = SubResource("Curve_ubd4s")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_qhs3d"]
+gravity = Vector3(0, 0, 0)
+scale_curve = SubResource("CurveTexture_86bjl")
+color_ramp = SubResource("GradientTexture1D_rkgxk")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sktpl"]
+transparency = 1
+blend_mode = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("2_gl51r")
+texture_filter = 0
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_po63u"]
+material = SubResource("StandardMaterial3D_sktpl")
+size = Vector2(0.14, 0.14)
+
+[node name="BowArrow" type="Node3D" unique_id=2091300130]
+script = ExtResource("1_1ooom")
+speed = 30.0
+max_distance = 16.0
+detach_paths = Array[NodePath]([NodePath("Trail")])
+
+[node name="Shaft" type="MeshInstance3D" parent="." unique_id=1150184016]
+cast_shadow = 0
+mesh = SubResource("BoxMesh_lsosc")
+
+[node name="FletchH" type="MeshInstance3D" parent="." unique_id=22192995]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.36)
+cast_shadow = 0
+mesh = SubResource("BoxMesh_4kpmj")
+
+[node name="FletchV" type="MeshInstance3D" parent="." unique_id=929521717]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0.36)
+cast_shadow = 0
+mesh = SubResource("BoxMesh_4kpmj")
+
+[node name="Tip" type="MeshInstance3D" parent="." unique_id=107201484]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.47)
+cast_shadow = 0
+mesh = SubResource("BoxMesh_6tel6")
+
+[node name="TipGlow" type="MeshInstance3D" parent="." unique_id=191104583]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.47)
+cast_shadow = 0
+mesh = SubResource("QuadMesh_vm6ob")
+
+[node name="Trail" type="GPUParticles3D" parent="." unique_id=28623840]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.47)
+amount = 30
+lifetime = 0.22
+visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
+process_material = SubResource("ParticleProcessMaterial_qhs3d")
+draw_pass_1 = SubResource("QuadMesh_po63u")
