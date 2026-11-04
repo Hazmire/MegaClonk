@@ -1,0 +1,47 @@
+[gd_resource type="Resource" script_class="StageDressing" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/backdrops/s3_far.png" id="1_iydm8"]
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/backdrops/s3_mid.png" id="2_7tbmu"]
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/backdrops/s3_near.png" id="3_dr1mo"]
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/textures/a3_wet_street.png" id="4_rw58a"]
+[ext_resource type="Script" path="res://scripts/stages/stage_dressing.gd" id="5_nax5i"]
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/textures/s3_charred_wall.png" id="6_gb30t"]
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/textures/s3_charred_wall_emission.png" id="7_1rixt"]
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/skies/alt3_downtown_skyonly_pano_2048.png" id="8_8gdj4"]
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/textures/s3_scorched.png" id="9_machs"]
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/textures/s3_torn_edge.png" id="10_lqctn"]
+
+[resource]
+script = ExtResource("5_nax5i")
+stage_number = 3
+title = "Downtown Calvary Run"
+sky = ExtResource("8_8gdj4")
+top = ExtResource("9_machs")
+side = ExtResource("6_gb30t")
+low = ExtResource("4_rw58a")
+torn_edge = ExtResource("10_lqctn")
+side_emission = ExtResource("7_1rixt")
+fog_color = Color(0.41568628, 0.1254902, 0.078431375, 1)
+fog_density = 0.0055
+ambient_color = Color(0.627451, 0.2509804, 0.1254902, 1)
+sun_color = Color(1, 0.5411765, 0.2901961, 1)
+wall_color = Color(0.47843137, 0.14117648, 0.078431375, 1)
+wall_glow_color = Color(1, 0.47843137, 0.22745098, 1)
+wall_glow = 0.6
+weather = "ash"
+backdrop_far = ExtResource("1_iydm8")
+backdrop_mid = ExtResource("2_7tbmu")
+backdrop_near = ExtResource("3_dr1mo")
+backdrop_ground_px = PackedFloat32Array(292, 258, 207)
+fence = {
+"candles": false,
+"gap": 2.6,
+"height": 1.1,
+"panel": false,
+"post_color": Color(0.41568628, 0.3529412, 0.28235295, 1),
+"stripes": true,
+"style": "sawhorse",
+"wire_color": Color(0.78431374, 0.2509804, 0.12156863, 1),
+"wires": 1
+}
+prop_style = 2

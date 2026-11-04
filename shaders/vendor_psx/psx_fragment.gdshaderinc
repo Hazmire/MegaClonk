@@ -27,13 +27,7 @@ vec2 uv = mix(UV, v_uv / v_clip.w, psx_affine_strength);
 	EMISSION = emission * u_emission_energy_multiplier;
 #endif
 
-#if (defined VERTEX_FOG_ENABLED) || (defined VERTEX_FOG_ALWAYS)
-	NORMAL = mix(NORMAL, vec3(0.0, 0.0, -1.0), v_fog_strength);
-	ALBEDO = mix(albedo.rgb, v_fog_color, v_fog_strength);
-	EMISSION += v_fog_color * v_fog_strength;
-#else
 	ALBEDO = albedo.rgb;
-#endif
 
 	SPECULAR = 0.0;
 	ROUGHNESS = 1.0;

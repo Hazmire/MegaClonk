@@ -4,7 +4,9 @@ var game: Node
 var root: Control
 var menu: Control
 var hud_root: Control
-var stopwatch_overlay: StopwatchOverlay
+var stopwatch_fx: StopwatchFX
+var stopwatch_seen_resets=0
+var weather_node: GPUParticles3D
 var run_stage: RunStage
 var run_hud: RunHud
 var run_overlay: RunOverlay
@@ -51,7 +53,7 @@ func setup(owner_game: Node) -> void:
  headline_font=load("res://assets/fonts/Kurland.ttf") if ResourceLoader.exists("res://assets/fonts/Kurland.ttf") else load("res://assets/fonts/PixelatedElegance.ttf")
  menu=Control.new();menu.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);root.add_child(menu)
  hud_root=Control.new();hud_root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);hud_root.mouse_filter=Control.MOUSE_FILTER_IGNORE;root.add_child(hud_root)
- stopwatch_overlay=StopwatchOverlay.new();stopwatch_overlay.setup(hud_root);hud_root.add_child(stopwatch_overlay)
+ stopwatch_fx=StopwatchFX.new();add_child(stopwatch_fx) # its own CanvasLayer (1), strictly below this one (2): the HUD never sits under the effect
  game.ui=self
  game.hud=text("",hud_root,18);game.hud.hide()
  quest_tracker=text("",hud_root,13);quest_tracker.hide()
@@ -206,9 +208,27 @@ func update_tally(delta: float) -> void:
   origin=game.player.camera.unproject_position(game.player.position+Vector3.UP*1.5)
  if tally.gold_gain_now>0:run_hud.gain("gold",tally.gold_gain_now,run_stage.from_screen(origin+Vector2(44,-16)))
  if tally.xp_gain_now>0.0:run_hud.gain("xp",tally.xp_gain_now,run_stage.from_screen(origin+Vector2(44,10)))
+# Stopwatch / Hourglass look: StopwatchFX is fed the hostile-time-left every frame and works out start, extension and release itself.
+func update_stopwatch(_delta: float) -> void:
+ if stopwatch_fx==null:return
+ var time: WorldTime=game.world_time
+ if time.hard_resets!=stopwatch_seen_resets:stopwatch_seen_resets=time.hard_resets;stopwatch_fx.reset()
+ stopwatch_fx.reduce_motion=bool(game.settings.get("reduced",false))
+ stopwatch_fx.timer_anchor=run_hud.timer_anchor()
+ var origin=Vector2(960,540)
+ if is_instance_valid(game.player) and is_instance_valid(game.player.camera) and DisplayServer.get_name()!="headless" and not game.player.camera.is_position_behind(game.player.position):
+  # the 3D world renders in a low-res SubViewport: scale its coordinates up to the full-screen canvas the effect draws on
+  var cam: Camera3D=game.player.camera;var scale_up=get_viewport().get_visible_rect().size/cam.get_viewport().get_visible_rect().size
+  origin=cam.unproject_position(game.player.position+Vector3.UP*1.0)*scale_up # the chest
+ stopwatch_fx.update(time.remaining,origin)
+ # Weather nearly stops while the world is frozen. Set from the state every frame, so it is restored after any pause or level-up.
+ if not is_instance_valid(weather_node) and is_instance_valid(game.player):weather_node=game.player.get_node_or_null(StageDressing.WEATHER_NAME) as GPUParticles3D
+ if is_instance_valid(weather_node):
+  var want=float(stopwatch_fx.style.rain_speed_while_frozen) if time.active() else 1.0
+  if weather_node.speed_scale!=want:weather_node.speed_scale=want
 func update_hud() -> void:
  var frame_delta=real_delta()
- if stopwatch_overlay:stopwatch_overlay.update_state(game.world_time,frame_delta)
+ update_stopwatch(frame_delta)
  if run_overlay:run_overlay.sync(game,frame_delta)
  update_tally(frame_delta)
  run_hud.update(frame_delta)

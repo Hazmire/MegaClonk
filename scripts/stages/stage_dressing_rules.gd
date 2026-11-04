@@ -1,0 +1,44 @@
+class_name StageDressingRules
+extends Resource
+# Values shared by every stage dressing. Generated from docs/stage_dressing/stage_dressing.json by tools/build_stage_dressings.gd.
+@export var triplanar_scale=0.25
+@export var low_ground_scale=0.18
+@export var sky_rotation_deg=180.0
+@export var ring_layers: PackedStringArray=PackedStringArray(["far","mid","near"])
+@export var ring_radius: PackedFloat32Array=PackedFloat32Array([240.0,150.0,90.0])
+@export var ring_ground_y: PackedFloat32Array=PackedFloat32Array([52.0,30.0,15.0]) # reference scale, see scaled_ring()
+@export var ring_fog_floor: PackedFloat32Array=PackedFloat32Array([26.0,13.0,4.0])
+@export var ring_fog_band: PackedFloat32Array=PackedFloat32Array([26.0,17.0,11.0])
+@export var reference_top=12.0 # the pack's top plateau; heights scale by (real top / this)
+@export var ring_haze: PackedFloat32Array=PackedFloat32Array([0.55,0.35,0.3])
+@export var outer_ground_drop=4.0
+@export var outer_ground_margin=2.0
+@export var outer_ground_radius_factor=1.1
+@export var outer_ground_tint=0.6
+@export var outer_ground_texture_scale=0.12
+@export var outer_ground_segments=96
+@export var fence_inset=1.0
+# The reference arena is 96 m across; the game's is 192 m. Ring radii and base heights scale by this so the rings stay outside the walls.
+@export var arena_scale=2.0
+@export var wall_offsets: PackedFloat32Array=PackedFloat32Array([9.0,15.0])
+@export var wall_density: PackedFloat32Array=PackedFloat32Array([0.2,0.28])
+@export var wall_height=360.0
+@export var wall_centre_y=150.0
+@export var rain_count=3000
+@export var dust_count=900
+@export var ash_count=900
+@export var rain_color=Color(0.85,0.9,0.86,0.3)
+@export var blood_rain_color=Color(0.6,0.05,0.04,0.55)
+@export var dust_color=Color(0.85,0.7,0.5,0.6)
+@export var ash_color=Color(0.75,0.68,0.64,0.9)
+@export var weather_reduced_fraction=0.5
+# Fog sea: two flat render-only layers outside the arena. size and edge_soft scale by arena_scale; y offsets are from the lowest terrain level.
+@export var fog_sea_size=560.0
+@export var fog_sea_lighten=0.06
+@export var fog_sea_darken=0.18
+@export var fog_sea_drift=0.6
+@export var fog_sea_y: PackedFloat32Array=PackedFloat32Array([-0.6,2.5])
+@export var fog_sea_density: PackedFloat32Array=PackedFloat32Array([1.0,0.55])
+@export var fog_sea_edge_soft: PackedFloat32Array=PackedFloat32Array([6.0,26.0])
+@export var fog_height_density=0.35
+@export var fog_height_offset=0.0

@@ -10,3 +10,20 @@ extends Resource
 @export var ghost_base_rate=0.5
 @export var ghost_growth_seconds=120.0
 @export var ghost_speed_cap=10.0
+# Credit-based spawner (Game.spawn_rate): enemies per second earned with nothing killed ("no-kill rate"), growing over the stage clock;
+# clearing the field earns up to (1+clear_bonus)x that, as the living count falls under a soft cap that also grows with time.
+@export var spawn_start_rate=0.25
+@export var spawn_end_rate=3.0
+@export var spawn_curve=1.4
+# After spawn_ramp_start_s of a stage the spawn rate gets an extra multiplier that grows by spawn_ramp_per_minute every further minute (1x at the start,
+# 1 + 0.35 x minutes-after). Raise spawn_ramp_per_minute to make stages fill up faster; set it to 0 for the old curve.
+@export var spawn_ramp_start_s=180.0
+@export var spawn_ramp_per_minute=0.35
+@export var soft_cap_start=25.0
+@export var soft_cap_end=300.0
+@export var clear_bonus=2.0
+@export var rush_spawn_mult=1.6
+@export var endless_mult_cap=6.0
+# Difficulty stat: +hp and +damage 1:1, +speed per point (capped), +spawn count 1:1 (rate and soft cap).
+@export var difficulty_speed_per_point=0.25
+@export var difficulty_speed_cap=1.6

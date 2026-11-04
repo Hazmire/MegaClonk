@@ -7,7 +7,7 @@ var cards_data: Array=[]
 var cards: Array=[]
 var accept: MenuItem
 func build() -> void:
- cards_data=RunData.shrine_cards(reward)
+ cards_data=RunData.shrine_cards(reward,float(game.stats.armor))
  build_panels();build_status();build_section()
  var golden=bool(reward.get("golden",false))
  var head=Control.new();head.name="Header";head.position=Vector2(572,182);head.size=Vector2(776,110);head.mouse_filter=Control.MOUSE_FILTER_IGNORE;content.add_child(head)

@@ -12,6 +12,8 @@ var build_box: VBoxContainer
 var build_signature_drawn=""
 var timer_label: Label
 var stage_label: Label
+var title_label: Label
+var timer_fx: EndlessTimerFx
 var banner: PanelContainer
 var event_label: Label
 var kills_value: Label
@@ -49,6 +51,7 @@ func setup(owner_game: Node,owner_frontend: Node) -> RunHud:
  bosses=RunBossBars.new().setup(game,self);add_child(bosses)
  toasts=RunToasts.new().setup(self);add_child(toasts)
  bump_label=cap("+1",18,0.05,FogPalette.BONE_BRIGHT,self);bump_label.visible=false;bump_label.name="BumpPlus"
+ game.endless_begun.connect(_on_endless_begun);game.endless_second.connect(_on_endless_second)
  return self
 # ---- construction ---------------------------------------------------------------------------------------------------
 func cap(text: String,size_px: int,tracking: float,color: Color,parent: Node=null,weight: int=800) -> Label:
@@ -63,12 +66,13 @@ func _build_left() -> void:
 func _build_top_centre() -> void:
  var column=VBoxContainer.new();column.position=Vector2(660,26);column.custom_minimum_size.x=600;column.size.x=600;column.add_theme_constant_override("separation",4);column.mouse_filter=Control.MOUSE_FILTER_IGNORE;add_child(column)
  timer_label=MenuStyle.label("00:00",MenuStyle.serif(),FogPalette.SIZE_HUD_TIMER,FogPalette.BONE_BRIGHT,3,column);timer_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+ timer_fx=EndlessTimerFx.new().setup(timer_label);add_child(timer_fx)
  var row=HBoxContainer.new();row.alignment=BoxContainer.ALIGNMENT_CENTER;row.add_theme_constant_override("separation",12);row.mouse_filter=Control.MOUSE_FILTER_IGNORE;column.add_child(row)
  for i in 2:
   var rule=ColorRect.new();rule.color=FogPalette.RUST_BRIGHT;rule.custom_minimum_size=Vector2(28,3);rule.size_flags_vertical=Control.SIZE_SHRINK_CENTER;rule.mouse_filter=Control.MOUSE_FILTER_IGNORE
   if i==0:row.add_child(rule)
   else:
-   stage_label=cap("STAGE 1",13,0.32,Color("D9D4C4"),row);row.add_child(rule)
+   stage_label=cap("STAGE 1",13,0.32,Color("D9D4C4"),row);title_label=cap("",13,0.32,Color("D9D4C4"),row);row.add_child(rule)
  banner=PanelContainer.new();banner.visible=false;banner.size_flags_horizontal=Control.SIZE_SHRINK_CENTER;banner.mouse_filter=Control.MOUSE_FILTER_IGNORE
  var box=FogTheme.flat(Color(0.055,0.059,0.055,0.9),FogPalette.RUST_BRIGHT,1);box.content_margin_left=20;box.content_margin_right=20;box.content_margin_top=10;box.content_margin_bottom=8;banner.add_theme_stylebox_override("panel",box)
  var gap=Control.new();gap.custom_minimum_size=Vector2(0,10);gap.mouse_filter=Control.MOUSE_FILTER_IGNORE;column.add_child(gap);column.add_child(banner)
@@ -117,13 +121,26 @@ func _build_xp() -> void:
 # ---- update ---------------------------------------------------------------------------------------------------------
 func set_text(l: Label,text: String) -> void:
  if l.text!=text:l.text=text
+# Bottom-centre of the run timer in screen pixels: the Stopwatch watch hangs from here.
+func timer_anchor() -> Vector2:
+ if not is_instance_valid(timer_label):return Vector2(960,120)
+ return timer_label.get_global_transform()*Vector2(timer_label.size.x*0.5,timer_label.size.y)
 func update(delta: float) -> void:
  var signature=RunData.build_signature(game)
  if signature!=build_signature_drawn:build_signature_drawn=signature;_rebuild_build()
- var left=maxf(0,game.STAGE_SECONDS-game.stage_time)
- set_text(timer_label,"%02d:%02d"%[int(left)/60,int(left)%60] if left>0 else "00:00")
- timer_label.add_theme_color_override("font_color",FogPalette.RUST_TEXT if left<=0 else FogPalette.BONE_BRIGHT)
- set_text(stage_label,("STAGE %d · %s"%[game.stage,str(StageThemes.config(game.stage).title)]+(" · ENDLESS" if left<=0 else "")).to_upper())
+ if game.endless:
+  # The same timer node becomes the endless timer: it counts up and escalates. Its text changes on the game's once-per-second signal.
+  if not timer_fx.active:timer_fx.resume();_on_endless_second(int(game.endless_time))
+  timer_fx.reduce_motion=bool(game.settings.get("reduced",false))
+  timer_fx.tick(delta,game.endless_time,game.mode=="run")
+  set_text(stage_label,"ENDLESS");stage_label.add_theme_color_override("font_color",FogPalette.RUST_TEXT)
+ else:
+  if timer_fx.active:timer_fx.reset()
+  var left=maxf(0,game.STAGE_SECONDS-game.stage_time)
+  set_text(timer_label,"%02d:%02d"%[int(left)/60,int(left)%60] if left>0 else "00:00")
+  timer_label.add_theme_color_override("font_color",FogPalette.RUST_TEXT if left<=0 else FogPalette.BONE_BRIGHT)
+  set_text(stage_label,"STAGE %d"%game.stage);stage_label.add_theme_color_override("font_color",Color("D9D4C4"))
+ set_text(title_label,("· %s"%str(StageThemes.title(game.stage))).to_upper())
  set_text(kills_value,str(game.kills));set_text(chest_value,str(game.chest_cost()));set_text(gold_value,str(game.gold))
  _tick(gold_tick,"gold",delta,"+")
  var hp_now=ceili(maxf(0,game.health));var hp_max=ceili(game.stats.max_health)
@@ -146,6 +163,10 @@ func update(delta: float) -> void:
  bosses.update(delta,top)
  toasts.card_y=top+bosses.occupied_height()+(0.0 if bosses.occupied_height()>0.0 else 60.0)
  minimap.paper_style=true
+func _on_endless_second(seconds: int) -> void:
+ set_text(timer_label,Endless.clock(seconds));timer_fx.set_text(timer_label.text)
+func _on_endless_begun() -> void:
+ timer_fx.start_endless()
 func gain(kind: String,amount: float,at: Vector2) -> void:
  popups.add(kind,amount,at)
  if kind=="gold":gold_tick_sum+=int(amount);gold_tick_left=1.6

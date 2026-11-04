@@ -8,8 +8,8 @@ extends RefCounted
 const TIER_WEIGHTS={"common":0.50,"uncommon":0.28,"rare":0.15,"epic":0.05,"legendary":0.02} # SPEC (tokens.json dropWeight)
 
 const DROPS={
- "vase_item_chance":0.04,           # GUESS: chance a smashed vase also yields a Common/Uncommon item
- "vase_tiers":["common","uncommon"], # SPEC
+ "vase_item_chance":0.0,            # Vases never yield items (was 0.04: a bug report). Items come from chests and shops only.
+ "vase_tiers":[],                  # none: see vase_item_chance
  "shop_tiers":["common","uncommon","rare","epic","legendary"], # Economy Rework: shops can stock every tier (Standard: all, Rare: Rare+, Legendary: Legendary only); prices live in Economy
  "rng_seed_offset":6100417          # item RNG stream, separate from game.rng so gem/weapon rolls are untouched
 }
@@ -26,7 +26,7 @@ const T={
  "bone_reliquary":{"xp":0.08},                                   # SPEC
  "crowsfoot_charm":{"evasion":0.12},                             # SPEC base; stacking 1-(1-x)^n is a GUESS ("diminishing returns")
  "rosary_teeth":{"crit":0.05,"crit_damage":0.10},                # SPEC
- "grave_salt":{"max_health":15.0,"armor":1.0},                   # SPEC hp; GUESS: 1 armour = 4.8% reduction under 100/(100+5a), the nearest to "+5% armour"
+ "grave_salt":{"max_health":15.0,"armor":4.0},                   # SPEC hp; 4 armour = 5.1% reduction under a/(75+a): "+5% armour"
  "hex_penny":{"vase_gold":0.20},                                 # SPEC
  "bitter_wine":{"damage":0.20,"max_health_pct":-0.10},           # SPEC
  "bloodletting_knife":{"damage":0.25,"max_health":-15.0},        # SPEC
@@ -64,7 +64,7 @@ const T={
  "heretics_prism":{"bonus":0.50,"heal":1.0},                     # SPEC
  "goat_skull":{"chance":0.10,"radius":3.0},                      # SPEC
  "coven_sigil":{"per_status":0.15,"cap":0.60},                   # SPEC
- "witch_hunters_brand":{"armor_each":0.4,"armor_cap":8.0,"lifesteal_each":0.002,"lifesteal_cap":0.04,"interval":0.5}, # GUESS all ("armour and lifesteal for every burning enemy")
+ "witch_hunters_brand":{"armor_each":1.6,"armor_cap":32.0,"lifesteal_each":0.015,"lifesteal_cap":0.30,"interval":0.5}, # GUESS all ("armour and lifesteal for every burning enemy")
  # ---- batch 4: build-defining
  "saints_finger":{"extra_rolls":1},                              # SPEC
  "butchers_hook":{"chance":0.15,"mult":2.0},                     # SPEC

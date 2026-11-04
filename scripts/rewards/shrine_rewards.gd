@@ -1,7 +1,7 @@
 class_name ShrineRewards
 extends RefCounted
 const TABLE=preload("res://assets/config/stat_rewards.tres")
-const DESCRIPTIONS={"damage":"Increases damage dealt by all weapons.","speed":"Increases movement speed.","max_health":"Increases maximum health and heals the added amount.","crit":"Increases critical hit chance, capped at 100%.","haste":"Increases weapon attack speed.","pickup":"Increases the XP attraction radius.","xp":"Increases experience gained.","armor":"Reduces incoming damage through existing armour rules.","regen":"Restores additional health per second."}
+const DESCRIPTIONS={"damage":"Increases damage dealt by all weapons.","speed":"Increases movement speed.","max_health":"Increases maximum health and heals the added amount.","crit":"Increases critical hit chance. Over 100% it becomes a chance of megacrits.","haste":"Increases weapon attack speed.","pickup":"Increases the XP attraction radius.","xp":"Increases experience gained.","armor":"Reduces incoming damage through existing armour rules.","regen":"Restores additional health per second."}
 static func roll_tier(rng: RandomNumberGenerator,luck: float=0.0) -> String:
  var base={}
  for tier in Rarity.IDS:base[tier]=float(Rarity.TIERS[tier].weight)
@@ -44,10 +44,10 @@ static func select(game: Node,index: int) -> bool:
  if index<0 or index>=choices.size():return false
  apply(game,choices[index]);game.active_shrine_reward={};game.play_sound("level");game.resume();return true
 
-static func bonus_text(choice: Dictionary) -> String:
+static func bonus_text(choice: Dictionary,current_armor: float=0.0) -> String:
  var amount=float(choice.amount)
  if choice.stat=="max_health":return "+%s HP"%number(amount)
- if choice.stat=="armor":return "+%s"%number(amount)
+ if choice.stat=="armor":return "+%s%% damage reduction"%number(roundf((Armor.reduction(current_armor+amount)-Armor.reduction(current_armor))*1000.0)/10.0)
  if choice.stat=="regen":return "+%s HP/s"%number(amount)
  return "+%s%%"%number(amount*100)
 

@@ -1,0 +1,76 @@
+[gd_scene format=4]
+
+[ext_resource type="Script" path="res://vfx/weapons/scripts/vfx_burst.gd" id="1_ja42h"]
+[ext_resource type="Texture2D" path="res://vfx/weapons/textures/streak.png" id="2_8obxk"]
+[ext_resource type="Texture2D" path="res://vfx/weapons/textures/dot.png" id="3_hn62e"]
+
+[sub_resource type="Gradient" id="Gradient_55r5y"]
+colors = PackedColorArray(1, 1, 1, 1, 0.85, 0.9, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_xw2yt"]
+gradient = SubResource("Gradient_55r5y")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_w4t4i"]
+particle_flag_align_y = true
+direction = Vector3(0, 0.5, 1)
+spread = 180.0
+initial_velocity_min = 3.0
+initial_velocity_max = 7.0
+gravity = Vector3(0, -10, 0)
+color_ramp = SubResource("GradientTexture1D_xw2yt")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ihaj8"]
+transparency = 1
+blend_mode = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("2_8obxk")
+texture_filter = 0
+billboard_keep_scale = true
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_bocei"]
+_surfaces = [{
+"aabb": AABB(-0.02, -0.13, -0.02, 0.04, 0.26, 0.04),
+"attribute_data": PackedByteArray("AAAAAAAAAAAAAIA/AAAAAAAAgD8AAIA/AAAAAAAAAAAAAIA/AACAPwAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAgD8AAIA/AAAAAAAAAAAAAIA/AACAPwAAAAAAAIA/"),
+"format": 34359738385,
+"material": SubResource("StandardMaterial3D_ihaj8"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 12,
+"vertex_data": PackedByteArray("CtejvLgeBb4AAAAACtejPLgeBb4AAAAACtejPLgeBT4AAAAACtejvLgeBb4AAAAACtejPLgeBT4AAAAACtejvLgeBT4AAAAAAAAAALgeBb4K16O8AAAAALgeBb4K16M8AAAAALgeBT4K16M8AAAAALgeBb4K16O8AAAAALgeBT4K16M8AAAAALgeBT4K16O8")
+}]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1wpkm"]
+transparency = 1
+blend_mode = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("3_hn62e")
+texture_filter = 0
+billboard_mode = 1
+billboard_keep_scale = true
+
+[sub_resource type="QuadMesh" id="QuadMesh_xlw5r"]
+material = SubResource("StandardMaterial3D_1wpkm")
+size = Vector2(0.6, 0.6)
+
+[node name="ImpactSparks" type="Node3D" unique_id=164688610]
+script = ExtResource("1_ja42h")
+life = 0.7
+
+[node name="Sparks" type="GPUParticles3D" parent="." unique_id=1116913719]
+emitting = false
+amount = 16
+lifetime = 0.3
+one_shot = true
+explosiveness = 1.0
+visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
+process_material = SubResource("ParticleProcessMaterial_w4t4i")
+draw_pass_1 = SubResource("ArrayMesh_bocei")
+
+[node name="FlashDot" type="MeshInstance3D" parent="." unique_id=1964075833]
+cast_shadow = 0
+mesh = SubResource("QuadMesh_xlw5r")
+metadata/time = 0.06

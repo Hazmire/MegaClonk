@@ -30,6 +30,7 @@ func run():
 
 var spot=0.0
 func dummy(hp: float=4000.0,kind: int=0,separate: bool=true) -> Dictionary:
+ game.stats.crit=0.0 # damage checks below assume no random critical hits (the run rng is unseeded here)
  if separate:spot+=40.0
  var e=game.spawn_enemy(0,game.player.position+Vector3(20+fmod(spot,60.0),0,-30+spot*0.5))
  e.hp=hp;e.max_hp=hp;e.kind=kind;e.slow=0;e.frozen=0;e.burn=0;e.poison=0;e.age=30.0

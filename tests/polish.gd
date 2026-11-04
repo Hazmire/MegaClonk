@@ -11,7 +11,7 @@ func run():
  game=load("res://scenes/main/main.tscn").instantiate();root.add_child(game);await process_frame
  game.sandbox=true;game.map_seed_override=9;game.next_run_seed=123;game.begin_run();game.mode="pause";game.player.active=false;game.settings.invincible=true
  await physics_frame;await physics_frame
- verify(game.world.get_node("TerraceTerrain").material_override.shader.resource_path.ends_with("grimdark_terrain.gdshader"),"World-space floor shader replaces flat ground")
+ verify(game.world.get_node("TerraceTerrain").material_override.shader.resource_path.ends_with("stage_ground.gdshader"),"World-space floor shader replaces flat ground")
  var env=game.world.get_child(0).environment
  verify(env.background_mode==Environment.BG_SKY and env.sky!=null and env.fog_enabled and env.fog_density>=0.003 and env.fog_density<=0.008,"Layered blue sky and readable distance fog are configured")
  var min_crest=1000.0

@@ -184,7 +184,10 @@ func fuse() -> void:
  var result=ImbueRules.install(game,wid,element)
  if not result.ok:
   game.toast(ImbueRules.reason_text(str(result.reason)));phase="idle";target_weapon=-1;build_dynamic();return
- game.play_sound(fuse_event(wid,element));done_text="%s|%s"%[Elements.display_name(element),weapon_name(wid)];done_color=Elements.color(element)
+ var fusion=Fusions.of_state(game.weapons[wid])
+ if fusion!="":start_forge(wid,fusion)
+ else:game.play_sound(fuse_event(wid,element))
+ done_text="%s|%s"%[Elements.display_name(element),weapon_name(wid)];done_color=Elements.color(element)
  phase="fusing";phase_time=0.0;just_fused_weapon=wid;target_slot=-1;_build_action();leave_button.hide()
  spent=price
 var spent=0
@@ -194,6 +197,13 @@ func fuse_event(wid: int,element: String) -> String:
  if not combo.is_empty():return "imbue.imbue_combo_"+str(combo.id)
  return "imbue.imbue_fuse_"+RetroAudio.element_id(element)
 var fuse_bar: Control
+var forge: ForgeScene=null
+# The second gem completed a Fusion: the forging moment replaces the plain fuse (and its sound); the page waits for it, then finishes normally.
+func start_forge(wid: int,fusion: String) -> void:
+ game.audio.last_player=null;game.audio.emit(fuse_event(wid,""))
+ var gem_ids=WeaponSockets.gems(game.weapons[wid]).duplicate()
+ forge=ForgeScene.new().setup(fusion,gem_ids,str(Fusions.WEAPON_KEYS.get(wid,"sword")),Fusions.weapon_name(game.weapons[wid],wid),game.audio.last_player)
+ add_child(forge);forge.finished.connect(func():forge=null)
 func finish_fuse() -> void:
  phase="done";held="";target_weapon=-1;phase_time=0.0
  var strip=content.get_node_or_null("Status")
@@ -205,4 +215,5 @@ func _process(delta: float) -> void:
  if phase=="fusing":
   phase_time+=delta
   if is_instance_valid(fuse_bar):fuse_bar.queue_redraw()
+  if forge!=null:return # the forging moment sets the pace
   if phase_time>=FUSE_TIME:finish_fuse()

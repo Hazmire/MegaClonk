@@ -1,0 +1,44 @@
+[gd_resource type="Resource" script_class="StageDressing" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/backdrops/s4_far.png" id="1_f5edq"]
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/backdrops/s4_mid.png" id="2_w87vj"]
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/backdrops/s4_near.png" id="3_v3qvv"]
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/textures/a1_brown_creek.png" id="4_lbbyk"]
+[ext_resource type="Script" path="res://scripts/stages/stage_dressing.gd" id="5_wdwtf"]
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/textures/a4_coal_rock.png" id="6_8c4sw"]
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/skies/alt4_no9_sinkhole_skyonly_pano_2048.png" id="7_c8lpd"]
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/textures/s1_mud.png" id="8_8k4kq"]
+
+[resource]
+script = ExtResource("5_wdwtf")
+stage_number = 4
+title = "The No. 9 Sinkhole"
+sky = ExtResource("7_c8lpd")
+top = ExtResource("8_8k4kq")
+side = ExtResource("6_8c4sw")
+low = ExtResource("4_lbbyk")
+torn_edge = ExtResource("6_8c4sw")
+fog_color = Color(0.11764706, 0.078431375, 0.078431375, 1)
+fog_density = 0.006
+ambient_color = Color(0.3529412, 0.2509804, 0.2509804, 1)
+sun_color = Color(0.5411765, 0.41568628, 0.41568628, 1)
+wall_color = Color(0.16470589, 0.101960786, 0.09411765, 1)
+wall_glow_color = Color(0.5411765, 0.10980392, 0.078431375, 1)
+wall_glow = 0.3
+weather = "blood_rain"
+backdrop_far = ExtResource("1_f5edq")
+backdrop_mid = ExtResource("2_w87vj")
+backdrop_near = ExtResource("3_v3qvv")
+backdrop_ground_px = PackedFloat32Array(288, 231, 213)
+fence = {
+"candles": true,
+"gap": 3.4,
+"height": 1.5,
+"panel": false,
+"post_color": Color(0.16470589, 0.1254902, 0.09411765, 1),
+"stripes": false,
+"style": "timber",
+"wire_color": Color(0.5411765, 0.11764706, 0.101960786, 1),
+"wires": 1
+}
+prop_style = 2

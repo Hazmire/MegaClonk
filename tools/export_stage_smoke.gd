@@ -8,7 +8,7 @@ func run():
  game.sandbox=true;game.settings.invincible=true;game.map_seed_override=9;game.next_run_seed=923;game.begin_run();game.set_physics_process(false);game.player.active=false
  for number in [1,2,3]:
   game.stage=number;game.build_stage();await process_frame
-  if not require(ForestAtmosphere.floor_material().get_shader_parameter("moss_high")==StageThemes.config(number).moss_high,"Compiled stage theme did not apply"):return
+  if not require(ForestAtmosphere.floor_material().get_shader_parameter("top_tex")==StageDressing.for_stage(number).top,"Compiled stage dressing did not apply"):return
   var counts={}
   for object in game.interactables:counts[object.kind]=int(counts.get(object.kind,0))+1
   if not require(counts.get("Chest",0)>=15 and counts.get("Shop",0)>=3 and counts.get("Elite Statue",0)>=2 and counts.get("Boss Statue",0)>=1,"Compiled world omitted required objects"):return

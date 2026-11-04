@@ -41,6 +41,7 @@ static func personal_bests(data: Dictionary,count: int=5) -> Array:
  var records: Array=data.get("leaderboard",[]).duplicate(true)
  records.sort_custom(func(a,b):return int(a.kills)>int(b.kills) or (int(a.kills)==int(b.kills) and float(a.time)>float(b.time)))
  return records.slice(0,count)
+static func best_endless(data: Dictionary) -> float:return float(data.get("best_endless_time",0.0))
 static func clock(seconds: float) -> String:return "%02d:%02d"%[int(seconds)/60,int(seconds)%60]
 static func stage_name(biome: int) -> String:return STAGE_NAMES[clampi(biome,0,STAGE_NAMES.size()-1)]
 static func stage_short(biome: int) -> String:return STAGE_SHORT[clampi(biome,0,STAGE_SHORT.size()-1)]

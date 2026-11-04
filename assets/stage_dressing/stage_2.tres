@@ -1,0 +1,44 @@
+[gd_resource type="Resource" script_class="StageDressing" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/backdrops/s2_far.png" id="1_pyb2p"]
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/backdrops/s2_mid.png" id="2_jnw81"]
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/backdrops/s2_near.png" id="3_lyk17"]
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/textures/a2_coal_slag.png" id="4_7nndb"]
+[ext_resource type="Script" path="res://scripts/stages/stage_dressing.gd" id="5_3ml11"]
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/textures/s2_clay_wall.png" id="6_14224"]
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/skies/alt2_route9_tipple_skyonly_pano_2048.png" id="7_rg13r"]
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/textures/s2_dead_grass.png" id="8_evldw"]
+[ext_resource type="Texture2D" path="res://assets/stage_dressing/textures/s2_torn_edge.png" id="9_devys"]
+
+[resource]
+script = ExtResource("5_3ml11")
+stage_number = 2
+title = "Route 9 & the Tipple"
+sky = ExtResource("7_rg13r")
+top = ExtResource("8_evldw")
+side = ExtResource("6_14224")
+low = ExtResource("4_7nndb")
+torn_edge = ExtResource("9_devys")
+fog_color = Color(0.65882355, 0.44313726, 0.23529412, 1)
+ambient_color = Color(0.6039216, 0.47843137, 0.3529412, 1)
+sun_color = Color(0.9411765, 0.6901961, 0.4392157, 1)
+wall_color = Color(0.72156864, 0.5176471, 0.29803923, 1)
+wall_glow_color = Color(0.22745098, 0.14117648, 0.08627451, 1)
+wall_glow = 0.4
+weather = "dust"
+backdrop_far = ExtResource("1_pyb2p")
+backdrop_mid = ExtResource("2_jnw81")
+backdrop_near = ExtResource("3_lyk17")
+backdrop_ground_px = PackedFloat32Array(299, 224, 206)
+fence = {
+"candles": false,
+"gap": 3.0,
+"height": 2.0,
+"panel": true,
+"post_color": Color(0.3529412, 0.3529412, 0.3372549, 1),
+"stripes": false,
+"style": "steel",
+"wire_color": Color(0.22745098, 0.22745098, 0.21960784, 1),
+"wires": 2
+}
+prop_style = 1

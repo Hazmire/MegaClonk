@@ -1,0 +1,46 @@
+extends SceneTree
+# Regenerates assets/stage_dressing/*.tres from docs/stage_dressing/stage_dressing.json (the source of truth).
+#   tools/godot.sh --headless --path . --script tools/build_stage_dressings.gd
+const DIR="res://docs/stage_dressing/"
+const PROP_STYLE=[0,1,2,2]
+const OUT="res://assets/stage_dressing/"
+# docs/ is excluded from exports, so the runtime copies of the pack's images live in assets/stage_dressing/ (the manifest stays the source of truth).
+func tex(path):
+ if path==null or path=="":return null
+ var target=OUT+path;DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(target.get_base_dir()))
+ DirAccess.copy_absolute(ProjectSettings.globalize_path(DIR+path),ProjectSettings.globalize_path(target))
+ return ResourceLoader.load(target,"Texture2D",ResourceLoader.CACHE_MODE_REPLACE) if ResourceLoader.exists(target) else null
+func vec(a):return Vector3(a[0],a[1],a[2])
+func _initialize():
+ var d=JSON.parse_string(FileAccess.get_file_as_string(DIR+"stage_dressing.json"))
+ var rules=StageDressingRules.new()
+ rules.triplanar_scale=float(d.texture_import.triplanar_world_scale);rules.low_ground_scale=float(d.texture_import.low_ground_scale)
+ rules.sky_rotation_deg=float(d.sky.sky_rotation_deg_y)
+ var layers=PackedStringArray();var radius=PackedFloat32Array();var ground=PackedFloat32Array();var haze=PackedFloat32Array();var floors=PackedFloat32Array();var bands=PackedFloat32Array()
+ for r in d.backdrop_rings:layers.append(r.layer);radius.append(r.radius_m);ground.append(r.ground_y_m);haze.append(r.haze);floors.append(r.fog_floor_m);bands.append(r.fog_band_m)
+ rules.ring_layers=layers;rules.ring_radius=radius;rules.ring_ground_y=ground;rules.ring_haze=haze;rules.ring_fog_floor=floors;rules.ring_fog_band=bands;rules.reference_top=float(d.backdrop_reference_top_m)
+ var strips=JSON.parse_string(FileAccess.get_file_as_string(DIR+"backdrops/strips.json")).ground_px_from_bottom # baked into each dressing: the strip art is fixed
+ var og=d.outer_ground
+ rules.outer_ground_drop=float(og.drop_m);rules.outer_ground_margin=float(og.inner_margin_m);rules.outer_ground_radius_factor=float(og.outer_radius_factor);rules.outer_ground_tint=float(og.tint);rules.outer_ground_texture_scale=float(og.texture_scale);rules.outer_ground_segments=int(og.segments);rules.fence_inset=float(d.fence_inset_m)
+ var fs=d.fog_sea;rules.fog_sea_size=float(fs.size_m);rules.fog_sea_lighten=float(fs.lighten);rules.fog_sea_darken=float(fs.darken);rules.fog_sea_drift=float(fs.drift)
+ var fy=PackedFloat32Array();var fd=PackedFloat32Array();var fe=PackedFloat32Array()
+ for l in fs.layers:fy.append(float(l.y_offset_m));fd.append(float(l.density));fe.append(float(l.edge_soft_m))
+ rules.fog_sea_y=fy;rules.fog_sea_density=fd;rules.fog_sea_edge_soft=fe;rules.fog_height_density=float(fs.height_fog.density);rules.fog_height_offset=float(fs.height_fog.offset_m)
+ rules.wall_offsets=PackedFloat32Array(d.fog_wall.offsets_from_edge_m);rules.wall_density=PackedFloat32Array(d.fog_wall.density)
+ DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://assets/stage_dressing"))
+ var err=ResourceSaver.save(rules,"res://assets/stage_dressing/rules.tres");print("rules ",err)
+ for s in d.stages:
+  var r=StageDressing.new()
+  r.stage_number=int(s.stage);r.title=s.name;r.sky=tex(s.sky)
+  r.top=tex(s.ground.top);r.side=tex(s.ground.side);r.low=tex(s.ground.low);r.torn_edge=tex(s.ground.torn_edge);r.side_emission=tex(s.ground.get("side_emission",""))
+  r.fog_color=Color(s.fog.color);r.fog_density=float(s.fog.density)
+  r.ambient_color=Color(s.ambient.color);r.ambient_energy=float(s.ambient.energy)
+  r.sun_color=Color(s.sun.color);r.sun_energy=float(s.sun.energy);r.sun_rotation_deg=vec(s.sun.rotation_deg)
+  r.wall_color=Color(s.fog_wall.color);r.wall_glow_color=Color(s.fog_wall.glow_color);r.wall_glow=float(s.fog_wall.glow)
+  r.weather=s.weather;r.backdrop_far=tex(s.backdrop.far);r.backdrop_mid=tex(s.backdrop.mid);r.backdrop_near=tex(s.backdrop.near);r.footsteps=s.footsteps
+  var f=s.fence;r.fence={"style":f.style,"post_color":Color(f.post_color),"wire_color":Color(f.wire_color),"height":float(f.height),"gap":float(f.gap),"wires":int(f.wires),"panel":bool(f.panel),"stripes":bool(f.stripes),"candles":bool(f.candles)}
+  var gp=PackedFloat32Array();for layer in layers:gp.append(float(strips["s%d_%s"%[int(s.stage),layer]]))
+  r.backdrop_ground_px=gp
+  r.prop_style=PROP_STYLE[int(s.stage)-1]
+  print("stage ",s.stage," ",ResourceSaver.save(r,"res://assets/stage_dressing/stage_%d.tres"%int(s.stage)))
+ quit()

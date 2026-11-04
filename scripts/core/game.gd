@@ -31,6 +31,10 @@ var weapons: Dictionary = {}
 var gems=GemInventory.new()
 var amulets=0 # Imbued Amulets in the bag (each unlocks one weapon's second socket)
 var amulets_found=0 # Imbued Amulet items acquired this run, bounded by Elements.TUNING.amulet.max_per_run
+const CHEST_BANISHES=3 # item banishes per run, spent from the chest reveal screen
+var banished_items: Array=[] # items banished from chests this run: they never roll from a chest again
+var chest_banishes_left=CHEST_BANISHES
+var chest_quick=false # the next chest screen opens straight on its reveal (a banish re-roll)
 var chest_gem="" # element found by the chest being revealed, shown once by the reward screen
 var world_time=WorldTime.new()
 var vases: Array=[]
@@ -71,6 +75,8 @@ var gold = 0
 var gold_fraction = 0.0
 var damage_total = 0.0
 var damage_by_weapon: Dictionary = {}
+var damage_by_fusion: Dictionary = {} # damage dealt by Fusion-tagged hits, per Fusion id (the weapon's own hits and its forms)
+var damage_by_form: Dictionary = {}   # damage dealt by the fused attack forms only (Fusions.FORMS), per Fusion id
 var weapon_damage_windows: Dictionary={}
 var spawn_clock = 0.0
 var invulnerability = 0.0
@@ -79,6 +85,18 @@ var spawn_rng=RandomNumberGenerator.new()
 var elite_active=false
 var elite_rewarded=false
 var ghost_budget=0.0
+# Endless mode: starts once, when a stage clock reaches 0:00 (Endless). endless_time counts seconds survived since, on the run simulation (stops for pause
+# and reward screens, keeps counting through the Stopwatch). Ghost spawns draw only from ghost_rng.
+signal endless_begun
+signal endless_second(seconds: int)
+var endless=false
+var endless_whole=0
+var endless_record:=false # the finished run beat best_endless_time (read by Results)
+var endless_started=false
+var endless_time=0.0
+var ghost_count=0
+var ghost_rng=RandomNumberGenerator.new()
+var ghost_view: GhostView
 var boss_spawned = false
 var boss_dead = false
 var portal: Node3D
@@ -123,7 +141,7 @@ var chests_opened=0
 var legacy_weapon_slots=0
 var legacy_tome_slots=0
 var grimdark_renderer: GrimdarkRenderer
-var settings = {"retro_scale":0.5,"psx_warp":0.25,"psx_snap":0.35,"psx_dither":true,"visual_intensity":0.7,"render_scale":1.0,"quality":1,"master":0.7,"effects":0.7,"ui_volume":0.65,"ambience":0.35,"music":0.3,"sensitivity":0.0025,"invert":false,"reduced":false,"fps":false,"focus_pause":true,"shake":true,"numbers":true,"invincible":false}
+var settings = {"retro_scale":0.5,"psx_warp":0.25,"psx_snap":0.35,"psx_dither":true,"visual_intensity":0.7,"render_scale":1.0,"quality":1,"master":0.7,"effects":0.7,"ui_volume":0.65,"ambience":0.35,"music":0.3,"sensitivity":0.0025,"invert":false,"reduced":false,"weather":true,"fps":false,"focus_pause":true,"shake":true,"numbers":true,"invincible":false}
 var pending_binding = ""
 var bindings = {"forward":KEY_W,"back":KEY_S,"left":KEY_A,"right":KEY_D,"jump":KEY_SPACE,"crouch":KEY_CTRL,"interact":KEY_E,"inspect":KEY_TAB,"ultimate":KEY_Q,"map":KEY_M}
 var music: AudioStreamPlayer
@@ -273,6 +291,7 @@ func create_avatar(parent: Node3D, index: int, pos: Vector3) -> Node3D:
  node.set_meta("character_index",index)
  return node
 func begin_run() -> void:
+ enemy_frame=0;crowd.next_id=1;crowd.solve_phase=0 # a seeded run must not depend on how many runs this process already played
  if not selected_weapon in Catalog.ACTIVE_WEAPONS:selected_weapon=Catalog.ACTIVE_WEAPONS[0]
  tome_rarities.clear()
  terrain_version=4
@@ -296,7 +315,7 @@ func begin_run() -> void:
   10: stats.crit_damage += 0.75
   14: stats.xp += 0.3
   16: stats.evasion += 0.15
-  17: stats.lifesteal += 0.03
+  17: stats.lifesteal += 0.05
   18: stats.damage += tier * 0.2
  health = stats.max_health
  xp = 0
@@ -305,12 +324,13 @@ func begin_run() -> void:
  gold = 0
  gold_fraction = 0
  elapsed = 0
+ endless=false;endless_started=false;endless_time=0.0;endless_whole=0;ghost_count=0;ghost_budget=0.0;ghost_rng.seed=run_seed+8675309
  damage_total = 0
- damage_by_weapon.clear();weapon_damage_windows.clear()
+ damage_by_weapon.clear();damage_by_fusion.clear();damage_by_form.clear();weapon_damage_windows.clear()
  weapons.clear();gems.reset();amulets=0;amulets_found=0
  tomes.clear()
  items.clear();irt.reset()
- banished.clear()
+ banished.clear();banished_items.clear();chest_banishes_left=CHEST_BANISHES;chest_quick=false
  rerolls = 3
  passive_clock = 0
  moving_time = 0
@@ -326,11 +346,17 @@ func equip(id: int) -> void:
  elif weapons.size() < weapon_limit():
   weapons[id] = {"level":1,"rarity":"common","clock":0.1,"upgrades":{},"legacy_damage":1.0}
   WeaponSockets.ensure(weapons[id])
-func terrain_height(x: float, z: float) -> float:
- # Query the collision mesh's already-built planes, never regenerate or format
- # a layout-cache key for each agent probe during a horde tick.
+# Fast path: the layout's planes are cached in `terrain_planes` while the layout matches the current stage (validated once per frame
+# and on every stage build), so the per-enemy probes do one array read instead of several dictionary lookups.
+var terrain_planes=PackedVector3Array()
+var terrain_planes_ready=false
+func refresh_terrain_cache() -> void:
+ terrain_planes_ready=false
  if not map_layout.is_empty() and int(map_layout.seed)==stage_map_seed() and int(map_layout.terrain_version)==terrain_version and int(map_layout.get("object_version",0))==world_content_version:
-  var plane: Vector3=map_layout.planes[ForestMap.index(x,z)]
+  terrain_planes=map_layout.planes;terrain_planes_ready=true
+func terrain_height(x: float, z: float) -> float:
+ if terrain_planes_ready:
+  var plane: Vector3=terrain_planes[clampi(floori((z+96)*0.5),0,ForestMap.SIDE-1)*ForestMap.SIDE+clampi(floori((x+96)*0.5),0,ForestMap.SIDE-1)]
   return plane.x*x+plane.y+plane.z*z+maxf(0,maxf(absf(x),absf(z))-96)*3.0
  return ForestMap.height(stage_map_seed(),x,z)
 func build_stage() -> void:
@@ -369,13 +395,8 @@ func build_stage() -> void:
  terrain_noise.seed = posmod(run_seed+8127+biome*101+stage*73,2147483647)
  terrain_noise.frequency = 0.018
  var colors = [Color("304f3d"),Color("9b7e51"),Color("353947")]
- var env = world.get_child(0).environment
- env.background_color = [Color("668e9b"),Color("b8a07c"),Color("343a58")][biome]
- env.fog_enabled = true
- env.fog_light_color = env.background_color
- env.fog_density = 0.003 if biome < 2 else 0.009
- StageThemes.apply(self)
  ForestWorld.build(self)
+ StageDressing.for_stage(stage).apply(self)
  if world_content_version>=1 or OrdinaryRoster.SETTINGS.elite_statues>0:create_elite_statue()
  var shop_count=0
  if map_layout.has("poi_kinds"):shop_count=map_layout.poi_kinds.count("Shop")
@@ -397,7 +418,7 @@ func build_stage() -> void:
  ImbueStation.setup(self)
  Vases.build(self)
  combat_fx=CombatFX.new();world.add_child(combat_fx)
- psx=PsxFx.new();world.add_child(psx);wrt=WeaponRuntime.new(self,psx);irt=ItemRuntime.new(self)
+ psx=PsxFx.new();world.add_child(psx);wrt=WeaponRuntime.release(wrt,self,psx);irt=ItemRuntime.new(self)
  pool = MeshPool.new()
  world.add_child(pool)
  numbers=CombatNumbers.new();world.add_child(numbers);numbers.prewarm()
@@ -408,6 +429,7 @@ func build_stage() -> void:
  world.add_child(player)
  player.position = map_layout.spawn+Vector3.UP*0.1
  player.avatar = create_avatar(player,0,Vector3.ZERO)
+ StageDressing.for_stage(stage).attach_weather(self)
  player.can_climb = loadout_runtime.trait_id=="climber"
  player.can_glide=loadout_runtime.trait_id=="glider"
  player.air_control = 18 if character == 11 else 9
@@ -417,6 +439,7 @@ func build_stage() -> void:
  player.camera.current = true
  enemy_view=EnemyView.new()
  world.add_child(enemy_view)
+ ghost_view=GhostView.new();world.add_child(ghost_view);ghost_count=0
  enemy_mesh = MultiMeshInstance3D.new()
  enemy_mesh.multimesh = MultiMesh.new()
  enemy_mesh.multimesh.transform_format = MultiMesh.TRANSFORM_3D
@@ -460,6 +483,11 @@ func gem_discovered(element: String) -> void:
 func toast(text: String) -> void:
  notice.text = text
  message_time = 4
+# Tab closes the build screen it opened. Handled in _input, before the GUI's Tab focus-navigation can swallow the key.
+func _input(event: InputEvent) -> void:
+ if event is InputEventKey and event.pressed and not event.echo and event.physical_keycode==KEY_E:e_press_frame=Engine.get_physics_frames()
+ if mode=="build" and event.is_action_pressed("inspect") and not event.is_echo():
+  get_viewport().set_input_as_handled();resume()
 func _unhandled_input(event: InputEvent) -> void:
  if pending_binding != "" and event is InputEventKey and event.pressed:
   InputMap.action_erase_events(pending_binding)
@@ -507,7 +535,10 @@ func _physics_process(delta: float) -> void:
  loadout_runtime.tick(self,delta)
  if irt.ticking:irt.tick(delta)
  elapsed += delta
- world_time.tick(delta)
+ if endless:
+  endless_time+=delta
+  if int(endless_time)!=endless_whole:endless_whole=int(endless_time);endless_second.emit(endless_whole) # the HUD updates its text on this, once per second
+ world_time.tick(delta);RunAudio.stopwatch(self)
  var hostile_delta=world_time.hostile(delta)
  for event_id in stage_clock.advance(delta):
   stage_event(event_id)
@@ -532,16 +563,15 @@ func _physics_process(delta: float) -> void:
   tick_passive()
   passive_clock -= 1
  spawn_clock -= hostile_delta
- # Budgeted spawning: no catch-up burst after a long frame; bounded ordinary counts.
- spawn_budget=minf(6,spawn_budget+hostile_delta*RUN_RULES.base_spawn_rate*stage_clock.pressure()*(1+(stage-1)*RUN_RULES.stage_spawn_growth))
- if spawn_clock<=0 and spawn_budget>=1 and enemies.size()<ENEMY_LIMIT-8:
-  var count=mini(3,int(spawn_budget))
-  for i in count:spawn_enemy()
-  spawn_budget-=count
-  spawn_clock=0.25
- if stage_clock.endless():
-  ghost_budget=minf(3,ghost_budget+hostile_delta*(RUN_RULES.ghost_base_rate+maxf(0,stage_time-STAGE_SECONDS)/RUN_RULES.ghost_growth_seconds))
-  if ghost_budget>=1 and enemies.size()<ENEMY_LIMIT-8:spawn_enemy(11);ghost_budget-=1
+ if endless:Ghosts.tick_spawner(self,hostile_delta) # normal spawning has stopped for good; the ghosts take over
+ else:
+  # Budgeted spawning: no catch-up burst after a long frame; bounded ordinary counts.
+  spawn_budget=minf(6,spawn_budget+hostile_delta*spawn_rate())
+  if hostile_delta>0.0 and spawn_clock<=0 and spawn_budget>=1 and enemies.size()<ENEMY_LIMIT-8: # nothing spawns while hostile time is stopped
+   var count=mini(3,int(spawn_budget))
+   for i in count:spawn_enemy()
+   spawn_budget-=count
+   spawn_clock=0.25
  BossEncounters.tick(self,hostile_delta)
  update_enemies(delta)
  rebuild_grid()
@@ -570,7 +600,23 @@ func tick_passive() -> void:
     stats[names[rng.randi_range(0,3)]] += 0.04
   20:
    if int(elapsed) % 60 == 0: award_item()
+# Credit-based spawning. Enemies per second the pool earns right now: a base rate that starts slow and grows over the stage clock
+# (and per stage), times the clock's rush/endless multiplier and the Difficulty stat, times a feedback term: up to (1+clear_bonus)x
+# while the field is clear, falling to 1x as the living count reaches a soft cap that grows over time. Nothing killed still spawns.
+func spawn_rate() -> float:
+ var span=clampf(stage_clock.elapsed/StageClock.DURATION,0.0,1.0)
+ var base=lerpf(RUN_RULES.spawn_start_rate,RUN_RULES.spawn_end_rate,pow(span,RUN_RULES.spawn_curve))*(1.0+(stage-1)*RUN_RULES.stage_spawn_growth*2.0)
+ base*=1.0+RUN_RULES.spawn_ramp_per_minute*maxf(0.0,stage_clock.elapsed-RUN_RULES.spawn_ramp_start_s)/60.0
+ var difficulty=maxf(0.1,float(stats.difficulty))
+ var soft_cap=lerpf(RUN_RULES.soft_cap_start,RUN_RULES.soft_cap_end,span)*difficulty
+ var clearance=clampf(1.0-float(enemies.size())/maxf(1.0,soft_cap),0.0,1.0)
+ return base*stage_clock.spawn_mult()*difficulty*(1.0+RUN_RULES.clear_bonus*clearance)
+# Difficulty also speeds enemies up (hp, damage and spawn count scale 1:1 with the stat).
+func difficulty_speed() -> float:
+ return clampf(1.0+(float(stats.difficulty)-1.0)*RUN_RULES.difficulty_speed_per_point,1.0,RUN_RULES.difficulty_speed_cap)
 func spawn_enemy(kind: int = -1, at: Vector3 = Vector3.INF) -> Dictionary:
+ if kind==Endless.GHOST_KIND:return Ghosts.spawn(self,0,at)
+ if endless and kind<0 and not sandbox:return {} # no more ordinary spawns in endless
  if enemies.size() >= ENEMY_LIMIT: return {}
  if is_instance_valid(forest_navigation) and not forest_navigation.ready_for_spawning:return {}
  if kind < 0:kind=OrdinaryRoster.choose(spawn_rng)
@@ -595,7 +641,8 @@ func spawn_enemy(kind: int = -1, at: Vector3 = Vector3.INF) -> Dictionary:
   enemy["hp"]=config.health*scale_factor
   enemy["max_hp"]=enemy.hp
   enemy["speed"]=config.speed
-  enemy["damage"]=config.damage*(1+(tier-1)*0.3+(stage-1)*0.2)*(1+overtime/180)
+  enemy["damage"]=config.damage*(1+(tier-1)*0.3+(stage-1)*0.2)*(1+overtime/180)*float(stats.difficulty)
+  enemy["speed"]=float(enemy.speed)*difficulty_speed()
   enemy["scale"]=1.0
   enemy["state"]="move"
   enemy["windup"]=0.0
@@ -615,47 +662,65 @@ func spawn_enemy(kind: int = -1, at: Vector3 = Vector3.INF) -> Dictionary:
  enemies.append(enemy)
  if effects.size()<70:combat_fx.burst("smoke_puff",enemy.pos-Vector3.UP*0.5,0.5)
  return enemy
+# Enemy distance LOD (squared metres): within NEAR every frame, then every 2nd / 3rd / 4th frame. Spawned enemies run every frame for 1.5 s.
+const LOD_NEAR_SQ=144.0
+const LOD_MID_SQ=900.0
+const LOD_FAR_SQ=3025.0
+var enemy_frame=0
+# True only while the enemy pass runs with hostile time stopped: nothing the enemies do may hurt the player then.
+var hostile_frozen_pass=false
 func update_enemies(real_delta: float) -> void:
  # Everything below is hostile simulation, so it runs on Stopwatch-scaled time. The player,
  # weapons, camera, UI and audio never go through here.
  var delta=world_time.hostile(real_delta)
+ hostile_frozen_pass=delta<=0.0
+ enemy_view.frozen_look=1.0 if world_time.frozen() else 0.0;enemy_view.jolt=world_time.just_released
  if debug_combat:
   combat_pool_start=pool.created;combat_burst_start=combat_fx.bursts_created
   combat_counters={"hits":0,"deaths":0,"xp_drops":0,"xp_merged":0,"scenes":0,"freed_nodes":0}
  if is_instance_valid(forest_navigation):forest_navigation.tick(real_delta,player.position)
- crowd.rebuild(enemies)
+ refresh_terrain_cache();crowd.rebuild(enemies);enemy_frame+=1
  var colors = [Color("ee7d70"),Color("ffc05f"),Color("a28cae"),Color("e0d3a0"),Color("f55e67"),Color("b0dafa"),Color("aeef7a"),Color("80b9cb"),Color("cf7aff")]
  var mm = enemy_mesh.multimesh
  var boss_count=0
- enemy_view.begin_frame()
+ enemy_view.begin_frame();ghost_view.begin_frame();Ghosts.separate(self,delta)
  for i in enemies.size():
   var e = enemies[i]
   if e.hp <= 0: continue
-  e.age += delta
-  EnemyContact.step(self,e,delta)
+  if e.has("ghost"):Ghosts.step(self,e,delta);continue
+  var dt=delta;var forced=false
+  if e.kind<8 and not e.has("encounter"):
+   # Distance LOD: far enemies think less often (with the skipped time carried over) and are redrawn from their cached pose.
+   var to_player: Vector3=e.pos-player.position;var d2=to_player.x*to_player.x+to_player.z*to_player.z
+   var period=1 if (d2<LOD_NEAR_SQ or e.age<1.5) else (2 if d2<LOD_MID_SQ else (3 if d2<LOD_FAR_SQ else 4))
+   if period>1 and (enemy_frame+int(e.get("crowd_id",i)))%period!=0:
+    e["lod_acc"]=float(e.get("lod_acc",0.0))+delta;enemy_view.redraw(e);continue
+   dt=delta+float(e.get("lod_acc",0.0));e["lod_acc"]=0.0;forced=period>1
+  e.age += dt
+  EnemyContact.step(self,e,dt)
   if e.hp<=0:crowd.disable(e);continue
-  if e.kind>=8:e["hit_time"]=maxf(0,float(e.get("hit_time",0))-delta)
-  e.cooldown -= delta
-  if e.has("fx"):StatusManager.tick(self,e,delta)
-  e.slow = maxf(0,e.slow-delta)
-  e.frozen = maxf(0,e.frozen-delta)
-  e.poison = maxf(0,e.poison-delta)
-  e.burn=maxf(0,e.burn-delta)
+  if e.kind>=8:e["hit_time"]=maxf(0,float(e.get("hit_time",0))-dt)
+  e.cooldown -= dt
+  if e.has("fx"):StatusManager.tick(self,e,dt)
+  e.slow = maxf(0,e.slow-dt)
+  e.frozen = maxf(0,e.frozen-dt)
+  e.poison = maxf(0,e.poison-dt)
+  e.burn=maxf(0,e.burn-dt)
   if e.burn>0:
-   if rng.randf()<delta:combat_fx.burst("fire_torch",e.pos,1,0.7)
-   e.burn_clock-=delta
+   if rng.randf()<dt:combat_fx.burst("fire_torch",e.pos,1,0.7)
+   e.burn_clock-=dt
    if e.burn_clock<=0: hit(e,(3+level*0.5)*irt.status_harder(),int(e.get("burn_source",1))); e.burn_clock=0.5
    if not settings.reduced and rng.randf()<0.07: impact(e.pos,Color("ffb45a"),1)
   if e.poison > 0:
-   e.poison_clock -= delta
+   e.poison_clock -= dt
    if e.poison_clock <= 0: hit(e,5+level,int(e.get("poison_source",23))); e.poison_clock = 0.5
   if e.kind<8:
-   crowd.prepare(e);EnemySimulation.step(self,e,delta)
-   crowd.resolve(self,e,delta)
+   crowd.prepare(e);EnemySimulation.step(self,e,dt)
+   crowd.resolve(self,e,dt,forced)
    if e.hp>0: enemy_view.draw_enemy(e,player.position)
    continue
   if e.has("encounter"):
-   crowd.prepare(e);Encounters.step(self,e,delta);crowd.resolve(self,e,delta);enemy_view.draw_enemy(e,player.position);continue
+   crowd.prepare(e);Encounters.step(self,e,dt);crowd.resolve(self,e,dt);enemy_view.draw_enemy(e,player.position);continue
   var direction = player.position-e.pos
   direction.y = 0
   var distance = direction.length()
@@ -672,7 +737,7 @@ func update_enemies(real_delta: float) -> void:
     e.cooldown = 3.8
     flash(e.pos,Color("ff4444"),2)
    if e.telegraph > 0:
-    e.telegraph -= delta
+    e.telegraph -= dt
     speed = 0 if e.telegraph>0.3 else 18
   if e.kind == 8:
    speed = 2.0
@@ -685,7 +750,7 @@ func update_enemies(real_delta: float) -> void:
     effects.back().life=1.4
    if e.telegraph>0:
     speed = 0
-    e.telegraph -= delta
+    e.telegraph -= dt
     if e.telegraph <= 0:
      if e.phase == 0:
       for j in 12:
@@ -706,8 +771,8 @@ func update_enemies(real_delta: float) -> void:
       e.hp=minf(e.max_hp,e.hp+e.max_hp*0.015)
      flash(e.pos,Color("ff718d"),8)
   if e.frozen > 0: speed = 0
-  e.pos += (direction*speed+e.knock)*delta
-  e.knock = e.knock.move_toward(Vector3.ZERO,delta*15)
+  e.pos += (direction*speed+e.knock)*dt
+  e.knock = e.knock.move_toward(Vector3.ZERO,dt*15)
   e.pos.y = terrain_height(e.pos.x,e.pos.z)+0.65*e.scale+(2+sin(e.age*3) if e.kind==5 else 0)
   if distance < 1.1*e.scale+0.5 and e.cooldown<=0:
    hurt((8+stage*2+tier*2)*(2 if e.kind==8 else 1))
@@ -722,7 +787,8 @@ func update_enemies(real_delta: float) -> void:
   mm.set_instance_color(boss_count,boss_tint)
   boss_count+=1
  mm.visible_instance_count=boss_count
- enemy_view.end_frame()
+ enemy_view.end_frame();ghost_view.end_frame(real_delta)
+ hostile_frozen_pass=false
 func rebuild_grid() -> void:
  grid.clear()
  for e in enemies:
@@ -746,6 +812,7 @@ func nearest(pos: Vector3, radius: float, farthest: bool = false) -> Dictionary:
  return result
 var hurt_events=0 # counts hits taken (the run overlay flashes red on each)
 func hurt(amount: float) -> void:
+ if hostile_frozen_pass:return # frozen enemies deal no damage, whatever their timers say
  if invulnerability>0 or loadout_runtime.immune() or (sandbox and settings.invincible): return
  amount*=loadout_runtime.incoming_multiplier()
  if rng.randf()<minf(0.75,stats.evasion):
@@ -753,7 +820,7 @@ func hurt(amount: float) -> void:
   if irt.any:irt.on_evade()
   return
  if irt.hurt_hooks and irt.witch_bottle(): toast("WARDED"); return
- var final_damage=maxf(1,amount*100/(100+stats.armor*5))
+ var final_damage=maxf(1,amount*Armor.multiplier(float(stats.armor)))
  if irt.hurt_hooks and irt.hourglass(final_damage):return
  health -= final_damage
  if irt.hurt_hooks:irt.on_damage_taken(amount)
@@ -768,6 +835,12 @@ func hurt(amount: float) -> void:
 # `ctx` (optional) is the shared weapon hit context: {"source": hit type, "dir", "pos"}. It only steers
 # impact feedback; damage, crit, sockets and combos all run through this one function for every source.
 const MEGACRIT_MULTIPLIER=1.5
+# Lifesteal is a chance per damaging hit to restore 1 HP; every full 100% guarantees one more HP (150% = 1 HP, +1 more half the time).
+# Rolls use the weapon runtime's RNG so seeded runs stay deterministic.
+func lifesteal_hp() -> float:
+ if stats.lifesteal<=0.0:return 0.0
+ var chance=float(stats.lifesteal);var whole=floorf(chance)
+ return whole+(1.0 if wrt.rng.randf()<chance-whole else 0.0)
 func hit(e: Dictionary, base: float, weapon: int, ctx: Dictionary = {}) -> void:
  if e.is_empty() or e.hp<=0: return
  if debug_combat:combat_counters.hits+=1
@@ -790,6 +863,7 @@ func hit(e: Dictionary, base: float, weapon: int, ctx: Dictionary = {}) -> void:
  if e.kind<8 and "shield" in e.variant.modules and e.hp/e.max_hp>0.5: amount*=0.5
  if irt.cond_damage:amount*=irt.damage_mult(e,item_hit,amount)
  amount=StatusManager.modify_damage(self,e,amount,critical,weapon)
+ if ctx.has("form") and e.kind in Elements.BOSS_KINDS:amount=minf(amount,float(e.max_hp)*float(Fusions.SAFETY.boss_hit_max_fraction)) # a fused form can never instakill a boss
  e["hit_time"]=0.10;e["flash_tint"]=0.0
  if is_instance_valid(combat_fx):
   if item_hit:psx.burst(e.pos+Vector3.UP*0.8,2,[Color("d9d2b8"),Color("8f876f")],4.0,0.1,0.18,6.0,1.5)
@@ -811,7 +885,10 @@ func hit(e: Dictionary, base: float, weapon: int, ctx: Dictionary = {}) -> void:
   numbers.show_damage(e.pos+Vector3.UP,amount,critical,color,elapsed)
  damage_total += actual
  damage_by_weapon[weapon] = damage_by_weapon.get(weapon,0.0)+actual
- if not item_hit:health = minf(stats.max_health,health+actual*stats.lifesteal)
+ if ctx.has("fusion"):
+  damage_by_fusion[ctx.fusion]=float(damage_by_fusion.get(ctx.fusion,0.0))+actual
+  if ctx.has("form"):damage_by_form[ctx.fusion]=float(damage_by_form.get(ctx.fusion,0.0))+actual
+ if not item_hit and actual>0.0 and stats.lifesteal>0.0:health=minf(stats.max_health,health+lifesteal_hp())
  if critical and not settings.reduced and not ctx.has("source"): flash(e.pos,Color("fff3aa"),0.4)
  StatusManager.on_hit(self,e,weapon,critical,actual)
  if irt.hit_hooks and not item_hit and ctx.has("source"):irt.on_hit(e,amount,actual,critical,weapon)
@@ -826,6 +903,7 @@ func kill_enemy(index: int) -> void:
  var e = enemies[index]
  if e.get("death_handled",false):return
  e.death_handled=true;crowd.disable(e)
+ if e.has("ghost"):Ghosts.kill(self,index,e);return
  StatusManager.on_death(self,e)
  var stage_encounter_complete=BossEncounters.died(self,e)
  RewardDrops.from_enemy(self,e)
@@ -898,10 +976,15 @@ func stage_event(event_id: String) -> void:
    var direction=-Vector3(player.position.x,0,player.position.z).normalized()
    var group=BossEncounters.start(self,str(stage)+":"+event_id,false,player.position+direction*24)
    announce("MINIBOSS ENCOUNTER · %d bosses"%group.required);play_sound("ready")
-  "endless":
-   run_metrics["endless"]=int(run_metrics.get("endless",0))+1
-   announce("ENDLESS MODE • Escape through the boss portal")
-   tone(90,0.6)
+  "endless":start_endless()
+# The stage clock reached 0:00: the run timer becomes the endless timer, the normal spawner stops for good and the ghosts take over. Exactly once per run.
+func start_endless() -> void:
+ if endless_started:return
+ endless_started=true;endless=true;endless_time=0.0;endless_whole=0;ghost_budget=0.0
+ run_metrics["endless"]=int(run_metrics.get("endless",0))+1
+ if Endless.LOCK_PORTAL:refresh_portal() # an open portal seals, a dormant one can no longer be summoned
+ RunAudio.endless_begins(self)
+ endless_begun.emit()
 func make_portal() -> void:
  if is_instance_valid(portal):return
  assert(forest_navigation.reachable(map_layout.portal))
@@ -913,6 +996,7 @@ func refresh_portal() -> void:
  if not is_instance_valid(portal):return
  GrimdarkObjects.refresh_portal(self)
 func activate_portal() -> bool:
+ if endless and Endless.LOCK_PORTAL:return false
  if portal_state=="summoned":return false
  if portal_state=="exit":return advance_stage()
  for active in enemies:
@@ -923,6 +1007,7 @@ func activate_portal() -> bool:
  tone(90,0.6)
  return true
 func advance_stage() -> bool:
+ if endless and Endless.LOCK_PORTAL:return false
  if not boss_dead or portal_state!="exit":return false
  WorldPickups.settle(self) # coins still in flight are paid before the checkpoint
  # Persist both sides of the transition; an interrupted generation can resume safely.
@@ -964,7 +1049,7 @@ func update_projectiles(real_delta: float) -> void:
    pool.release(p.node);projectiles.remove_at(i);continue
   if p.velocity.length_squared()>0.01: p.node.look_at(p.node.position+p.velocity)
   if not settings.reduced and int(p.age*30)!=int((p.age-delta)*30) and effects.size()<55:trail(p.node.position,Color("ff9b74"))
-  if segment_distance(player.position+Vector3.UP,previous,p.node.position)<0.8: hurt(p.damage); p.life=0
+  if delta>0.0 and segment_distance(player.position+Vector3.UP,previous,p.node.position)<0.8: hurt(p.damage); p.life=0 # a frozen projectile cannot hit
   if p.life<=0:
    pool.release(p.node)
    projectiles.remove_at(i)
@@ -996,12 +1081,20 @@ func update_effects(delta: float) -> void:
     effects[i].node.queue_free()
     if debug_combat:combat_counters.freed_nodes+=1
    effects.remove_at(i)
+const GEM_GRAVITY=26.0
 func update_pickups(delta: float) -> void:
  for i in range(pickups.size()-1,-1,-1):
   var p = pickups[i]
   p.age+=delta
   p.node.rotation.y+=delta*0.85
-  p.node.position.y+=(sin(p.age*2)-sin((p.age-delta)*2))*0.06
+  if not p.get("attracted",false) and not p.get("magnet",false):
+   # Gravity: a gem dropped in mid-air (a flying enemy died, a knock-up) falls to the ground, then hovers and bobs a little above it.
+   var rest=terrain_height(p.node.position.x,p.node.position.z)+0.55
+   var base=float(p.get("base_y",p.node.position.y));var vy=float(p.get("vy",0.0))-GEM_GRAVITY*delta
+   base+=vy*delta
+   if base<=rest:base=rest;vy=0.0
+   p["base_y"]=base;p["vy"]=vy
+   p.node.position.y=base+sin(p.age*2.0)*0.06
   var distance = p.node.position.distance_to(player.position+Vector3.UP)
   if not p.get("attracted",false) and distance<5*stats.pickup:
    p["attracted"]=true;p["attraction_reason"]="pickup_range";p["attraction_distance"]=distance;p["attraction_radius"]=5*stats.pickup
@@ -1032,7 +1125,7 @@ func on_level() -> void:
  if irt.any:irt.on_level_up()
  match character:
   0: stats.luck+=0.03
-  1: stats.armor+=1.5
+  1: stats.armor+=6.0
   4: stats.damage+=0.04
   5: stats.crit+=0.01
   8: stats.max_health+=4; health+=4
@@ -1137,25 +1230,27 @@ func update_interactions(delta: float) -> void:
   if d<distance: distance=d; closest=obj
  if mode=="run" and RewardDrops.present_next(self):return
  if is_instance_valid(portal) and portal.position.distance_to(player.position)<4:
+  if endless and Endless.LOCK_PORTAL:
+   notice.text="The portal is sealed";return
   notice.text="E  /  "+("Advance to stage %d"%(stage+1) if portal_state=="exit" else ("Boss active • defeat the stage guardian" if portal_state=="summoned" else "Summon the stage boss"))
-  if Input.is_action_just_pressed("interact"):activate_portal()
+  if interact_pressed():activate_portal()
   return
  var vase=Vases.nearest_in_reach(self,player.position)
  if not vase.is_empty() and (closest.is_empty() or Vector2(vase.pos.x-player.position.x,vase.pos.z-player.position.z).length()<closest.node.position.distance_to(player.position)):
   notice.text="E  /  Smash vase"
-  if Input.is_action_just_pressed("interact"):Vases.smash(self,vase)
+  if interact_pressed():Vases.smash(self,vase)
   return
  if closest.is_empty(): return
  if closest.kind=="Boss Statue":
   notice.text="[%s] Increase Boss Count (+1 for this run)\nFuture miniboss/stage encounters: %d bosses"%[OS.get_keycode_string(bindings.interact),additional_boss_count+2]
-  if Input.is_action_just_pressed("interact"):activate_boss_statue(closest)
+  if interact_pressed():activate_boss_statue(closest)
   return
  if closest.kind=="Elite Statue":
   notice.text="Press E to summon Elite Enemies"
-  if Input.is_action_just_pressed("interact"):activate_elite_statue(closest)
+  if interact_pressed() and not endless:activate_elite_statue(closest)
   return
  notice.text="E  /  %s%s"%[closest.kind," · %d gold"%chest_cost() if closest.kind=="Chest" else (" · %d gold per gem"%ImbueRules.cost(stage,irt.imbue_discount()) if closest.kind==ImbueStation.KIND else "")]
- if not Input.is_action_just_pressed("interact"): return
+ if not interact_pressed(): return
  match closest.kind:
   "Shop":frontend.shop(closest);return
   "Imbue Station":frontend.imbue_station(closest);return
@@ -1171,6 +1266,12 @@ func update_interactions(delta: float) -> void:
  closest.used=true
  closest.node.scale=Vector3.ONE*0.5
  tone(600,0.15)
+# E always interacts (chests, shops, stations, vases...), whatever the "interact" action was rebound to; the rebound key still works too.
+var e_press_frame=-100
+func interact_pressed() -> bool:
+ if Input.is_action_just_pressed("interact"):e_press_frame=-100;return true
+ if Engine.get_physics_frames()-e_press_frame<=1:e_press_frame=-100;return true # E was pressed this frame or the last
+ return false
 func update_hud() -> void:
  frontend.update_hud()
  if is_instance_valid(combat_debug_label):
@@ -1184,12 +1285,12 @@ func show_build() -> void:
  frontend.inventory()
 
 func finish_run(victory: bool) -> void:
- mode="results"
+ mode="results";endless_record=false;loadout_runtime.stop_audio(self)
  WorldPickups.settle(self)
  world_time.reset()
  if not victory and health<=0:
   player.dead=true
-  RunAudio.death(self)
+  RunAudio.death(self);loadout_runtime.stop_audio(self)
   var dying_avatar=player.avatar
   var death_tween=dying_avatar.create_tween()
   death_tween.tween_method(func(_time):
@@ -1197,7 +1298,7 @@ func finish_run(victory: bool) -> void:
  if not sandbox and FileAccess.file_exists("user://active-run.json"): DirAccess.remove_absolute("user://active-run.json")
  var unlocked=progress.finish(kills,elapsed,victory,selected_biome,sandbox)
  run_metrics["ultimates"]=loadout_runtime.uses
- MetaProgress.record(progress.data,{"weapon":selected_weapon,"trait":loadout_runtime.trait_id,"ultimate":loadout_runtime.ultimate_id,"time":elapsed,"kills":kills,"victory":victory,"metrics":run_metrics.duplicate(true)},sandbox)
+ endless_record=MetaProgress.record(progress.data,{"endless_time":endless_time if endless else 0.0,"weapon":selected_weapon,"trait":loadout_runtime.trait_id,"ultimate":loadout_runtime.ultimate_id,"time":elapsed,"kills":kills,"victory":victory,"metrics":run_metrics.duplicate(true)},sandbox)
  if not sandbox:progress.save()
  frontend.results(victory,unlocked)
  if is_instance_valid(audio):
@@ -1262,6 +1363,7 @@ func tone(_frequency: float,_duration: float,_loudness: float=0.3) -> void:
  play_sound("boss.warning" if _frequency<200 else "ui.confirm")
 
 func _exit_tree() -> void:
+ if wrt!=null:wrt.forms=null # WeaponRuntime and FusionForms refer to each other: break the cycle so both are freed
  CombatFX.frames.clear()
  ForestAtmosphere.reset();StageThemes.reset()
  RigClips.reset()
@@ -1340,15 +1442,15 @@ func save_run(path: String = "user://active-run.json") -> bool:
  var saved_enemies=[]
  for e in enemies:
   var record=e.duplicate(true)
-  record.erase("variant");record.erase("move_direction");record.erase("crowd_start");record.erase("crowd_was_traversing");record.erase("crowd_last_solved");record.erase("crowd_body_height");record.erase("crowd_slot")
-  for key in ["pos","knock","target","charge_direction"]:
+  record.erase("variant");record.erase("view");record.erase("move_direction");record.erase("crowd_start");record.erase("crowd_was_traversing");record.erase("crowd_last_solved");record.erase("crowd_body_height");record.erase("crowd_slot")
+  for key in ["pos","knock","target","charge_direction","vel","bank_to"]:
    if record.has(key): record[key]=[record[key].x,record[key].y,record[key].z]
   saved_enemies.append(record)
  var saved_pickups=[]
  for pickup in pickups: saved_pickups.append({"position":[pickup.node.position.x,pickup.node.position.y,pickup.node.position.z],"value":pickup.value,"age":pickup.age,"red":pickup.get("red",false),"attracted":pickup.get("attracted",false),"attraction_reason":pickup.get("attraction_reason","")})
  var used=[]
  for object in interactables: used.append({"kind":object.kind,"used":object.used,"charge":object.charge,"tier":object.get("tier","Common"),"offers":object.get("offers",null),"sold":object.get("sold",[]),"shrine_reward":object.get("shrine_reward",{}),"golden":object.get("golden",false),"shrine_choices":object.get("shrine_choices",[])})
- var data={"version":2,"next_enemy_id":crowd.next_id,"drop_chests":RewardDrops.serialize(self),"vases_broken":Vases.serialize(self),"world_pickups":WorldPickups.serialize(self),"stopwatch":world_time.serialize(),"reward_queue":reward_queue,"active_reward":active_reward,"item_state":irt.serialize(),"shrine_reward_queue":shrine_reward_queue,"active_shrine_reward":active_shrine_reward,"announced_stages":announced_stages,"gem_rng_state":str(gem_rng.state),"pending_upgrades":pending_upgrades+(1 if mode=="upgrade" else 0),"terrain_version":terrain_version,"world_content_version":world_content_version,"additional_boss_count":additional_boss_count,"boss_encounters":boss_encounters,"map_seed_override":map_seed_override,"stage_clock":stage_clock.serialize(),"boss_variant":boss_variant,"ghost_budget":ghost_budget,"portal_state":portal_state,"loadout":loadout_runtime.serialize(),"selected_weapon":selected_weapon,"run_metrics":run_metrics,"chests_opened":chests_opened,"legacy_weapon_slots":legacy_weapon_slots,"legacy_tome_slots":legacy_tome_slots,"minimap":serialize_minimap(),"variants":variants.serialize(),"spawn_rng_state":str(spawn_rng.state),"elite_active":elite_active,"elite_rewarded":elite_rewarded,"rng_state":str(rng.state),"character":character,"biome":biome,"selected_biome":selected_biome,"tier":tier,"stage":stage,"elapsed":elapsed,"stage_time":stage_time,"stats":stats,"health":health,"xp":xp,"level":level,"kills":kills,"gold":gold,"weapons":saved_weapons,"amulets":amulets,"amulets_found":amulets_found,"gems":gems.serialize(),"tomes":tomes,"tome_rarities":tome_rarities,"items":items,"sandbox":sandbox,"position":[player.position.x,player.position.y,player.position.z],"enemies":saved_enemies,"boss_spawned":boss_spawned,"boss_dead":boss_dead,"interactables":used,"damage_total":damage_total,"rerolls":rerolls,"banished":banished,"pickups":saved_pickups,"damage_by_weapon":damage_by_weapon,"gold_fraction":gold_fraction,"camera":[player.yaw,player.pitch,player.zoom]}
+ var data={"version":2,"next_enemy_id":crowd.next_id,"drop_chests":RewardDrops.serialize(self),"vases_broken":Vases.serialize(self),"world_pickups":WorldPickups.serialize(self),"stopwatch":world_time.serialize(),"reward_queue":reward_queue,"active_reward":active_reward,"item_state":irt.serialize(),"shrine_reward_queue":shrine_reward_queue,"active_shrine_reward":active_shrine_reward,"announced_stages":announced_stages,"gem_rng_state":str(gem_rng.state),"pending_upgrades":pending_upgrades+(1 if mode=="upgrade" else 0),"terrain_version":terrain_version,"world_content_version":world_content_version,"additional_boss_count":additional_boss_count,"boss_encounters":boss_encounters,"map_seed_override":map_seed_override,"stage_clock":stage_clock.serialize(),"boss_variant":boss_variant,"ghost_budget":ghost_budget,"banished_items":banished_items,"chest_banishes_left":chest_banishes_left,"endless_started":endless_started,"endless_time":endless_time,"ghost_rng_state":ghost_rng.state,"portal_state":portal_state,"loadout":loadout_runtime.serialize(),"selected_weapon":selected_weapon,"run_metrics":run_metrics,"chests_opened":chests_opened,"legacy_weapon_slots":legacy_weapon_slots,"legacy_tome_slots":legacy_tome_slots,"minimap":serialize_minimap(),"variants":variants.serialize(),"spawn_rng_state":str(spawn_rng.state),"elite_active":elite_active,"elite_rewarded":elite_rewarded,"rng_state":str(rng.state),"character":character,"biome":biome,"selected_biome":selected_biome,"tier":tier,"stage":stage,"elapsed":elapsed,"stage_time":stage_time,"stats":stats,"health":health,"xp":xp,"level":level,"kills":kills,"gold":gold,"weapons":saved_weapons,"amulets":amulets,"amulets_found":amulets_found,"gems":gems.serialize(),"tomes":tomes,"tome_rarities":tome_rarities,"items":items,"sandbox":sandbox,"position":[player.position.x,player.position.y,player.position.z],"enemies":saved_enemies,"boss_spawned":boss_spawned,"boss_dead":boss_dead,"interactables":used,"damage_total":damage_total,"rerolls":rerolls,"banished":banished,"pickups":saved_pickups,"damage_by_weapon":damage_by_weapon,"gold_fraction":gold_fraction,"camera":[player.yaw,player.pitch,player.zoom]}
  var file=FileAccess.open(path+".tmp",FileAccess.WRITE)
  if not file: return false
  file.store_string(JSON.stringify(data)); file.close()
@@ -1396,14 +1498,17 @@ func load_run(path: String = "user://active-run.json") -> bool:
  for element in refunds:gems.add(str(element),1)
  if weapons.is_empty():equip(0)
  amulets=maxi(0,int(data.get("amulets",0)));amulets_found=maxi(0,int(data.get("amulets_found",0)))
- tomes=data.tomes;tome_rarities=data.get("tome_rarities",{}); items=ItemMigration.sanitize(data.items,stats); irt.restore(data.get("item_state",{})); banished=data.banished; rerolls=int(data.rerolls)
+ tomes=data.tomes;tome_rarities=data.get("tome_rarities",{}); items=ItemMigration.sanitize(data.items,stats); irt.restore(data.get("item_state",{})); banished=data.banished;banished_items=Array(data.get("banished_items",[]));chest_banishes_left=int(data.get("chest_banishes_left",CHEST_BANISHES)); rerolls=int(data.rerolls)
  build_stage()
  elapsed=float(data.elapsed); stage_time=float(data.stage_time)
  boss_variant=str(data.get("boss_variant",boss_variant))
  if boss_variant not in ["chunkus","rock_golem"]:boss_variant="chunkus" if boss_variant=="sovereign" else "rock_golem"
  ghost_budget=float(data.get("ghost_budget",0))
+ endless_started=bool(data.get("endless_started",false));endless_time=float(data.get("endless_time",0.0));ghost_rng.state=int(data.get("ghost_rng_state",ghost_rng.state))
  stage_clock.restore(data.get("stage_clock",{}),stage_time)
  stage_time=stage_clock.elapsed
+ if stage_clock.endless() and not endless_started:endless_started=true;endless_time=maxf(0.0,stage_time-STAGE_SECONDS)
+ endless=endless_started
  health=float(data.health); xp=float(data.xp); level=int(data.level); kills=int(data.kills); gold=int(data.gold)
  damage_total=float(data.damage_total)
  damage_by_weapon.clear()
@@ -1428,9 +1533,10 @@ func load_run(path: String = "user://active-run.json") -> bool:
    e.variant=OrdinaryRoster.variant(int(record.kind),choice)
   for key in record:
    if key=="encounter" and int(data.get("terrain_version",1))<3 and int(record.kind)==8:continue
-   if key in ["pos","knock","target","charge_direction"]: e[key]=Vector3(record[key][0],record[key][1],record[key][2])
+   if key in ["pos","knock","target","charge_direction","vel","bank_to"]: e[key]=Vector3(record[key][0],record[key][1],record[key][2])
    elif key in ["kind","phase","crowd_id"]: e[key]=int(record[key])
    else: e[key]=record[key]
+  if e.has("ghost"):Ghosts.refresh(self,e)
  if int(data.get("terrain_version",1))<3:
   for enemy in enemies:enemy.pos.y=terrain_height(enemy.pos.x,enemy.pos.z)+0.65
  BossEncounters.restore(self,data.get("boss_encounters",{}))
@@ -1550,6 +1656,26 @@ func item_stacks(id: Variant) -> int:
  for entry in items:
   if str(entry.id)==str(id):return int(entry.stacks)
  return 0
+# Chest banish: the item the chest just gave is taken back out of the bag, can never come from a chest again this run, and the chest rolls a
+# replacement (shown straight on its reveal). Costs one of CHEST_BANISHES. Returns false when none are left.
+func banish_chest_item(id: String) -> bool:
+ if chest_banishes_left<=0 or id=="" or not Catalog.item_exists(id):return false
+ chest_banishes_left-=1;revoke_item(id)
+ if not id in banished_items:banished_items.append(id)
+ active_reward=""
+ var replacement=ItemDrops.roll_chest(self)
+ if replacement=="":resume();return true
+ reward_queue.push_front(replacement);chest_quick=true;RewardDrops.present_next(self)
+ return true
+# Takes one stack of a granted item back out (the reverse of grant_item).
+func revoke_item(id: String) -> void:
+ if id=="imbued_amulet":amulets=maxi(0,amulets-1);amulets_found=maxi(0,amulets_found-1);return
+ for i in range(items.size()-1,-1,-1):
+  if str(items[i].id)!=id:continue
+  items[i].stacks=int(items[i].stacks)-1
+  if int(items[i].stacks)<=0:items.remove_at(i)
+  break
+ irt.on_acquire(id)
 # The one way an item enters the inventory. Uniques can be held once and never stack.
 func grant_item(id: Variant,quiet: bool=false) -> bool:
  id=str(id)
@@ -1617,7 +1743,9 @@ func weapon_tooltip(id: int) -> String:
  var state=weapons[id];var definition=Catalog.WEAPONS[id]
  var r=WeaponStats.resolve(self,id,state)
  var damage=float(r.damage)*stats.damage*loadout_runtime.damage_multiplier()
- var result="%s • Level %d\nDamage %.1f • %s"%[definition[0],state.level,damage,WeaponUpgrades.format_value(id,"haste",r)]
+ var fusion=Fusions.of_state(state)
+ var result="%s • Level %d\nDamage %.1f • %s"%[Fusions.weapon_name(state,id),state.level,damage,WeaponUpgrades.format_value(id,"haste",r)]
+ if fusion!="":result+="\n%s"%Fusions.epithet(fusion)
  for key in WeaponUpgrades.pool(id):
   if key in ["damage","haste"]:continue
   result+="\n%s: %s"%[WeaponUpgrades.label(id,key),WeaponUpgrades.format_value(id,key,r)]

@@ -25,12 +25,20 @@ func batch(key: String, mesh: Mesh, capacity: int) -> MultiMesh:
  add_child(node)
  batches[key]=node
  return node.multimesh
+# Stopwatch look: enemies read as frozen (cold grey-blue) while hostile time is stopped, and jolt for one frame on release.
+var frozen_look=0.0
+var jolt=false
 func begin_frame() -> void:
  counts.clear();last_transforms.clear()
 func put(key: String, mesh: Mesh, transform: Transform3D, color: Color, capacity: int = 500, spectral: bool=false, flash: float=0.0, flash_tint: float=0.0) -> void:
  var mm=batch(key,mesh,capacity)
  var index=int(counts.get(key,0))
  if index>=capacity: return
+ if key!="elite_emblems":
+  if frozen_look>0.0:
+   var grey=color.r*0.299+color.g*0.587+color.b*0.114
+   color=color.lerp(Color(grey*0.78,grey*0.95,grey*1.15,color.a),frozen_look*0.6)
+  if jolt:transform.origin.y+=0.12
  mm.set_instance_transform(index,transform)
  mm.set_instance_color(index,color)
  mm.set_instance_custom_data(index,Color(flash,1 if spectral else 0,flash_tint,0))
@@ -42,8 +50,9 @@ func draw_enemy(e: Dictionary, viewer: Vector3) -> void:
  var state="enemy_move" if walking else "enemy_idle"
  var frame=int(cycle*8)%8 if walking else int(e.age*2)%2
  if e.pos.distance_squared_to(viewer)>900:frame=(frame/4)*4 if walking else 0
- var mesh=BestiaryFrames.mesh(model,state,frame)
  var key=model+state+str(frame)
+ var mesh: ArrayMesh=BestiaryFrames.meshes.get(key) # same key BestiaryFrames.mesh() builds: skip its second string concat per enemy per frame
+ if mesh==null:mesh=BestiaryFrames.mesh(model,state,frame)
  models[e.variant.id]=mesh
  var direction=e.get("move_direction",viewer-e.pos) if walking else viewer-e.pos
  var facing=atan2(direction.x,direction.z)
@@ -65,8 +74,16 @@ func draw_enemy(e: Dictionary, viewer: Vector3) -> void:
  if not e.get("climb",{}).is_empty():tilt=-0.25
  var base=Transform3D(Basis.from_euler(Vector3(tilt,facing,0)).scaled(Vector3.ONE*scale_value),e.pos-Vector3.UP*(0.65+below))
  last_transforms[e.variant.id]=base
- put(key,mesh,base,color,500,e.get("encounter","")=="ghost",flash,float(e.get("flash_tint",0.0)))
+ var spectral=e.get("encounter","")=="ghost";var tint=float(e.get("flash_tint",0.0))
+ e["view"]=[key,mesh,base,color,spectral,flash,tint] # the pose far enemies are redrawn from between their slower updates
+ put(key,mesh,base,color,500,spectral,flash,tint)
  if e.get("elite",false):
   put("elite_emblems",emblem_mesh,Transform3D(Basis(Vector3.FORWARD,PI),e.pos+Vector3.UP*2.7),Color("ffd365"))
+# Re-submits the last drawn pose (enemies that skipped this frame's update).
+func redraw(e: Dictionary) -> void:
+ var v=e.get("view")
+ if v==null:return
+ put(v[0],v[1],v[2],v[3],500,v[4],v[5],v[6])
+ if e.get("elite",false):put("elite_emblems",emblem_mesh,Transform3D(Basis(Vector3.FORWARD,PI),e.pos+Vector3.UP*2.7),Color("ffd365"))
 func end_frame() -> void:
  for key in batches: batches[key].multimesh.visible_instance_count=int(counts.get(key,0))

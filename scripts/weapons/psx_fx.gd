@@ -44,6 +44,20 @@ var im_sq_n=0
 var im_sq_pos=PackedVector3Array();var im_sq_size=PackedFloat32Array();var im_sq_col=PackedColorArray()
 var im_sg_n=0
 var im_sg_xform: Array[Transform3D]=[];var im_sg_col=PackedColorArray()
+# Fusion tint: while a Fusion weapon's effects are drawn, every colour is re-hued to the Fusion's two tones (alternating), keeping its brightness.
+var tint_on=false;var tint_n=0
+var tint_a=Color.WHITE;var tint_b=Color.WHITE;var tint_core=Color.WHITE
+func tint_begin(mid: Color,acc: Color,core: Color) -> void:
+ tint_on=true;tint_a=mid;tint_b=acc;tint_core=core
+func tint_end() -> void:
+ tint_on=false
+func _t(c: Color) -> Color:
+ if not tint_on:return c
+ tint_n+=1
+ var hue: Color=tint_a if (tint_n&1)==0 else tint_b
+ var v=maxf(c.r,maxf(c.g,c.b))
+ if v>0.88 and c.s<0.2:return tint_core.lerp(c,0.35) # white-hot stays near the Fusion's core colour
+ return Color.from_hsv(hue.h,minf(1.0,hue.s*1.05),clampf(v*(0.55+0.5*hue.v),0.0,1.0),c.a)
 var stats={"squares_peak":0,"shards_peak":0,"segments_peak":0,"dropped":0}
 
 func _init() -> void:
@@ -90,7 +104,7 @@ func spark(pos: Vector3,vel: Vector3,c0: Color,c1: Color,size0: float,size1: flo
  if not room(sq_n,SQUARE_CAP):return
  var i=sq_n;sq_n+=1
  sq_pos[i]=pos;sq_vel[i]=vel;sq_age[i]=0.0;sq_life[i]=maxf(0.04,life);sq_delay[i]=delay
- sq_size0[i]=size0*SIZE_SCALE;sq_size1[i]=size1*SIZE_SCALE;sq_grav[i]=gravity;sq_drag[i]=drag;sq_c0[i]=c0;sq_c1[i]=c1
+ sq_size0[i]=size0*SIZE_SCALE;sq_size1[i]=size1*SIZE_SCALE;sq_grav[i]=gravity;sq_drag[i]=drag;sq_c0[i]=_t(c0);sq_c1[i]=_t(c1) if tint_on else c1
 # Radial or cone burst of squares. `palette` colours are picked at random per square.
 func burst(pos: Vector3,count: int,palette: Array,speed: float,size: float,life: float,gravity: float=9.0,drag: float=1.2,direction: Vector3=Vector3.ZERO,cone: float=PI,end_color: Color=Color(0,0,0,0)) -> void:
  count=int(ceil(count*clampf(intensity,0.25,1.0)))
@@ -111,7 +125,7 @@ func shards(pos: Vector3,count: int,color: Color,speed: float,size: float,life: 
   var v=rand_dir()
   if direction!=Vector3.ZERO:v=direction.normalized().slerp(v,clampf(cone/PI,0.0,1.0)*rng.randf()).normalized()
   sh_pos[i]=pos;sh_vel[i]=v*speed*rng.randf_range(0.5,1.0);sh_axis[i]=rand_dir();sh_angle[i]=rng.randf()*TAU;sh_spin[i]=rng.randf_range(-14.0,14.0)
-  sh_age[i]=0.0;sh_life[i]=life*rng.randf_range(0.7,1.2);sh_size[i]=size*rng.randf_range(0.6,1.3);sh_grav[i]=gravity;sh_col[i]=color
+  sh_age[i]=0.0;sh_life[i]=life*rng.randf_range(0.7,1.2);sh_size[i]=size*rng.randf_range(0.6,1.3);sh_grav[i]=gravity;sh_col[i]=_t(color)
 # One angular box segment from a to b. It holds colour c0 then c1 (second half) and thins in discrete steps.
 func segment(a: Vector3,b: Vector3,width: float,c0: Color,c1: Color,life: float,delay: float=0.0,taper: float=0.5) -> void:
  if not room(sg_n,SEGMENT_CAP):return
@@ -122,7 +136,7 @@ func segment(a: Vector3,b: Vector3,width: float,c0: Color,c1: Color,life: float,
  var x=ref.cross(z).normalized();var y=z.cross(x).normalized()
  var i=sg_n;sg_n+=1
  sg_xform[i]=Transform3D(Basis(x*width,y*width,z*length),(a+b)*0.5)
- sg_age[i]=0.0;sg_life[i]=maxf(0.03,life);sg_delay[i]=delay;sg_c0[i]=c0;sg_c1[i]=c1;sg_taper[i]=taper
+ sg_age[i]=0.0;sg_life[i]=maxf(0.03,life);sg_delay[i]=delay;sg_c0[i]=_t(c0);sg_c1[i]=_t(c1) if tint_on else c1;sg_taper[i]=taper
 # Jagged lightning: every flicker frame re-rolls the polyline and shows for ~0.045s with hard cuts,
 # an outer coloured core plus a white inner core. Returns the polyline of the first frame.
 func bolt(from: Vector3,to: Vector3,outer: Color,inner: Color,width: float,jag: float,pieces: int,frames: int=3,frame_time: float=0.05) -> PackedVector3Array:
@@ -161,7 +175,7 @@ func trail(pos: Vector3,color: Color,size: float,life: float,drift: Vector3=Vect
 # Immediate-mode helpers: call every frame while the thing exists; nothing persists afterwards.
 func draw_square(pos: Vector3,size: float,color: Color) -> void:
  if im_sq_n>=SQUARE_CAP-sq_n:return
- im_sq_pos[im_sq_n]=pos;im_sq_size[im_sq_n]=size;im_sq_col[im_sq_n]=color;im_sq_n+=1
+ im_sq_pos[im_sq_n]=pos;im_sq_size[im_sq_n]=size;im_sq_col[im_sq_n]=_t(color);im_sq_n+=1
 func draw_segment(a: Vector3,b: Vector3,width: float,color: Color) -> void:
  if im_sg_n>=SEGMENT_CAP-sg_n:return
  var along=b-a;var length=along.length()
@@ -169,7 +183,7 @@ func draw_segment(a: Vector3,b: Vector3,width: float,color: Color) -> void:
  var z=along/length
  var ref=Vector3.UP if absf(z.dot(Vector3.UP))<0.95 else Vector3.RIGHT
  var x=ref.cross(z).normalized();var y=z.cross(x).normalized()
- im_sg_xform[im_sg_n]=Transform3D(Basis(x*width,y*width,z*length),(a+b)*0.5);im_sg_col[im_sg_n]=color;im_sg_n+=1
+ im_sg_xform[im_sg_n]=Transform3D(Basis(x*width,y*width,z*length),(a+b)*0.5);im_sg_col[im_sg_n]=_t(color);im_sg_n+=1
 func clear() -> void:
  im_sq_n=0;im_sg_n=0
  sq_n=0;sh_n=0;sg_n=0
@@ -208,6 +222,7 @@ func _tick_squares(delta: float) -> void:
   buf[o+12]=c.r;buf[o+13]=c.g;buf[o+14]=c.b;buf[o+15]=1.0
   shown+=1;i+=1
  for k in im_sq_n:
+  if shown>=SQUARE_CAP:break # the buffer is SQUARE_CAP instances; a heavy build used to write past it
   var o=shown*16;var size=im_sq_size[k];var p=im_sq_pos[k];var c=im_sq_col[k]
   buf[o]=size;buf[o+3]=p.x;buf[o+5]=size;buf[o+7]=p.y;buf[o+10]=size;buf[o+11]=p.z
   buf[o+12]=c.r;buf[o+13]=c.g;buf[o+14]=c.b;buf[o+15]=1.0;shown+=1

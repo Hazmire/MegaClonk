@@ -9,7 +9,7 @@ const GROUPS=[
  ["Combat",["damage","crit","crit_damage","haste","count","size","projectile_speed","duration","knockback"]],
  ["Movement",["speed","air_jumps","jump","slide_speed","slide_friction","glide","climb"]],
  ["Rewards",["pickup","xp","gold_gain","luck","difficulty"]]]
-const LABELS={"max_health":"Max health","crit_damage":"Crit damage","projectile_speed":"Projectile speed","air_jumps":"Air jumps","slide_speed":"Slide speed","slide_friction":"Slide friction","gold_gain":"Gold gain","xp":"XP gain","pickup":"Pickup range","regen":"Regeneration"}
+const LABELS={"haste":"Attack speed","max_health":"Max health","crit_damage":"Crit damage","projectile_speed":"Projectile speed","air_jumps":"Air jumps","slide_speed":"Slide speed","slide_friction":"Slide friction","gold_gain":"Gold gain","xp":"XP gain","pickup":"Pickup range","regen":"Regeneration"}
 static func tier_index(tier: String) -> int:return maxi(0,TIER_IDS.find(tier))
 static func label(key: String) -> String:return LABELS.get(key,key.replace("_"," ").capitalize())
 # --- stats -------------------------------------------------------------------------------------------------------
@@ -45,7 +45,7 @@ static func weapons(game: Node) -> Array:
  for id in game.weapons:
   var state: Dictionary=game.weapons[id];var meta=game.equipment_meta("weapons",id,int(state.level))
   var gems=WeaponSockets.gems(state)
-  out.append({"id":int(id),"name":str(meta.name),"level":int(state.level),"tier":tier_index(str(meta.rarity)),"gems":gems,"sockets":WeaponSockets.unlocked(state)})
+  out.append({"id":int(id),"name":Fusions.weapon_name(state,int(id)) if Fusions.is_fusion(state) else str(meta.name),"fusion":Fusions.of_state(state),"level":int(state.level),"tier":tier_index(str(meta.rarity)),"gems":gems,"sockets":WeaponSockets.unlocked(state)})
  return out
 static func tomes(game: Node) -> Array:
  var out=[]
@@ -115,7 +115,7 @@ static func level_card(game: Node,choice: Dictionary) -> Dictionary:
   card.rows=[{"label":"Health","from":"%d"%roundi(game.health),"to":"%d"%roundi(minf(float(game.stats.max_health),float(game.health)+25.0))}]
   return card
  if choice.type=="weapon":
-  var id=int(choice.id);card.category="weapons";card.max_level=Economy.WEAPON_MAX_LEVEL;card.short_name=Catalog.weapon_name(id)
+  var id=int(choice.id);card.category="weapons";card.max_level=Economy.WEAPON_MAX_LEVEL;card.short_name=Fusions.weapon_name_of(game,id)
   if game.weapons.has(id):
    var state: Dictionary=game.weapons[id];card.level_from=int(state.level);card.level_to=mini(card.level_from+1,card.max_level)
    if choice.has("attribute"):
@@ -161,11 +161,11 @@ static func shop_rows(game: Node,object: Dictionary) -> Array:
  return rows
 # --- shrine ---------------------------------------------------------------------------------------------------------
 # One Dictionary per shrine choice: {index, stat, stat_name, bonus, description, tier, tier_name, before, after}; all from ShrineRewards.
-static func shrine_cards(reward: Dictionary) -> Array:
+static func shrine_cards(reward: Dictionary,current_armor: float=0.0) -> Array:
  var out=[]
  for i in reward.get("choices",[]).size():
   var c: Dictionary=reward.choices[i];var tier=tier_index(str(c.rarity))
-  out.append({"index":i,"stat":str(c.stat),"stat_name":ShrineRewards.stat_name(str(c.stat)),"bonus":ShrineRewards.bonus_text(c),"description":str(c.description),"tier":tier,"tier_name":str(FogPalette.RARITY[tier]["name"]),"before":float(c.before),"after":float(c.after)})
+  out.append({"index":i,"stat":str(c.stat),"stat_name":ShrineRewards.stat_name(str(c.stat)),"bonus":ShrineRewards.bonus_text(c,current_armor),"description":str(c.description),"tier":tier,"tier_name":str(FogPalette.RARITY[tier]["name"]),"before":float(c.before),"after":float(c.after)})
  return out
 # --- treasure chest -------------------------------------------------------------------------------------------------
 # What the chest screen shows. The item is already decided and granted by RewardDrops before the screen opens; this only builds the
@@ -209,7 +209,7 @@ static func imbue(game: Node) -> Dictionary:
    elif i<open:sockets.append({"kind":"empty","element":"","name":""})
    else:sockets.append({"kind":"locked","element":"","name":""})
   var combo=WeaponSockets.combo(state)
-  weapons.append({"id":int(id),"name":str(Catalog.WEAPONS[id][0]),"level":int(state.level),"open":open,"used":gems.size(),"sockets":sockets,"combo":str(combo.get("name","")),"can_unlock_second":WeaponSockets.can_unlock_second(state)})
+  weapons.append({"id":int(id),"name":Fusions.weapon_name(state,int(id)),"fusion":Fusions.of_state(state),"level":int(state.level),"open":open,"used":gems.size(),"sockets":sockets,"combo":str(combo.get("name","")),"can_unlock_second":WeaponSockets.can_unlock_second(state)})
  return {"cost":cost,"gold":int(game.gold),"amulets":int(game.amulets),"tray":tray,"weapons":weapons}
 # --- results, build inspector ---------------------------------------------------------------------------------------------
 static func clock(seconds: float) -> String:return "%02d:%02d"%[int(seconds)/60,int(seconds)%60]
@@ -218,14 +218,15 @@ static func results(game: Node,victory: bool,unlocked: Array) -> Dictionary:
  var per=[];var best=-1
  for id in game.damage_by_weapon:
   if int(id)<0:continue
-  per.append({"id":int(id),"name":str(Catalog.weapon_name(int(id))),"damage":float(game.damage_by_weapon[id])})
+  per.append({"id":int(id),"name":Fusions.weapon_name_of(game,int(id)),"damage":float(game.damage_by_weapon[id])})
   if best==-1 or float(game.damage_by_weapon[id])>float(game.damage_by_weapon[best]):best=int(id)
  per.sort_custom(func(a,b):return a.damage>b.damage)
  return {"victory":victory,"time":clock(game.elapsed),"stage":int(game.stage),"level":int(game.level),"kills":int(game.kills),"damage":float(game.damage_total),"gold":int(game.gold),
-  "best":str(Catalog.weapon_name(best)) if best>=0 else "None","per_weapon":per,"unlocked":unlocked,"sandbox":bool(game.sandbox),"character":str(game.character)}
+  "best":Fusions.weapon_name_of(game,best) if best>=0 else "None","per_weapon":per,"unlocked":unlocked,"sandbox":bool(game.sandbox),"character":str(game.character),
+  "endless":bool(game.endless),"endless_time":float(game.endless_time),"endless_clock":Endless.clock(game.endless_time),"new_record":bool(game.endless_record)}
 # Build inspector: run totals and one entry per weapon (the game's own tooltip text) with its sockets.
 static func build_details(game: Node) -> Dictionary:
  var ws=[]
- for id in game.weapons:ws.append({"id":int(id),"name":str(Catalog.WEAPONS[id][0]),"level":int(game.weapons[id].level),"text":game.weapon_tooltip(id),"sockets":SocketScreens.tooltip(game.weapons[id])})
+ for id in game.weapons:ws.append({"id":int(id),"name":Fusions.weapon_name_of(game,int(id)),"level":int(game.weapons[id].level),"text":game.weapon_tooltip(id),"sockets":SocketScreens.tooltip(game.weapons[id])})
  return {"level":int(game.level),"stage":int(game.stage),"kills":int(game.kills),"damage":float(game.damage_total),"gold":int(game.gold),"paid_chests":int(game.chests_opened),"free_chests":int(game.run_metrics.get("free_chests",0)),
   "extra_bosses":int(game.additional_boss_count),"per_boss":1+int(game.additional_boss_count),"weapons":ws}

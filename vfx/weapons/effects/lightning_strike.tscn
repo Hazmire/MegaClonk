@@ -1,0 +1,97 @@
+[gd_scene format=4]
+
+[ext_resource type="Script" path="res://vfx/weapons/scripts/lightning_strike.gd" id="1_s2tvt"]
+[ext_resource type="Texture2D" path="res://vfx/weapons/textures/streak.png" id="2_wy1qs"]
+[ext_resource type="Texture2D" path="res://vfx/weapons/textures/ring.png" id="3_xoge6"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wt0js"]
+transparency = 1
+blend_mode = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+
+[sub_resource type="Gradient" id="Gradient_volep"]
+offsets = PackedFloat32Array(0, 0.4, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.75, 0.88, 1, 1, 0.3, 0.55, 0.95, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_rl54f"]
+gradient = SubResource("Gradient_volep")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ie10w"]
+particle_flag_align_y = true
+direction = Vector3(0, 1, 0)
+spread = 75.0
+initial_velocity_min = 4.0
+initial_velocity_max = 9.0
+gravity = Vector3(0, -16, 0)
+damping_min = 2.0
+damping_max = 4.0
+scale_min = 0.6
+scale_max = 1.2
+color_ramp = SubResource("GradientTexture1D_rl54f")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n33ee"]
+transparency = 1
+blend_mode = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("2_wy1qs")
+texture_filter = 0
+billboard_keep_scale = true
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_qn58n"]
+_surfaces = [{
+"aabb": AABB(-0.03, -0.2, -0.03, 0.06, 0.4, 0.06),
+"attribute_data": PackedByteArray("AAAAAAAAAAAAAIA/AAAAAAAAgD8AAIA/AAAAAAAAAAAAAIA/AACAPwAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAgD8AAIA/AAAAAAAAAAAAAIA/AACAPwAAAAAAAIA/"),
+"format": 34359738385,
+"material": SubResource("StandardMaterial3D_n33ee"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 12,
+"vertex_data": PackedByteArray("j8L1vM3MTL4AAAAAj8L1PM3MTL4AAAAAj8L1PM3MTD4AAAAAj8L1vM3MTL4AAAAAj8L1PM3MTD4AAAAAj8L1vM3MTD4AAAAAAAAAAM3MTL6PwvW8AAAAAM3MTL6PwvU8AAAAAM3MTD6PwvU8AAAAAM3MTL6PwvW8AAAAAM3MTD6PwvU8AAAAAM3MTD6PwvW8")
+}]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0pbba"]
+transparency = 1
+blend_mode = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.85, 0.94, 1, 1)
+albedo_texture = ExtResource("3_xoge6")
+texture_filter = 0
+billboard_mode = 1
+billboard_keep_scale = true
+
+[sub_resource type="QuadMesh" id="QuadMesh_pe0ru"]
+material = SubResource("StandardMaterial3D_0pbba")
+
+[node name="LightningStrike" type="Node3D" unique_id=1430221246]
+script = ExtResource("1_s2tvt")
+bolt_material = SubResource("StandardMaterial3D_wt0js")
+
+[node name="Bolt" type="MeshInstance3D" parent="." unique_id=745600965]
+cast_shadow = 0
+
+[node name="Sparks" type="GPUParticles3D" parent="." unique_id=180735218]
+emitting = false
+amount = 28
+lifetime = 0.45
+one_shot = true
+explosiveness = 1.0
+visibility_aabb = AABB(-10, -10, -10, 20, 20, 20)
+process_material = SubResource("ParticleProcessMaterial_ie10w")
+draw_pass_1 = SubResource("ArrayMesh_qn58n")
+
+[node name="Ring" type="MeshInstance3D" parent="." unique_id=1160201674]
+cast_shadow = 0
+mesh = SubResource("QuadMesh_pe0ru")
+
+[node name="Light" type="OmniLight3D" parent="." unique_id=1898446680]
+light_color = Color(0.6, 0.8, 1, 1)
+light_energy = 0.0
+omni_range = 7.0
+metadata/peak = 4.0
+metadata/fade = 0.15

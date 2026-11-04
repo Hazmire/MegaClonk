@@ -34,6 +34,7 @@ static func cam_pos(rt: WeaponRuntime) -> Vector3:
 # Called from Game.hit for every damaging weapon hit, after crit has been rolled.
 static func impact(rt: WeaponRuntime,id: int,source: String,pos: Vector3,dir: Vector3,critical: bool,e: Dictionary,variant: int=-1) -> void:
  var psx=rt.psx
+ rt.tint_for(id) # a Fusion weapon's hit look is drawn in the Fusion's two tones
  var sound=AUDIO.get(source,NO_SOUND)
  var home=rt.game.audio
  match source:
@@ -63,6 +64,9 @@ static func impact(rt: WeaponRuntime,id: int,source: String,pos: Vector3,dir: Ve
   var event=str(sound[1] if critical else sound[0])
   if event!="":home.emit(event,pos,1.0,1.0,variant)
   if source!="pulse":ElementAudio.hit(rt.game,id,pos) # aura pulses emit their element hit once per pulse in update_aura
+ var fusion=str(rt.fusion_of.get(id,""))
+ if fusion!="" and source!="pulse":FusionFx.impact(rt,fusion,pos,dir) # the Fusion's signature hit (shares the 24/s budget; above it only the status look)
+ psx.tint_end()
 static func fire_burst(rt: WeaponRuntime,pos: Vector3,dir: Vector3,power: float) -> void:
  var psx=rt.psx
  # flame burst (short lived), then embers that arc and extinguish (colour steps to dead brown)

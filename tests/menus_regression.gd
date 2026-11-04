@@ -47,10 +47,10 @@ func run() -> void:
  var counts=MenuData.tier_counts()
  check(counts.all==61 and counts.common==19 and counts.uncommon==17 and counts.rare==13 and counts.epic==7 and counts.legendary==5,"Rarity filter counts are 61 / 19 / 17 / 13 / 7 / 5 from the catalogue")
  check(MenuData.drop_weight_text("common")=="50%" and MenuData.drop_weight_text("legendary")=="2%","Drop weights come from ItemStats.TIER_WEIGHTS")
- check(MenuData.sources_text("whetstone")=="Appears in vases, chests and shops" and MenuData.sources_text("hex_penny")=="Appears in vases, chests and shops","Common items list vases, chests and shops")
+ check(MenuData.sources_text("whetstone")=="Appears in chests and shops" and MenuData.sources_text("hex_penny")=="Appears in chests and shops","Common items list chests and shops (vases give no items)")
  check(MenuData.sources_text("headsmans_oath")=="Appears in chests and shops" and MenuData.sources_text("imbued_amulet")=="Appears in chests and shops","Legendary items appear in chests and shops, never vases")
  var rare_id=String(Catalog.ITEM_IDS.filter(func(x):return Catalog.item_tier(x)=="rare")[0])
- check(MenuData.sources_text(rare_id)=="Appears in chests and shops" and MenuData.sources_text("tinder_pouch")=="Appears in vases, chests and shops","Rare items skip vases; Uncommon items do not")
+ check(MenuData.sources_text(rare_id)=="Appears in chests and shops" and MenuData.sources_text("tinder_pouch")=="Appears in chests and shops","No item lists vases as a source")
  var gem_items=Catalog.ITEM_IDS.filter(func(i):return MenuData.needs_element(String(i))!="")
  check(gem_items.size()==5 and MenuData.needs_element("tinder_pouch")=="fire","Five items need a gem and Tinder Pouch needs Fire")
  var pools_ok=true

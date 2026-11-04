@@ -18,10 +18,12 @@ static func candidates(ids: Array,tiers: Array=[]) -> Array:
  return result
 # Chest reward: tier first, then an item of that tier.
 static func roll_chest(game: Node) -> String:
- var selected=RewardSelector.choose(candidates(available(game)),game.rng,weights(float(game.stats.luck)))
+ var pool=available(game).filter(func(id):return not id in game.banished_items) # banished items never come from a chest again
+ var selected=RewardSelector.choose(candidates(pool),game.rng,weights(float(game.stats.luck)))
  return str(selected.get("id",""))
 # Vase reward: Common/Uncommon only, with ItemStats.DROPS.vase_item_chance. Returns "" for no item.
 static func roll_vase(game: Node) -> String:
+ if float(ItemStats.DROPS.vase_item_chance)<=0.0 or ItemStats.DROPS.vase_tiers.is_empty():return "" # vases never give items (no rng draw either)
  if game.rng.randf()>=float(ItemStats.DROPS.vase_item_chance):return ""
  var selected=RewardSelector.choose(candidates(available(game),ItemStats.DROPS.vase_tiers),game.rng,weights(float(game.stats.luck)))
  return str(selected.get("id",""))

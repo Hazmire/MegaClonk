@@ -84,7 +84,7 @@ func catalog_tests():
   if id!="":
    vase_hits+=1
    if not Catalog.item_tier(id) in ["common","uncommon"]:vase_ok=false
- check(vase_ok and vase_hits>0 and absf(float(vase_hits)/6000.0-float(ItemStats.DROPS.vase_item_chance))<0.015,"Vases drop only Commons/Uncommons at the configured rate (%d/6000)"%vase_hits)
+ check(vase_ok and vase_hits==0,"Smashing vases never yields an item (%d/6000)"%vase_hits)
  var shop_ok=true
  var shop_rng=RandomNumberGenerator.new();shop_rng.seed=3
  for t in ["Common","Rare","Legendary"]:
@@ -113,7 +113,7 @@ func stat_tests():
  fresh();give("salted_pork");var hp=game.stats.max_health
  check(is_equal_approx(hp,base.max_health+20.0) and is_equal_approx(game.health,hp),"Salted Pork: +20 max HP, filled on pickup")
  fresh();give("rosary_teeth");give("grave_salt")
- check(is_equal_approx(game.stats.crit,base.crit+0.05) and is_equal_approx(game.stats.crit_damage,base.crit_damage+0.10) and is_equal_approx(game.stats.max_health,base.max_health+15.0) and is_equal_approx(game.stats.armor,1.0),"Rosary of Teeth and Grave Salt")
+ check(is_equal_approx(game.stats.crit,base.crit+0.05) and is_equal_approx(game.stats.crit_damage,base.crit_damage+0.10) and is_equal_approx(game.stats.max_health,base.max_health+15.0) and is_equal_approx(game.stats.armor,4.0),"Rosary of Teeth and Grave Salt")
  fresh();give("crowsfoot_charm");var one=game.stats.evasion;give("crowsfoot_charm",5)
  check(is_equal_approx(one,0.12) and game.stats.evasion>one and game.stats.evasion<0.75 and game.stats.evasion<6*0.12,"Crowsfoot Charm: +12% evasion with diminishing returns")
  fresh();give("bitter_wine");var wine=game.stats
@@ -432,7 +432,7 @@ func gem_tests():
   var b=make_enemy(Vector3(5+i,0,0));b["burn"]=3.0
  var armor0=game.stats.armor;var ls0=game.stats.lifesteal
  for i in 40:game.irt.tick(1.0/60.0)
- check(is_equal_approx(game.stats.armor-armor0,3*0.4) and is_equal_approx(game.stats.lifesteal-ls0,3*0.002),"Witch-Hunter's Brand: armour and lifesteal per burning enemy")
+ check(is_equal_approx(game.stats.armor-armor0,3*ItemStats.v("witch_hunters_brand","armor_each")) and is_equal_approx(game.stats.lifesteal-ls0,3*ItemStats.v("witch_hunters_brand","lifesteal_each")),"Witch-Hunter's Brand: armour and lifesteal per burning enemy")
  for e2 in game.enemies:e2["burn"]=0.0
  for i in 40:game.irt.tick(1.0/60.0)
  check(is_equal_approx(game.stats.armor,armor0) and is_equal_approx(game.stats.lifesteal,ls0),"Witch-Hunter's Brand: bonuses vanish when nothing burns")

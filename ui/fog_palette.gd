@@ -60,3 +60,5 @@ const SIZE_HUD_TIMER := 68
 const SIZE_HUD_NUMBER := 34
 const SIZE_LABEL := 13       # small caps labels, letter spacing ~0.28em
 const SIZE_BODY := 17
+# Endless mode: the blood-red digits of the endless timer (tier 0). Later tiers darken through endless_timer_style.json.
+const ENDLESS_RED := Color("D8333E")

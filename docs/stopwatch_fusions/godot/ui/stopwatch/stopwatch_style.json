@@ -1,0 +1,41 @@
+{
+  "_note": "Stopwatch look. Mockup: RunStopwatch.dc.html. The ticks and the watch show the FRACTION left of the current total, so any duration works. The Stopwatch FREEZES hostiles (hostile time 0), like the Hourglass.",
+  "wave_in_s": 0.6,
+  "wave_out_s": 0.5,
+  "flash_alpha": 0.55,
+  "flash_s": 0.15,
+  "punch_scale": 1.025,
+  "punch_s": 0.3,
+  "bubble_px": 64,
+  "tint": "#7FA8D8",
+  "tint_amount": 0.4,
+  "ice": "#CFE8FF",
+  "ice_glow": "#7FC4FF",
+  "warn": "#E0303A",
+  "warn_last_s": 1.0,
+  "ticks": 60,
+  "tick_margin_px": 16,
+  "tick_major": [
+    5,
+    26
+  ],
+  "tick_minor": [
+    4,
+    16
+  ],
+  "watch": {
+    "size_px": 88,
+    "offset_below_timer_px": 24,
+    "brass": "#B08A4A",
+    "face": "#0E0F0E",
+    "rattle_px": 2
+  },
+  "extend": {
+    "refill_s": 0.3,
+    "tag_s": 1.2,
+    "tag_color": "#CFE8FF"
+  },
+  "rain_speed_while_frozen": 0.05,
+  "number_format": "one decimal under 10 s, whole seconds from 10 s",
+  "hostile_scale": 0.0
+}

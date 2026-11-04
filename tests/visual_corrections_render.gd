@@ -9,7 +9,7 @@ func run():
   var panel=MeshInstance3D.new();panel.mesh=QuadMesh.new();panel.mesh.size=Vector2(2.5,2.5);panel.position=Vector3(-1.4 if i==0 else 1.4,1,0);root.add_child(panel)
   if i==0:panel.material_override=GrimdarkMaterials.material(source)
   else:
-   var mat=ForestAtmosphere.floor_material();panel.material_override=mat;mat.set_shader_parameter("stone_low",Color(.1,.5,.2));mat.set_shader_parameter("stone_high",Color(.15,.6,.25))
+   var mat=ForestAtmosphere.floor_material();panel.material_override=mat;mat.set_shader_parameter("top_tex",StageDressing.for_stage(1).top)
  var camera=Camera3D.new();root.add_child(camera);camera.current=true;camera.projection=Camera3D.PROJECTION_ORTHOGONAL;camera.size=6
  for side in [1,-1]:
   camera.position=Vector3(0,1,6*side);camera.look_at(Vector3(0,1,0));await process_frame;await process_frame;await process_frame;await RenderingServer.frame_post_draw

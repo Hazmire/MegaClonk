@@ -75,13 +75,13 @@ func prepare(e: Dictionary) -> void:
  var slot=int(e.crowd_slot);e["crowd_was_traversing"]=traversing[slot]>0;e.pos.y-=lifts[slot]
 func snapshot(e: Dictionary,slot: int) -> void:
  positions[slot]=e.pos;lifts[slot]=float(e.get("crowd_height",0));floors[slot]=positions[slot].y-0.65-lifts[slot]
-func resolve(game: Node,e: Dictionary,delta: float) -> void:
+func resolve(game: Node,e: Dictionary,delta: float,forced: bool=false) -> void:
  var slot=int(e.crowd_slot)
  if e.hp<=0:alive[slot]=0;return
  var radius=float(radii[slot]);var old_height=float(lifts[slot]);var on_terrain_path=not e.get("climb",EMPTY).is_empty() or not e.get("drop",EMPTY).is_empty();traversing[slot]=1 if on_terrain_path else 0
  # Two staggered groups solve at 30Hz against ALL actual body positions;
  # pursuit, damage, broadphase and the player's swept capsule remain at 60Hz.
- if int(ids[slot])%2!=solve_phase:
+ if delta<=0.0 or (not forced and int(ids[slot])%2!=solve_phase): # delta 0 = frozen: bodies keep their exact positions
   if on_terrain_path:
    if not e.get("crowd_was_traversing",false):e.pos.y+=old_height
    e.crowd_height=0

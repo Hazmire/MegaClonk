@@ -6,10 +6,7 @@ static func noise_texture() -> Texture2D:
  return preload("res://assets/config/forest_variation.png")
 static func floor_material() -> ShaderMaterial:
  if ground==null:
-  ground=ShaderMaterial.new();ground.shader=preload("res://shaders/grimdark_terrain.gdshader");ground.set_shader_parameter("variation",noise_texture())
-  ground.set_shader_parameter("earth_texture",preload("res://assets/grimdark/horror/PS1_ForestAsset/dirt.JPG"))
-  ground.set_shader_parameter("grass_texture",preload("res://assets/grimdark/horror/PS1_ForestAsset/grass.jpg"))
-  ground.set_shader_parameter("rock_texture",preload("res://assets/grimdark/horror/PS1_ForestAsset/rock.jpg"))
+  ground=ShaderMaterial.new();ground.shader=preload("res://shaders/stage_ground.gdshader")
  return ground
 static func grass_material() -> ShaderMaterial:
  if grass==null:
@@ -40,7 +37,8 @@ static func add_grass(game: Node,data: Dictionary,rng: RandomNumberGenerator) ->
   var batch=game.prop_batches[key];batch.visibility_range_end=45;batch.visibility_range_end_margin=8;batch.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
 static func reset() -> void:
- if ground!=null:ground.set_shader_parameter("variation",null)
+ if ground!=null:
+  for parameter in ["top_tex","side_tex","low_tex","emission_tex"]:ground.set_shader_parameter(parameter,null)
  if grass!=null:
   for parameter in ["shape_texture","shape_atlas","noise_texture","wind_texture","color_gradient"]:grass.set_shader_parameter(parameter,null)
  ground=null;grass=null

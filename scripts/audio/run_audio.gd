@@ -9,6 +9,7 @@ const HEARTBEAT_KEY="low_hp_heartbeat"
 const VICTORY_DELAY=2.0
 # Enrage roar per boss: stage 1 splits by boss (the larger Big Chunkus bellows), then one roar per stage, repeating every 3 stages.
 const STAGE_ENRAGE=["world.boss_enrage_beast","world.boss_enrage_shriek","world.boss_enrage_abyssal"]
+const STOPWATCH_KEY="stopwatch_loop"
 static var gold_last=-100.0
 static var gold_streak=0
 static func hurt(game: Node,damage: float) -> void:
@@ -44,3 +45,21 @@ static func gold(game: Node) -> void:
  gold_streak=gold_streak+1 if (gap>=0.0 and gap<=1.2) else 0
  gold_last=now
  game.audio.emit("pickup.gold",Vector3.INF,1.0,1.0,mini(gold_streak,2))
+# Endless mode begins: the banshee, once per run, at the start of the glitch; the music ducks about 6 dB for the length of the sound.
+const BANSHEE_DUCK_DB=6.0
+const BANSHEE_LENGTH_S=3.0
+static func endless_begins(game: Node) -> void:
+ if not is_instance_valid(game.audio):return
+ game.audio.emit("world.endless_begins_banshee",game.player.position);game.audio.music_dip(-BANSHEE_DUCK_DB,BANSHEE_LENGTH_S)
+
+# Stopwatch (and Hourglass) sound: the loop plays exactly while hostile time is stopped, and the end cue plays on release. Called every run tick, so a loop
+# that pause / level-up silenced is restarted on resume. The opening cue is played by WorldPickups.stopwatch (an extension gets no new cue).
+static func stopwatch(game: Node) -> void:
+ var audio=game.audio
+ if not is_instance_valid(audio):return
+ var time: WorldTime=game.world_time
+ if time.just_released:
+  audio.loop_stop(STOPWATCH_KEY);audio.emit("powerup.stopwatch_end")
+ elif time.active():
+  if not audio.loop_active(STOPWATCH_KEY):audio.loop_start(STOPWATCH_KEY,"powerup.stopwatch_loop")
+ elif audio.loop_active(STOPWATCH_KEY):audio.loop_stop(STOPWATCH_KEY)

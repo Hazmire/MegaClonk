@@ -1,0 +1,18 @@
+{
+ "height_px": 512,
+ "width_px": 2048,
+ "ground_px_from_bottom": {
+  "s1_far": 346,
+  "s1_mid": 238,
+  "s1_near": 206,
+  "s2_far": 299,
+  "s2_mid": 224,
+  "s2_near": 206,
+  "s3_far": 292,
+  "s3_mid": 258,
+  "s3_near": 207,
+  "s4_far": 288,
+  "s4_mid": 231,
+  "s4_near": 213
+ }
+}

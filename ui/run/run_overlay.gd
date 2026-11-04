@@ -1,7 +1,7 @@
 class_name RunOverlay
 extends ColorRect
-# The one fog overlay for a run: scanlines and vignette always on, `low_hp` while HP <= 30% and `stopwatch` while hostile
-# time is slowed or frozen (Stopwatch / Hourglass, both reported by WorldTime.active()). It sits above the HUD and below the
+# The one fog overlay for a run: scanlines and vignette always on, `low_hp` while HP <= 30% and (`stopwatch` is unused now:
+# the Stopwatch look is StopwatchFX on layer 1). It sits above the HUD and below the
 # pause / reward screens, so those never get a second overlay. Presentation only; nothing here touches gameplay.
 const LOW_HP_FRACTION=0.30
 const FADE_RATE=4.0
@@ -17,7 +17,6 @@ static func wants_low_hp(health: float,max_health: float) -> bool:return max_hea
 # Called from the HUD refresh with real frame time.
 func sync(game: Node,delta: float) -> void:
  low_hp=move_toward(low_hp,1.0 if wants_low_hp(game.health,float(game.stats.max_health)) else 0.0,delta*FADE_RATE)
- stopwatch=move_toward(stopwatch,1.0 if game.world_time.active() else 0.0,delta*FADE_RATE)
  if int(game.hurt_events)!=seen_hurts:seen_hurts=int(game.hurt_events);hurt=1.0
  hurt=move_toward(hurt,0.0,delta*2.5);shader_material.set_shader_parameter("hurt",hurt)
  shader_material.set_shader_parameter("low_hp",low_hp);shader_material.set_shader_parameter("stopwatch",stopwatch)

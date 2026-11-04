@@ -16,6 +16,7 @@ var cooldown_suppressed=0
 var voice_suppressed=0
 var music_players=[]
 var muted=false # test/profile stub: emit() accepts nothing (used to prove audio never changes the simulation)
+var last_player: Node=null # the player the most recent accepted emit started (the Fusion forge reads its playback position)
 var count_emits=false # tests: count every emit request per event id
 var emit_counts: Dictionary={}
 var profile_usec=0 # tests/profile: time spent inside emit() and the loop calls while count_emits is on
@@ -120,7 +121,7 @@ func _emit(event: String,position_value: Vector3,gain: float,pitch_multiplier: f
  if AudioServer.get_driver_name()!="Dummy":player.play()
  voice.event=event;voice.until=clock+maxf(0.02,stream.get_length()/player.pitch_scale);voice.priority=priority;voice["key"]=loop_key
  if loop_key!="":voice.until=clock+1.0e9
- last_events[event]=clock;accepted+=1;recent.append(event)
+ last_player=player;last_events[event]=clock;accepted+=1;recent.append(event)
  if recent.size()>16:recent.pop_front()
  return true
 # Looping sounds (shrine charge, heartbeat, aura, scythes, element layers) hold one pooled voice under a key.
@@ -220,6 +221,16 @@ func music_duck(on: bool) -> void:
  duck_tween.tween_property(amplify,"volume_db",DUCK_DB if on else 0.0,0.3);duck_tween.tween_property(lowpass,"cutoff_hz",DUCK_CUTOFF_HZ if on else 20500.0,0.3)
  if not on:duck_tween.chain().tween_callback(func():AudioServer.set_bus_effect_enabled(index,0,false);AudioServer.set_bus_effect_enabled(index,1,false))
 var duck_tween: Tween
+var dip_tween: Tween
+func music_dip(db: float,seconds: float) -> void: # a plain level dip (no low-pass) for a one-off sting; skipped while the level-up duck owns the bus
+ if ducked:return
+ var index=AudioServer.get_bus_index("Music")
+ if AudioServer.get_bus_effect_count(index)<2:return
+ var amplify=AudioServer.get_bus_effect(index,1) as AudioEffectAmplify
+ AudioServer.set_bus_effect_enabled(index,1,true)
+ if dip_tween and dip_tween.is_valid():dip_tween.kill()
+ dip_tween=create_tween();dip_tween.tween_property(amplify,"volume_db",db,0.2);dip_tween.tween_interval(maxf(seconds-0.2,0.0));dip_tween.tween_property(amplify,"volume_db",0.0,0.6)
+ dip_tween.tween_callback(func():if not ducked:AudioServer.set_bus_effect_enabled(index,1,false))
 func music_fade_out(seconds: float) -> void:
  if music_tween and music_tween.is_valid():music_tween.kill()
  music_tween=create_tween().set_parallel(true)

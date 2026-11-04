@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="StageDressingRules" format=3]
+
+[ext_resource type="Script" path="res://scripts/stages/stage_dressing_rules.gd" id="1_rdnxa"]
+
+[resource]
+script = ExtResource("1_rdnxa")
+ring_layers = PackedStringArray("far", "mid", "near")
+ring_radius = PackedFloat32Array(240, 150, 90)
+ring_ground_y = PackedFloat32Array(52, 30, 15)
+ring_fog_floor = PackedFloat32Array(26, 13, 4)
+ring_fog_band = PackedFloat32Array(26, 17, 11)
+ring_haze = PackedFloat32Array(0.55, 0.35, 0.3)
+wall_offsets = PackedFloat32Array(9, 15)
+wall_density = PackedFloat32Array(0.2, 0.28)
+fog_sea_y = PackedFloat32Array(-0.6, 2.5)
+fog_sea_density = PackedFloat32Array(1, 0.55)
+fog_sea_edge_soft = PackedFloat32Array(6, 26)

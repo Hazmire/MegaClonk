@@ -18,7 +18,7 @@ static func model(id: String) -> Mesh:
 static func initialize(game: Node, e: Dictionary, id: String) -> void:
  var d=config(id);var scaling=(1+(game.stage-1)*0.6)*(1+(game.tier-1)*0.3)*game.stats.difficulty
  if id=="ghost":scaling*=1+maxf(0,game.stage_time-game.STAGE_SECONDS)/120
- e.encounter=id;e.variant=d;e.hp=d.health*scaling;e.max_hp=e.hp;e.speed=d.speed;e.damage=d.damage*scaling;e.scale=d.scale
+ e.encounter=id;e.variant=d;e.hp=d.health*scaling;e.max_hp=e.hp;e.speed=d.speed*game.difficulty_speed();e.damage=d.damage*scaling;e.scale=d.scale
  e.radius=d.get("radius",0.6);e.ability_clock=10.0 if id=="chunkus" else 12.0;e.aoe_remaining=0.0;e.owner_key=str(game.stage)+"_golem_"+str(e.get("crowd_id",game.crowd.next_id));e.elite=id=="statue_elite"
  e.state="move";e.action="";e.windup=0.0;e.recovery=0.0;e.charge_time=0.0;e.charge_direction=Vector3.ZERO;e.charge_hit=false;e.hit_time=0.0;e.special_cds={};e.wave_clock=0.0;e.waves=0
 static func step(game: Node, e: Dictionary, delta: float) -> void:

@@ -28,17 +28,24 @@ var fireball_loop_id=-1
 var scythe_loop_id=-1
 var loop_speed=0.0
 var pulse_budget=0
+var fusion_of: Dictionary={} # weapon id -> Fusion id ("" = not a Fusion), refreshed every update
+var fusion_budget=24.0 # Fusion impacts share the 24/s combo budget (FusionFx.take)
+var forms: FusionForms
 var counters={"strike":{},"casts":{},"dropped_timers":0}
 const SCYTHE_MODEL_PATH="res://assets/weapons/scythe.glb" # supplied model slot; PLACEHOLDER mesh is used until it exists
 
+# A new runtime replaces the old one: break the old runtime <-> FusionForms cycle so it is freed.
+static func release(old: WeaponRuntime,owner: Node,fx: Node) -> WeaponRuntime:
+ if old!=null:old.forms=null
+ return WeaponRuntime.new(owner,fx)
 func _init(owner: Node,fx: PsxFx) -> void:
- game=owner;psx=fx;rng.seed=424242
+ game=owner;psx=fx;rng.seed=424242;forms=FusionForms.new(self)
  scythe_view=MultiMeshInstance3D.new();scythe_view.name="PLACEHOLDER_ScytheMeshes"
  var mm=MultiMesh.new();mm.transform_format=MultiMesh.TRANSFORM_3D;mm.use_colors=true;mm.mesh=scythe_mesh();mm.instance_count=MAX_SCYTHES;mm.visible_instance_count=0
  scythe_view.multimesh=mm;scythe_view.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF;scythe_view.extra_cull_margin=200.0
  fx.add_child(scythe_view)
 func clear() -> void:
- timers.clear();fireballs.clear();arrows.clear();bullets.clear();scythes.clear()
+ timers.clear();fireballs.clear();arrows.clear();bullets.clear();scythes.clear();forms.clear();fusion_of.clear()
  if scythe_view!=null:scythe_view.multimesh.visible_instance_count=0
  psx.clear()
 func uses_placeholder_scythe() -> bool:return not ResourceLoader.exists(SCYTHE_MODEL_PATH)
@@ -93,12 +100,20 @@ func flat(v: Vector3) -> Vector3:
  var f=Vector3(v.x,0,v.z)
  return f.normalized() if f.length_squared()>0.0001 else Vector3.FORWARD.rotated(Vector3.UP,game.player.yaw)
 func yaw_dir(dir: Vector3,angle: float) -> Vector3:return dir.rotated(Vector3.UP,angle)
+# Fusion tint context: while a Fusion weapon's effects are drawn, PsxFx re-hues every colour to the Fusion's two tones.
+func tint_for(id: int) -> void:
+ var f=str(fusion_of.get(id,""))
+ if f=="":psx.tint_end()
+ else:FusionFx.begin(self,f)
 func count_cast(id: int) -> void:counters.casts[id]=int(counters.casts.get(id,0))+1
 # Shared hit interface ---------------------------------------------------------------------
 func strike(e: Dictionary,damage: float,id: int,source: String,dir: Vector3=Vector3.ZERO,pos: Vector3=Vector3.INF,variant: int=-1) -> void:
  if e.is_empty() or e.hp<=0:return
  counters.strike[source]=int(counters.strike.get(source,0))+1
- game.hit(e,damage,id,{"source":source,"dir":dir,"pos":pos if pos.is_finite() else e.pos,"variant":variant})
+ var ctx={"source":source,"dir":dir,"pos":pos if pos.is_finite() else e.pos,"variant":variant}
+ var fusion=str(fusion_of.get(id,""))
+ if fusion!="":ctx["fusion"]=fusion # tagged with the Fusion, so damage can be read back per Fusion
+ game.hit(e,damage,id,ctx)
 # Called by Game.hit once the crit roll is known (position/source come from the hit context).
 func on_hit(e: Dictionary,id: int,ctx: Dictionary,critical: bool) -> void:
  var source=str(ctx.get("source",""))
@@ -110,15 +125,18 @@ func hit_reach(e: Dictionary,scale: float=0.7) -> float:return float(e.get("radi
 func update(delta: float) -> void:
  psx.intensity=0.5 if game.settings.reduced else clampf(float(game.settings.visual_intensity)/0.7,0.4,1.0)
  pulse_budget=14
+ fusion_budget=minf(FusionFx.budget_per_second(),fusion_budget+delta*FusionFx.budget_per_second())
+ for id in game.weapons.keys():fusion_of[id]=Fusions.of_state(game.weapons[id])
  var i=0
  while i<timers.size():
   timers[i].t-=delta
   if timers[i].t<=0.0:
-   var call: Callable=timers[i].call;timers.remove_at(i);call.call()
+   var call: Callable=timers[i].call;timers.remove_at(i);call.call();psx.tint_end()
   else:i+=1
  for id in game.weapons.keys():
   var state=game.weapons[id]
-  if id==10:update_aura(id,state,delta);continue
+  tint_for(id)
+  if id==10:update_aura(id,state,delta);psx.tint_end();continue
   state.clock-=delta
   if state.clock>0.0:continue
   var r=WeaponStats.resolve(game,id,state)
@@ -133,7 +151,9 @@ func update(delta: float) -> void:
    15:fired=fire_shotgun(id,r)
   state.clock=float(r.interval)+(float(r.count-1)*float(r.get("gap",0.0)) if id==0 else 0.0) if fired else 0.12
   if fired:count_cast(id)
+ psx.tint_end()
  step_fireballs(delta);step_arrows(delta);step_bullets(delta);step_scythes(delta);sync_loops()
+ forms.tick(delta)
  psx.tick(delta)
 
 # SWORD -------------------------------------------------------------------------------------
@@ -145,6 +165,7 @@ func fire_sword(id: int,r: Dictionary) -> bool:
  return true
 func do_slash(id: int,index: int) -> void:
  if not game.weapons.has(id):return
+ tint_for(id)
  var r=WeaponStats.resolve(game,id,game.weapons[id])
  var pos=game.player.position
  var target=game.nearest(pos,float(r.reach)+0.8)
@@ -162,6 +183,8 @@ func do_slash(id: int,index: int) -> void:
  WeaponFeel.sword_arc(self,origin_pos(),dir,reach,half,index,deg_to_rad(40.0 if index%2==0 else -40.0))
  var origin=origin_pos();var final_slash=index==int(r.count)-1 and int(r.count)>1
  game.audio.emit("weapon.sword_swing_final" if final_slash else "weapon.sword.swing",origin,1.0,1.0,mini(index,2));ElementAudio.attack(game,id,origin)
+ var fusion=str(fusion_of.get(id,""))
+ if fusion!="":forms.on_slash(id,fusion,dir,r)
 
 # One random living enemy of `pool` (the weapon's own rng, never game.rng), or {} when the pool is empty.
 func random_enemy(pool: Array) -> Dictionary:
@@ -176,7 +199,12 @@ func fire_firestaff(id: int,r: Dictionary) -> bool:
  for k in n:
   if fireballs.size()>=MAX_FIREBALLS:break
   var d=dir if k==0 else (random_enemy(pool).pos-origin).normalized()
-  fireballs.append({"pos":origin+d*0.9,"vel":d*float(r.speed),"dir":d,"damage":float(r.damage),"id":id,"scale":float(r.scale),"hit_r":float(r.hit_radius),"left":float(r.range)+3.0,"trail":0.0,"age":0.0})
+  var ball={"pos":origin+d*0.9,"vel":d*float(r.speed),"dir":d,"damage":float(r.damage),"id":id,"scale":float(r.scale),"hit_r":float(r.hit_radius),"left":float(r.range)+3.0,"trail":0.0,"age":0.0}
+  var fusion=str(fusion_of.get(id,""))
+  if fusion!="" and FusionForms.enabled and k==0: # the lead fireball is a comet: bigger and harder, and it splits into a meteor shower where it lands
+   var form=Fusions.form(1)
+   ball["fusion"]=fusion;ball["base_damage"]=float(r.damage);ball["scale"]=float(r.scale)*float(form.comet_scale);ball["damage"]=float(r.damage)*float(form.comet_damage_mult);ball["hit_r"]=float(r.hit_radius)*float(form.comet_scale)
+  fireballs.append(ball)
  WeaponFeel.fire_muzzle(self,origin+dir*0.9,dir)
  game.audio.emit("weapon.firestaff.cast",origin,1.0,1.0);ElementAudio.attack(game,id,origin)
  return true
@@ -205,15 +233,18 @@ func step_fireballs(delta: float) -> void:
    else:
     WeaponFeel.fire_burst(self,next,-b.dir,1.0)
     game.audio.emit("weapon.firestaff.impact",next,0.8,1.0)
+   if b.has("fusion") and done:forms.comet_splits(b,next)
    fireballs.remove_at(i);i-=1;continue
   # body: three nested hard squares (red outer, orange, yellow core), nudged toward the camera to avoid z ties
   var s=float(b.scale)
+  tint_for(int(b.id))
   WeaponFeel.draw_fireball(self,next,s,float(b.age),cam)
   b.trail-=delta
   if b.trail<=0.0:
    b.trail=0.035
    psx.spark(next,Vector3(rng.randf_range(-1,1),rng.randf_range(0.2,1.6),rng.randf_range(-1,1)),WeaponFeel.FIRE_MID,WeaponFeel.EMBER_DEAD,0.26*s,0.08,0.36,3.0,0.5)
    if rng.randf()<0.5:psx.spark(next,Vector3(rng.randf_range(-1.4,1.4),rng.randf_range(0.0,1.0),rng.randf_range(-1.4,1.4)),WeaponFeel.FIRE_OUTER,WeaponFeel.EMBER_DEAD,0.14*s,0.05,0.7,9.0,0.4)
+   if b.has("fusion"):FusionFx.trail(self,str(b.fusion),next,1.4)
   i-=1
 
 # LIGHTNING STAFF ---------------------------------------------------------------------------
@@ -239,6 +270,7 @@ func fire_lightning(id: int,r: Dictionary) -> bool:
  return true
 func do_strike(id: int,target: Dictionary,cast: Dictionary) -> void:
  if not game.weapons.has(id):return
+ tint_for(id)
  var r=WeaponStats.resolve(game,id,game.weapons[id])
  if target.is_empty() or target.hp<=0:
   target=game.nearest(game.player.position,float(WeaponStats.LIGHTNING.search_radius))
@@ -264,6 +296,7 @@ func chain_from(id: int,from_pos: Vector3,cast: Dictionary,remaining: int,damage
  var next_damage=damage*float(WeaponStats.LIGHTNING.falloff)
  later(float(WeaponStats.LIGHTNING.chain_delay),func():
   if not game.weapons.has(id):return
+  tint_for(id)
   var to=best.pos if best.hp>0 else from_pos
   WeaponFeel.chain_link(self,from_pos+Vector3.UP*0.2,to)
   if best.hp>0:strike(best,next_damage,id,"chain",to-from_pos)
@@ -278,7 +311,10 @@ func fire_bow(id: int,r: Dictionary) -> bool:
  for k in n:
   if arrows.size()>=MAX_ARROWS:break
   var d=yaw_dir(dir,(float(k)-float(n-1)*0.5)*fan)
-  arrows.append({"pos":origin+d*0.8,"dir":d,"speed":float(r.speed),"left":float(r.range),"damage":float(r.damage),"id":id,"scale":float(r.scale),"hit_r":float(r.hit_radius),"hits":{},"trail":0.0})
+  var arrow={"pos":origin+d*0.8,"dir":d,"speed":float(r.speed),"left":float(r.range),"damage":float(r.damage),"id":id,"scale":float(r.scale),"hit_r":float(r.hit_radius),"hits":{},"trail":0.0}
+  var fusion=str(fusion_of.get(id,""))
+  if fusion!="":arrow["fusion"]=fusion
+  arrows.append(arrow)
  WeaponFeel.arrow_launch(self,origin+dir*0.8,dir)
  game.audio.emit("weapon.bow_volley" if n>1 else "weapon.bow.fire",origin,1.0,1.0);ElementAudio.attack(game,id,origin)
  return true
@@ -298,12 +334,15 @@ func step_arrows(delta: float) -> void:
     if a.hits.has(e.crowd_id):continue
     if game.segment_distance(e.pos,prev,next)>a.hit_r+hit_reach(e):continue
     a.hits[e.crowd_id]=true # piercing: one hit per enemy per arrow, the arrow flies on
-    strike(e,a.damage,a.id,"arrow",a.dir,e.pos,a.hits.size()-1)
+    if a.has("shard"):forms.strike_form(str(a.fusion),e,a.damage,a.id,"shard",a.dir,e.pos)
+    else:strike(e,a.damage,a.id,"arrow",a.dir,e.pos,a.hits.size()-1)
+    if a.has("fusion") and not a.has("shard") and a.hits.size()==1:forms.arrow_split(a,e.pos,e) # the first pierce splits it into three shards
   a.pos=next
   if stopped or a.left<=0.0:
    psx.burst(next,5,[WeaponFeel.ARROW_DUST,WeaponFeel.ARROW_GLOW],3.5,0.15,0.3,6.0,1.5,Vector3.UP,1.2)
    arrows.remove_at(i);i-=1;continue
   var s=float(a.scale)
+  tint_for(int(a.id))
   psx.draw_segment(next-a.dir*1.5*s,next,0.12*s,WeaponFeel.ARROW_SHAFT)
   psx.draw_segment(next-a.dir*1.5*s,next-a.dir*1.15*s+Vector3(0,0.2,0)*s,0.08*s,WeaponFeel.ARROW_FIN)
   psx.draw_segment(next-a.dir*1.5*s,next-a.dir*1.15*s-Vector3(0,0.2,0)*s,0.08*s,WeaponFeel.ARROW_FIN)
@@ -312,6 +351,7 @@ func step_arrows(delta: float) -> void:
   psx.draw_square(next+toward*0.05,0.28*s,WeaponFeel.ARROW_TIP)
   a.trail-=delta
   if a.trail<=0.0:
+   if a.has("fusion"):FusionFx.trail(self,str(a.fusion),next-a.dir*0.4,0.9)
    a.trail=0.06;psx.spark(next-a.dir*0.5,Vector3(rng.randf_range(-0.5,0.5),rng.randf_range(0.0,0.6),rng.randf_range(-0.5,0.5)),WeaponFeel.ARROW_DUST,WeaponFeel.ARROW_SHAFT,0.12,0.04,0.28)
   i-=1
 
@@ -324,7 +364,12 @@ func fire_revolver(id: int,r: Dictionary) -> bool:
  for k in n:
   if bullets.size()>=MAX_BULLETS:break
   var d=dir if k==0 else (random_enemy(pool).pos-origin).normalized()
-  bullets.append({"pos":origin+d*0.9,"dir":d,"speed":float(r.speed),"left":float(r.range),"damage":float(r.damage),"id":id,"bounces":int(r.bounces),"hits":{},"smoke":0.0,"bounced":false})
+  var bullet={"pos":origin+d*0.9,"dir":d,"speed":float(r.speed),"left":float(r.range),"damage":float(r.damage),"id":id,"bounces":int(r.bounces),"hits":{},"smoke":0.0,"bounced":false}
+  var fusion=str(fusion_of.get(id,""))
+  if fusion!="":
+   bullet["fusion"]=fusion
+   if k==0:forms.on_revolver_shot(id,fusion,bullet) # every 6th shot: the first bullet is a judgement round
+  bullets.append(bullet)
  WeaponFeel.revolver_muzzle(self,origin+dir*0.9,dir)
  game.audio.emit("weapon.revolver.fire",origin,1.0,1.0);ElementAudio.attack(game,id,origin)
  return true
@@ -347,7 +392,9 @@ func step_bullets(delta: float) -> void:
     if b.hits.has(e.crowd_id):continue
     if game.segment_distance(e.pos,prev,next)>float(WeaponStats.REVOLVER.hit_radius)+hit_reach(e):continue
     b.hits[e.crowd_id]=true
-    strike(e,b.damage,b.id,"ricochet" if b.bounced else "bullet",b.dir,e.pos)
+    if b.has("judge"):
+     forms.strike_form(str(b.fusion),e,b.damage,b.id,"judgement",b.dir,e.pos);continue # a judgement round carries straight through everything
+    strike(e,b.damage,b.id,"ricochet" if b.bounced else "bullet",b.dir,e.pos) # a judgement round carries straight through everything
     if int(b.bounces)>0:
      var nxt: Dictionary={};var best=INF
      for c in game.nearby(e.pos,float(WeaponStats.REVOLVER.ricochet_range)):
@@ -361,10 +408,15 @@ func step_bullets(delta: float) -> void:
       break
     dead=true;break
   b.pos=next
-  if dead or b.left<=0.0:bullets.remove_at(i);i-=1;continue
+  if dead or b.left<=0.0:
+   if b.has("judge"):forms.judgement_ends(b,next)
+   bullets.remove_at(i);i-=1;continue
   # silver slug with a hard white head, discrete smoke squares every 1.2 m and the odd spark
-  psx.draw_segment(next-b.dir*0.7,next,0.15,WeaponFeel.BULLET_BODY)
-  psx.draw_square(next+(cam-next).normalized()*0.04,0.26,WeaponFeel.BULLET_HEAD)
+  tint_for(int(b.id))
+  var big=2.6 if b.has("judge") else 1.0
+  psx.draw_segment(next-b.dir*0.7*big,next,0.15*big,WeaponFeel.BULLET_BODY)
+  psx.draw_square(next+(cam-next).normalized()*0.04,0.26*big,WeaponFeel.BULLET_HEAD)
+  if b.has("fusion"):FusionFx.trail(self,str(b.fusion),next,1.4 if b.has("judge") else 0.7)
   if b.smoke>=0.9:
    b.smoke-=0.9
    psx.spark(next-b.dir*0.4,Vector3(0,0.4,0),WeaponFeel.SMOKE_LIGHT,WeaponFeel.SMOKE_DARK,0.17,0.07,0.55,-0.4,0.8)
@@ -381,6 +433,8 @@ func update_aura(id: int,state: Dictionary,delta: float) -> void:
  aura_spin+=delta*0.5 # slow, independent of Attack Speed (that only changes the pulse rate)
  aura_glow=maxf(0.0,aura_glow-delta)
  draw_aura_circle(center,radius,aura_spin,aura_glow>0.0)
+ var aura_fusion=str(fusion_of.get(id,""))
+ if aura_fusion!="":forms.aura_draw(id,center,radius,aura_spin,aura_glow>0.0) # the second, counter-rotating ring
  aura_smoke-=delta
  if aura_smoke<=0.0:
   aura_smoke=0.06
@@ -397,6 +451,7 @@ func update_aura(id: int,state: Dictionary,delta: float) -> void:
  for e in game.nearby(center,radius+1.5):
   if Vector2(e.pos.x-center.x,e.pos.z-center.z).length()>radius+hit_reach(e):continue
   hit_any=true;strike(e,float(r.damage),id,"pulse",Vector3.ZERO,e.pos)
+ if aura_fusion!="":forms.aura_pulse(id,aura_fusion,center,radius,r) # inner ring bonus, and every 3rd pulse erupts
  psx.ring(center,radius*0.96,int(radius*7.0),WeaponFeel.AURA_LIGHT,0.2,0.3,3.5)
  game.audio.emit("weapon.aura.pulse",origin_pos(),1.0 if hit_any else 0.6,1.0);ElementAudio.attack(game,id,origin_pos());ElementAudio.hit(game,id,origin_pos())
 func draw_aura_circle(center: Vector3,radius: float,spin: float,flash: bool) -> void:
@@ -460,7 +515,9 @@ func step_scythes(delta: float) -> void:
   if s.phase==0:
    var v=maxf(float(s.speed)*0.22,float(s.speed)*(1.0-float(s.travel)/float(s.out_range)));loop_speed=maxf(loop_speed,v)
    s.dir=yaw_dir(s.dir,s.curve*delta);s.pos=prev+s.dir*v*delta;s.travel+=v*delta
-   if s.travel>=s.out_range or s.t>1.6:s.phase=1;s.t=0.0
+   if s.travel>=s.out_range or s.t>1.6:
+    s.phase=1;s.t=0.0
+    if str(fusion_of.get(s.id,""))!="":forms.scythe_turns(s,s.pos) # a vortex where the blade turns back
   else:
    var to=target_pos-prev;var dist=to.length()
    var v=minf(float(s.return_speed)*1.3,7.0+float(s.t)*float(s.return_speed)*1.8);loop_speed=maxf(loop_speed,v)
@@ -476,8 +533,10 @@ func step_scythes(delta: float) -> void:
    hits[e.crowd_id]=true
    strike(e,s.damage,s.id,"scythe_out" if s.phase==0 else "scythe_back",s.dir,e.pos)
   s.trail-=delta
+  tint_for(int(s.id))
   if s.trail<=0.0:
    s.trail=0.045
+   FusionFx.trail(self,str(fusion_of.get(s.id,"")),s.pos,1.0)
    psx.spark(s.pos-s.dir*0.4,Vector3(rng.randf_range(-0.6,0.6),rng.randf_range(0.1,0.8),rng.randf_range(-0.6,0.6)),WeaponFeel.DUST_MID,WeaponFeel.DUST_DARK,0.2*float(s.scale),0.07,0.45,1.0,1.0)
    psx.segment(prev,s.pos,0.12*float(s.scale),WeaponFeel.DUST_LIGHT,WeaponFeel.DUST_MID,0.14,0.0,0.4) # angular stepped swish
   if shown<MAX_SCYTHES:
@@ -531,6 +590,8 @@ func fire_shotgun(id: int,r: Dictionary) -> bool:
   if not victim.is_empty():
    hits_made+=1;strike(victim,float(r.damage),id,"pellet",d,origin+d*best_t)
  WeaponFeel.shotgun_blast(self,origin+dir*0.7,dir,half,n)
+ var fusion=str(fusion_of.get(id,""))
+ if fusion!="":forms.shotgun_blast(id,fusion,origin,dir,r) # a bile wall across the cone
  game.audio.emit("weapon.shotgun.fire",origin,1.0,1.0);ElementAudio.attack(game,id,origin)
  later(minf(0.3,float(r.interval)*0.3),pump_sound)
  return true
